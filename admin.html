@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administration Command Center — Nirdesha Portal | MoSPI, Government of India</title>
+  <meta name="description" content="Central administration and competency intelligence command center for the Ministry of Statistics and Programme Implementation (MoSPI).">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-body">
+
+  <div class="admin-shell">
+    
+    <!-- 1. LEFT SIDEBAR -->
+    <aside class="admin-sidebar" id="admin-sidebar" aria-label="Administrative Navigation">
+      <div class="admin-sidebar-header">
+        <svg class="admin-emblem-icon" viewBox="0 0 100 120" fill="currentColor" aria-hidden="true">
+          <path d="M50,5 C42,5 38,12 38,18 C38,24 42,28 40,32 C38,36 34,38 34,44 C34,50 38,54 42,56 C44,57 46,62 46,68 L44,76 L35,78 L35,82 L65,82 L65,78 L56,76 L54,68 C54,62 56,57 58,56 C62,54 66,50 66,44 C66,38 62,36 60,32 C58,28 62,24 62,18 C62,12 58,5 50,5 Z" opacity="0.85"/>
+          <circle cx="50" cy="92" r="8" fill="none" stroke="currentColor" stroke-width="2"/>
+          <rect x="25" y="104" width="50" height="4" rx="1"/>
+          <rect x="20" y="110" width="60" height="4" rx="1"/>
+        </svg>
+        <div class="admin-brand-info">
+          <div class="admin-brand-title">निर्देश <span>NIRDESHA</span></div>
+          <div class="admin-brand-sub">Admin Portal • MoSPI</div>
+        </div>
+      </div>
+
+      <nav class="admin-sidebar-nav">
+        <div class="admin-nav-category">Main Console</div>
+
+        <a href="#dashboard" class="admin-nav-item active" data-tab="dashboard">
+          <span class="admin-nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          </span>
+          <span>Dashboard</span>
+        </a>
+
+        <a href="#courses" class="admin-nav-item" data-tab="courses">
+          <span class="admin-nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+          </span>
+          <span>Courses & Pathways</span>
+          <span class="admin-nav-badge">64</span>
+        </a>
+
+        <a href="#ai-mentor" class="admin-nav-item" data-tab="ai-mentor">
+          <span class="admin-nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10H12V2z"></path><path d="M12 12L2.1 12.05"></path><path d="M12 12a10 10 0 0 0 7.07-2.93"></path></svg>
+          </span>
+          <span>AI Mentor</span>
+          <span class="admin-nav-badge" style="background:#0284c7;">Active</span>
+        </a>
+
+        <a href="#assessments" class="admin-nav-item" data-tab="assessments">
+          <span class="admin-nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+          </span>
+          <span>Skill Diagnostics</span>
+        </a>
+
+        <a href="#officers" class="admin-nav-item" data-tab="officers">
+          <span class="admin-nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          </span>
+          <span>Officer Directory</span>
+        </a>
+
+        <a href="#profile" class="admin-nav-item" data-tab="profile">
+          <span class="admin-nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          </span>
+          <span>Profile</span>
+        </a>
+      </nav>
+
+      <div class="admin-sidebar-bottom">
+        <div class="admin-nav-category" style="padding-top: 0.2rem;">System Management</div>
+
+        <a href="#settings" class="admin-nav-item" data-tab="settings">
+          <span class="admin-nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          </span>
+          <span>Settings</span>
+        </a>
+
+        <a href="login.html" class="admin-nav-item nav-signout" id="admin-signout-btn" title="Sign out of session">
+          <span class="admin-nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+          </span>
+          <span>Sign Out</span>
+        </a>
+
+        <div class="admin-user-card">
+          <div class="admin-avatar">AD</div>
+          <div class="admin-user-details">
+            <span class="admin-user-name">Dr. A. K. Verma</span>
+            <span class="admin-user-role">Director (Cadre & Training)</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 2. MAIN WORKSPACE -->
+    <div class="admin-main">
+      <header class="admin-topbar">
+        <div class="admin-topbar-left">
+          <button class="admin-mobile-btn" id="admin-mobile-toggle" aria-label="Toggle navigation">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+          <div class="admin-search-wrap">
+            <span class="admin-search-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </span>
+            <input type="text" class="admin-search-input" id="admin-top-search" placeholder="Search courses, officer cadre, competencies...">
+          </div>
+        </div>
+
+        <div class="admin-topbar-right">
+          <div class="admin-status-pill">
+            <span class="status-dot-pulse"></span>
+            <span>Central Portal v3.2 Active</span>
+          </div>
+          <a href="main.html" class="btn-admin-action" title="Open Public Home Portal">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+            <span>Public Portal</span>
+          </a>
+        </div>
+      </header>
+
+      <main class="admin-content-area">
+        <!-- VIEW 1: DASHBOARD -->
+        <div class="admin-view-tab active" id="view-dashboard">
+          <div class="admin-welcome-banner">
+            <div>
+              <h1 class="welcome-title">Administrative Command Center</h1>
+              <p class="welcome-sub">Central capacity analytics, NSSTA course enrollments, and competency diagnostics monitoring for MoSPI cadres.</p>
+            </div>
+            <div class="welcome-badges">
+              <div class="welcome-badge-item">📍 Khurshid Lal Bhawan, New Delhi</div>
+              <div class="welcome-badge-item">📅 Cycle 2026-Q3 Active</div>
+            </div>
+          </div>
+
+          <div class="admin-metrics-grid">
+            <div class="admin-metric-card">
+              <div class="metric-header-row">
+                <span class="metric-label-title">Enrolled Officers</span>
+                <div class="metric-icon-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg></div>
+              </div>
+              <div class="metric-val-large">18,520</div>
+              <div class="metric-footer-badge"><span>↑ 14.2%</span><span style="color: #64748b; font-weight: 500;">from last quarter</span></div>
+            </div>
+
+            <div class="admin-metric-card">
+              <div class="metric-header-row">
+                <span class="metric-label-title">Active NSSTA Courses</span>
+                <div class="metric-icon-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></div>
+              </div>
+              <div class="metric-val-large">64</div>
+              <div class="metric-footer-badge"><span>↑ 8 new</span><span style="color: #64748b; font-weight: 500;">modules added</span></div>
+            </div>
+
+            <div class="admin-metric-card">
+              <div class="metric-header-row">
+                <span class="metric-label-title">Guidance Alignment</span>
+                <div class="metric-icon-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></div>
+              </div>
+              <div class="metric-val-large">95.4%</div>
+              <div class="metric-footer-badge"><span>✓ High</span><span style="color: #64748b; font-weight: 500;">MoSPI baseline match</span></div>
+            </div>
+
+            <div class="admin-metric-card">
+              <div class="metric-header-row">
+                <span class="metric-label-title">AI Mentor Inquiries</span>
+                <div class="metric-icon-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></div>
+              </div>
+              <div class="metric-val-large">1,420</div>
+              <div class="metric-footer-badge"><span>⚡ 99.1%</span><span style="color: #64748b; font-weight: 500;">real-time resolution</span></div>
+            </div>
+          </div>
+
+          <div class="admin-split-grid">
+            <div class="admin-panel-card">
+              <div class="panel-header">
+                <div class="panel-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg><span>Active Competency Pathways (NSSTA Wing)</span></div>
+                <a href="#courses" class="admin-nav-item" data-tab="courses" style="font-size: 0.775rem; color: #ea580c; font-weight: 700; padding: 0;">View All 64 →</a>
+              </div>
+              <div class="panel-body" style="padding: 0.5rem 0;">
+                <div class="course-mini-item">
+                  <div class="course-mini-info"><span class="course-mini-title">Advanced Multi-Stage Sampling & Survey Design</span><span class="course-mini-meta"><span><strong>Code:</strong> NSSTA-101</span><span><strong>Enrolled:</strong> 4,820 Officers</span></span></div>
+                  <div class="course-progress-bar" title="85% Completion"><div class="course-progress-fill" style="width: 85%;"></div></div>
+                </div>
+                <div class="course-mini-item">
+                  <div class="course-mini-info"><span class="course-mini-title">National Accounts & Macro Deflator Analytics</span><span class="course-mini-meta"><span><strong>Code:</strong> NSSTA-204</span><span><strong>Enrolled:</strong> 3,150 Officers</span></span></div>
+                  <div class="course-progress-bar" title="72% Completion"><div class="course-progress-fill" style="width: 72%;"></div></div>
+                </div>
+                <div class="course-mini-item">
+                  <div class="course-mini-info"><span class="course-mini-title">Public Data Science & Statistical Computing in Python</span><span class="course-mini-meta"><span><strong>Code:</strong> NSSTA-305</span><span><strong>Enrolled:</strong> 2,940 Officers</span></span></div>
+                  <div class="course-progress-bar" title="91% Completion"><div class="course-progress-fill" style="width: 91%;"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="admin-panel-card">
+              <div class="panel-header">
+                <div class="panel-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"></path></svg><span>Nirdesha AI Guidance Copilot</span></div>
+                <span class="status-dot-pulse"></span>
+              </div>
+              <div class="panel-body">
+                <div class="ai-mentor-box">
+                  <div class="ai-mentor-header">Ask AI Mentor a Competency Question</div>
+                  <p style="font-size: 0.775rem; color: #475569; margin: 0; line-height: 1.45;">Tap any prompt below or jump to the full AI Mentor console.</p>
+                </div>
+                <div class="ai-mentor-prompt-chips">
+                  <button type="button" class="prompt-chip-btn">▸ Explain CPI vs WPI weighting differences</button>
+                  <button type="button" class="prompt-chip-btn">▸ Mandatory prerequisites for JSO to SSO cadre transition</button>
+                  <button type="button" class="prompt-chip-btn">▸ How does the GDP deflator work in 2011-12 base series?</button>
+                </div>
+                <a href="#ai-mentor" class="btn-admin-action" data-tab="ai-mentor" style="width: 100%; justify-content: center; margin-top: 0.5rem;">Open Full AI Mentor Console →</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="admin-panel-card">
+            <div class="panel-header">
+              <div class="panel-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg><span>Recent Officer Competency Diagnostics (MoSPI Cadres)</span></div>
+              <span style="font-size: 0.75rem; color: #64748b; font-weight: 700;">Live Feed (2026-09-02)</span>
+            </div>
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead>
+                  <tr><th>Officer Name</th><th>Cadre Designation</th><th>Division / Posting</th><th>Score</th><th>Status</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><strong>Rajesh Sharma</strong> (ISS-2021-08)</td><td>Senior Statistical Officer</td><td>NSSO FOD, Jaipur</td><td><strong>92 / 100</strong></td><td><span class="badge-status-cert">Nirdesha Verified</span></td><td><button class="btn-admin-action" style="padding: 0.25rem 0.55rem; font-size: 0.7rem;">Review</button></td></tr>
+                  <tr><td><strong>Priyanka Deshmukh</strong> (SSS-2023-41)</td><td>Junior Statistical Officer</td><td>Central Statistics Office (CSO)</td><td><strong>84 / 100</strong></td><td><span class="badge-status-cert">Nirdesha Verified</span></td><td><button class="btn-admin-action" style="padding: 0.25rem 0.55rem; font-size: 0.7rem;">Review</button></td></tr>
+                  <tr><td><strong>K. Sundaram</strong> (DES-TN-109)</td><td>Assistant Director (Statistics)</td><td>State DES, Tamil Nadu</td><td><strong>78 / 100</strong></td><td><span class="badge-status-prog">In Progress</span></td><td><button class="btn-admin-action" style="padding: 0.25rem 0.55rem; font-size: 0.7rem;">Review</button></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW 2: COURSES & PATHWAYS -->
+        <div class="admin-view-tab" id="view-courses">
+          <div style="margin-bottom: 1.5rem;">
+            <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">National Statistical Academy Course Catalog</h2>
+            <p style="font-size: 0.85rem; color: #64748b; margin: 0;">Curated training pathways developed by NSSTA Greater Noida and MoSPI Subject Matter Experts.</p>
+          </div>
+          <div class="courses-filter-bar">
+            <button class="filter-pill-btn active" data-category="all">All Disciplines (64)</button>
+            <button class="filter-pill-btn" data-category="sampling">Sampling & Surveys (18)</button>
+            <button class="filter-pill-btn" data-category="accounts">National Accounts (14)</button>
+            <button class="filter-pill-btn" data-category="datascience">Data Science & AI (20)</button>
+            <button class="filter-pill-btn" data-category="field">Field Operations & CAPI (12)</button>
+          </div>
+          <div class="courses-catalog-grid">
+            <div class="course-card-gov" data-category="sampling">
+              <div>
+                <div class="course-badge-code">NSSTA-101 • Core SSS / ISS</div>
+                <h3 class="course-card-title">Advanced Multi-Stage Sampling & Survey Methodology</h3>
+                <p class="course-card-desc">Stratified sampling, cluster designs, variance estimation, and non-sampling error minimization in large-scale socio-economic surveys.</p>
+              </div>
+              <div class="course-card-footer"><span style="font-size: 0.75rem; color: #475569; font-weight: 600;">⏱️ 8 Weeks • 40 Credits</span><button class="btn-admin-action" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;">Manage Syllabus</button></div>
+            </div>
+            <div class="course-card-gov" data-category="accounts">
+              <div>
+                <div class="course-badge-code">NSSTA-204 • Macroeconomic Analytics</div>
+                <h3 class="course-card-title">National Accounts & Macro Deflator Analytics</h3>
+                <p class="course-card-desc">SNA 2008 frameworks, Gross State Domestic Product (GSDP) estimation, Supply and Use Tables (SUT), and inflation deflator modeling.</p>
+              </div>
+              <div class="course-card-footer"><span style="font-size: 0.75rem; color: #475569; font-weight: 600;">⏱️ 6 Weeks • 30 Credits</span><button class="btn-admin-action" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;">Manage Syllabus</button></div>
+            </div>
+            <div class="course-card-gov" data-category="datascience">
+              <div>
+                <div class="course-badge-code">NSSTA-305 • Modern Analytics</div>
+                <h3 class="course-card-title">Public Data Science & Statistical Computing in Python</h3>
+                <p class="course-card-desc">Pandas, NumPy, automated data validation pipelines, statistical imputation methods, and DPDP-compliant data masking.</p>
+              </div>
+              <div class="course-card-footer"><span style="font-size: 0.75rem; color: #475569; font-weight: 600;">⏱️ 10 Weeks • 50 Credits</span><button class="btn-admin-action" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;">Manage Syllabus</button></div>
+            </div>
+            <div class="course-card-gov" data-category="field">
+              <div>
+                <div class="course-badge-code">NSSTA-412 • Field Protocol</div>
+                <h3 class="course-card-title">Field Operations, CAPI Tablets & DPDP Governance</h3>
+                <p class="course-card-desc">Tablet-based enumerator administration, biometric geolocation verification, quality audits, and field supervisor escalation procedures.</p>
+              </div>
+              <div class="course-card-footer"><span style="font-size: 0.75rem; color: #475569; font-weight: 600;">⏱️ 4 Weeks • 20 Credits</span><button class="btn-admin-action" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;">Manage Syllabus</button></div>
+            </div>
+            <div class="course-card-gov" data-category="datascience">
+              <div>
+                <div class="course-badge-code">NSSTA-508 • Artificial Intelligence</div>
+                <h3 class="course-card-title">Machine Learning for Administrative Big Data</h3>
+                <p class="course-card-desc">Classification models for industrial categorization (NIC codes), predictive outlier detection, and natural language query extraction.</p>
+              </div>
+              <div class="course-card-footer"><span style="font-size: 0.75rem; color: #475569; font-weight: 600;">⏱️ 8 Weeks • 40 Credits</span><button class="btn-admin-action" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;">Manage Syllabus</button></div>
+            </div>
+            <div class="course-card-gov" data-category="sampling">
+              <div>
+                <div class="course-badge-code">NSSTA-601 • Periodic Labour Force</div>
+                <h3 class="course-card-title">PLFS & Enterprise Survey Operational Standards</h3>
+                <p class="course-card-desc">Rotational panel sampling, activity status estimation (UPS & CWS), unincorporated enterprise survey auditing, and weights calibration.</p>
+              </div>
+              <div class="course-card-footer"><span style="font-size: 0.75rem; color: #475569; font-weight: 600;">⏱️ 6 Weeks • 30 Credits</span><button class="btn-admin-action" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;">Manage Syllabus</button></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW 3: AI MENTOR -->
+        <div class="admin-view-tab" id="view-ai-mentor">
+          <div style="margin-bottom: 1.5rem;">
+            <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">Nirdesha AI Guidance Copilot (Statistical Mentor)</h2>
+            <p style="font-size: 0.85rem; color: #64748b; margin: 0;">Interactive cognitive tutor grounded in MoSPI competency standards, NSSTA curricular modules, and national statistical protocols.</p>
+          </div>
+          <div class="ai-chat-container">
+            <div class="ai-chat-header">
+              <div class="ai-chat-title"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2a10 10 0 1 0 10 10H12V2z"></path></svg><span>Nirdesha AI Mentor Session • Officer Cadre Copilot</span></div>
+              <span class="admin-status-pill" style="background: rgba(255,255,255,0.15); color:#fff; border-color:rgba(255,255,255,0.3);">Model: MoSPI-StatLLM v2</span>
+            </div>
+            <div class="ai-chat-log" id="ai-chat-log">
+              <div class="chat-bubble bot">
+                Namaste Director Verma. I am your <strong>Nirdesha AI Mentor</strong>. I can assist you with competency assessments, course design recommendations, cadre progression frameworks, and official MoSPI statistical methodology queries. How can I assist you today?
+              </div>
+            </div>
+            <div class="ai-chat-input-row">
+              <input type="text" class="ai-chat-input" id="ai-chat-input" placeholder="Type a statistical inquiry (e.g. CPI weighting, GDP deflator, JSO requirements)...">
+              <button type="button" class="btn-ai-send" id="btn-ai-send">Ask Mentor</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW 4: SKILL DIAGNOSTICS -->
+        <div class="admin-view-tab" id="view-assessments">
+          <div style="margin-bottom: 1.5rem;">
+            <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">Competency Diagnostics & Baseline Engine</h2>
+            <p style="font-size: 0.85rem; color: #64748b; margin: 0;">Evidence-weighted competency scoring and skill gap identification mapped to GIGW & MoSPI standards.</p>
+          </div>
+          <div class="admin-metrics-grid" style="margin-bottom: 1.5rem;">
+            <div class="admin-metric-card"><div class="metric-label-title">Statistical Theory</div><div class="metric-val-large">88.4%</div><div class="metric-footer-badge">National Average</div></div>
+            <div class="admin-metric-card"><div class="metric-label-title">Field Operations</div><div class="metric-val-large">93.2%</div><div class="metric-footer-badge">National Average</div></div>
+            <div class="admin-metric-card"><div class="metric-label-title">Data Science</div><div class="metric-val-large" style="color: #ea580c;">71.6%</div><div class="metric-footer-badge" style="color: #ea580c;">Priority Focus Area</div></div>
+            <div class="admin-metric-card"><div class="metric-label-title">DPDP Compliance</div><div class="metric-val-large" style="color: #15803d;">98.0%</div><div class="metric-footer-badge">Legally Certified</div></div>
+          </div>
+        </div>
+
+        <!-- VIEW 5: OFFICER DIRECTORY -->
+        <div class="admin-view-tab" id="view-officers">
+          <div style="margin-bottom: 1.5rem;">
+            <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">National Statistical Cadre Directory</h2>
+            <p style="font-size: 0.85rem; color: #64748b; margin: 0;">Verified roster of central and state statistical personnel registered under Nirdesha.</p>
+          </div>
+          <div class="admin-panel-card">
+            <div class="panel-header"><div class="panel-title">Officers Roster (18,520 Total Registered)</div></div>
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead>
+                  <tr><th>Roll ID</th><th>Officer Name</th><th>Cadre</th><th>Posting Department</th><th>Jurisdiction</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><strong>ISS-2021-08</strong></td><td>Rajesh Sharma</td><td>Indian Statistical Service</td><td>NSSO Field Operations (FOD)</td><td>Rajasthan</td><td><span class="badge-status-cert">Active Duty</span></td></tr>
+                  <tr><td><strong>SSS-2023-41</strong></td><td>Priyanka Deshmukh</td><td>Subordinate Statistical Service</td><td>Central Statistics Office (CSO)</td><td>New Delhi</td><td><span class="badge-status-cert">Active Duty</span></td></tr>
+                  <tr><td><strong>DES-TN-109</strong></td><td>K. Sundaram</td><td>State DES Cadre</td><td>Directorate of Economics & Statistics</td><td>Tamil Nadu</td><td><span class="badge-status-cert">Active Duty</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW 6: PROFILE -->
+        <div class="admin-view-tab" id="view-profile">
+          <div style="margin-bottom: 1.5rem;">
+            <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">Administrator Officer Profile</h2>
+            <p style="font-size: 0.85rem; color: #64748b; margin: 0;">Government identity details, cryptographic credentials, and cadre authorization status.</p>
+          </div>
+          <div class="profile-overview-card">
+            <div class="profile-avatar-row">
+              <div class="profile-avatar-large">AD</div>
+              <div>
+                <h3 style="font-size: 1.35rem; font-weight: 800; color: #002b49; margin: 0 0 0.25rem 0;">Dr. A. K. Verma</h3>
+                <div style="font-size: 0.85rem; color: #ea580c; font-weight: 700; margin-bottom: 0.25rem;">Director (Cadre Capacity & Training Governance)</div>
+                <div style="font-size: 0.775rem; color: #64748b;">Ministry of Statistics & Programme Implementation (MoSPI), Government of India</div>
+              </div>
+            </div>
+            <div class="settings-group">
+              <div class="settings-item-row"><span style="font-size: 0.85rem; font-weight: 700; color: #334155;">Official Login ID</span><span style="font-size: 0.85rem; font-weight: 700; color: #002b49;">admin@gov</span></div>
+              <div class="settings-item-row"><span style="font-size: 0.85rem; font-weight: 700; color: #334155;">Official Government Email</span><span style="font-size: 0.85rem; color: #002b49;">ak.verma@mospi.gov.in</span></div>
+              <div class="settings-item-row"><span style="font-size: 0.85rem; font-weight: 700; color: #334155;">Employee Roll Code</span><span style="font-size: 0.85rem; color: #002b49;">MoSPI-DIR-2016-0042</span></div>
+              <div class="settings-item-row"><span style="font-size: 0.85rem; font-weight: 700; color: #334155;">Authentication Tier</span><span class="badge-status-cert">Tier-1 Central Administrator (Cryptographic 2FA)</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW 7: SETTINGS -->
+        <div class="admin-view-tab" id="view-settings">
+          <div style="margin-bottom: 1.5rem;">
+            <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">Portal & Security Settings</h2>
+            <p style="font-size: 0.85rem; color: #64748b; margin: 0;">System configurations, assessment thresholds, and data protection compliance logs.</p>
+          </div>
+          <div class="profile-overview-card">
+            <h3 style="font-size: 1.15rem; font-weight: 800; color: #002b49; margin-bottom: 1.25rem;">Assessment & Evaluation Parameters</h3>
+            <div class="settings-group">
+              <div class="settings-item-row">
+                <div><div style="font-size: 0.875rem; font-weight: 700; color: #0f172a;">Competency Passing Threshold</div><div style="font-size: 0.775rem; color: #64748b;">Minimum score required for official Nirdesha Certificate issuance</div></div>
+                <span style="font-size: 0.9rem; font-weight: 800; color: #002b49;">75% Score</span>
+              </div>
+              <div class="settings-item-row">
+                <div><div style="font-size: 0.875rem; font-weight: 700; color: #0f172a;">Automatic NSSTA Pathway Recommendation</div><div style="font-size: 0.775rem; color: #64748b;">AI-generated learning roadmap assigned upon diagnostic completion</div></div>
+                <span class="badge-status-cert">Enabled (AI Model Active)</span>
+              </div>
+              <div class="settings-item-row">
+                <div><div style="font-size: 0.875rem; font-weight: 700; color: #0f172a;">DPDP Audit Trail</div><div style="font-size: 0.775rem; color: #64748b;">Immutable log of officer competency score views and evaluations</div></div>
+                <button class="btn-admin-action" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;">Download Audit Log</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,630 @@
+/* ==========================================================================
+   NIRDESHA — PUBLIC / OFFICER LEARNING DASHBOARD DESIGN SYSTEM
+   Heatmap, Competitive Skill Ratings, NotebookLM Cards, Timed Quiz Engine
+   ========================================================================== */
+
+:root {
+  --trainee-sidebar-w: 260px;
+  --trainee-navy: #002b49;
+  --trainee-saffron: #ea580c;
+  --trainee-bg: #f8fafc;
+  --trainee-card: #ffffff;
+  --trainee-border: #cbd5e1;
+}
+
+body.trainee-body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background-color: var(--trainee-bg);
+  color: #0f172a;
+  min-height: 100vh;
+  display: flex;
+  overflow-x: hidden;
+}
+
+.trainee-shell {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* ==========================================================================
+   1. TRAINEE LEFT SIDEBAR
+   ========================================================================== */
+.trainee-sidebar {
+  width: var(--trainee-sidebar-w);
+  background-color: #00223a;
+  color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  border-right: 1.5px solid #001524;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.trainee-sidebar-header {
+  padding: 1.25rem 1.25rem 1rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.trainee-emblem-icon {
+  width: 32px;
+  height: 40px;
+  color: var(--trainee-saffron);
+  flex-shrink: 0;
+}
+
+.trainee-brand-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.1;
+}
+
+.trainee-brand-title span {
+  color: var(--trainee-saffron);
+}
+
+.trainee-brand-sub {
+  font-size: 0.65rem;
+  color: #94a3b8;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 0.2rem;
+}
+
+.trainee-sidebar-nav {
+  flex: 1;
+  padding: 1rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  overflow-y: auto;
+}
+
+.trainee-nav-category {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #64748b;
+  font-weight: 800;
+  padding: 0.6rem 0.75rem 0.3rem 0.75rem;
+}
+
+.trainee-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 0.85rem;
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 0px !important;
+  border-left: 3px solid transparent;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.trainee-nav-item:hover {
+  background-color: #001829;
+  color: #ffffff;
+  border-left-color: var(--trainee-saffron);
+  text-decoration: none;
+}
+
+.trainee-nav-item.active {
+  background-color: #001424;
+  color: #ffffff;
+  border-left-color: var(--trainee-saffron);
+  font-weight: 700;
+}
+
+.trainee-nav-badge {
+  margin-left: auto;
+  font-size: 0.65rem;
+  font-weight: 800;
+  background-color: var(--trainee-saffron);
+  color: #ffffff;
+  padding: 0.15rem 0.45rem;
+  border-radius: 0px !important;
+}
+
+.trainee-sidebar-bottom {
+  padding: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.trainee-user-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0px !important;
+  margin-top: 0.35rem;
+}
+
+.trainee-avatar {
+  width: 34px;
+  height: 34px;
+  background-color: #0284c7;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0px !important;
+  flex-shrink: 0;
+}
+
+.trainee-user-details {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.trainee-user-name {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.trainee-user-role {
+  font-size: 0.675rem;
+  color: #94a3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ==========================================================================
+   2. MAIN WORKSPACE
+   ========================================================================== */
+.trainee-main {
+  margin-left: var(--trainee-sidebar-w);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 100vh;
+}
+
+.trainee-topbar {
+  background-color: #ffffff;
+  height: 64px;
+  border-bottom: 1.5px solid var(--trainee-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: 1.75rem;
+  position: sticky;
+  top: 0;
+  z-index: 90;
+}
+
+.trainee-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  max-width: 480px;
+}
+
+.trainee-mobile-btn {
+  display: none;
+  background: none;
+  border: 1px solid #cbd5e1;
+  padding: 0.4rem;
+  cursor: pointer;
+  border-radius: 0px;
+}
+
+.trainee-search-input {
+  width: 100%;
+  padding: 0.5rem 0.85rem 0.5rem 2.4rem;
+  font-size: 0.85rem;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 0px !important;
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.trainee-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.trainee-pill-streak {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.75rem;
+  background-color: #fff7ed;
+  border: 1px solid #fdba74;
+  color: #c2410c;
+  font-size: 0.75rem;
+  font-weight: 800;
+  border-radius: 0px !important;
+}
+
+.trainee-pill-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.75rem;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
+  font-size: 0.75rem;
+  font-weight: 800;
+  border-radius: 0px !important;
+}
+
+.trainee-content-area {
+  padding: 1.75rem;
+  flex: 1;
+}
+
+/* ==========================================================================
+   3. GITHUB-STYLE LEARNING HEATMAP WIDGET
+   ========================================================================== */
+.heatmap-container-card {
+  background: #ffffff;
+  border: 1.5px solid var(--trainee-navy);
+  border-radius: 0px !important;
+  box-shadow: 4px 4px 0px var(--trainee-navy);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.heatmap-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.heatmap-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--trainee-navy);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.heatmap-stats {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.heatmap-grid-wrapper {
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.heatmap-grid {
+  display: grid;
+  grid-template-rows: repeat(7, 12px);
+  grid-auto-flow: column;
+  grid-auto-columns: 12px;
+  gap: 4px;
+}
+
+.heatmap-day {
+  width: 12px;
+  height: 12px;
+  background-color: #e2e8f0;
+  border-radius: 0px;
+  transition: transform 0.15s ease;
+  cursor: pointer;
+}
+
+.heatmap-day:hover {
+  transform: scale(1.3);
+  outline: 1.5px solid var(--trainee-navy);
+}
+
+.heatmap-day.lvl-1 { background-color: #bbf7d0; }
+.heatmap-day.lvl-2 { background-color: #4ade80; }
+.heatmap-day.lvl-3 { background-color: #16a34a; }
+.heatmap-day.lvl-4 { background-color: #15803d; }
+
+.heatmap-legend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+  font-size: 0.7rem;
+  color: #64748b;
+}
+
+/* ==========================================================================
+   4. COMPETITIVE ELO SKILL RATINGS
+   ========================================================================== */
+.elo-ratings-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 1100px) {
+  .elo-ratings-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .elo-ratings-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.elo-card {
+  background: #ffffff;
+  border: 1.5px solid var(--trainee-navy);
+  border-radius: 0px !important;
+  box-shadow: 4px 4px 0px var(--trainee-navy);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.15s ease;
+}
+
+.elo-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 6px 6px 0px var(--trainee-saffron);
+}
+
+.elo-domain-tag {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.35rem;
+}
+
+.elo-score-val {
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: var(--trainee-navy);
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+}
+
+.elo-tier-badge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 0.2rem 0.55rem;
+  border-radius: 0px !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: max-content;
+}
+
+.elo-tier-badge.advanced { background: #dbeafe; color: #1e40af; }
+.elo-tier-badge.expert { background: #dcfce7; color: #166534; }
+.elo-tier-badge.intermediate { background: #fef3c7; color: #92400e; }
+
+/* ==========================================================================
+   5. NOTEBOOKLM-STYLE REVISION CARDS
+   ========================================================================== */
+.notebooklm-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 992px) {
+  .notebooklm-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.notebook-card {
+  background: #ffffff;
+  border: 1.5px solid var(--trainee-navy);
+  border-left: 5px solid var(--trainee-saffron);
+  border-radius: 0px !important;
+  box-shadow: 3px 3px 0px var(--trainee-navy);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.15s ease;
+}
+
+.notebook-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 5px 5px 0px var(--trainee-saffron);
+}
+
+.notebook-topic {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--trainee-saffron);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.35rem;
+}
+
+.notebook-card-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 0.65rem;
+  line-height: 1.3;
+}
+
+.notebook-card-bullet {
+  font-size: 0.8rem;
+  color: #475569;
+  line-height: 1.5;
+  margin-bottom: 0.4rem;
+  display: flex;
+  gap: 0.45rem;
+}
+
+/* ==========================================================================
+   6. FIXED-TIME TIMED ASSESSMENT QUIZ MODAL
+   ========================================================================== */
+.quiz-box-card {
+  background: #002b49;
+  color: #ffffff;
+  padding: 1.75rem 2rem;
+  border-radius: 0px !important;
+  box-shadow: 4px 4px 0px var(--trainee-saffron);
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.quiz-btn-start {
+  background: var(--trainee-saffron);
+  color: #ffffff;
+  border: 1.5px solid #c2410c;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 800;
+  cursor: pointer;
+  border-radius: 0px !important;
+  box-shadow: 3px 3px 0px #001524;
+  transition: all 0.15s ease;
+}
+
+.quiz-btn-start:hover {
+  background: #c2410c;
+  transform: translateY(-1px);
+}
+
+/* Modal Popup */
+.quiz-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1.25rem;
+}
+
+.quiz-modal-backdrop.open {
+  display: flex;
+}
+
+.quiz-modal-dialog {
+  background: #ffffff;
+  border: 2px solid var(--trainee-navy);
+  width: 100%;
+  max-width: 680px;
+  border-radius: 0px !important;
+  box-shadow: 8px 8px 0px var(--trainee-navy);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.quiz-modal-header {
+  padding: 1rem 1.5rem;
+  background: var(--trainee-navy);
+  color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.quiz-timer-box {
+  background: #ef4444;
+  color: #ffffff;
+  padding: 0.35rem 0.85rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 900;
+  font-size: 1.1rem;
+  border-radius: 0px;
+}
+
+.quiz-modal-body {
+  padding: 1.5rem;
+}
+
+.quiz-option-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid #cbd5e1;
+  margin-bottom: 0.65rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+
+.quiz-option-label:hover {
+  background: #f8fafc;
+  border-color: var(--trainee-navy);
+}
+
+.quiz-option-label input {
+  accent-color: var(--trainee-navy);
+}
+
+.quiz-modal-footer {
+  padding: 1rem 1.5rem;
+  background: #f8fafc;
+  border-top: 1.5px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ==========================================================================
+   7. RESPONSIVE
+   ========================================================================== */
+@media (max-width: 900px) {
+  .trainee-sidebar {
+    transform: translateX(-100%);
+  }
+  .trainee-sidebar.open {
+    transform: translateX(0);
+  }
+  .trainee-main {
+    margin-left: 0;
+  }
+  .trainee-mobile-btn {
+    display: block;
+  }
+}

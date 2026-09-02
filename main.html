@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>निर्देश (Nirdesha) — National Competency Intelligence & Training Guidance Platform | MoSPI, Govt. of India</title>
+  
+  <meta name="description" content="Official portal for competency-intelligence, skill-gap analysis, and personalized learning guidance aligned with Ministry of Statistics and Programme Implementation (MoSPI) workflows.">
+  <meta name="keywords" content="Government of India, MoSPI, Nirdesha, Competency Engine, Official Training, Skill Rating, Civil Services Training, SIH">
+  
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="निर्देश (Nirdesha) — Government of India Portal">
+  <meta property="og:description" content="National Competency Intelligence & Training Guidance Platform, MoSPI.">
+  <meta property="og:type" content="website">
+
+  <!-- Google Fonts: Plus Jakarta Sans for crisp, modern, authoritative typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- External Government Theme Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- External JavaScript (Deferred) -->
+  <script src="js/script.js" defer></script>
+</head>
+<body>
+
+  <!-- Screen Reader Skip Link (GIGW Compliance) -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- National Tricolor Ribbon -->
+  <div class="tricolor-ribbon" aria-hidden="true"></div>
+
+  <!-- ==========================================================================
+       1. TOP ACCESSIBILITY & UTILITY BAR (GIGW MANDATE)
+       ========================================================================== -->
+  <div class="top-bar">
+    <div class="container top-bar-inner">
+      <div class="top-bar-left">
+        <div class="top-flag-icon" title="Indian National Flag" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <span>भारत सरकार | Government of India</span>
+        <span style="color: #cbd5e1;">•</span>
+        <span>सांख्यिकी एवं कार्यक्रम कार्यान्वयन मंत्रालय | MoSPI</span>
+      </div>
+
+      <div class="top-bar-right">
+        <!-- Accessibility Controls -->
+        <div class="top-util-group" aria-label="Text size and accessibility controls">
+          <button class="top-util-btn" id="font-decrease" title="Decrease font size" aria-label="Decrease font size">A-</button>
+          <button class="top-util-btn" id="font-reset" title="Standard font size" aria-label="Standard font size">A</button>
+          <button class="top-util-btn" id="font-increase" title="Increase font size" aria-label="Increase font size">A+</button>
+        </div>
+
+        <!-- Theme Mode Dropdown (Hover-Activated: Dark / Bright / System) -->
+        <div class="top-theme-wrapper notranslate" id="theme-menu-wrapper" translate="no">
+          <button class="top-theme-btn notranslate" id="theme-btn" aria-haspopup="true" aria-expanded="false" title="Theme (Dark / Bright / System)" translate="no">
+            <span class="theme-icon-indicator" id="theme-active-icon" aria-hidden="true">
+              <!-- Default: System (Monitor/Laptop) -->
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </span>
+            <span class="theme-btn-label" id="theme-active-label">System</span>
+            <span class="theme-caret" aria-hidden="true">▾</span>
+          </button>
+          <div class="top-theme-menu notranslate" id="theme-dropdown-menu" role="menu" aria-label="Select website theme" translate="no">
+            <button class="theme-option-btn active" data-theme-mode="system" role="menuitem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              <span>System</span>
+              <span class="theme-check-icon">✓</span>
+            </button>
+            <button class="theme-option-btn" data-theme-mode="light" role="menuitem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+              <span>Bright</span>
+              <span class="theme-check-icon">✓</span>
+            </button>
+            <button class="theme-option-btn" data-theme-mode="dark" role="menuitem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+              <span>Dark</span>
+              <span class="theme-check-icon">✓</span>
+            </button>
+          </div>
+        </div>
+
+        <a href="#main-content" style="font-size: 0.775rem; font-weight: 600; color: #475569;">Screen Reader</a>
+
+        <!-- Regional Language Selector Button (Protected from auto-translation) -->
+        <button class="top-lang-btn notranslate" id="lang-toggle-btn" translate="no" aria-haspopup="dialog" aria-expanded="false" title="Select regional language">
+          🌐 <span id="current-lang-label" class="notranslate" translate="no">English</span> ▾
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       2. MAIN GOVERNMENT BRANDING HEADER
+       ========================================================================== -->
+  <header class="main-header">
+    <div class="container header-inner">
+      <div class="brand-section">
+        <!-- State Emblem Representation -->
+        <div class="emblem-wrapper" title="State Emblem of India">
+          <svg class="emblem-icon" viewBox="0 0 100 120" fill="currentColor" aria-hidden="true">
+            <!-- Lion Capital Styled SVG Emblem Silhouette -->
+            <path d="M50,5 C42,5 38,12 38,18 C38,24 42,28 40,32 C38,36 34,38 34,44 C34,50 38,54 42,56 C44,57 46,62 46,68 L44,76 L35,78 L35,82 L65,82 L65,78 L56,76 L54,68 C54,62 56,57 58,56 C62,54 66,50 66,44 C66,38 62,36 60,32 C58,28 62,24 62,18 C62,12 58,5 50,5 Z" opacity="0.85"/>
+            <circle cx="50" cy="92" r="8" fill="none" stroke="currentColor" stroke-width="2"/>
+            <rect x="25" y="104" width="50" height="4" rx="1"/>
+            <rect x="20" y="110" width="60" height="4" rx="1"/>
+            <text x="50" y="101" font-size="5" text-anchor="middle" font-family="serif" font-weight="bold">सत्यमेव जयते</text>
+          </svg>
+        </div>
+
+        <!-- Ministry & Portal Branding -->
+        <div class="brand-titles">
+          <span class="gov-title-hi">भारत सरकार</span>
+          <span class="gov-title-en">Government of India</span>
+          <span class="ministry-title">Ministry of Statistics & Programme Implementation (MoSPI)</span>
+        </div>
+
+        <div class="brand-divider" aria-hidden="true"></div>
+
+        <div class="portal-title-group">
+          <div class="portal-name">निर्देश <span>NIRDESHA</span></div>
+          <div class="portal-tagline">Competency Intelligence & Training Guidance System</div>
+        </div>
+      </div>
+
+      <!-- Right Header Elements: Initiatives & Search -->
+      <div class="header-right">
+        <div class="gov-badge-box" title="Digital India Initiative">
+          <div class="badge-flag-circle"></div>
+          <div>
+            <div style="font-size: 0.7rem; color: #64748b; line-height: 1;">A National Initiative</div>
+            <div style="color: var(--gov-navy); font-weight: 800;">Digital India</div>
+          </div>
+        </div>
+
+        <!-- Portal Search Bar -->
+        <form class="search-form" id="search-form" role="search">
+          <input type="text" class="search-input" id="search-input" placeholder="Search portal / circulars..." aria-label="Search portal">
+          <button type="submit" class="search-btn" aria-label="Search">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       3. PRIMARY NAVIGATION BAR (NAVY BLUE)
+       ========================================================================== -->
+  <nav class="main-nav" aria-label="Primary Navigation">
+    <div class="container nav-bar-inner">
+      <button class="mobile-toggle" id="mobile-toggle" aria-expanded="false" aria-label="Toggle navigation menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+      <ul class="nav-menu" id="nav-menu">
+        <!-- Floating Hover Pill Indicator (Framer Motion layoutId="hover-bg" style) -->
+        <div class="nav-hover-pill" id="nav-hover-pill" aria-hidden="true"></div>
+
+        <!-- 1. Home -->
+        <li class="nav-item active">
+          <a href="#" class="nav-link">
+            <span>Home</span>
+          </a>
+        </li>
+
+        <!-- 2. About Nirdesha -->
+        <li class="nav-item">
+          <button class="nav-link" aria-haspopup="true" aria-expanded="false">
+            <span>About Nirdesha</span>
+            <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="nav-dropdown-wrapper">
+            <div class="nav-dropdown-menu">
+              <div class="dropdown-columns">
+                <div class="dropdown-col">
+                  <span class="dropdown-col-title">Mission & Mandate</span>
+                  <ul class="dropdown-list">
+                    <li>
+                      <a href="#about" class="dropdown-item-link">
+                        <div class="dropdown-icon-box">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                          <span class="dropdown-item-title">Platform Overview</span>
+                          <span class="dropdown-item-desc">Core architecture & national competency objectives</span>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#about" class="dropdown-item-link">
+                        <div class="dropdown-icon-box">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                          <span class="dropdown-item-title">MoSPI & GIGW Standards</span>
+                          <span class="dropdown-item-desc">Certified compliance & government data security</span>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="dropdown-col">
+                  <span class="dropdown-col-title">Institutions</span>
+                  <ul class="dropdown-list">
+                    <li>
+                      <a href="#about" class="dropdown-item-link">
+                        <div class="dropdown-icon-box">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                          <span class="dropdown-item-title">NSSTA Academy Wing</span>
+                          <span class="dropdown-item-desc">National Statistical Systems Training Academy</span>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#about" class="dropdown-item-link">
+                        <div class="dropdown-icon-box">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line></svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                          <span class="dropdown-item-title">Nodal Directory</span>
+                          <span class="dropdown-item-desc">Coordinators across state statistical directorates</span>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- 3. Competency Framework -->
+        <li class="nav-item">
+          <button class="nav-link" aria-haspopup="true" aria-expanded="false">
+            <span>Competency Framework</span>
+            <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="nav-dropdown-wrapper">
+            <div class="nav-dropdown-menu">
+              <div class="dropdown-columns">
+                <div class="dropdown-col">
+                  <span class="dropdown-col-title">Taxonomies & Standards</span>
+                  <ul class="dropdown-list">
+                    <li>
+                      <a href="#framework" class="dropdown-item-link">
+                        <div class="dropdown-icon-box">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                          <span class="dropdown-item-title">Role Mapping Engine</span>
+                          <span class="dropdown-item-desc">Cadre profiling & baseline capability requirements</span>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#framework" class="dropdown-item-link">
+                        <div class="dropdown-icon-box">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                          <span class="dropdown-item-title">Taxonomy Catalog</span>
+                          <span class="dropdown-item-desc">Browse 450+ verified statistical competencies</span>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="dropdown-col">
+                  <span class="dropdown-col-title">Gap Analysis</span>
+                  <ul class="dropdown-list">
+                    <li>
+                      <a href="#framework" class="dropdown-item-link">
+                        <div class="dropdown-icon-box">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                          <span class="dropdown-item-title">Skill-Gap Matrix</span>
+                          <span class="dropdown-item-desc">Objective delta between current skills & role target</span>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#framework" class="dropdown-item-link">
+                        <div class="dropdown-icon-box">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                          <span class="dropdown-item-title">Cadre Requirement CRUD</span>
+                          <span class="dropdown-item-desc">Official departmental requirement matrices</span>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- 4. Training Guidance -->
+        <li class="nav-item">
+          <button class="nav-link" aria-haspopup="true" aria-expanded="false">
+            <span>Training Guidance</span>
+            <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="nav-dropdown-wrapper">
+            <div class="nav-dropdown-menu">
+              <div class="dropdown-columns">
+                <div class="dropdown-col">
+                  <span class="dropdown-col-title">Learning Pathways</span>
+                  <ul class="dropdown-list">
+                    <li>
+                      <a href="#training" class="dropdown-item-link">
+                        <div class="dropdown-icon-box">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                          <span class="dropdown-item-title">Personalized Pathways</span>
+                          <span class="dropdown-item-desc">AI-guided courses targeting identified gap areas</span>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#training" class="dropdown-item-link">
+                        <div class="dropdown-icon-box">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                          <span class="dropdown-item-title">NSSTA Course Catalog</span>
+                          <span class="dropdown-item-desc">Specialized training modules for official statistics</span>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="dropdown-col">
+                  <span class="dropdown-col-title">Guidance Tools</span>
+                  <ul class="dropdown-list">
+                    <li>
+                      <a href="#training" class="dropdown-item-link">
+                        <div class="dropdown-icon-box">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect></svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                          <span class="dropdown-item-title">AI Mentor Guidance</span>
+                          <span class="dropdown-item-desc">Context-injected guidance for civil service officers</span>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#training" class="dropdown-item-link">
+                        <div class="dropdown-icon-box">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line></svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                          <span class="dropdown-item-title">Summary Study Cards</span>
+                          <span class="dropdown-item-desc">Notebook-style summary cards for quick revision</span>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- 5. Assessments -->
+        <li class="nav-item">
+          <button class="nav-link" aria-haspopup="true" aria-expanded="false">
+            <span>Assessments</span>
+            <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="nav-dropdown-wrapper">
+            <div class="nav-dropdown-menu">
+              <div class="dropdown-columns">
+                <div class="dropdown-col">
+                  <span class="dropdown-col-title">Evaluation Engines</span>
+                  <ul class="dropdown-list">
+                    <li>
+                      <a href="#assessments" class="dropdown-item-link">
+                        <div class="dropdown-icon-box">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                          <span class="dropdown-item-title">Timed Diagnostic Tests</span>
+                          <span class="dropdown-item-desc">Fixed-total-time baseline assessment engine</span>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#assessments" class="dropdown-item-link">
+                        <div class="dropdown-icon-box">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                          <span class="dropdown-item-title">Dual-Metric Scoring</span>
+                          <span class="dropdown-item-desc">Confidence score (0-100) & Elo rating updates</span>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="dropdown-col">
+                  <span class="dropdown-col-title">Credentials</span>
+                  <ul class="dropdown-list">
+                    <li>
+                      <a href="#assessments" class="dropdown-item-link">
+                        <div class="dropdown-icon-box">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                          <span class="dropdown-item-title">Verified Certificates</span>
+                          <span class="dropdown-item-desc">Official Nirdesha Achievement Credentials</span>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#assessments" class="dropdown-item-link">
+                        <div class="dropdown-icon-box">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                          <span class="dropdown-item-title">Evaluation Records</span>
+                          <span class="dropdown-item-desc">Historical test logs & candidate score cards</span>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- 6. Reports & Metrics -->
+        <li class="nav-item">
+          <button class="nav-link" aria-haspopup="true" aria-expanded="false">
+            <span>Reports & Metrics</span>
+            <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="nav-dropdown-wrapper">
+            <div class="nav-dropdown-menu">
+              <div class="dropdown-columns">
+                <div class="dropdown-col">
+                  <span class="dropdown-col-title">National Dashboards</span>
+                  <ul class="dropdown-list">
+                    <li>
+                      <a href="#metrics" class="dropdown-item-link">
+                        <div class="dropdown-icon-box">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                          <span class="dropdown-item-title">Capacity Analytics</span>
+                          <span class="dropdown-item-desc">Departmental level competency heatmaps</span>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#metrics" class="dropdown-item-link">
+                        <div class="dropdown-icon-box">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                          <span class="dropdown-item-title">Learning Heatmap</span>
+                          <span class="dropdown-item-desc">Contribution tracking and activity trends</span>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="dropdown-col">
+                  <span class="dropdown-col-title">Rankings & Index</span>
+                  <ul class="dropdown-list">
+                    <li>
+                      <a href="#metrics" class="dropdown-item-link">
+                        <div class="dropdown-icon-box">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line></svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                          <span class="dropdown-item-title">Department Leaderboard</span>
+                          <span class="dropdown-item-desc">Department-scoped & privacy-compliant rankings</span>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#metrics" class="dropdown-item-link">
+                        <div class="dropdown-icon-box">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                          <span class="dropdown-item-title">State Statistical Index</span>
+                          <span class="dropdown-item-desc">Cadre readiness indicators across 28 states & UTs</span>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- 7. Circulars & Orders (Aligned Right to prevent viewport clipping) -->
+        <li class="nav-item">
+          <button class="nav-link" aria-haspopup="true" aria-expanded="false">
+            <span>Circulars & Orders</span>
+            <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="nav-dropdown-wrapper dropdown-right">
+            <div class="nav-dropdown-menu">
+              <div class="dropdown-columns">
+                <div class="dropdown-col">
+                  <span class="dropdown-col-title">Official Gazette</span>
+                  <ul class="dropdown-list">
+                    <li>
+                      <a href="#circulars" class="dropdown-item-link">
+                        <div class="dropdown-icon-box">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                          <span class="dropdown-item-title">Department Circulars</span>
+                          <span class="dropdown-item-desc">Annual training calendars & cadre circulars</span>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#circulars" class="dropdown-item-link">
+                        <div class="dropdown-icon-box">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                          <span class="dropdown-item-title">Office Memorandums</span>
+                          <span class="dropdown-item-desc">Administrative orders and policy notifications</span>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#circulars" class="dropdown-item-link">
+                        <div class="dropdown-icon-box">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                          <span class="dropdown-item-title">SOPs & User Manuals</span>
+                          <span class="dropdown-item-desc">Officer handbooks & testing guides (PDF)</span>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- 8. Helpdesk (Aligned Right) -->
+        <li class="nav-item">
+          <button class="nav-link" aria-haspopup="true" aria-expanded="false">
+            <span>Helpdesk</span>
+            <svg class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="nav-dropdown-wrapper dropdown-right">
+            <div class="nav-dropdown-menu">
+              <div class="dropdown-columns">
+                <div class="dropdown-col">
+                  <span class="dropdown-col-title">Support & Assistance</span>
+                  <ul class="dropdown-list">
+                    <li>
+                      <a href="#contact" class="dropdown-item-link">
+                        <div class="dropdown-icon-box">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                          <span class="dropdown-item-title">Technical Support</span>
+                          <span class="dropdown-item-desc">Direct toll-free helpline & portal assistance</span>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#faq" class="dropdown-item-link">
+                        <div class="dropdown-icon-box">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                          <span class="dropdown-item-title">Frequently Asked Questions</span>
+                          <span class="dropdown-item-desc">Common answers on registration & evaluations</span>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#contact" class="dropdown-item-link">
+                        <div class="dropdown-icon-box">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-8.27 4a2 2 0 0 1-3.46 0"></path></svg>
+                        </div>
+                        <div class="dropdown-item-content">
+                          <span class="dropdown-item-title">Grievance Escalation</span>
+                          <span class="dropdown-item-desc">Official ticket tracking for nodal officers</span>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="login.html#login" class="btn-nav-login" title="Officer Login">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+            <polyline points="10 17 15 12 10 7"></polyline>
+            <line x1="15" y1="12" x2="3" y2="12"></line>
+          </svg>
+          <span>Officer Login</span>
+        </a>
+        <a href="login.html#register" class="btn-nav-signup" title="New Officer Registration">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" y1="8" x2="19" y2="14"></line><line x1="22" y1="11" x2="16" y2="11"></line>
+          </svg>
+          <span>Sign Up</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ==========================================================================
+       4. OFFICIAL CIRCULARS & NOTIFICATIONS TICKER (DYNAMIC ROTATING CYCLE)
+       ========================================================================== -->
+  <div class="ticker-bar" aria-label="Official announcements and updates">
+    <div class="container ticker-inner">
+      <div class="ticker-label">
+        <span class="ticker-pulse-dot" aria-hidden="true"></span>
+        <span>Updates</span>
+      </div>
+
+      <!-- Rotational Viewport (Populated and cycled dynamically via js/script.js) -->
+      <div class="ticker-viewport" id="ticker-viewport" role="region" aria-live="polite" aria-label="Rotating notifications">
+        <div class="ticker-track" id="ticker-track">
+          <!-- Notification items rotate in and out via JavaScript -->
+        </div>
+      </div>
+
+      <!-- Carousel Navigation & State Controls -->
+      <div class="ticker-controls">
+        <span class="ticker-counter notranslate" id="ticker-counter" translate="no" title="Notification index">1 / 5</span>
+        <button class="ticker-btn" id="ticker-prev-btn" title="Previous update" aria-label="Previous update">◀</button>
+        <button class="ticker-btn" id="ticker-toggle-btn" title="Pause / Resume rotation" aria-label="Pause update rotation">❚❚</button>
+        <button class="ticker-btn" id="ticker-next-btn" title="Next update" aria-label="Next update">▶</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       5. MAIN CONTENT AREA (STRICTLY WHITE BACKGROUND)
+       ========================================================================== -->
+  <main id="main-content">
+
+    <!-- HERO SECTION: GOVERNMENT OFFICIAL BANNER -->
+    <section class="hero-gov">
+      <div class="container">
+        <div class="hero-grid">
+          <div>
+            <div class="hero-pill">
+              <span>National Statistical & Governance Capability Initiative</span>
+            </div>
+            <h1 class="hero-heading">
+              Empowering India's Public Workforce with <span class="accent">Competency Intelligence</span>
+            </h1>
+            <p class="hero-subtext">
+              Nirdesha is the official capacity-building platform developed to assess competency baselines, identify role-specific skill gaps, and deliver personalized learning guidance aligned with MoSPI standards.
+            </p>
+
+            <div class="hero-button-group">
+              <a href="login.html" class="btn-gov-primary" title="Access Competency Portal (Login or Register)">
+                <span>Access Competency Portal</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </a>
+              <a href="#circulars" class="btn-gov-secondary">
+                <span>View Guidelines & Circulars</span>
+              </a>
+            </div>
+
+            <div class="hero-features-list">
+              <div class="hero-feature-item">
+                <span class="check-icon">✓</span>
+                <span>Role-Based Profiling</span>
+              </div>
+              <div class="hero-feature-item">
+                <span class="check-icon">✓</span>
+                <span>Evidence-Weighted Scoring</span>
+              </div>
+              <div class="hero-feature-item">
+                <span class="check-icon">✓</span>
+                <span>Nirdesha Verified Certificates</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Official Spotlight Card -->
+          <div class="spotlight-card">
+            <div class="spotlight-header">
+              <div class="spotlight-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                <span>Portal Spotlight</span>
+              </div>
+              <span class="spotlight-badge">Phase 1 Active</span>
+            </div>
+            <div class="spotlight-body">
+              <div class="spotlight-announcement">
+                <strong>Active Assessment Cycle:</strong> Field Statistical Officers and Data Analysts can now verify their role competencies online.
+              </div>
+
+              <div class="spotlight-stat-row">
+                <div class="spotlight-stat">
+                  <div class="stat-label">Mapped Frameworks</div>
+                  <div class="stat-num">48+ Roles</div>
+                </div>
+                <div class="spotlight-stat">
+                  <div class="stat-label">Active Modules</div>
+                  <div class="stat-num">120+ Units</div>
+                </div>
+              </div>
+
+              <div style="font-size: 0.8rem; color: #475569;">
+                <strong>Next Schedule:</strong> Departmental competency review commences on the 15th of this month.
+              </div>
+            </div>
+            <div class="spotlight-footer">
+              <a href="#assessments" style="font-size: 0.825rem; font-weight: 700; color: var(--gov-navy-light);">
+                Take Baseline Diagnostic Assessment →
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         QUICK ACCESS SERVICES SECTION (ENHANCED CARDS & ANIMATED LOGOS)
+         ========================================================================== -->
+    <section class="quick-access-section" id="quick-services">
+      <div class="container">
+        <!-- Section Title & Intro -->
+        <div class="quick-section-header">
+          <span class="section-eyebrow-gov">Public Service Gateways</span>
+          <h2 class="section-title-gov" style="font-size: 1.85rem; margin-bottom: 0.5rem;">Core Operational Capabilities</h2>
+          <p class="section-lead-gov" style="max-width: 680px; margin-inline: auto;">
+            Direct access to official competency diagnostics, workforce mapping, personalized training, and real-time capacity intelligence.
+          </p>
+        </div>
+
+        <div class="quick-grid">
+          <!-- Card 1: Skill Diagnostic (Minimalist Line-Drawing Compass matching user's spec) -->
+          <a href="#assessments" class="quick-card-enhanced card-diagnostic" aria-label="Access Skill Diagnostic Module">
+            <div class="quick-card-header">
+              <span class="quick-badge-tag">Module 01 • Diagnostic</span>
+              <svg class="quick-card-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </div>
+            <div class="quick-icon-wrap">
+              <svg class="anim-compass" width="34" height="34" viewBox="0 0 24 24" fill="none">
+                <!-- Compass Outer Circle Ring (Drawn with stroke-dashoffset animation) -->
+                <path class="compass-ring-draw" d="M12 3c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9c-4.97 0 -9 -4.03 -9 -9c0 -4.97 4.03 -9 9 -9Z" stroke="#0f172a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" pathLength="1" />
+                <!-- Center Pivot Axis Point -->
+                <circle class="compass-pivot-draw" cx="12" cy="12" r="1.5" fill="#ea580c" />
+                <!-- Precision Needle (Expands and rotates 180° into alignment) -->
+                <path class="compass-needle-draw" d="M10.2 10.2l6.8 -3.2l-3.2 6.8l-6.8 3.2Z" fill="#0f172a" stroke="#0f172a" stroke-width="0.5" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <h3 class="quick-card-title">Skill Diagnostic</h3>
+            <p class="quick-card-desc">
+              Evaluate knowledge baselines across core statistical, survey methodology, and analytical competencies with timed assessment accuracy.
+            </p>
+            <span class="quick-action-link">
+              Launch Diagnostic Tool
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </span>
+          </a>
+
+          <!-- Card 2: Role Mapping (Canonical Users Icon: Person Drawn, then Second Person Emerging from Behind) -->
+          <a href="#framework" class="quick-card-enhanced card-role" aria-label="Access Role Mapping Module">
+            <div class="quick-card-header">
+              <span class="quick-badge-tag">Module 02 • Taxonomy</span>
+              <svg class="quick-card-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </div>
+            <div class="quick-icon-wrap">
+              <svg class="anim-people" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <!-- Person 1 (Primary Officer drawn in front) -->
+                <g class="role-front-person">
+                  <circle class="role-head-front" cx="9" cy="7" r="4" pathLength="1" />
+                  <path class="role-body-front" d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" pathLength="1" />
+                </g>
+                <!-- Person 2 (Second Officer emerging smoothly from behind and drawing into view) -->
+                <g class="role-behind-person">
+                  <path class="role-head-behind" d="M16 3.13a4 4 0 0 1 0 7.75" pathLength="1" />
+                  <path class="role-body-behind" d="M22 21v-2a4 4 0 0 0-3-3.87" pathLength="1" />
+                </g>
+              </svg>
+            </div>
+            <h3 class="quick-card-title">Role Mapping</h3>
+            <p class="quick-card-desc">
+              Align individual officer capabilities with official MoSPI role requirements, cadre specifications, and departmental capability profiles.
+            </p>
+            <span class="quick-action-link">
+              Explore Role Mapping
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </span>
+          </a>
+
+          <!-- Card 3: Learning Pathways (Canonical Open Book Icon with Symmetrical Line Drawing) -->
+          <a href="#training" class="quick-card-enhanced card-learning" aria-label="Access Learning Pathways Module">
+            <div class="quick-card-header">
+              <span class="quick-badge-tag">Module 03 • Guidance</span>
+              <svg class="quick-card-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </div>
+            <div class="quick-icon-wrap">
+              <svg class="anim-book" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <!-- Center Book Spine Line -->
+                <line class="book-spine-draw" x1="12" y1="7" x2="12" y2="21" pathLength="1" stroke="#002b49" stroke-width="2" />
+                <!-- Left Open Book Page (Canonical BookOpen geometry) -->
+                <path class="book-left-page-draw" d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" pathLength="1" />
+                <!-- Right Open Book Page (Canonical BookOpen geometry) -->
+                <path class="book-right-page-draw" d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" pathLength="1" />
+              </svg>
+            </div>
+            <h3 class="quick-card-title">Learning Pathways</h3>
+            <p class="quick-card-desc">
+              Access curated personalized training pathways and NSSTA aligned course catalogs tailored to close diagnosed capability gaps.
+            </p>
+            <span class="quick-action-link">
+              View Learning Pathways
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </span>
+          </a>
+
+          <!-- Card 4: Capacity Analysis (Minimalist Line-Drawing Coordinate Graph) -->
+          <a href="#metrics" class="quick-card-enhanced card-capacity" aria-label="Access Capacity Analysis Module">
+            <div class="quick-card-header">
+              <span class="quick-badge-tag">Module 04 • Intelligence</span>
+              <svg class="quick-card-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </div>
+            <div class="quick-icon-wrap">
+              <svg class="anim-graph" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <!-- Coordinate Axes (Drawn L-shape) -->
+                <path class="graph-axis-draw" d="M3 3v18h18" stroke="#002b49" pathLength="1" />
+                <!-- Technical Projection Stems -->
+                <line class="graph-bar-stem" x1="7" y1="21" x2="7" y2="16" stroke="#94a3b8" stroke-width="1.5" pathLength="1" />
+                <line class="graph-bar-stem" x1="12" y1="21" x2="12" y2="11" stroke="#94a3b8" stroke-width="1.5" pathLength="1" />
+                <line class="graph-bar-stem" x1="17" y1="21" x2="17" y2="6" stroke="#94a3b8" stroke-width="1.5" pathLength="1" />
+                <!-- Dynamic Capacity Growth Trajectory Curve -->
+                <polyline class="graph-trend-draw" points="7 16 12 11 17 6 21 6" stroke="#002b49" stroke-width="2.5" pathLength="1" />
+              </svg>
+            </div>
+            <h3 class="quick-card-title">Capacity Analysis</h3>
+            <p class="quick-card-desc">
+              Departmental competency heatmaps, state-level readiness index, and high-impact analytics reporting for administrative leadership.
+            </p>
+            <span class="quick-action-link">
+              Open Capacity Analytics
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CORE MANDATES & FUNCTIONAL MODULES -->
+    <section class="section-gov" id="framework">
+      <div class="container">
+        <div class="section-header-gov">
+          <span class="section-eyebrow-gov">Architectural Pillars</span>
+          <h2 class="section-title-gov">Core Modules of the Nirdesha Framework</h2>
+          <p class="section-lead-gov">
+            Built upon transparent evaluation standards, data integrity, and evidence-weighted guidance protocols.
+          </p>
+        </div>
+
+        <div class="cards-grid-3">
+          <!-- Card 1 -->
+          <div class="gov-card">
+            <div class="card-top-bar"></div>
+            <h3 class="gov-card-title">Competency Engine</h3>
+            <p class="gov-card-text">
+              Maintains standardized competency taxonomies across administrative, statistical, survey methodology, and data analysis cadres. Identifies precise gaps between current capabilities and departmental requirements.
+            </p>
+            <a href="#framework" class="gov-card-link">Explore Taxonomy Standards →</a>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="gov-card">
+            <div class="card-top-bar"></div>
+            <h3 class="gov-card-title">Dual-Metric Rating System</h3>
+            <p class="gov-card-text">
+              Maintains clear separation between <em>Skill Confidence Score</em> (0-100 evidence-weighted) and <em>Competitive Assessment Rating</em> (Elo-style update formula with decay), guaranteeing impartial proficiency records.
+            </p>
+            <a href="#assessments" class="gov-card-link">Read Rating Specification →</a>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="gov-card">
+            <div class="card-top-bar"></div>
+            <h3 class="gov-card-title">Personalized Guidance</h3>
+            <p class="gov-card-text">
+              Delivers dynamic training recommendations mapped to NSSTA and official training curriculums, preventing redundant instruction and accelerating critical capability development.
+            </p>
+            <a href="#training" class="gov-card-link">View Guidance Methodology →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NATIONAL METRICS COUNTER -->
+    <section class="metrics-section" id="metrics">
+      <div class="container">
+        <div class="metrics-box">
+          <div class="metric-item">
+            <div class="metric-number metric-stopwatch" data-target="18500" data-suffix="+" data-start="1">1</div>
+            <div class="metric-label">Registered Officers</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-number metric-stopwatch" data-target="450" data-suffix="+" data-start="1">1</div>
+            <div class="metric-label">Competencies Mapped</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-number metric-stopwatch" data-target="95" data-suffix="%" data-start="1">1%</div>
+            <div class="metric-label">Guidance Alignment</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-number metric-stopwatch" data-target="36" data-suffix="" data-start="1">1</div>
+            <div class="metric-label">States & UTs Covered</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CIRCULARS, NOTIFICATIONS & ORDERS (TABBED COMPONENT) -->
+    <section class="section-gov" id="circulars">
+      <div class="container">
+        <div class="section-header-gov">
+          <span class="section-eyebrow-gov">Official Gazette</span>
+          <h2 class="section-title-gov">Circulars, Notifications & Guidelines</h2>
+          <p class="section-lead-gov">Access recent departmental communications, orders, and training policy directives.</p>
+        </div>
+
+        <div class="tabs-gov">
+          <div class="tabs-nav" role="tablist">
+            <button class="tab-btn active" data-tab="tab-circulars" role="tab">Circulars (2026)</button>
+            <button class="tab-btn" data-tab="tab-notifications" role="tab">Office Memorandums</button>
+            <button class="tab-btn" data-tab="tab-guidelines" role="tab">User Manuals & FAQs</button>
+          </div>
+
+          <!-- Tab 1: Circulars -->
+          <div class="tab-pane active" id="tab-circulars" role="tabpanel">
+            <ul class="notification-list">
+              <li class="notification-item">
+                <div>
+                  <a href="#download" class="notification-link">MoSPI/TRG/2026/04: Onboarding of Field Officers onto the Nirdesha Competency Portal.</a>
+                  <span class="notification-badge">NEW</span>
+                </div>
+                <span class="notification-date">01 Sep 2026</span>
+              </li>
+              <li class="notification-item">
+                <div>
+                  <a href="#download" class="notification-link">MoSPI/STAT/2026/18: Guidelines for standardized statistical survey competency assessment.</a>
+                </div>
+                <span class="notification-date">24 Aug 2026</span>
+              </li>
+              <li class="notification-item">
+                <div>
+                  <a href="#download" class="notification-link">MoSPI/NSSTA/2026/02: Calendar of specialized training courses for the upcoming quarter.</a>
+                </div>
+                <span class="notification-date">10 Aug 2026</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Tab 2: Office Memorandums -->
+          <div class="tab-pane" id="tab-notifications" role="tabpanel">
+            <ul class="notification-list">
+              <li class="notification-item">
+                <div>
+                  <a href="#download" class="notification-link">OM No. 12/2026-Estt: Nomination of nodal officers for competency verification.</a>
+                  <span class="notification-badge">IMPORTANT</span>
+                </div>
+                <span class="notification-date">18 Aug 2026</span>
+              </li>
+              <li class="notification-item">
+                <div>
+                  <a href="#download" class="notification-link">OM No. 09/2026-Trg: Integration of e-learning credits into annual capacity registers.</a>
+                </div>
+                <span class="notification-date">05 Aug 2026</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Tab 3: Guidelines -->
+          <div class="tab-pane" id="tab-guidelines" role="tabpanel">
+            <ul class="notification-list">
+              <li class="notification-item">
+                <div>
+                  <a href="#download" class="notification-link">Standard Operating Procedure (SOP) for Officer Profile Verification v1.2 (PDF, 1.4 MB).</a>
+                </div>
+                <span class="notification-date">PDF Document</span>
+              </li>
+              <li class="notification-item">
+                <div>
+                  <a href="#download" class="notification-link">Candidate Guide: How to navigate the timed competency diagnostic module.</a>
+                </div>
+                <span class="notification-date">User Guide</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HELPDESK & NODAL SUPPORT STRIP -->
+    <section class="section-gov" id="contact" style="padding-top: 0;">
+      <div class="container">
+        <div class="mandate-banner">
+          <div class="mandate-text">
+            <h3>Need Assistance with Departmental Onboarding?</h3>
+            <p>
+              The Nirdesha Technical Helpdesk is available Monday through Friday (09:30 AM to 05:30 PM IST). Registered nodal officers can also raise tickets via the central grievance portal.
+            </p>
+          </div>
+          <div>
+            <a href="mailto:support-nirdesha@gov.in" class="btn-gov-primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+              <span>Contact Support Desk</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       6. FOOTER (STRICTLY BLACK BACKGROUND AS REQUESTED)
+       ========================================================================== -->
+  <footer class="footer-gov">
+    <div class="container">
+      <div class="footer-top-grid">
+        <!-- Brand & Description -->
+        <div>
+          <div class="footer-brand-title">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gov-saffron)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+            <span>निर्देश NIRDESHA</span>
+          </div>
+          <p class="footer-brand-text">
+            National Competency-Intelligence and Training Guidance Platform. Designed for MoSPI and SIH-aligned administrative capacity building workflows.
+          </p>
+          <p style="font-size: 0.8rem; color: #71717a;">
+            Ministry of Statistics and Programme Implementation<br>
+            Khurshid Lal Bhawan, Janpath, New Delhi - 110001
+          </p>
+        </div>
+
+        <!-- Navigation Links -->
+        <div>
+          <h4 class="footer-col-title">Portal Navigation</h4>
+          <ul class="footer-links">
+            <li><a href="#about" class="footer-link">About Portal</a></li>
+            <li><a href="#framework" class="footer-link">Competency Taxonomies</a></li>
+            <li><a href="#assessments" class="footer-link">Assessment Guidelines</a></li>
+            <li><a href="#training" class="footer-link">Training Pathways</a></li>
+            <li><a href="#circulars" class="footer-link">Circulars & Orders</a></li>
+          </ul>
+        </div>
+
+        <!-- External Government Portals -->
+        <div>
+          <h4 class="footer-col-title">Government Links</h4>
+          <ul class="footer-links">
+            <li><a href="https://india.gov.in" target="_blank" rel="noopener" class="footer-link">National Portal of India</a></li>
+            <li><a href="https://mospi.gov.in" target="_blank" rel="noopener" class="footer-link">MoSPI Official Website</a></li>
+            <li><a href="https://digitalindia.gov.in" target="_blank" rel="noopener" class="footer-link">Digital India</a></li>
+            <li><a href="https://mygov.in" target="_blank" rel="noopener" class="footer-link">MyGov Platform</a></li>
+            <li><a href="https://data.gov.in" target="_blank" rel="noopener" class="footer-link">Open Government Data (OGD)</a></li>
+          </ul>
+        </div>
+
+        <!-- Help & Information -->
+        <div>
+          <h4 class="footer-col-title">Help & Support</h4>
+          <ul class="footer-links">
+            <li><a href="#contact" class="footer-link">Technical Support</a></li>
+            <li><a href="#faq" class="footer-link">Frequently Asked Questions</a></li>
+            <li><a href="#sitemap" class="footer-link">Portal Sitemap</a></li>
+            <li><a href="#feedback" class="footer-link">Feedback / Grievances</a></li>
+            <li><a href="#disclaimer" class="footer-link">Accessibility Statement</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Mandatory GIGW Government Policies Ribbon -->
+      <div class="footer-policies-bar">
+        <ul class="policies-list">
+          <li><a href="#terms">Terms of Use</a></li>
+          <li><a href="#privacy">Privacy Policy</a></li>
+          <li><a href="#copyright">Copyright Policy</a></li>
+          <li><a href="#hyperlink">Hyperlinking Policy</a></li>
+          <li><a href="#security">Security Policy</a></li>
+          <li><a href="#disclaimer">Disclaimer</a></li>
+          <li><a href="#help">Help</a></li>
+        </ul>
+      </div>
+
+      <!-- Mandatory NIC & Government Attribution -->
+      <div class="footer-bottom">
+        <p>
+          Website Content Managed by <strong>Ministry of Statistics and Programme Implementation, Government of India</strong>.
+        </p>
+        <p>
+          Designed, Developed and Hosted by <strong>Nirdesha Technology & Research Unit / National Informatics Centre (NIC)</strong>.
+        </p>
+        <div class="footer-meta-info">
+          <span>Last Updated: <strong>02 September 2026</strong></span>
+          <span>•</span>
+          <span>Page Visitors: <strong>00184290</strong></span>
+          <span>•</span>
+          <span>Compliant with <strong>GIGW 3.0 (Quality Certified)</strong></span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating Back to Top Button -->
+  <button class="back-to-top" id="back-to-top" title="Back to top of page" aria-label="Back to top">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+  </button>
+
+  <!-- ==========================================================================
+       REGIONAL LANGUAGE SELECTION MODAL (GIGW & BHASHINI COMPLIANT)
+       Protected with class="notranslate" and translate="no" so language names remain authentic
+       ========================================================================== -->
+  <div class="lang-modal-backdrop notranslate" id="lang-modal" translate="no" role="dialog" aria-modal="true" aria-labelledby="lang-modal-title" aria-hidden="true">
+    <div class="lang-modal-dialog notranslate" translate="no">
+      <div class="lang-modal-header notranslate" translate="no">
+        <div class="lang-modal-title-group notranslate" translate="no">
+          <h3 id="lang-modal-title" class="notranslate" translate="no">
+            <span>🌐</span> Select Your Regional Language | अपनी भाषा चुनें
+          </h3>
+          <p class="lang-modal-subtitle notranslate" translate="no">
+            National Competency Intelligence & Guidance Platform — MoSPI, Government of India
+          </p>
+        </div>
+        <button class="lang-modal-close-btn notranslate" id="lang-modal-close" translate="no" aria-label="Close language selector">&times;</button>
+      </div>
+
+      <div class="lang-modal-search notranslate" translate="no">
+        <div class="lang-search-wrap notranslate" translate="no">
+          <svg class="lang-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" class="lang-search-input notranslate" id="lang-search" translate="no" placeholder="Search language (e.g. Marathi, Telugu, Tamil, Hindi, বাংলা)..." aria-label="Search Indian language">
+        </div>
+      </div>
+
+      <div class="lang-modal-body notranslate" translate="no">
+        <div class="lang-grid notranslate" id="lang-grid" translate="no">
+          <!-- Rendered dynamically via js/script.js with Indian scheduled languages -->
+        </div>
+      </div>
+
+      <div class="lang-modal-footer notranslate" translate="no">
+        <div class="lang-footer-hint notranslate" translate="no">
+          Default language is English. Selection auto-translates the entire portal and saves your preference.
+        </div>
+        <div class="lang-actions-group notranslate" translate="no">
+          <button class="btn-lang-cancel notranslate" id="lang-cancel-btn" translate="no">Cancel</button>
+          <button class="btn-lang-apply notranslate" id="lang-apply-btn" translate="no">Apply Language</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       FIRST-TIME VISITOR FLOATING REGIONAL LANGUAGE PROMPT
+       ========================================================================== -->
+  <aside class="lang-floating-prompt notranslate" id="lang-floating-prompt" translate="no" style="display: none;" aria-label="Regional language selection prompt">
+    <div class="prompt-icon notranslate" translate="no">🌐</div>
+    <div class="prompt-content notranslate" translate="no">
+      <div class="prompt-title notranslate" translate="no">Select your regional language?</div>
+      <div class="prompt-sub notranslate" translate="no">Read this portal in Hindi, Marathi, Telugu, Tamil, Bengali, or other Indian languages.</div>
+      <div class="prompt-actions notranslate" translate="no">
+        <button class="prompt-btn-choose notranslate" id="prompt-choose-btn" translate="no">Choose Language</button>
+        <button class="prompt-btn-dismiss notranslate" id="prompt-dismiss-btn" translate="no">Continue in English</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Google Translate Hidden Element & CDN Script -->
+  <div id="google_translate_element" style="display: none;" aria-hidden="true"></div>
+  <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" defer></script>
+
+</body>
+</html>

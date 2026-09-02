@@ -1,0 +1,667 @@
+﻿/* ==========================================================================
+   NIRDESHA — GOVERNMENT PORTAL AUTHENTICATION DESIGN SYSTEM
+   Login & New Officer Registration Interface
+   ========================================================================== */
+
+.auth-page-wrapper {
+  min-height: calc(100vh - 120px);
+  background-color: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 1120px;
+  margin: 2.5rem auto 3.5rem auto;
+  padding-inline: 1.25rem;
+}
+
+/* Back Link Header */
+.auth-nav-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #002b49;
+  text-decoration: none;
+  margin-bottom: 1.5rem;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.auth-nav-back:hover {
+  color: #ea580c;
+  transform: translateX(-3px);
+  text-decoration: none;
+}
+
+/* Two-Column Auth Layout */
+.auth-layout-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 960px) {
+  .auth-layout-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Main Card (Sharp Edges, Government Authority) */
+.auth-main-card {
+  background-color: #ffffff;
+  border: 1.5px solid #002b49;
+  border-radius: 0px !important;
+  box-shadow: 6px 6px 0px #002b49;
+  overflow: hidden;
+}
+
+/* Auth Tabs Navigation */
+.auth-tabs-nav {
+  display: flex;
+  background-color: #f1f5f9;
+  border-bottom: 1.5px solid #002b49;
+}
+
+.auth-tab-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 1rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #64748b;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.auth-tab-btn:hover {
+  color: #002b49;
+  background-color: #e2e8f0;
+}
+
+.auth-tab-btn.active {
+  background-color: #ffffff;
+  color: #002b49;
+  border-bottom: 3px solid #ea580c;
+}
+
+.auth-tab-btn.active .auth-tab-icon {
+  color: #ea580c;
+}
+
+.auth-tab-icon {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Auth Card Body */
+.auth-card-body {
+  padding: 2rem 2.25rem;
+}
+
+@media (max-width: 600px) {
+  .auth-card-body {
+    padding: 1.25rem;
+  }
+}
+
+.auth-panel {
+  display: none;
+}
+
+.auth-panel.active {
+  display: block;
+  animation: fadeInAuth 0.25s ease-out;
+}
+
+@keyframes fadeInAuth {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.auth-panel-heading {
+  margin-bottom: 1.5rem;
+}
+
+.auth-panel-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 0.35rem;
+}
+
+.auth-panel-subtitle {
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+/* Government SSO Quick Access Box */
+.sso-section {
+  margin-bottom: 1.75rem;
+}
+
+.sso-btn-parichay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: #ffffff;
+  border: 1.5px solid #002b49;
+  border-radius: 0px !important;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #002b49;
+  cursor: pointer;
+  box-shadow: 2px 2px 0px #002b49;
+  transition: all 0.15s ease;
+}
+
+.sso-btn-parichay:hover {
+  background: #f8fafc;
+  box-shadow: 4px 4px 0px #002b49;
+  transform: translateY(-1px);
+}
+
+.sso-badge-tricolor {
+  width: 16px;
+  height: 12px;
+  border: 1px solid #cbd5e1;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+.sso-badge-tricolor span:nth-child(1) { background: #ff9933; height: 33.3%; }
+.sso-badge-tricolor span:nth-child(2) { background: #ffffff; height: 33.3%; }
+.sso-badge-tricolor span:nth-child(3) { background: #138808; height: 33.3%; }
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  margin-block: 1.5rem;
+  color: #64748b;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.auth-divider span {
+  padding-inline: 0.75rem;
+}
+
+/* Login Mode Pill Selector (Password vs OTP) */
+.auth-mode-toggle {
+  display: flex;
+  background: #f1f5f9;
+  padding: 0.25rem;
+  border: 1px solid #cbd5e1;
+  margin-bottom: 1.25rem;
+}
+
+.auth-mode-btn {
+  flex: 1;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #475569;
+  background: transparent;
+  border: none;
+  border-radius: 0px !important;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.auth-mode-btn.active {
+  background: #002b49;
+  color: #ffffff;
+}
+
+/* Forms & Input Groups */
+.form-group-gov {
+  margin-bottom: 1.15rem;
+}
+
+.form-label-gov {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.4rem;
+}
+
+.form-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.form-input-icon {
+  position: absolute;
+  left: 0.85rem;
+  color: #64748b;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+
+.form-input-gov {
+  width: 100%;
+  padding: 0.65rem 0.85rem 0.65rem 2.5rem;
+  font-size: 0.875rem;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 0px !important;
+  background-color: #ffffff;
+  color: #0f172a;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-input-gov:focus {
+  outline: none;
+  border-color: #002b49;
+  box-shadow: 0 0 0 2px rgba(0, 43, 73, 0.15);
+}
+
+.form-input-gov::placeholder {
+  color: #94a3b8;
+  font-size: 0.825rem;
+}
+
+.form-input-toggle-btn {
+  position: absolute;
+  right: 0.65rem;
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+}
+
+.form-input-toggle-btn:hover {
+  color: #002b49;
+}
+
+/* Captcha Block */
+.captcha-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.65rem;
+}
+
+.captcha-display {
+  flex-shrink: 0;
+  background: #f8fafc;
+  border: 1.5px dashed #002b49;
+  padding: 0.45rem 1rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #002b49;
+  letter-spacing: 0.3em;
+  user-select: none;
+  text-decoration: line-through;
+}
+
+.captcha-refresh-btn {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #002b49;
+  padding: 0.5rem;
+  border-radius: 0px !important;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.captcha-refresh-btn:hover {
+  background: #e2e8f0;
+}
+
+/* Remember / Forgot Links */
+.form-options-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.35rem;
+  font-size: 0.8rem;
+}
+
+.checkbox-label-gov {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #334155;
+  cursor: pointer;
+}
+
+.checkbox-label-gov input {
+  accent-color: #002b49;
+  width: 15px;
+  height: 15px;
+}
+
+.form-link-gov {
+  color: #002b49;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.form-link-gov:hover {
+  color: #ea580c;
+  text-decoration: underline;
+}
+
+/* Primary Auth Submit Button */
+.btn-auth-submit {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 0.85rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  background-color: #002b49;
+  color: #ffffff;
+  border: 1.5px solid #002b49;
+  border-radius: 0px !important;
+  cursor: pointer;
+  box-shadow: 4px 4px 0px #ea580c;
+  transition: all 0.15s ease;
+}
+
+.btn-auth-submit:hover {
+  background-color: #001a2e;
+  box-shadow: 6px 6px 0px #ea580c;
+  transform: translateY(-1px);
+}
+
+/* Registration Grid Inputs */
+.form-row-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 600px) {
+  .form-row-2col {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
+/* Select Inputs */
+.form-select-gov {
+  width: 100%;
+  padding: 0.65rem 0.85rem 0.65rem 2.5rem;
+  font-size: 0.875rem;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 0px !important;
+  background-color: #ffffff;
+  color: #0f172a;
+  cursor: pointer;
+  appearance: auto;
+}
+
+.form-select-gov:focus {
+  outline: none;
+  border-color: #002b49;
+}
+
+/* Side Advisory Information Panel */
+.auth-side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.auth-info-card {
+  background-color: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  border-left: 4px solid #002b49;
+  padding: 1.25rem;
+  border-radius: 0px !important;
+}
+
+.auth-info-card.warning-style {
+  background-color: #fffbeb;
+  border-color: #fde68a;
+  border-left-color: #d97706;
+}
+
+.auth-info-header {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+}
+
+.auth-info-text {
+  font-size: 0.8rem;
+  color: #475569;
+  line-height: 1.55;
+}
+
+.auth-checklist {
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0 0 0;
+}
+
+.auth-checklist li {
+  font-size: 0.775rem;
+  color: #334155;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  margin-bottom: 0.4rem;
+}
+
+.auth-checklist li span.bullet {
+  color: #ea580c;
+  font-weight: 800;
+}
+
+/* Helpdesk Assistance Box */
+.auth-helpdesk-card {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  padding: 1.15rem;
+  font-size: 0.8rem;
+  border-radius: 0px !important;
+}
+
+.helpdesk-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.35rem;
+  color: #002b49;
+  font-weight: 700;
+}
+
+/* Feedback Status Alert */
+.auth-alert {
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+  border-radius: 0px !important;
+  font-size: 0.825rem;
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.auth-alert.show {
+  display: flex;
+}
+
+.auth-alert.alert-success {
+  background-color: #dcfce7;
+  color: #166534;
+  border: 1px solid #86efac;
+}
+
+.auth-alert.alert-error {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+/* ==========================================================================
+   DARK THEME OVERRIDES FOR AUTH PAGE ([data-theme="dark"])
+   ========================================================================== */
+[data-theme="dark"] .auth-main-card {
+  background-color: #111827;
+  border-color: #334155;
+  box-shadow: 6px 6px 0px #070b13;
+}
+
+[data-theme="dark"] .auth-tabs-nav {
+  background-color: #0f172a;
+  border-bottom-color: #334155;
+}
+
+[data-theme="dark"] .auth-tab-btn {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .auth-tab-btn:hover {
+  background-color: #1e293b;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .auth-tab-btn.active {
+  background-color: #111827;
+  color: #38bdf8;
+  border-bottom-color: #ea580c;
+}
+
+[data-theme="dark"] .auth-panel-title {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .auth-panel-subtitle {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .sso-btn-parichay {
+  background-color: #0f172a;
+  border-color: #334155;
+  color: #f8fafc;
+  box-shadow: 2px 2px 0px #070b13;
+}
+
+[data-theme="dark"] .sso-btn-parichay:hover {
+  background-color: #1e293b;
+  border-color: #38bdf8;
+}
+
+[data-theme="dark"] .auth-mode-toggle {
+  background-color: #0f172a;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .auth-mode-btn {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .auth-mode-btn.active {
+  background-color: #1e293b;
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .form-label-gov {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .form-input-gov,
+[data-theme="dark"] .form-select-gov {
+  background-color: #0f172a;
+  border-color: #334155;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .form-input-gov:focus,
+[data-theme="dark"] .form-select-gov:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+}
+
+[data-theme="dark"] .captcha-display {
+  background-color: #0f172a;
+  border-color: #38bdf8;
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .captcha-refresh-btn {
+  background-color: #1e293b;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .checkbox-label-gov {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .form-link-gov {
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .auth-info-card {
+  background-color: #111827;
+  border-color: #334155;
+  border-left-color: #38bdf8;
+}
+
+[data-theme="dark"] .auth-info-header {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .auth-info-text {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .auth-checklist li {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .auth-info-card.warning-style {
+  background-color: #1c1917;
+  border-color: #44403c;
+  border-left-color: #f59e0b;
+}
+
+[data-theme="dark"] .auth-helpdesk-card {
+  background-color: #111827;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .auth-nav-back {
+  color: #38bdf8;
+}

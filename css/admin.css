@@ -1,0 +1,958 @@
+﻿/* ==========================================================================
+   NIRDESHA — ADMIN DASHBOARD DESIGN SYSTEM
+   Sidebar Layout, Command Center, Course Catalog, AI Mentor, Profile & Settings
+   ========================================================================== */
+
+:root {
+  --admin-sidebar-w: 260px;
+  --admin-sidebar-bg: #002b49;
+  --admin-sidebar-hover: #001a2e;
+  --admin-sidebar-active: #001524;
+  --admin-text-light: #f8fafc;
+  --admin-text-dim: #94a3b8;
+  --admin-accent: #ea580c;
+  --admin-border: #e2e8f0;
+  --admin-card-bg: #ffffff;
+}
+
+body.admin-body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background-color: #f8fafc;
+  color: #0f172a;
+  min-height: 100vh;
+  display: flex;
+  overflow-x: hidden;
+}
+
+/* App Shell Layout */
+.admin-shell {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* ==========================================================================
+   1. LEFT SIDEBAR (STICKY, SHARP, AUTHORITATIVE)
+   ========================================================================== */
+.admin-sidebar {
+  width: var(--admin-sidebar-w);
+  background-color: var(--admin-sidebar-bg);
+  color: var(--admin-text-light);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  border-right: 1.5px solid #001a2e;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Sidebar Brand Header */
+.admin-sidebar-header {
+  padding: 1.25rem 1.25rem 1rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.admin-emblem-icon {
+  width: 34px;
+  height: 42px;
+  color: #ea580c;
+  flex-shrink: 0;
+}
+
+.admin-brand-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-brand-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  line-height: 1.1;
+}
+
+.admin-brand-title span {
+  color: #ea580c;
+}
+
+.admin-brand-sub {
+  font-size: 0.675rem;
+  color: #94a3b8;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 0.2rem;
+}
+
+/* Sidebar Navigation Items */
+.admin-sidebar-nav {
+  flex: 1;
+  padding: 1rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  overflow-y: auto;
+}
+
+.admin-nav-category {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #64748b;
+  font-weight: 800;
+  padding: 0.6rem 0.75rem 0.3rem 0.75rem;
+}
+
+.admin-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 0.85rem;
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 0px !important;
+  border-left: 3px solid transparent;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.admin-nav-item:hover {
+  background-color: var(--admin-sidebar-hover);
+  color: #ffffff;
+  text-decoration: none;
+  border-left-color: #ea580c;
+}
+
+.admin-nav-item.active {
+  background-color: var(--admin-sidebar-active);
+  color: #ffffff;
+  border-left-color: #ea580c;
+  font-weight: 700;
+}
+
+.admin-nav-icon {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: inherit;
+}
+
+.admin-nav-badge {
+  margin-left: auto;
+  font-size: 0.675rem;
+  font-weight: 800;
+  background-color: #ea580c;
+  color: #ffffff;
+  padding: 0.15rem 0.45rem;
+  border-radius: 0px !important;
+}
+
+/* Sidebar Footer / User Profile & Sign Out */
+.admin-sidebar-bottom {
+  padding: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.admin-user-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0px !important;
+  margin-top: 0.35rem;
+}
+
+.admin-avatar {
+  width: 34px;
+  height: 34px;
+  background-color: #ea580c;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0px !important;
+  flex-shrink: 0;
+}
+
+.admin-user-details {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.admin-user-name {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-user-role {
+  font-size: 0.675rem;
+  color: #94a3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-nav-item.nav-signout {
+  color: #f87171;
+}
+
+.admin-nav-item.nav-signout:hover {
+  background-color: #450a0a;
+  color: #fca5a5;
+  border-left-color: #ef4444;
+}
+
+/* ==========================================================================
+   2. MAIN WORKSPACE (RIGHT OF SIDEBAR)
+   ========================================================================== */
+.admin-main {
+  margin-left: var(--admin-sidebar-w);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 100vh;
+}
+
+/* Top Command Bar */
+.admin-topbar {
+  background-color: #ffffff;
+  height: 64px;
+  border-bottom: 1.5px solid var(--admin-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: 1.75rem;
+  position: sticky;
+  top: 0;
+  z-index: 90;
+}
+
+.admin-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  max-width: 480px;
+}
+
+.admin-mobile-btn {
+  display: none;
+  background: none;
+  border: 1px solid #cbd5e1;
+  padding: 0.4rem;
+  cursor: pointer;
+  border-radius: 0px;
+}
+
+.admin-search-wrap {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.admin-search-icon {
+  position: absolute;
+  left: 0.85rem;
+  color: #64748b;
+  pointer-events: none;
+}
+
+.admin-search-input {
+  width: 100%;
+  padding: 0.5rem 0.85rem 0.5rem 2.4rem;
+  font-size: 0.85rem;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 0px !important;
+  background: #f8fafc;
+  color: #0f172a;
+  transition: all 0.15s ease;
+}
+
+.admin-search-input:focus {
+  outline: none;
+  background: #ffffff;
+  border-color: #002b49;
+  box-shadow: 0 0 0 2px rgba(0, 43, 73, 0.1);
+}
+
+.admin-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.admin-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.75rem;
+  background-color: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #065f46;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 0px !important;
+}
+
+.status-dot-pulse {
+  width: 7px;
+  height: 7px;
+  background-color: #10b981;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
+}
+
+.btn-admin-action {
+  background: #002b49;
+  color: #ffffff;
+  border: 1.5px solid #002b49;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  padding: 0.45rem 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  border-radius: 0px !important;
+  box-shadow: 2px 2px 0px #ea580c;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+.btn-admin-action:hover {
+  background: #001a2e;
+  box-shadow: 3px 3px 0px #ea580c;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* Main Content Workspace Padding */
+.admin-content-area {
+  padding: 1.75rem;
+  flex: 1;
+}
+
+/* Tab Views Manager */
+.admin-view-tab {
+  display: none;
+}
+
+.admin-view-tab.active {
+  display: block;
+  animation: adminFade 0.2s ease-out;
+}
+
+@keyframes adminFade {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   3. VIEW: DASHBOARD COMMAND OVERVIEW
+   ========================================================================== */
+.admin-welcome-banner {
+  background: linear-gradient(135deg, #002b49 0%, #001a2e 100%);
+  color: #ffffff;
+  padding: 1.75rem 2rem;
+  border-radius: 0px !important;
+  box-shadow: 4px 4px 0px #ea580c;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.welcome-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.35rem;
+}
+
+.welcome-sub {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  max-width: 600px;
+  line-height: 1.5;
+}
+
+.welcome-badges {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.welcome-badge-item {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 0px !important;
+}
+
+/* 4-Column KPI Metric Cards */
+.admin-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 1100px) {
+  .admin-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .admin-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.admin-metric-card {
+  background: #ffffff;
+  border: 1.5px solid #002b49;
+  border-radius: 0px !important;
+  box-shadow: 4px 4px 0px #002b49;
+  padding: 1.35rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.admin-metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 6px 6px 0px #002b49;
+}
+
+.metric-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.metric-label-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.metric-icon-box {
+  width: 32px;
+  height: 32px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #002b49;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0px !important;
+}
+
+.metric-val-large {
+  font-size: 1.85rem;
+  font-weight: 900;
+  color: #0f172a;
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.metric-footer-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.725rem;
+  font-weight: 700;
+  color: #15803d;
+}
+
+/* 2-Column Split: Courses & AI Mentor Section */
+.admin-split-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 1024px) {
+  .admin-split-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Card Wrappers */
+.admin-panel-card {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 0px !important;
+  box-shadow: 3px 3px 0px #cbd5e1;
+  overflow: hidden;
+}
+
+.panel-header {
+  padding: 1rem 1.25rem;
+  background: #f8fafc;
+  border-bottom: 1.5px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.panel-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #002b49;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.panel-body {
+  padding: 1.25rem;
+}
+
+/* Course Snapshot List in Dashboard */
+.course-mini-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.15s ease;
+}
+
+.course-mini-item:last-child {
+  border-bottom: none;
+}
+
+.course-mini-item:hover {
+  background: #f8fafc;
+}
+
+.course-mini-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.course-mini-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.course-mini-meta {
+  font-size: 0.725rem;
+  color: #64748b;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.course-progress-bar {
+  width: 90px;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 0px;
+  overflow: hidden;
+}
+
+.course-progress-fill {
+  height: 100%;
+  background: #002b49;
+}
+
+/* AI Mentor Quick Interaction Card */
+.ai-mentor-box {
+  background: #f8fafc;
+  border: 1.5px solid #002b49;
+  border-left: 4px solid #ea580c;
+  border-radius: 0px !important;
+  padding: 1.15rem;
+  margin-bottom: 1rem;
+}
+
+.ai-mentor-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: #002b49;
+  margin-bottom: 0.4rem;
+}
+
+.ai-mentor-prompt-chips {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-block: 0.75rem;
+}
+
+.prompt-chip-btn {
+  text-align: left;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 0px !important;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.775rem;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.prompt-chip-btn:hover {
+  border-color: #ea580c;
+  color: #ea580c;
+  background: #fff7ed;
+}
+
+/* Cadre Assessment Records Table */
+.admin-table-wrap {
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.825rem;
+  text-align: left;
+}
+
+.admin-table th {
+  background: #f8fafc;
+  color: #475569;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.75rem 1rem;
+  border-bottom: 1.5px solid #cbd5e1;
+  font-size: 0.725rem;
+}
+
+.admin-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  color: #1e293b;
+}
+
+.admin-table tr:hover td {
+  background: #f8fafc;
+}
+
+.badge-status-cert {
+  background: #dcfce7;
+  color: #166534;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  border-radius: 0px;
+}
+
+.badge-status-prog {
+  background: #fef3c7;
+  color: #92400e;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  border-radius: 0px;
+}
+
+/* ==========================================================================
+   4. VIEW: FULL COURSES & LEARNING PATHWAYS
+   ========================================================================== */
+.courses-filter-bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-pill-btn {
+  padding: 0.45rem 0.95rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 0px !important;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.filter-pill-btn.active,
+.filter-pill-btn:hover {
+  background: #002b49;
+  color: #ffffff;
+  border-color: #002b49;
+}
+
+.courses-catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+  .courses-catalog-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .courses-catalog-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.course-card-gov {
+  background: #ffffff;
+  border: 1.5px solid #002b49;
+  border-radius: 0px !important;
+  box-shadow: 4px 4px 0px #002b49;
+  padding: 1.35rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.15s ease;
+}
+
+.course-card-gov:hover {
+  transform: translateY(-2px);
+  box-shadow: 6px 6px 0px #ea580c;
+}
+
+.course-badge-code {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #ea580c;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.35rem;
+}
+
+.course-card-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.course-card-desc {
+  font-size: 0.8rem;
+  color: #64748b;
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+}
+
+.course-card-footer {
+  border-top: 1px solid #f1f5f9;
+  padding-top: 0.85rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ==========================================================================
+   5. VIEW: INTERACTIVE AI MENTOR CHAT INTERFACE
+   ========================================================================== */
+.ai-chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 640px;
+  background: #ffffff;
+  border: 1.5px solid #002b49;
+  border-radius: 0px !important;
+  box-shadow: 5px 5px 0px #002b49;
+  overflow: hidden;
+}
+
+.ai-chat-header {
+  padding: 1rem 1.5rem;
+  background: #002b49;
+  color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ai-chat-title {
+  font-size: 1rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.ai-chat-log {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: #f8fafc;
+}
+
+.chat-bubble {
+  max-width: 80%;
+  padding: 0.85rem 1.15rem;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  border-radius: 0px !important;
+}
+
+.chat-bubble.bot {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-left: 4px solid #ea580c;
+  color: #0f172a;
+  align-self: flex-start;
+  box-shadow: 2px 2px 0px rgba(0,0,0,0.05);
+}
+
+.chat-bubble.user {
+  background: #002b49;
+  color: #ffffff;
+  align-self: flex-end;
+  box-shadow: 2px 2px 0px #ea580c;
+}
+
+.ai-chat-input-row {
+  padding: 1rem 1.25rem;
+  background: #ffffff;
+  border-top: 1.5px solid #e2e8f0;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.ai-chat-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 0px !important;
+}
+
+.ai-chat-input:focus {
+  outline: none;
+  border-color: #002b49;
+}
+
+.btn-ai-send {
+  background: #ea580c;
+  color: #ffffff;
+  border: 1.5px solid #c2410c;
+  padding: 0.75rem 1.25rem;
+  font-weight: 800;
+  cursor: pointer;
+  border-radius: 0px !important;
+  box-shadow: 3px 3px 0px #001a2e;
+}
+
+.btn-ai-send:hover {
+  background: #c2410c;
+}
+
+/* ==========================================================================
+   6. VIEW: ADMIN PROFILE & SETTINGS PANELS
+   ========================================================================== */
+.profile-overview-card {
+  background: #ffffff;
+  border: 1.5px solid #002b49;
+  border-radius: 0px !important;
+  box-shadow: 4px 4px 0px #002b49;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.profile-avatar-row {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.profile-avatar-large {
+  width: 72px;
+  height: 72px;
+  background: #002b49;
+  color: #ffffff;
+  font-size: 1.75rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ea580c;
+  border-radius: 0px !important;
+}
+
+.settings-group {
+  margin-bottom: 1.5rem;
+}
+
+.settings-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+/* ==========================================================================
+   7. RESPONSIVE MEDIA QUERIES (MOBILE DRAWER)
+   ========================================================================== */
+@media (max-width: 900px) {
+  .admin-sidebar {
+    transform: translateX(-100%);
+  }
+  .admin-sidebar.open {
+    transform: translateX(0);
+  }
+  .admin-main {
+    margin-left: 0;
+  }
+  .admin-mobile-btn {
+    display: block;
+  }
+}

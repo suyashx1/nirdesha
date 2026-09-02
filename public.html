@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Officer Learning & Competency Dashboard — Nirdesha | MoSPI, Government of India</title>
+  <meta name="description" content="Personalized learning guidance, competitive skill ratings, and competency diagnostics dashboard for public officials and statistical officers.">
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Core & Trainee Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/public.css">
+</head>
+<body class="trainee-body">
+
+  <div class="trainee-shell">
+    
+    <!-- ==========================================================================
+         1. LEFT SIDEBAR (OFFICER / PUBLIC TRAINEE NAVIGATION)
+         ========================================================================== -->
+    <aside class="trainee-sidebar" id="trainee-sidebar" aria-label="Officer Learning Navigation">
+      <!-- Header -->
+      <div class="trainee-sidebar-header">
+        <svg class="trainee-emblem-icon" viewBox="0 0 100 120" fill="currentColor" aria-hidden="true">
+          <path d="M50,5 C42,5 38,12 38,18 C38,24 42,28 40,32 C38,36 34,38 34,44 C34,50 38,54 42,56 C44,57 46,62 46,68 L44,76 L35,78 L35,82 L65,82 L65,78 L56,76 L54,68 C54,62 56,57 58,56 C62,54 66,50 66,44 C66,38 62,36 60,32 C58,28 62,24 62,18 C62,12 58,5 50,5 Z" opacity="0.85"/>
+          <circle cx="50" cy="92" r="8" fill="none" stroke="currentColor" stroke-width="2"/>
+          <rect x="25" y="104" width="50" height="4" rx="1"/>
+          <rect x="20" y="110" width="60" height="4" rx="1"/>
+        </svg>
+        <div>
+          <div class="trainee-brand-title">निर्देश <span>NIRDESHA</span></div>
+          <div class="trainee-brand-sub">Officer Learning Portal • MoSPI</div>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="trainee-sidebar-nav">
+        <div class="trainee-nav-category">Trainee Console</div>
+
+        <!-- 1. Learning Dashboard -->
+        <a href="#dashboard" class="trainee-nav-item active" data-tab="dashboard">
+          <span class="admin-nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          </span>
+          <span>Learning Dashboard</span>
+        </a>
+
+        <!-- 2. Courses & iGOT Tracks -->
+        <a href="#courses" class="trainee-nav-item" data-tab="courses">
+          <span class="admin-nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+          </span>
+          <span>My Courses & Tracks</span>
+          <span class="trainee-nav-badge">4 Active</span>
+        </a>
+
+        <!-- 3. Skill Radar & Gap Analysis -->
+        <a href="#skill-graph" class="trainee-nav-item" data-tab="skill-graph">
+          <span class="admin-nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+          </span>
+          <span>2D Skill Radar</span>
+        </a>
+
+        <!-- 4. NotebookLM Revision Cards -->
+        <a href="#notebooklm" class="trainee-nav-item" data-tab="notebooklm">
+          <span class="admin-nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          </span>
+          <span>NotebookLM Cards</span>
+        </a>
+
+        <!-- 5. Timed Self-Evaluations -->
+        <a href="#quiz" class="trainee-nav-item" data-tab="quiz">
+          <span class="admin-nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          </span>
+          <span>Timed Quiz Engine</span>
+        </a>
+
+        <!-- 6. AI Study Mentor -->
+        <a href="#ai-mentor" class="trainee-nav-item" data-tab="ai-mentor">
+          <span class="admin-nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10H12V2z"></path></svg>
+          </span>
+          <span>AI Study Mentor</span>
+        </a>
+
+        <!-- 7. Verified Certificates -->
+        <a href="#certificates" class="trainee-nav-item" data-tab="certificates">
+          <span class="admin-nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          </span>
+          <span>Verified Certificates</span>
+        </a>
+
+        <!-- 8. Officer Profile -->
+        <a href="#profile" class="trainee-nav-item" data-tab="profile">
+          <span class="admin-nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          </span>
+          <span>Officer Profile</span>
+        </a>
+      </nav>
+
+      <!-- Bottom: Settings, Sign Out & Officer Card -->
+      <div class="trainee-sidebar-bottom">
+        <a href="login.html" class="admin-nav-item nav-signout" id="trainee-signout-btn" title="Sign out of learning session">
+          <span class="admin-nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+          </span>
+          <span>Sign Out</span>
+        </a>
+
+        <div class="trainee-user-card">
+          <div class="trainee-avatar">SR</div>
+          <div class="trainee-user-details">
+            <span class="trainee-user-name">S. K. Raman</span>
+            <span class="trainee-user-role">Junior Statistical Officer (JSO)</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ==========================================================================
+         2. MAIN WORKSPACE
+         ========================================================================== -->
+    <div class="trainee-main">
+      
+      <!-- Top Command Bar -->
+      <header class="trainee-topbar">
+        <div class="trainee-topbar-left">
+          <button class="trainee-mobile-btn" id="trainee-mobile-toggle" aria-label="Toggle navigation drawer">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+          
+          <div class="admin-search-wrap">
+            <span class="admin-search-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </span>
+            <input type="text" class="trainee-search-input" placeholder="Search topics, formulas, NSSTA modules, DPDP rules...">
+          </div>
+        </div>
+
+        <div class="trainee-topbar-right">
+          <div class="trainee-pill-streak" title="Consistency Streak">
+            <span>🔥 14-Day Streak</span>
+          </div>
+
+          <div class="trainee-pill-rating" id="trainee-top-elo" title="Competitive Elo Rating">
+            <span>⚡ 1,485 Elo (Proficient)</span>
+          </div>
+
+          <a href="main.html" class="btn-admin-action" title="Open Public Home Portal">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+            <span>Public Portal</span>
+          </a>
+        </div>
+      </header>
+
+      <!-- Views Area -->
+      <main class="trainee-content-area">
+
+        <!-- ======================================================================
+             VIEW 1: LEARNING DASHBOARD (DEFAULT)
+             ====================================================================== -->
+        <div class="trainee-view-tab" id="view-dashboard" style="display: block;">
+          
+          <!-- Officer Welcome Banner -->
+          <div class="admin-welcome-banner" style="background: linear-gradient(135deg, #00223a 0%, #001524 100%);">
+            <div>
+              <h1 class="welcome-title">Welcome back, Officer Raman</h1>
+              <p class="welcome-sub">
+                Subordinate Statistical Service (SSS Cadre) • Target Milestone: <strong>Senior Statistical Officer (SSO) Cadre Benchmark</strong>
+              </p>
+            </div>
+            <div class="welcome-badges">
+              <div class="welcome-badge-item">🎯 82% Competency Match</div>
+              <div class="welcome-badge-item">🏆 Top 8% in Division</div>
+            </div>
+          </div>
+
+          <!-- GitHub-Style Learning Heatmap -->
+          <div class="heatmap-container-card">
+            <div class="heatmap-header">
+              <div class="heatmap-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                <span>Officer Learning Consistency Heatmap (Last 12 Weeks)</span>
+              </div>
+              <span class="heatmap-stats">142 Activities Logged • 0 Days Missed this Week</span>
+            </div>
+
+            <div class="heatmap-grid-wrapper">
+              <div class="heatmap-grid" id="heatmap-grid">
+                <!-- 84 Daily activity squares populated dynamically -->
+              </div>
+            </div>
+
+            <div class="heatmap-legend">
+              <span>Less</span>
+              <span class="heatmap-day" style="background: #e2e8f0; display: inline-block;"></span>
+              <span class="heatmap-day lvl-1" style="display: inline-block;"></span>
+              <span class="heatmap-day lvl-2" style="display: inline-block;"></span>
+              <span class="heatmap-day lvl-3" style="display: inline-block;"></span>
+              <span class="heatmap-day lvl-4" style="display: inline-block;"></span>
+              <span>More Active</span>
+            </div>
+          </div>
+
+          <!-- Competitive Domain Elo Ratings -->
+          <div style="margin-bottom: 1.25rem;">
+            <h3 style="font-size: 1.15rem; font-weight: 800; color: #002b49; margin: 0 0 0.25rem 0;">
+              Competitive Skill Ratings (Per-Domain Elo)
+            </h3>
+            <p style="font-size: 0.8rem; color: #64748b; margin: 0;">
+              Deterministic skill ratings computed from timed self-evaluations and formal NSSTA assessments.
+            </p>
+          </div>
+
+          <div class="elo-ratings-grid">
+            <div class="elo-card">
+              <div>
+                <div class="elo-domain-tag">Domain 1</div>
+                <div style="font-size: 0.95rem; font-weight: 800; color: #0f172a; margin-bottom: 0.4rem;">Survey Sampling & Theory</div>
+                <div class="elo-score-val">1,520</div>
+              </div>
+              <div>
+                <span class="elo-tier-badge advanced">⭐ Tier 3 • Advanced</span>
+              </div>
+            </div>
+
+            <div class="elo-card">
+              <div>
+                <div class="elo-domain-tag">Domain 2</div>
+                <div style="font-size: 0.95rem; font-weight: 800; color: #0f172a; margin-bottom: 0.4rem;">National Accounts & Deflators</div>
+                <div class="elo-score-val">1,385</div>
+              </div>
+              <div>
+                <span class="elo-tier-badge intermediate">📈 Tier 2 • Intermediate</span>
+              </div>
+            </div>
+
+            <div class="elo-card">
+              <div>
+                <div class="elo-domain-tag">Domain 3</div>
+                <div style="font-size: 0.95rem; font-weight: 800; color: #0f172a; margin-bottom: 0.4rem;">Data Science & Computing</div>
+                <div class="elo-score-val">1,440</div>
+              </div>
+              <div>
+                <span class="elo-tier-badge advanced">⭐ Tier 3 • Proficient</span>
+              </div>
+            </div>
+
+            <div class="elo-card">
+              <div>
+                <div class="elo-domain-tag">Domain 4</div>
+                <div style="font-size: 0.95rem; font-weight: 800; color: #0f172a; margin-bottom: 0.4rem;">DPDP Act & Governance</div>
+                <div class="elo-score-val">1,610</div>
+              </div>
+              <div>
+                <span class="elo-tier-badge expert">🏆 Tier 4 • Expert</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fixed-Time Assessment Call to Action -->
+          <div class="quiz-box-card">
+            <div>
+              <div style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #fdba74; margin-bottom: 0.35rem;">
+                Official Skill Evaluation Cycle
+              </div>
+              <h2 style="font-size: 1.35rem; font-weight: 800; margin: 0 0 0.4rem 0;">
+                Timed Self-Evaluation Micro-Assessment (5 Minutes)
+              </h2>
+              <p style="font-size: 0.85rem; color: #cbd5e1; margin: 0; max-width: 580px; line-height: 1.5;">
+                Evaluate your practical survey execution speed and formula accuracy. Scores immediately update your competitive domain rating and unlock verified competency credentials.
+              </p>
+            </div>
+            <button type="button" class="quiz-btn-start btn-open-quiz">
+              Take Diagnostic Assessment ⏱️
+            </button>
+          </div>
+
+          <!-- NotebookLM-Style Key Point Revision Cards Snapshot -->
+          <div style="margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h3 style="font-size: 1.15rem; font-weight: 800; color: #002b49; margin: 0 0 0.25rem 0;">
+                NotebookLM-Style Revision Summaries
+              </h3>
+              <p style="font-size: 0.8rem; color: #64748b; margin: 0;">
+                Bite-sized, exam-ready key point cards for fast revision before field surveys.
+              </p>
+            </div>
+            <a href="#notebooklm" class="trainee-nav-item" data-tab="notebooklm" style="font-size: 0.775rem; color: #ea580c; font-weight: 700; padding: 0;">View All Cards →</a>
+          </div>
+
+          <div class="notebooklm-grid">
+            <div class="notebook-card">
+              <div>
+                <div class="notebook-topic">Sampling Design</div>
+                <h4 class="notebook-card-title">Horvitz-Thompson Estimator & Weights</h4>
+                <div class="notebook-card-bullet"><span>▸</span> <strong>Core Formula:</strong> Y_HT = ∑(y_i / π_i) where π_i is probability of selection.</div>
+                <div class="notebook-card-bullet"><span>▸</span> <strong>Multiplier Rule:</strong> Inverse sampling probabilities ensure design-unbiased estimates in NSS multi-stage frames.</div>
+              </div>
+            </div>
+
+            <div class="notebook-card">
+              <div>
+                <div class="notebook-topic">Macroeconomics</div>
+                <h4 class="notebook-card-title">GDP Deflator vs Consumer Price Index</h4>
+                <div class="notebook-card-bullet"><span>▸</span> <strong>Coverage:</strong> GDP deflator measures all domestically produced goods; CPI measures fixed household consumption basket.</div>
+                <div class="notebook-card-bullet"><span>▸</span> <strong>Index Type:</strong> GDP Deflator is a Paasche-like implicit index, while CPI uses Laspeyres modified formula.</div>
+              </div>
+            </div>
+
+            <div class="notebook-card">
+              <div>
+                <div class="notebook-topic">Data Governance</div>
+                <h4 class="notebook-card-title">DPDP Act 2023 Survey Data Compliance</h4>
+                <div class="notebook-card-bullet"><span>▸</span> <strong>Section 8 Mandate:</strong> Microdata releases must de-identify individual direct identifiers before public publication.</div>
+                <div class="notebook-card-bullet"><span>▸</span> <strong>Audit Protocol:</strong> Keep immutable logging for every data transform executed on CAPI tablets.</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ======================================================================
+             VIEW 2: COURSES & IGOT TRACKS
+             ====================================================================== -->
+        <div class="trainee-view-tab" id="view-courses" style="display: none;">
+          <div style="margin-bottom: 1.5rem;">
+            <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">
+              Enrolled Learning Pathways & iGOT Karmayogi Tracks
+            </h2>
+            <p style="font-size: 0.85rem; color: #64748b; margin: 0;">
+              Official training programmes assigned to your SSS officer profile.
+            </p>
+          </div>
+
+          <div class="courses-catalog-grid">
+            <div class="course-card-gov">
+              <div>
+                <div class="course-badge-code">NSSTA-101 • Core SSS / ISS</div>
+                <h3 class="course-card-title">Advanced Multi-Stage Sampling & Survey Methodology</h3>
+                <p class="course-card-desc">Stratified sampling, cluster designs, variance estimation, and non-sampling error minimization in large-scale socio-economic surveys.</p>
+                <div style="margin-block: 0.75rem;">
+                  <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 700; color: #002b49; margin-bottom: 0.35rem;">
+                    <span>Syllabus Completed</span>
+                    <span>85%</span>
+                  </div>
+                  <div class="course-progress-bar" style="width: 100%; height: 8px;">
+                    <div class="course-progress-fill" style="width: 85%;"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="course-card-footer">
+                <span style="font-size: 0.75rem; color: #475569; font-weight: 600;">Unit 6: Outlier Handling</span>
+                <button class="btn-admin-action" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;">Resume Lesson ▶</button>
+              </div>
+            </div>
+
+            <div class="course-card-gov">
+              <div>
+                <div class="course-badge-code">NSSTA-305 • Modern Analytics</div>
+                <h3 class="course-card-title">Public Data Science & Statistical Computing in Python</h3>
+                <p class="course-card-desc">Pandas, NumPy, automated data validation pipelines, statistical imputation methods, and DPDP-compliant data masking.</p>
+                <div style="margin-block: 0.75rem;">
+                  <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 700; color: #002b49; margin-bottom: 0.35rem;">
+                    <span>Syllabus Completed</span>
+                    <span>91%</span>
+                  </div>
+                  <div class="course-progress-bar" style="width: 100%; height: 8px;">
+                    <div class="course-progress-fill" style="width: 91%;"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="course-card-footer">
+                <span style="font-size: 0.75rem; color: #475569; font-weight: 600;">Final Assessment Ready</span>
+                <button class="btn-admin-action" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;">Take Final Test</button>
+              </div>
+            </div>
+
+            <div class="course-card-gov">
+              <div>
+                <div class="course-badge-code">iGOT-Gov-2026 • Karmayogi Bharat</div>
+                <h3 class="course-card-title">Official Data Ethics, DPDP Act & Public Trust</h3>
+                <p class="course-card-desc">Ethical principles in public statistics, secure data custodianship, and grievance escalation under the Data Protection Board.</p>
+                <div style="margin-block: 0.75rem;">
+                  <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 700; color: #002b49; margin-bottom: 0.35rem;">
+                    <span>Syllabus Completed</span>
+                    <span>100% (Certified)</span>
+                  </div>
+                  <div class="course-progress-bar" style="width: 100%; height: 8px;">
+                    <div class="course-progress-fill" style="width: 100%; background: #16a34a;"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="course-card-footer">
+                <span class="badge-status-cert">Certificate Earned</span>
+                <button class="btn-admin-action" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;">View Certificate</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ======================================================================
+             VIEW 3: 2D SKILL RADAR & COMPETENCY TREE
+             ====================================================================== -->
+        <div class="trainee-view-tab" id="view-skill-graph" style="display: none;">
+          <div style="margin-bottom: 1.5rem;">
+            <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">
+              2D Skill Radar & Role Gap Analysis
+            </h2>
+            <p style="font-size: 0.85rem; color: #64748b; margin: 0;">
+              Safe 2D interactive baseline comparing your current verified skills vs. the Senior Statistical Officer (SSO) benchmark.
+            </p>
+          </div>
+
+          <div class="admin-panel-card" style="padding: 2rem;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center;">
+              <div>
+                <h3 style="font-size: 1.15rem; font-weight: 800; color: #002b49; margin-bottom: 1rem;">
+                  Competency Domain Alignment
+                </h3>
+                
+                <div style="margin-bottom: 1.25rem;">
+                  <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem;">
+                    <span>Survey Sampling Design (NSSO Frame)</span>
+                    <span style="color: #15803d;">94% / 100% Target</span>
+                  </div>
+                  <div class="course-progress-bar" style="width: 100%; height: 10px;">
+                    <div class="course-progress-fill" style="width: 94%; background: #15803d;"></div>
+                  </div>
+                </div>
+
+                <div style="margin-bottom: 1.25rem;">
+                  <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem;">
+                    <span>Macroeconomic & Deflator Theory</span>
+                    <span style="color: #ea580c;">68% / 85% Target (Gap Identified)</span>
+                  </div>
+                  <div class="course-progress-bar" style="width: 100%; height: 10px;">
+                    <div class="course-progress-fill" style="width: 68%; background: #ea580c;"></div>
+                  </div>
+                </div>
+
+                <div style="margin-bottom: 1.25rem;">
+                  <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem;">
+                    <span>Data Science & Python Programming</span>
+                    <span style="color: #15803d;">90% / 80% Target (Benchmark Exceeded)</span>
+                  </div>
+                  <div class="course-progress-bar" style="width: 100%; height: 10px;">
+                    <div class="course-progress-fill" style="width: 90%; background: #15803d;"></div>
+                  </div>
+                </div>
+
+                <div style="margin-bottom: 1.25rem;">
+                  <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem;">
+                    <span>DPDP Act & Field Protocol Standards</span>
+                    <span style="color: #15803d;">98% / 90% Target</span>
+                  </div>
+                  <div class="course-progress-bar" style="width: 100%; height: 10px;">
+                    <div class="course-progress-fill" style="width: 98%; background: #15803d;"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Recommendation Card -->
+              <div style="background: #f8fafc; border: 1.5px solid #002b49; border-left: 4px solid #ea580c; padding: 1.5rem;">
+                <h4 style="font-size: 1rem; font-weight: 800; color: #002b49; margin: 0 0 0.5rem 0;">
+                  Targeted Learning Guidance
+                </h4>
+                <p style="font-size: 0.825rem; color: #475569; line-height: 1.6; margin-bottom: 1rem;">
+                  Your statistical sampling and DPDP scores exceed the required standard for promotion to Senior Statistical Officer. To close your remaining 17% gap in Macroeconomic Deflators, we recommend completing <strong>NSSTA Module 204</strong>.
+                </p>
+                <button class="btn-admin-action" style="font-size: 0.8rem;">Enroll in Recommended Module →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ======================================================================
+             VIEW 4: NOTEBOOKLM REVISION CARDS
+             ====================================================================== -->
+        <div class="trainee-view-tab" id="view-notebooklm" style="display: none;">
+          <div style="margin-bottom: 1.5rem;">
+            <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">
+              NotebookLM Key-Point Revision Cards
+            </h2>
+            <p style="font-size: 0.85rem; color: #64748b; margin: 0;">
+              Distilled core principles for fast memorization and operational field readiness.
+            </p>
+          </div>
+
+          <div class="notebooklm-grid">
+            <div class="notebook-card">
+              <div class="notebook-topic">Sampling Design</div>
+              <h4 class="notebook-card-title">Horvitz-Thompson Estimator & Multipliers</h4>
+              <div class="notebook-card-bullet"><span>▸</span> <strong>Unbiasedness:</strong> E[Y_HT] = Y is guaranteed regardless of sampling structure.</div>
+              <div class="notebook-card-bullet"><span>▸</span> <strong>Variance:</strong> Sen-Yates-Grundy variance formulation applies when sample size is fixed.</div>
+            </div>
+
+            <div class="notebook-card">
+              <div class="notebook-topic">National Accounts</div>
+              <h4 class="notebook-card-title">Supply and Use Tables (SUT) Balance</h4>
+              <div class="notebook-card-bullet"><span>▸</span> <strong>Accounting Identity:</strong> Total Supply at Purchasers' Prices = Total Use at Purchasers' Prices.</div>
+              <div class="notebook-card-bullet"><span>▸</span> <strong>Base Year:</strong> 2011-12 benchmark tables provide structural weights for GDP deflators.</div>
+            </div>
+
+            <div class="notebook-card">
+              <div class="notebook-topic">CAPI Protocol</div>
+              <h4 class="notebook-card-title">GPS Verification & Non-Response Imputation</h4>
+              <div class="notebook-card-bullet"><span>▸</span> <strong>Validation:</strong> GPS coordinates must match census enumeration block within 50-meter tolerance.</div>
+              <div class="notebook-card-bullet"><span>▸</span> <strong>Imputation:</strong> Hot-deck donor imputation is applied for item non-response.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ======================================================================
+             VIEW 5: TIMED ASSESSMENT ENGINE
+             ====================================================================== -->
+        <div class="trainee-view-tab" id="view-quiz" style="display: none;">
+          <div style="margin-bottom: 1.5rem;">
+            <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">
+              Fixed-Total-Time Self-Evaluation Engine
+            </h2>
+            <p style="font-size: 0.85rem; color: #64748b; margin: 0;">
+              Standardized MoSPI assessment engine evaluating practical execution speed and accuracy.
+            </p>
+          </div>
+
+          <div class="quiz-box-card">
+            <div>
+              <div style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #fdba74; margin-bottom: 0.35rem;">
+                Available Assessment
+              </div>
+              <h3 style="font-size: 1.25rem; font-weight: 800; margin: 0 0 0.4rem 0;">
+                Survey Sampling & Socio-Economic Survey Methodology (Test ID: EVAL-2026-Q3)
+              </h3>
+              <p style="font-size: 0.85rem; color: #cbd5e1; margin: 0; line-height: 1.5;">
+                5 Multiple-Choice Questions • Fixed Total Time: 5 Minutes • Accuracy + Time-Efficiency Scoring.
+              </p>
+            </div>
+            <button type="button" class="quiz-btn-start btn-open-quiz">
+              Start Assessment Now ▶
+            </button>
+          </div>
+        </div>
+
+        <!-- ======================================================================
+             VIEW 6: AI STUDY MENTOR
+             ====================================================================== -->
+        <div class="trainee-view-tab" id="view-ai-mentor" style="display: none;">
+          <div style="margin-bottom: 1.5rem;">
+            <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">
+              Nirdesha Personal AI Study Mentor
+            </h2>
+            <p style="font-size: 0.85rem; color: #64748b; margin: 0;">
+              Your dedicated statistical learning tutor. Ask questions about formulas, sampling designs, or circular interpretations.
+            </p>
+          </div>
+
+          <div class="ai-chat-container">
+            <div class="ai-chat-header">
+              <div class="ai-chat-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2a10 10 0 1 0 10 10H12V2z"></path></svg>
+                <span>Officer Raman • Personal Study Session</span>
+              </div>
+              <span class="admin-status-pill" style="background: rgba(255,255,255,0.15); color:#fff; border-color:rgba(255,255,255,0.3);">
+                Model: MoSPI-StatLLM v2
+              </span>
+            </div>
+
+            <div class="ai-chat-log" id="trainee-chat-log">
+              <div class="chat-bubble bot">
+                Namaste Officer Raman! I am your <strong>Nirdesha AI Study Mentor</strong>. I can clarify statistical formulas, explain NSS survey concepts, or help you prepare for the upcoming SSO cadre transition test. What would you like to explore?
+              </div>
+            </div>
+
+            <div class="ai-chat-input-row">
+              <input type="text" class="ai-chat-input" id="trainee-chat-input" placeholder="Ask a study question (e.g., Explain Horvitz-Thompson formula or CPI weight calculation)...">
+              <button type="button" class="btn-ai-send" id="trainee-chat-send">Ask Mentor</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ======================================================================
+             VIEW 7: VERIFIED CERTIFICATES
+             ====================================================================== -->
+        <div class="trainee-view-tab" id="view-certificates" style="display: none;">
+          <div style="margin-bottom: 1.5rem;">
+            <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">
+              Nirdesha Verified Competency Certificates
+            </h2>
+            <p style="font-size: 0.85rem; color: #64748b; margin: 0;">
+              Official credentials issued under the authority of MoSPI and NSSTA.
+            </p>
+          </div>
+
+          <div class="admin-panel-card" style="padding: 2.5rem; border: 2px solid #002b49; text-align: center; max-width: 720px; margin: 0 auto;">
+            <div style="color: #ea580c; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem;">
+              Government of India • Ministry of Statistics & Programme Implementation
+            </div>
+            <h3 style="font-size: 1.75rem; font-weight: 900; color: #002b49; margin: 0 0 0.5rem 0;">
+              CERTIFICATE OF STATISTICAL COMPETENCY
+            </h3>
+            <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 1.5rem;">
+              This is to officially certify that
+            </p>
+            <div style="font-size: 1.5rem; font-weight: 800; color: #0f172a; border-bottom: 2px solid #ea580c; display: inline-block; padding-bottom: 0.35rem; margin-bottom: 1.25rem;">
+              Officer S. K. Raman (SSS-2024-8891)
+            </div>
+            <p style="font-size: 0.9rem; color: #334155; line-height: 1.6; max-width: 520px; margin: 0 auto 2rem auto;">
+              has demonstrated verified proficiency in <strong>Public Data Science & Statistical Computing in Python</strong> with an assessment score of <strong>91%</strong> (Accredited under NSSTA-305 standards).
+            </p>
+            <div style="display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #e2e8f0; padding-top: 1.5rem;">
+              <div>
+                <div style="font-weight: 800; color: #002b49; font-size: 0.85rem;">Dr. A. K. Verma</div>
+                <div style="font-size: 0.75rem; color: #64748b;">Director (Training), MoSPI</div>
+              </div>
+              <div style="background: #f8fafc; border: 1px dashed #002b49; padding: 0.4rem 0.85rem; font-size: 0.75rem; font-weight: 700; color: #002b49;">
+                QR VALIDATION: NIR-2026-9814-VERIFIED
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ======================================================================
+             VIEW 8: OFFICER PROFILE
+             ====================================================================== -->
+        <div class="trainee-view-tab" id="view-profile" style="display: none;">
+          <div style="margin-bottom: 1.5rem;">
+            <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">
+              Officer Service Profile
+            </h2>
+            <p style="font-size: 0.85rem; color: #64748b; margin: 0;">
+              Cadre records, employee roll number, and competency governance status.
+            </p>
+          </div>
+
+          <div class="profile-overview-card">
+            <div class="profile-avatar-row">
+              <div class="profile-avatar-large" style="background: #0284c7;">SR</div>
+              <div>
+                <h3 style="font-size: 1.35rem; font-weight: 800; color: #002b49; margin: 0 0 0.25rem 0;">S. K. Raman</h3>
+                <div style="font-size: 0.85rem; color: #ea580c; font-weight: 700; margin-bottom: 0.25rem;">
+                  Junior Statistical Officer (JSO)
+                </div>
+                <div style="font-size: 0.775rem; color: #64748b;">
+                  Subordinate Statistical Service (SSS Cadre), MoSPI
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-group">
+              <div class="settings-item-row">
+                <span style="font-size: 0.85rem; font-weight: 700; color: #334155;">Login Access ID</span>
+                <span style="font-size: 0.85rem; font-weight: 700; color: #002b49;">public</span>
+              </div>
+              <div class="settings-item-row">
+                <span style="font-size: 0.85rem; font-weight: 700; color: #334155;">Employee Roll Code</span>
+                <span style="font-size: 0.85rem; color: #002b49;">SSS-2024-8891</span>
+              </div>
+              <div class="settings-item-row">
+                <span style="font-size: 0.85rem; font-weight: 700; color: #334155;">Cadre Allocation</span>
+                <span style="font-size: 0.85rem; color: #002b49;">Field Operations Division (NSSO / FOD)</span>
+              </div>
+              <div class="settings-item-row">
+                <span style="font-size: 0.85rem; font-weight: 700; color: #334155;">Current Cadre Competency Rating</span>
+                <span class="badge-status-cert">1,485 Elo (Level 3 - Proficient)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+
+  </div>
+
+  <!-- ==========================================================================
+       3. FIXED-TIME ASSESSMENT QUIZ MODAL
+       ========================================================================== -->
+  <div class="quiz-modal-backdrop" id="quiz-modal" role="dialog" aria-modal="true">
+    <div class="quiz-modal-dialog">
+      <div class="quiz-modal-header">
+        <div>
+          <div style="font-size: 0.7rem; text-transform: uppercase; color: #fdba74; font-weight: 800;">Timed Self-Evaluation</div>
+          <div style="font-size: 1rem; font-weight: 800;">Survey Sampling & Methodology Test</div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <div class="quiz-timer-box" id="quiz-timer">05:00</div>
+          <button type="button" id="quiz-close-btn" style="background:none; border:none; color:#fff; font-size:1.5rem; cursor:pointer;">&times;</button>
+        </div>
+      </div>
+
+      <div class="quiz-modal-body">
+        <div id="quiz-questions-wrap">
+          <p style="font-size: 0.95rem; font-weight: 700; color: #0f172a; margin-bottom: 1rem;">
+            Question 1 of 5: In an NSS multi-stage stratified sample, if first-stage units (FSUs) are selected with Probability Proportional to Size (PPS), what weighting adjustment is required to ensure design-unbiased estimators?
+          </p>
+          <label class="quiz-option-label">
+            <input type="radio" name="q1" value="A" checked>
+            <span>A) Division by the joint inclusion probability of the selected second-stage units (SSUs)</span>
+          </label>
+          <label class="quiz-option-label">
+            <input type="radio" name="q1" value="B">
+            <span>B) Equal weighting across all urban and rural sample blocks</span>
+          </label>
+          <label class="quiz-option-label">
+            <input type="radio" name="q1" value="C">
+            <span>C) Post-stratification scaling based only on gross census household totals</span>
+          </label>
+          <label class="quiz-option-label">
+            <input type="radio" name="q1" value="D">
+            <span>D) Standard arithmetic averaging without multiplier inverse transformation</span>
+          </label>
+        </div>
+
+        <!-- Result Feedback Box -->
+        <div id="quiz-result-box" style="display: none; text-align: center; padding: 1.5rem 0;">
+          <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎉</div>
+          <h3 style="font-size: 1.35rem; font-weight: 800; color: #002b49; margin-bottom: 0.5rem;">Assessment Completed!</h3>
+          <p style="font-size: 0.95rem; font-weight: 700; color: #166534;" id="quiz-score-val">
+            80% Accuracy (118s used, 80% Time Efficiency)
+          </p>
+          <p style="font-size: 0.85rem; font-weight: 800; color: #ea580c; margin-bottom: 1.5rem;" id="quiz-elo-delta">
+            +28 Elo Rating Awarded
+          </p>
+          <button type="button" class="btn-admin-action" onclick="document.getElementById('quiz-modal').classList.remove('open')">
+            Close & Update Dashboard
+          </button>
+        </div>
+      </div>
+
+      <div class="quiz-modal-footer">
+        <span style="font-size: 0.75rem; color: #64748b;">Fixed duration: 5:00 minutes • Auto-submits on timer expiry</span>
+        <button type="button" class="btn-admin-action" id="quiz-submit-btn">Submit Assessment</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/public.js"></script>
+</body>
+</html>

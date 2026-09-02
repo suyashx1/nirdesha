@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="system">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Officer Authentication & Registration — Nirdesha Portal | MoSPI, Government of India</title>
+  <meta name="description" content="Official authentication gateway for the Nirdesha Competency Intelligence Platform. Single Sign-On and cadre registration for central and state statistical officers.">
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Core & Auth Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+
+  <!-- National Tricolor Ribbon -->
+  <div class="tricolor-ribbon" aria-hidden="true"></div>
+
+  <!-- ==========================================================================
+       1. TOP ACCESSIBILITY & UTILITY BAR (GIGW MANDATE)
+       ========================================================================== -->
+  <div class="top-bar">
+    <div class="container top-bar-inner">
+      <div class="top-bar-left">
+        <div class="top-flag-icon" title="Indian National Flag" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <span>भारत सरकार | Government of India</span>
+        <span style="color: #cbd5e1;">•</span>
+        <span>सांख्यिकी एवं कार्यक्रम कार्यान्वयन मंत्रालय | MoSPI</span>
+      </div>
+
+      <div class="top-bar-right">
+        <!-- Accessibility Controls -->
+        <div class="top-util-group" aria-label="Text size and accessibility controls">
+          <button class="top-util-btn" id="font-decrease" title="Decrease font size">A-</button>
+          <button class="top-util-btn" id="font-reset" title="Standard font size">A</button>
+          <button class="top-util-btn" id="font-increase" title="Increase font size">A+</button>
+        </div>
+
+        <!-- Theme Mode Dropdown (Hover Activated: Dark / Bright / System) -->
+        <div class="top-theme-wrapper notranslate" id="theme-menu-wrapper" translate="no">
+          <button class="top-theme-btn notranslate" id="theme-btn" aria-haspopup="true" aria-expanded="false" title="Theme (Dark / Bright / System)">
+            <span class="theme-icon-indicator" id="theme-active-icon" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </span>
+            <span class="theme-btn-label" id="theme-active-label">System</span>
+            <span class="theme-caret" aria-hidden="true">▾</span>
+          </button>
+          <div class="top-theme-menu notranslate" id="theme-dropdown-menu" role="menu" aria-label="Select website theme">
+            <button class="theme-option-btn active" data-theme-mode="system" role="menuitem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              <span>System</span>
+              <span class="theme-check-icon">✓</span>
+            </button>
+            <button class="theme-option-btn" data-theme-mode="light" role="menuitem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+              <span>Bright</span>
+              <span class="theme-check-icon">✓</span>
+            </button>
+            <button class="theme-option-btn" data-theme-mode="dark" role="menuitem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+              <span>Dark</span>
+              <span class="theme-check-icon">✓</span>
+            </button>
+          </div>
+        </div>
+
+        <a href="main.html" class="auth-nav-back" style="margin-bottom: 0;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          <span>Return to Portal</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       2. MAIN GOVERNMENT BRANDING HEADER
+       ========================================================================== -->
+  <header class="main-header">
+    <div class="container header-inner">
+      <div class="brand-section">
+        <!-- State Emblem Representation -->
+        <div class="emblem-wrapper" title="State Emblem of India">
+          <svg class="emblem-icon" viewBox="0 0 100 120" fill="currentColor" aria-hidden="true">
+            <path d="M50,5 C42,5 38,12 38,18 C38,24 42,28 40,32 C38,36 34,38 34,44 C34,50 38,54 42,56 C44,57 46,62 46,68 L44,76 L35,78 L35,82 L65,82 L65,78 L56,76 L54,68 C54,62 56,57 58,56 C62,54 66,50 66,44 C66,38 62,36 60,32 C58,28 62,24 62,18 C62,12 58,5 50,5 Z" opacity="0.85"/>
+            <circle cx="50" cy="92" r="8" fill="none" stroke="currentColor" stroke-width="2"/>
+            <rect x="25" y="104" width="50" height="4" rx="1"/>
+            <rect x="20" y="110" width="60" height="4" rx="1"/>
+            <text x="50" y="101" font-size="5" text-anchor="middle" font-family="serif" font-weight="bold">सत्यमेव जयते</text>
+          </svg>
+        </div>
+
+        <!-- Ministry Titles -->
+        <div class="brand-titles">
+          <span class="gov-title-hi">भारत सरकार</span>
+          <span class="gov-title-en">Government of India</span>
+          <span class="ministry-title">Ministry of Statistics & Programme Implementation (MoSPI)</span>
+        </div>
+
+        <div class="brand-divider" aria-hidden="true"></div>
+
+        <div class="portal-title-group">
+          <div class="portal-name">निर्देश <span>NIRDESHA</span></div>
+          <div class="portal-tagline">Competency Intelligence & Training Guidance Gateway</div>
+        </div>
+      </div>
+
+      <!-- Right Initiative Badge with non-shrinking flag -->
+      <div class="header-right">
+        <div class="gov-badge-box" title="Digital India Initiative">
+          <div class="badge-flag-circle"></div>
+          <div>
+            <div style="font-size: 0.7rem; color: #64748b; line-height: 1;">A National Initiative</div>
+            <div style="color: var(--gov-navy); font-weight: 800;">Digital India</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       3. AUTHENTICATION / REGISTRATION INTERFACE
+       ========================================================================== -->
+  <main class="auth-page-wrapper">
+    <div class="auth-container">
+
+      <!-- Breadcrumb Link Back -->
+      <a href="main.html" class="auth-nav-back">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        <span>Back to Nirdesha Home Portal</span>
+      </a>
+
+      <!-- Status Alert Box -->
+      <div class="auth-alert" id="auth-alert" role="alert"></div>
+
+      <!-- Two-Column Grid -->
+      <div class="auth-layout-grid">
+        
+        <!-- Left: Interactive Form Card -->
+        <div class="auth-main-card">
+          <!-- Navigation Tabs -->
+          <div class="auth-tabs-nav" role="tablist">
+            <button class="auth-tab-btn active" id="tab-login" role="tab" aria-selected="true" aria-controls="panel-login">
+              <span class="auth-tab-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+              </span>
+              <span>Officer Sign In</span>
+            </button>
+            <button class="auth-tab-btn" id="tab-register" role="tab" aria-selected="false" aria-controls="panel-register">
+              <span class="auth-tab-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" y1="8" x2="19" y2="14"></line><line x1="22" y1="11" x2="16" y2="11"></line></svg>
+              </span>
+              <span>New Officer Registration</span>
+            </button>
+          </div>
+
+          <div class="auth-card-body">
+
+            <!-- TAB 1: OFFICER SIGN IN PANEL -->
+            <div class="auth-panel active" id="panel-login" role="tabpanel" aria-labelledby="tab-login">
+              <div class="auth-panel-heading">
+                <h2 class="auth-panel-title">Sign In to Competency Portal</h2>
+                <p class="auth-panel-subtitle">Access role mapping, diagnostic assessments, and NSSTA learning pathways.</p>
+              </div>
+
+              <!-- Government SSO Quick Access -->
+              <div class="sso-section">
+                <button type="button" class="sso-btn-parichay" title="Authenticate with Government Single Sign-On (MeriPehchaan / Parichay)">
+                  <div class="sso-badge-tricolor">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <span>Authenticate with Parichay (MeriPehchaan SSO)</span>
+                </button>
+              </div>
+
+              <div class="auth-divider">
+                <span>OR SIGN IN WITH GOVERNMENT CREDENTIALS</span>
+              </div>
+
+              <!-- Login Mode Selector: Password vs OTP -->
+              <div class="auth-mode-toggle" role="group" aria-label="Sign in method">
+                <button type="button" class="auth-mode-btn active" id="mode-password-btn">Password Login</button>
+                <button type="button" class="auth-mode-btn" id="mode-otp-btn">Instant Mobile/Email OTP</button>
+              </div>
+
+              <form id="form-officer-login" novalidate>
+                <!-- Identifier Input -->
+                <div class="form-group-gov">
+                  <label for="login-identifier" class="form-label-gov">
+                    <span>Official Email ID / Employee Code</span>
+                    <span style="font-weight: 500; font-size: 0.725rem; color: #64748b;">@gov.in or MoSPI Roll</span>
+                  </label>
+                  <div class="form-input-wrap">
+                    <span class="form-input-icon">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    </span>
+                    <input type="text" id="login-identifier" class="form-input-gov" placeholder="e.g. officer.name@gov.in or EMP8942" required autocomplete="username">
+                  </div>
+                </div>
+
+                <!-- Password Field Group -->
+                <div class="form-group-gov" id="field-group-password">
+                  <label for="login-password" class="form-label-gov">
+                    <span>Security Password</span>
+                    <a href="#forgot" class="form-link-gov" style="font-size: 0.75rem;">Forgot Password?</a>
+                  </label>
+                  <div class="form-input-wrap">
+                    <span class="form-input-icon">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    </span>
+                    <input type="password" id="login-password" class="form-input-gov" placeholder="Enter portal security password" autocomplete="current-password">
+                    <button type="button" class="form-input-toggle-btn" data-toggle-target="login-password" aria-label="Toggle password visibility">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- OTP Field Group (Initially Hidden) -->
+                <div class="form-group-gov" id="field-group-otp" style="display: none;">
+                  <label for="login-otp" class="form-label-gov">
+                    <span>6-Digit Security OTP</span>
+                    <span style="font-weight: 500; font-size: 0.725rem; color: #64748b;">Sent to registered mobile</span>
+                  </label>
+                  <div class="form-input-wrap">
+                    <span class="form-input-icon">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+                    </span>
+                    <input type="text" id="login-otp" class="form-input-gov" placeholder="Enter 6-digit numeric OTP" maxlength="6" pattern="[0-9]{6}">
+                  </div>
+                </div>
+
+                <!-- Security Captcha -->
+                <div class="form-group-gov">
+                  <label class="form-label-gov">
+                    <span>Security Verification Code</span>
+                    <span style="font-weight: 500; font-size: 0.725rem; color: #64748b;">Case sensitive</span>
+                  </label>
+                  <div class="captcha-row">
+                    <div class="captcha-display notranslate" id="captcha-code" translate="no">T8K4Z</div>
+                    <button type="button" class="captcha-refresh-btn" id="captcha-refresh" title="Generate new security code" aria-label="Refresh Captcha">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                    </button>
+                    <input type="text" id="login-captcha" class="form-input-gov" style="padding-left: 0.85rem;" placeholder="Type captcha code" required maxlength="6">
+                  </div>
+                </div>
+
+                <!-- Form Options: Remember Me -->
+                <div class="form-options-row">
+                  <label class="checkbox-label-gov">
+                    <input type="checkbox" id="remember-me">
+                    <span>Remember officer code on this terminal</span>
+                  </label>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn-auth-submit" id="btn-login-submit">
+                  <span id="login-submit-text">Authorize & Sign In</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+              </form>
+            </div>
+
+            <!-- TAB 2: NEW OFFICER REGISTRATION PANEL -->
+            <div class="auth-panel" id="panel-register" role="tabpanel" aria-labelledby="tab-register">
+              <div class="auth-panel-heading">
+                <h2 class="auth-panel-title">Register Competency Profile</h2>
+                <p class="auth-panel-subtitle">Mandatory enrollment for public statistical personnel and central cadres.</p>
+              </div>
+
+              <form id="form-officer-register" novalidate>
+                <!-- Row 1: Full Name & Official Email -->
+                <div class="form-row-2col">
+                  <div class="form-group-gov">
+                    <label for="reg-fullname" class="form-label-gov">Official Full Name</label>
+                    <div class="form-input-wrap">
+                      <span class="form-input-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                      </span>
+                      <input type="text" id="reg-fullname" class="form-input-gov" placeholder="As per service record" required>
+                    </div>
+                  </div>
+
+                  <div class="form-group-gov">
+                    <label for="reg-email" class="form-label-gov">Official Email ID (@gov.in / @nic.in)</label>
+                    <div class="form-input-wrap">
+                      <span class="form-input-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                      </span>
+                      <input type="email" id="reg-email" class="form-input-gov" placeholder="officer@nic.in or @mospi.gov.in" required>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Row 2: Cadre Stream & Employee ID -->
+                <div class="form-row-2col">
+                  <div class="form-group-gov">
+                    <label for="reg-cadre" class="form-label-gov">Cadre / Service Designation</label>
+                    <div class="form-input-wrap">
+                      <span class="form-input-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                      </span>
+                      <select id="reg-cadre" class="form-select-gov" required>
+                        <option value="" disabled selected>Select official cadre</option>
+                        <option value="ISS">Indian Statistical Service (ISS)</option>
+                        <option value="SSS">Subordinate Statistical Service (SSS)</option>
+                        <option value="MoSPI_HQ">MoSPI Ministry HQ (Administrative)</option>
+                        <option value="FOD">Field Operations Division (NSSO / FOD)</option>
+                        <option value="SDRD">Survey Design & Research Division (SDRD)</option>
+                        <option value="STATE_DES">State Directorate of Economics & Statistics</option>
+                        <option value="NSSTA">NSSTA Academy Faculty / Researcher</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group-gov">
+                    <label for="reg-empcode" class="form-label-gov">Employee / Officer Code</label>
+                    <div class="form-input-wrap">
+                      <span class="form-input-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"></rect><line x1="7" y1="8" x2="17" y2="8"></line><line x1="7" y1="12" x2="17" y2="12"></line><line x1="7" y1="16" x2="12" y2="16"></line></svg>
+                      </span>
+                      <input type="text" id="reg-empcode" class="form-input-gov" placeholder="e.g. SSS-2024-8891" required>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Row 3: Department / Office & Mobile -->
+                <div class="form-row-2col">
+                  <div class="form-group-gov">
+                    <label for="reg-office" class="form-label-gov">Department / Directorate Posting</label>
+                    <div class="form-input-wrap">
+                      <span class="form-input-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+                      </span>
+                      <input type="text" id="reg-office" class="form-input-gov" placeholder="e.g. NSSO Regional Office, Jaipur" required>
+                    </div>
+                  </div>
+
+                  <div class="form-group-gov">
+                    <label for="reg-mobile" class="form-label-gov">Aadhaar-Linked Official Mobile</label>
+                    <div class="form-input-wrap">
+                      <span class="form-input-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+                      </span>
+                      <input type="tel" id="reg-mobile" class="form-input-gov" placeholder="10-digit mobile number" maxlength="10" required>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Row 4: Password & Confirm -->
+                <div class="form-row-2col">
+                  <div class="form-group-gov">
+                    <label for="reg-password" class="form-label-gov">Security Password</label>
+                    <div class="form-input-wrap">
+                      <span class="form-input-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                      </span>
+                      <input type="password" id="reg-password" class="form-input-gov" placeholder="Min. 8 chars, 1 capital & special" required autocomplete="new-password">
+                      <button type="button" class="form-input-toggle-btn" data-toggle-target="reg-password" aria-label="Toggle password visibility">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="form-group-gov">
+                    <label for="reg-password-confirm" class="form-label-gov">Confirm Security Password</label>
+                    <div class="form-input-wrap">
+                      <span class="form-input-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                      </span>
+                      <input type="password" id="reg-password-confirm" class="form-input-gov" placeholder="Re-enter password" required autocomplete="new-password">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Statutory Compliance Checkbox -->
+                <div class="form-group-gov" style="margin-top: 0.5rem; margin-bottom: 1.5rem;">
+                  <label class="checkbox-label-gov" style="align-items: flex-start;">
+                    <input type="checkbox" id="reg-consent" required style="margin-top: 3px;">
+                    <span style="font-size: 0.775rem; line-height: 1.45;">
+                      I declare that I am an authorized government statistical officer. I agree to abide by the provisions of the <strong>Official Secrets Act, 1923</strong> and the <strong>Digital Personal Data Protection Act, 2023</strong> regarding confidentiality of assessment data.
+                    </span>
+                  </label>
+                </div>
+
+                <!-- Registration Submit Button -->
+                <button type="submit" class="btn-auth-submit">
+                  <span>Submit Officer Registration for Nodal Approval</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+              </form>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right: Official Advisory & Support Column -->
+        <div class="auth-side-panel">
+          
+          <!-- Official Warning Card -->
+          <div class="auth-info-card warning-style">
+            <div class="auth-info-header" style="color: #92400e;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+              <span>Restricted Government Gateway</span>
+            </div>
+            <p class="auth-info-text">
+              This system is strictly reserved for authorized personnel of the Ministry of Statistics & Programme Implementation (MoSPI) and designated State Directorate cadres. Unauthorized access attempts are monitored and prosecutable under Section 43 and 66 of the Information Technology Act, 2000.
+            </p>
+          </div>
+
+          <!-- Registration Prerequisites Card -->
+          <div class="auth-info-card">
+            <div class="auth-info-header">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+              <span>Registration Requirements</span>
+            </div>
+            <ul class="auth-checklist">
+              <li>
+                <span class="bullet">▸</span>
+                <span>Active <strong>@gov.in</strong> or <strong>@nic.in</strong> official email address.</span>
+              </li>
+              <li>
+                <span class="bullet">▸</span>
+                <span>Valid Employee Roll Code issued by MoSPI Administration or State DES.</span>
+              </li>
+              <li>
+                <span class="bullet">▸</span>
+                <span>Aadhaar-linked mobile for dual-factor verification (2FA).</span>
+              </li>
+              <li>
+                <span class="bullet">▸</span>
+                <span>Approval by designated Departmental Nodal Officer within 24 hours.</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Helpdesk Assistance Card -->
+          <div class="auth-helpdesk-card">
+            <div class="auth-info-header" style="color: var(--gov-navy);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+              <span>Nodal Officer Support</span>
+            </div>
+            <p class="auth-info-text">
+              Facing login issues, transferred to a new field division, or require biometric reset?
+            </p>
+            <div class="helpdesk-item">
+              <span>📧 Email:</span>
+              <a href="mailto:support-nirdesha@nic.in" class="form-link-gov">support-nirdesha@nic.in</a>
+            </div>
+            <div class="helpdesk-item">
+              <span>📞 Toll-Free:</span>
+              <span>1800-11-MoSPI (09:30 - 18:00 IST)</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ==========================================================================
+       4. STRICTLY BLACK FOOTER (GOVERNMENT MANDATE)
+       ========================================================================== -->
+  <footer class="footer-gov" role="contentinfo">
+    <div class="container">
+      <div class="footer-top-grid">
+        <!-- Brand & Description -->
+        <div>
+          <div class="footer-brand-title">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gov-saffron)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+            <span>निर्देश NIRDESHA</span>
+          </div>
+          <p class="footer-brand-text">
+            National Competency-Intelligence and Training Guidance Platform. Official authentication gateway for central and state statistical officers.
+          </p>
+          <p style="font-size: 0.8rem; color: #71717a;">
+            Ministry of Statistics and Programme Implementation (MoSPI)<br>
+            Khurshid Lal Bhawan, Janpath, New Delhi - 110001
+          </p>
+        </div>
+
+        <!-- Navigation Links -->
+        <div>
+          <h4 class="footer-col-title">Portal Navigation</h4>
+          <ul class="footer-links">
+            <li><a href="main.html" class="footer-link">Nirdesha Home Portal</a></li>
+            <li><a href="main.html#about" class="footer-link">About Nirdesha</a></li>
+            <li><a href="main.html#framework" class="footer-link">Competency Framework</a></li>
+            <li><a href="main.html#assessments" class="footer-link">Diagnostic Assessments</a></li>
+            <li><a href="main.html#training" class="footer-link">Training Pathways</a></li>
+          </ul>
+        </div>
+
+        <!-- External Government Portals -->
+        <div>
+          <h4 class="footer-col-title">Government Links</h4>
+          <ul class="footer-links">
+            <li><a href="https://india.gov.in" target="_blank" rel="noopener" class="footer-link">National Portal of India</a></li>
+            <li><a href="https://mospi.gov.in" target="_blank" rel="noopener" class="footer-link">MoSPI Official Website</a></li>
+            <li><a href="https://digitalindia.gov.in" target="_blank" rel="noopener" class="footer-link">Digital India</a></li>
+            <li><a href="https://mygov.in" target="_blank" rel="noopener" class="footer-link">MyGov Platform</a></li>
+            <li><a href="https://data.gov.in" target="_blank" rel="noopener" class="footer-link">Open Government Data (OGD)</a></li>
+          </ul>
+        </div>
+
+        <!-- Help & Information -->
+        <div>
+          <h4 class="footer-col-title">Help & Support</h4>
+          <ul class="footer-links">
+            <li><a href="mailto:support-nirdesha@nic.in" class="footer-link">Nodal Officer Helpdesk</a></li>
+            <li><a href="main.html#faq" class="footer-link">Frequently Asked Questions</a></li>
+            <li><a href="main.html#sitemap" class="footer-link">Portal Sitemap</a></li>
+            <li><a href="main.html#feedback" class="footer-link">Feedback / Grievances</a></li>
+            <li><a href="main.html#disclaimer" class="footer-link">Accessibility Statement</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Mandatory GIGW Government Policies Ribbon -->
+      <div class="footer-policies-bar">
+        <ul class="policies-list">
+          <li><a href="main.html#terms">Terms of Use</a></li>
+          <li><a href="main.html#privacy">Privacy Policy</a></li>
+          <li><a href="main.html#copyright">Copyright Policy</a></li>
+          <li><a href="main.html#hyperlink">Hyperlinking Policy</a></li>
+          <li><a href="main.html#security">Security Policy</a></li>
+          <li><a href="main.html#disclaimer">Disclaimer</a></li>
+          <li><a href="main.html#help">Help</a></li>
+        </ul>
+      </div>
+
+      <!-- Mandatory NIC & Government Attribution in Solid Black Container -->
+      <div class="footer-bottom">
+        <p>
+          © 2026 Website Content Managed by <strong>Ministry of Statistics and Programme Implementation, Government of India</strong>. All Rights Reserved.
+        </p>
+        <p>
+          Designed, Developed and Hosted by <strong>National Informatics Centre (NIC)</strong> / Nirdesha Technology & Research Unit.
+        </p>
+        <div class="footer-meta-info">
+          <span>Last Updated: <strong>02 September 2026</strong></span>
+          <span>•</span>
+          <span>Security Status: <strong>NIC Security Audit Certified</strong></span>
+          <span>•</span>
+          <span>Compliant with <strong>GIGW 3.0 (Quality Certified)</strong></span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Authentication Script -->
+  <script src="js/auth.js"></script>
+</body>
+</html>
