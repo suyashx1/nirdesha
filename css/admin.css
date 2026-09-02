@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    NIRDESHA — ADMIN DASHBOARD DESIGN SYSTEM
    Sidebar Layout, Command Center, Course Catalog, AI Mentor, Profile & Settings
    ========================================================================== */
@@ -956,3 +956,240 @@ body.admin-body {
     display: block;
   }
 }
+
+/* ==========================================================================
+   8. CORE FEATURE ENHANCEMENTS: EDITABLE PROFILES, AVATAR UPLOAD, DOC DROP SHIMMER, SORT & INSPECT
+   ========================================================================== */
+
+/* Profile Form Fields */
+.profile-field-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #334155;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.35rem;
+}
+
+.profile-input-field {
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #002b49;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 0px !important;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+}
+
+.profile-input-field:focus {
+  outline: none;
+  border-color: #ea580c;
+  box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.15);
+}
+
+.profile-grid-fields {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 640px) {
+  .profile-grid-fields {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Avatar Upload Overlay */
+.profile-avatar-container {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.avatar-upload-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 43, 73, 0.75);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+
+.profile-avatar-container:hover .avatar-upload-overlay {
+  opacity: 1;
+}
+
+.profile-toast-alert {
+  background: #dcfce7;
+  border: 1px solid #16a34a;
+  color: #166534;
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 0.45rem 0.85rem;
+  border-radius: 0px !important;
+  animation: adminFade 0.3s ease;
+}
+
+/* Document Drop AI Extraction Zone */
+.doc-drop-zone {
+  background: #fff7ed;
+  border: 2px dashed #ea580c;
+  padding: 1.25rem 1.5rem;
+  border-radius: 0px !important;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.doc-drop-zone:hover,
+.doc-drop-zone.dragover {
+  background: #ffedd5;
+  border-color: #c2410c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.15);
+}
+
+.doc-drop-icon {
+  width: 48px;
+  height: 48px;
+  background: #ffffff;
+  border: 1.5px solid #ea580c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.doc-drop-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.doc-drop-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #002b49;
+}
+
+.doc-drop-sub {
+  font-size: 0.775rem;
+  color: #475569;
+  line-height: 1.45;
+}
+
+.doc-drop-link {
+  color: #ea580c;
+  font-weight: 800;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Shimmer Loading State */
+.shimmer-container {
+  background: #ffffff;
+  border: 1.5px solid #002b49;
+  padding: 1.25rem;
+  margin-top: 1rem;
+}
+
+.shimmer-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #002b49;
+  margin-bottom: 1rem;
+}
+
+.shimmer-block {
+  height: 14px;
+  background: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%);
+  background-size: 200% 100%;
+  animation: shimmerSweep 1.5s infinite;
+  margin-bottom: 0.65rem;
+}
+
+@keyframes shimmerSweep {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Sortable Headers */
+.sortable-header {
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s ease;
+}
+
+.sortable-header:hover {
+  background: #e2e8f0 !important;
+  color: #002b49 !important;
+}
+
+.sort-icon {
+  display: inline-block;
+  margin-left: 0.35rem;
+  font-size: 0.75rem;
+  color: #ea580c;
+}
+
+/* Admin Inspect Modal */
+.admin-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 21, 36, 0.75);
+  backdrop-filter: blur(4px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.admin-modal-dialog {
+  background: #ffffff;
+  border: 2px solid #002b49;
+  box-shadow: 8px 8px 0px #ea580c;
+  width: 100%;
+  max-width: 600px;
+  overflow: hidden;
+  animation: adminFade 0.25s ease-out;
+}
+
+.admin-modal-header {
+  background: #002b49;
+  color: #ffffff;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 3px solid #ea580c;
+}
+
+.admin-modal-body {
+  padding: 1.5rem;
+}
+
+.admin-modal-footer {
+  padding: 1rem 1.5rem;
+  background: #f8fafc;
+  border-top: 1.5px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+

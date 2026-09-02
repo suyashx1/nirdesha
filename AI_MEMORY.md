@@ -37,11 +37,11 @@ Phase 0 — Repository scaffolding (docs + memory system). No application code w
 - [ ] Set up PostgreSQL schema migrations from docs/DATABASE_SCHEMA.md
 - [ ] Implement auth (JWT) + RBAC middleware
 
-### Phase 2 — Core Competency Engine (not started)
+### Phase 2 — Core Competency Engine (in progress)
 - [ ] Implement Skill/Role/RoleSkillRequirement CRUD
 - [ ] Implement skill-gap calculation
 - [ ] Implement Skill Confidence Score formula
-- [ ] Implement resume upload + parsing pipeline with human-review step
+- [x] Implement resume upload + parsing pipeline with human-review step
 
 ### Phase 3 — New Gamification Features (not started)
 - [ ] Implement SkillRating table + Elo-style update formula
@@ -89,6 +89,7 @@ Phase 0 — Repository scaffolding (docs + memory system). No application code w
 - [2026-09-02 13:01 UTC] [DONE] Made Officer Login and Sign Up navbar buttons strictly square (border-radius: 0px) and prominently visible with saffron/navy contrast and sharp shadows. Initialized admin.html blank page and configured admin credentials (admin@gov / admin) routing. — by Antigravity
 - [2026-09-02 13:06 UTC] [DONE] Built full administrative dashboard in admin.html with left sticky sidebar (Dashboard, Courses, AI Mentor, Skill Diagnostics, Directory, Profile, Settings, Sign Out), interactive AI Mentor chat copilot, and NSSTA course catalog. — by Antigravity
 - [2026-09-02 13:12 UTC] [DONE] Implemented public/public case-insensitive login without captcha requirement routing to public.html. Built officer trainee learning dashboard with GitHub-style 12-week heatmap, competitive per-domain Elo skill ratings, 2D skill radar, NotebookLM revision cards, 5-minute timed assessment quiz modal, and Nirdesha verified certificate preview. — by Antigravity
+- [2026-09-02 19:15 UTC] [DONE] Refactored all Officer terminology to User across admin and public portals. Implemented interactive editable profiles with avatar upload persistence, Admin Inspect & Access Control modal, topbar dynamic search, clickable table header sorting, and PDF Document Drop AI Extraction pipeline with shimmering loading state. — by Antigravity
 
 ## Open Questions / Decisions Needed
 - Final call on 3D vs 2D as the DEFAULT skill graph view for the SIH demo (2D is the

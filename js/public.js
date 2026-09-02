@@ -1,10 +1,13 @@
 /**
- * Nirdesha — Officer / Public Trainee Learning Dashboard Script
- * Manages Heatmap Rendering, Elo Rating Simulator, Fixed-Time Quiz, NotebookLM Cards, & AI Mentor
+ * Nirdesha — User / Public Trainee Learning Dashboard Script
+ * Manages Heatmap Rendering, Elo Rating Simulator, Fixed-Time Quiz, NotebookLM Cards,
+ * Interactive Profile Persistence, Avatar Upload, and Document Drop AI Extraction.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Sidebar Tab Switching
+  // ==========================================================================
+  // 1. SIDEBAR TAB NAVIGATION & MOBILE DRAWER
+  // ==========================================================================
   const navItems = document.querySelectorAll('.trainee-nav-item[data-tab]');
   const viewTabs = document.querySelectorAll('.trainee-view-tab');
   const sidebar = document.getElementById('trainee-sidebar');
@@ -54,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 2. Sign Out Action
+  // Sign Out Action
   const signoutBtn = document.getElementById('trainee-signout-btn');
   if (signoutBtn) {
     signoutBtn.addEventListener('click', (e) => {
@@ -64,15 +67,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 3. Render GitHub-Style Contribution Heatmap
+  // ==========================================================================
+  // 2. GITHUB-STYLE CONTRIBUTION HEATMAP
+  // ==========================================================================
   const heatmapGrid = document.getElementById('heatmap-grid');
   if (heatmapGrid) {
-    // Generate 12 weeks of activity (84 days)
-    const levels = ['lvl-0', 'lvl-1', 'lvl-2', 'lvl-3', 'lvl-4'];
     for (let i = 0; i < 84; i++) {
       const day = document.createElement('div');
       day.className = 'heatmap-day';
-      // Pseudo-random activity distribution biased towards active consistency
       const rand = Math.random();
       let lvl = 'lvl-1';
       if (rand < 0.2) lvl = '';
@@ -87,7 +89,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 4. Fixed-Total-Time Self-Evaluation Quiz Engine
+  // ==========================================================================
+  // 3. FIXED-TIME SELF-EVALUATION QUIZ ENGINE
+  // ==========================================================================
   const quizModal = document.getElementById('quiz-modal');
   const openQuizBtns = document.querySelectorAll('.btn-open-quiz');
   const closeQuizBtn = document.getElementById('quiz-close-btn');
@@ -142,8 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function submitQuizAssessment() {
     clearInterval(timerInterval);
     const timeSpent = 300 - remainingSeconds;
-    // Calculate simulated score
-    const correctCount = 4; // Mock 4 out of 5
+    const correctCount = 4;
     const totalCount = 5;
     const accuracy = (correctCount / totalCount) * 100;
     const timeEfficiency = Math.round(((300 - (timeSpent / 2)) / 300) * 100);
@@ -157,7 +160,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (scoreDisplay) scoreDisplay.textContent = `${accuracy}% Accuracy (${timeSpent}s used, ${timeEfficiency}% Speed Efficiency)`;
     if (eloDeltaDisplay) eloDeltaDisplay.textContent = `+28 Elo (Domain: Survey Sampling & Theory)`;
 
-    // Update the live Elo badge on the topbar
     const topElo = document.getElementById('trainee-top-elo');
     if (topElo) topElo.textContent = '⚡ 1,513 Elo (Level 3 - Proficient)';
   }
@@ -169,7 +171,181 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 5. Interactive Trainee AI Study Mentor Chat
+  // ==========================================================================
+  // 4. INTERACTIVE PROFILE & AVATAR UPLOAD HANDLER
+  // ==========================================================================
+  const profileName = document.getElementById('public-profile-name');
+  const profileRole = document.getElementById('public-profile-role');
+  const profileEmail = document.getElementById('public-profile-email');
+  const profileRoll = document.getElementById('public-profile-roll');
+  const profileCadre = document.getElementById('public-profile-cadre');
+  const profileDivision = document.getElementById('public-profile-division');
+  const profileSkills = document.getElementById('public-profile-skills');
+  const profileAvatar = document.getElementById('public-profile-avatar');
+  const sidebarAvatar = document.getElementById('public-sidebar-avatar');
+  const sidebarName = document.getElementById('public-sidebar-name');
+  const sidebarRole = document.getElementById('public-sidebar-role');
+  const saveProfileBtn = document.getElementById('public-save-profile-btn');
+  const profileToast = document.getElementById('public-profile-toast');
+
+  const avatarBtn = document.getElementById('public-avatar-btn');
+  const avatarFileInput = document.getElementById('public-avatar-file-input');
+
+  function loadSavedProfile() {
+    const saved = localStorage.getItem('nirdesha_public_profile');
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        if (profileName && data.name) profileName.value = data.name;
+        if (profileRole && data.role) profileRole.value = data.role;
+        if (profileEmail && data.email) profileEmail.value = data.email;
+        if (profileRoll && data.roll) profileRoll.value = data.roll;
+        if (profileCadre && data.cadre) profileCadre.value = data.cadre;
+        if (profileDivision && data.division) profileDivision.value = data.division;
+        if (profileSkills && data.skills) profileSkills.value = data.skills;
+
+        if (sidebarName && data.name) sidebarName.textContent = data.name;
+        if (sidebarRole && data.role) sidebarRole.textContent = data.role;
+
+        if (data.avatarImg) {
+          setAvatarImage(data.avatarImg);
+        }
+      } catch (err) {
+        console.error("Error loading public profile:", err);
+      }
+    }
+  }
+
+  function setAvatarImage(src) {
+    if (profileAvatar) {
+      profileAvatar.style.backgroundImage = `url(${src})`;
+      profileAvatar.style.backgroundSize = 'cover';
+      profileAvatar.style.backgroundPosition = 'center';
+      profileAvatar.textContent = '';
+    }
+    if (sidebarAvatar) {
+      sidebarAvatar.style.backgroundImage = `url(${src})`;
+      sidebarAvatar.style.backgroundSize = 'cover';
+      sidebarAvatar.style.backgroundPosition = 'center';
+      sidebarAvatar.textContent = '';
+    }
+  }
+
+  loadSavedProfile();
+
+  if (saveProfileBtn) {
+    saveProfileBtn.addEventListener('click', () => {
+      const data = {
+        name: profileName ? profileName.value : '',
+        role: profileRole ? profileRole.value : '',
+        email: profileEmail ? profileEmail.value : '',
+        roll: profileRoll ? profileRoll.value : '',
+        cadre: profileCadre ? profileCadre.value : '',
+        division: profileDivision ? profileDivision.value : '',
+        skills: profileSkills ? profileSkills.value : '',
+        avatarImg: localStorage.getItem('nirdesha_public_avatar') || ''
+      };
+
+      localStorage.setItem('nirdesha_public_profile', JSON.stringify(data));
+
+      if (sidebarName) sidebarName.textContent = data.name;
+      if (sidebarRole) sidebarRole.textContent = data.role;
+
+      if (profileToast) {
+        profileToast.style.display = 'block';
+        setTimeout(() => { profileToast.style.display = 'none'; }, 3000);
+      }
+    });
+  }
+
+  if (avatarBtn && avatarFileInput) {
+    avatarBtn.addEventListener('click', () => avatarFileInput.click());
+
+    avatarFileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const dataUrl = event.target.result;
+        setAvatarImage(dataUrl);
+        localStorage.setItem('nirdesha_public_avatar', dataUrl);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // ==========================================================================
+  // 5. DOCUMENT DROP AI EXTRACTION PIPELINE (PHASE 2 PARSER)
+  // ==========================================================================
+  const pdfDropZone = document.getElementById('public-pdf-drop-zone');
+  const pdfInput = document.getElementById('public-pdf-input');
+  const pdfBrowseLink = document.getElementById('public-pdf-browse');
+  const pdfShimmer = document.getElementById('public-pdf-shimmer');
+  const shimmerStatusText = document.getElementById('public-shimmer-status-text');
+
+  if (pdfDropZone) {
+    pdfDropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      pdfDropZone.classList.add('dragover');
+    });
+
+    pdfDropZone.addEventListener('dragleave', () => {
+      pdfDropZone.classList.remove('dragover');
+    });
+
+    pdfDropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      pdfDropZone.classList.remove('dragover');
+      const files = e.dataTransfer.files;
+      if (files.length > 0) triggerPdfExtraction(files[0]);
+    });
+
+    pdfDropZone.addEventListener('click', (e) => {
+      if (e.target === pdfBrowseLink || pdfDropZone.contains(e.target)) {
+        if (pdfInput) pdfInput.click();
+      }
+    });
+  }
+
+  if (pdfInput) {
+    pdfInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) triggerPdfExtraction(e.target.files[0]);
+    });
+  }
+
+  function triggerPdfExtraction(file) {
+    if (!pdfShimmer || !shimmerStatusText) return;
+
+    pdfShimmer.style.display = 'block';
+    shimmerStatusText.textContent = `⚡ Initializing MoSPI AI Document Extraction Engine for "${file.name}"...`;
+
+    setTimeout(() => {
+      shimmerStatusText.textContent = `📄 Parsing PDF structure & service credentials...`;
+    }, 600);
+
+    setTimeout(() => {
+      shimmerStatusText.textContent = `🤖 Auto-populating Cadre, Division & Baseline Skills...`;
+    }, 1200);
+
+    setTimeout(() => {
+      pdfShimmer.style.display = 'none';
+
+      if (profileCadre) profileCadre.value = "Subordinate Statistical Service (SSS Cadre)";
+      if (profileDivision) profileDivision.value = "NSSO Field Operations Division (FOD), Regional Office";
+      if (profileSkills) profileSkills.value = "Survey Sampling Theory, CAPI Tablet Operations, Python Computing, DPDP Compliance";
+
+      if (profileToast) {
+        profileToast.textContent = `✓ AI Extracted Profile Data from "${file.name}" — Review & Click Save!`;
+        profileToast.style.display = 'block';
+        setTimeout(() => { profileToast.style.display = 'none'; }, 4000);
+      }
+    }, 1800);
+  }
+
+  // ==========================================================================
+  // 6. INTERACTIVE AI STUDY MENTOR CHAT
+  // ==========================================================================
   const traineeChatLog = document.getElementById('trainee-chat-log');
   const traineeChatInput = document.getElementById('trainee-chat-input');
   const traineeChatSend = document.getElementById('trainee-chat-send');

@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    NIRDESHA — GOVERNMENT PORTAL AUTHENTICATION DESIGN SYSTEM
    Login & New Officer Registration Interface
    ========================================================================== */
@@ -665,3 +665,117 @@
 [data-theme="dark"] .auth-nav-back {
   color: #38bdf8;
 }
+
+/* Document Drop AI Extraction Zone */
+.doc-drop-zone {
+  background: #fff7ed;
+  border: 2px dashed #ea580c;
+  padding: 1rem 1.25rem;
+  border-radius: 0px !important;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.doc-drop-zone:hover,
+.doc-drop-zone.dragover {
+  background: #ffedd5;
+  border-color: #c2410c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.15);
+}
+
+.doc-drop-icon {
+  width: 44px;
+  height: 44px;
+  background: #ffffff;
+  border: 1.5px solid #ea580c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.doc-drop-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.doc-drop-title {
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: #002b49;
+}
+
+.doc-drop-sub {
+  font-size: 0.775rem;
+  color: #475569;
+  line-height: 1.4;
+}
+
+.doc-drop-link {
+  color: #ea580c;
+  font-weight: 800;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Shimmer Loading State */
+.shimmer-container {
+  background: #ffffff;
+  border: 1.5px solid #002b49;
+  padding: 1.25rem;
+}
+
+.shimmer-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.825rem;
+  font-weight: 800;
+  color: #002b49;
+  margin-bottom: 0.85rem;
+}
+
+.status-dot-pulse {
+  width: 7px;
+  height: 7px;
+  background-color: #10b981;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
+}
+
+.shimmer-block {
+  height: 12px;
+  background: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%);
+  background-size: 200% 100%;
+  animation: shimmerSweep 1.5s infinite;
+  margin-bottom: 0.5rem;
+}
+
+@keyframes shimmerSweep {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+[data-theme="dark"] .doc-drop-zone {
+  background: #1e1b18;
+  border-color: #f97316;
+}
+
+[data-theme="dark"] .doc-drop-title {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .doc-drop-sub {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .shimmer-container {
+  background: #111827;
+  border-color: #38bdf8;
+}
+
