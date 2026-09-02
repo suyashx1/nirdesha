@@ -291,23 +291,88 @@ document.addEventListener('DOMContentLoaded', () => {
     traineeChatLog.scrollTop = traineeChatLog.scrollHeight;
   }
 
-  function handleTraineeChat(query) {
+    async function handleTraineeChat(query) {
     if (!query.trim()) return;
     sendTraineeChatMessage(query, 'user');
     if (traineeChatInput) traineeChatInput.value = '';
 
-    setTimeout(() => {
+    // Create bot response bubble immediately
+    const botBubble = document.createElement('div');
+    botBubble.className = 'chat-bubble bot';
+    botBubble.innerHTML = '<span style="color:#64748b; font-style:italic;">⚡ Thinking...</span>';
+    traineeChatLog.appendChild(botBubble);
+    traineeChatLog.scrollTop = traineeChatLog.scrollHeight;
+
+    let accumulatedText = '';
+    let hasReceivedFirstToken = false;
+
+    try {
+      // 1. Try Ultra-Fast Streaming Endpoint (/api/chat/stream)
+      const response = await fetch('http://127.0.0.1:8000/api/chat/stream', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: 'public',
+          message: query,
+          role: 'mentor'
+        })
+      });
+
+      if (response.ok && response.body) {
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder('utf-8');
+        let buffer = '';
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split(/\r?\n/);
+          buffer = lines.pop(); // keep partial line
+
+          for (const line of lines) {
+            const trimmed = line.trim();
+            if (trimmed === 'data: [DONE]') break;
+            if (trimmed.startsWith('data: ')) {
+              try {
+                const parsed = JSON.parse(trimmed.slice(6));
+                if (parsed.chunk) {
+                  if (!hasReceivedFirstToken) {
+                    botBubble.innerHTML = '';
+                    hasReceivedFirstToken = true;
+                  }
+                  accumulatedText += parsed.chunk;
+                  botBubble.innerHTML = accumulatedText.replace(/\n/g, '<br>');
+                  traineeChatLog.scrollTop = traineeChatLog.scrollHeight;
+                }
+              } catch (e) {}
+            }
+          }
+        }
+
+        if (accumulatedText.trim()) {
+          return;
+        }
+      }
+    } catch (err) {
+      // Server offline - fallback
+    }
+
+    // 2. Offline instant fallback if server is unreachable
+    if (!hasReceivedFirstToken) {
       const q = query.toLowerCase();
       let reply = TRAINEE_RESPONSES["default"];
       if (q.includes('formula') || q.includes('sampling') || q.includes('weight')) {
         reply = TRAINEE_RESPONSES["formula"];
-      } else if (q.includes('cpi') || q.includes('inflation')) {
+      } else if (q.includes('cpi') || q.includes('inflation') || q.includes('deflator')) {
         reply = TRAINEE_RESPONSES["cpi"];
-      } else if (q.includes('dpdp') || q.includes('privacy')) {
+      } else if (q.includes('dpdp') || q.includes('privacy') || q.includes('law')) {
         reply = TRAINEE_RESPONSES["dpdp"];
       }
-      sendTraineeChatMessage(reply, 'bot');
-    }, 500);
+      botBubble.innerHTML = reply.replace(/\n/g, '<br>');
+      traineeChatLog.scrollTop = traineeChatLog.scrollHeight;
+    }
   }
 
   if (traineeChatSend && traineeChatInput) {
