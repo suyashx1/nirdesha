@@ -1,0 +1,388 @@
+/* ==========================================================================
+   NIRDESHA GLOBAL AI GUIDANCE COMPANION POP-UP
+   Consistent across all portal pages (main, public, admin, login)
+   ========================================================================== */
+
+/* Floating Launcher Container at Bottom Right */
+.nirdesha-companion-launcher {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999990;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+/* "Do you need any help?" Prompt Bubble */
+.companion-prompt-bubble {
+  background: #ffffff;
+  border: 1.5px solid #002b49;
+  border-radius: 0px !important;
+  box-shadow: 3px 3px 0px #ea580c, 0 8px 20px rgba(0, 0, 0, 0.12);
+  padding: 0.5rem 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  animation: companionPulse 3s ease-in-out infinite;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  user-select: none;
+}
+
+.companion-prompt-bubble:hover {
+  transform: translateY(-2px);
+  box-shadow: 4px 4px 0px #ea580c;
+}
+
+.companion-prompt-text {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #002b49;
+  white-space: nowrap;
+}
+
+.companion-spark-icon {
+  color: #ea580c;
+  display: flex;
+  align-items: center;
+}
+
+@keyframes companionPulse {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+/* Floating AI Avatar Button */
+.companion-avatar-btn {
+  width: 54px;
+  height: 54px;
+  background: #002b49;
+  border: 2px solid #ea580c;
+  border-radius: 0px !important;
+  box-shadow: 3px 3px 0px #ea580c, 0 10px 25px rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.companion-avatar-btn:hover {
+  background: #ea580c;
+  border-color: #002b49;
+  box-shadow: 3px 3px 0px #002b49;
+  transform: scale(1.05);
+}
+
+.companion-online-dot {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 10px;
+  height: 10px;
+  background: #22c55e;
+  border: 2px solid #002b49;
+  border-radius: 50%;
+}
+
+/* ==========================================================================
+   AI GUIDANCE POP-UP CHAT WINDOW
+   ========================================================================== */
+.companion-popup-window {
+  position: fixed;
+  bottom: 88px;
+  right: 24px;
+  width: 380px;
+  max-width: calc(100vw - 32px);
+  height: 520px;
+  max-height: calc(100vh - 110px);
+  background: #ffffff;
+  border: 2px solid #002b49;
+  border-radius: 0px !important;
+  box-shadow: 6px 6px 0px #ea580c, 0 25px 50px rgba(0, 0, 0, 0.25);
+  z-index: 999995;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  opacity: 0;
+  transform: translateY(20px) scale(0.96);
+  pointer-events: none;
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.companion-popup-window.is-open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+/* Header Tricolor Accent Strip */
+.companion-header-tricolor {
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(90deg, #ea580c 33.3%, #ffffff 33.3% 66.6%, #15803d 66.6%);
+}
+
+/* Popup Header */
+.companion-header {
+  background: #f8fafc;
+  border-bottom: 1.5px solid #e2e8f0;
+  padding: 0.85rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.companion-header-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.companion-header-avatar {
+  width: 32px;
+  height: 32px;
+  background: #002b49;
+  border: 1.5px solid #ea580c;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.companion-header-titles {
+  display: flex;
+  flex-direction: column;
+}
+
+.companion-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #002b49;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.companion-status {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #15803d;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 1px;
+}
+
+.companion-status-indicator {
+  width: 6px;
+  height: 6px;
+  background: #22c55e;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Header Action Buttons (Fullscreen & Close) */
+.companion-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.companion-action-btn {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 0px !important;
+  transition: all 0.15s ease;
+}
+
+.companion-action-btn:hover {
+  background: #002b49;
+  border-color: #002b49;
+  color: #ffffff;
+}
+
+.companion-action-btn.btn-close:hover {
+  background: #dc2626;
+  border-color: #dc2626;
+  color: #ffffff;
+}
+
+/* Chat Body */
+.companion-chat-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: #ffffff;
+}
+
+.companion-msg {
+  max-width: 84%;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.825rem;
+  line-height: 1.45;
+  border-radius: 0px !important;
+  word-break: break-word;
+}
+
+.companion-msg.bot {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-left: 3.5px solid #ea580c;
+  color: #1e293b;
+  align-self: flex-start;
+}
+
+.companion-msg.user {
+  background: #002b49;
+  border: 1px solid #00172c;
+  color: #ffffff;
+  align-self: flex-end;
+}
+
+/* Suggested Question Chips */
+.companion-chips-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.25rem;
+}
+
+.companion-chip {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #002b49;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.25rem 0.55rem;
+  cursor: pointer;
+  border-radius: 0px !important;
+  transition: all 0.15s ease;
+}
+
+.companion-chip:hover {
+  background: #ea580c;
+  border-color: #c2410c;
+  color: #ffffff;
+}
+
+/* Chat Footer Input */
+.companion-footer {
+  padding: 0.75rem 1rem;
+  border-top: 1.5px solid #e2e8f0;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.companion-input {
+  flex: 1;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.825rem;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 0px !important;
+  background: #ffffff;
+  color: #0f172a;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.15s ease;
+}
+
+.companion-input:focus {
+  border-color: #ea580c;
+}
+
+.companion-send-btn {
+  background: #002b49;
+  border: 1.5px solid #00172c;
+  color: #ffffff;
+  padding: 0.6rem 0.9rem;
+  cursor: pointer;
+  border-radius: 0px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.companion-send-btn:hover {
+  background: #ea580c;
+  border-color: #c2410c;
+}
+
+/* Dark Theme Overrides */
+[data-theme="dark"] .companion-prompt-bubble {
+  background: #0f172a;
+  border-color: #334155;
+  box-shadow: 3px 3px 0px #ea580c;
+}
+
+[data-theme="dark"] .companion-prompt-text {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .companion-popup-window {
+  background: #0f172a;
+  border-color: #334155;
+  box-shadow: 6px 6px 0px #ea580c, 0 25px 50px rgba(0, 0, 0, 0.6);
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .companion-header {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .companion-title {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .companion-action-btn {
+  background: #0f172a;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .companion-chat-body {
+  background: #0f172a;
+}
+
+[data-theme="dark"] .companion-msg.bot {
+  background: #1e293b;
+  border-color: #334155;
+  border-left-color: #ea580c;
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .companion-chip {
+  background: #1e293b;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .companion-footer {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .companion-input {
+  background: #0f172a;
+  border-color: #334155;
+  color: #f8fafc;
+}

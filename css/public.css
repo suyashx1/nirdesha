@@ -225,7 +225,9 @@ body.trainee-body {
   align-items: center;
   gap: 1rem;
   flex: 1;
-  max-width: 480px;
+  max-width: none;
+  min-width: 0;
+  margin-right: 1.5rem;
 }
 
 .trainee-mobile-btn {
@@ -285,26 +287,29 @@ body.trainee-body {
 }
 
 /* ==========================================================================
-   3. GITHUB-STYLE LEARNING HEATMAP WIDGET
+   3. GITHUB-STYLE LEARNING HEATMAP WIDGET (FULL-CONTAINER WIDTH)
    ========================================================================== */
 .heatmap-container-card {
   background: #ffffff;
   border: 1.5px solid var(--trainee-navy);
   border-radius: 0px !important;
   box-shadow: 4px 4px 0px var(--trainee-navy);
-  padding: 1.25rem 1.5rem;
+  padding: 1.5rem;
   margin-bottom: 2rem;
+  width: 100%;
 }
 
 .heatmap-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .heatmap-title {
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 800;
   color: var(--trainee-navy);
   display: flex;
@@ -313,36 +318,82 @@ body.trainee-body {
 }
 
 .heatmap-stats {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: #64748b;
   font-weight: 700;
 }
 
+.heatmap-months-row {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 36px;
+  padding-right: 4px;
+  font-size: 0.725rem;
+  color: #64748b;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.heatmap-body-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+  width: 100%;
+}
+
+.heatmap-days-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  font-size: 0.65rem;
+  color: #64748b;
+  font-weight: 700;
+  padding-bottom: 2px;
+  width: 28px;
+  flex-shrink: 0;
+}
+
+.heatmap-body-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+  width: 100%;
+  overflow: hidden; /* Prevent vertical jitter */
+}
+
 .heatmap-grid-wrapper {
   overflow-x: auto;
-  padding-bottom: 0.5rem;
+  overflow-y: hidden !important; /* Never spawn vertical scrollbars on hover */
+  padding: 5px 6px; /* Generous breathing room for hover scale */
+  flex: 1;
+  width: 100%;
+  scrollbar-width: thin;
 }
 
 .heatmap-grid {
   display: grid;
-  grid-template-rows: repeat(7, 12px);
-  grid-auto-flow: column;
-  grid-auto-columns: 12px;
-  gap: 4px;
+  grid-template-rows: repeat(7, 1fr);
+  grid-template-columns: repeat(52, minmax(0, 1fr));
+  gap: 3px;
+  width: 100%;
+  min-width: 680px;
+  padding: 2px;
 }
 
 .heatmap-day {
-  width: 12px;
-  height: 12px;
+  width: 100%;
+  aspect-ratio: 1 / 1;
   background-color: #e2e8f0;
-  border-radius: 0px;
-  transition: transform 0.15s ease;
+  border-radius: 1px;
+  transition: transform 0.15s ease, outline 0.15s ease;
   cursor: pointer;
 }
 
 .heatmap-day:hover {
-  transform: scale(1.3);
+  transform: scale(1.22); /* Smooth controlled scale that does not overflow container bounds */
   outline: 1.5px solid var(--trainee-navy);
+  outline-offset: -1px;
+  z-index: 10;
 }
 
 .heatmap-day.lvl-1 { background-color: #bbf7d0; }
@@ -350,15 +401,38 @@ body.trainee-body {
 .heatmap-day.lvl-3 { background-color: #16a34a; }
 .heatmap-day.lvl-4 { background-color: #15803d; }
 
+.heatmap-footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.heatmap-footer-note {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
 .heatmap-legend {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 0.35rem;
-  margin-top: 0.75rem;
   font-size: 0.7rem;
   color: #64748b;
 }
+
+.heatmap-legend .heatmap-day {
+  width: 12px;
+  height: 12px;
+  aspect-ratio: 1 / 1;
+}
+
 
 /* ==========================================================================
    4. COMPETITIVE ELO SKILL RATINGS
@@ -627,4 +701,1998 @@ body.trainee-body {
   .trainee-mobile-btn {
     display: block;
   }
+}
+
+/* ==========================================================================
+   8. DARK THEME OVERRIDES ([data-theme="dark"])
+   ========================================================================== */
+[data-theme="dark"] body.trainee-body {
+  background-color: #090d16;
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .trainee-sidebar {
+  background-color: #060a12;
+  border-right-color: #1e293b;
+}
+
+[data-theme="dark"] .trainee-topbar {
+  background-color: #0d1322;
+  border-bottom-color: #1e293b;
+}
+
+[data-theme="dark"] .trainee-search-input {
+  background: #090d16;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .heatmap-container-card,
+[data-theme="dark"] .elo-card,
+[data-theme="dark"] .notebook-card,
+[data-theme="dark"] .quiz-modal-dialog {
+  background-color: #111827;
+  border-color: #334155;
+  box-shadow: 4px 4px 0px #030712;
+}
+
+[data-theme="dark"] .heatmap-title,
+[data-theme="dark"] .elo-score-val,
+[data-theme="dark"] .notebook-card-title {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .heatmap-day {
+  background-color: #1e293b;
+}
+
+[data-theme="dark"] .quiz-modal-body,
+[data-theme="dark"] .quiz-modal-footer {
+  background-color: #111827;
+  border-color: #1e293b;
+}
+
+[data-theme="dark"] .quiz-option-label {
+  border-color: #334155;
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .quiz-option-label:hover {
+  background-color: #1e293b;
+  border-color: #38bdf8;
+}
+
+/* ==========================================================================
+   SKILL RADAR & CADRE PROGRESSION (MERGED DASHBOARD COMPONENT)
+   ========================================================================== */
+.skill-radar-dashboard-card {
+  background: #ffffff;
+  border: 1.5px solid var(--trainee-navy);
+  border-radius: 0px !important;
+  box-shadow: 4px 4px 0px var(--trainee-navy);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.radar-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  border-bottom: 1.5px solid #e2e8f0;
+  padding-bottom: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.radar-card-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--trainee-saffron);
+}
+
+.radar-card-heading {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--trainee-navy);
+  margin: 0.2rem 0 0 0;
+}
+
+.skill-radar-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr;
+  gap: 1.75rem;
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .skill-radar-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.skill-radar-bars-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.radar-skill-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.radar-skill-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.radar-skill-target {
+  font-size: 0.8rem;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.radar-bar-track {
+  width: 100%;
+  height: 10px;
+  background-color: #e2e8f0;
+  border-radius: 0px !important;
+  overflow: hidden;
+}
+
+.radar-bar-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 0px !important;
+  transition: width 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gap-pill {
+  font-size: 0.7rem;
+  padding: 0.1rem 0.45rem;
+  background: #ffedd5;
+  color: #c2410c;
+  font-weight: 800;
+  border-radius: 0px;
+}
+
+.exceeded-pill {
+  font-size: 0.7rem;
+  padding: 0.1rem 0.45rem;
+  background: #dcfce7;
+  color: #15803d;
+  font-weight: 800;
+  border-radius: 0px;
+}
+
+.skill-radar-recom-card {
+  background: #f8fafc;
+  border: 1.5px solid #002b49;
+  border-left: 4px solid #ea580c;
+  padding: 1.35rem;
+  border-radius: 0px !important;
+}
+
+.recom-badge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #ea580c;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+}
+
+.recom-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #002b49;
+  margin: 0 0 0.5rem 0;
+}
+
+.recom-text {
+  font-size: 0.825rem;
+  color: #475569;
+  line-height: 1.55;
+  margin-bottom: 1rem;
+}
+
+/* ==========================================================================
+   RADIANT HEATMAP GREEN & HIGH-CONTRAST DARK MODE OVERRIDES
+   ========================================================================== */
+[data-theme="dark"] .skill-radar-dashboard-card {
+  background-color: #111827 !important;
+  border-color: #334155 !important;
+  box-shadow: 4px 4px 0px #020617 !important;
+}
+
+[data-theme="dark"] .radar-card-header {
+  border-bottom-color: #1e293b !important;
+}
+
+[data-theme="dark"] .radar-card-heading {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .radar-skill-name {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .radar-skill-target {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .radar-bar-track {
+  background-color: #1e293b !important;
+}
+
+[data-theme="dark"] .skill-radar-recom-card {
+  background-color: #0f172a !important;
+  border-color: #334155 !important;
+  border-left-color: #ea580c !important;
+}
+
+[data-theme="dark"] .recom-title {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .recom-text {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .section-subheading-theme {
+  color: #ffffff !important;
+}
+
+/* RADIANT, LUMINOUS HEATMAP GREENS IN DARK MODE */
+[data-theme="dark"] .heatmap-day {
+  background-color: #1e293b !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] .heatmap-day.lvl-1 {
+  background-color: #15803d !important; /* Rich deep emerald */
+}
+
+[data-theme="dark"] .heatmap-day.lvl-2 {
+  background-color: #22c55e !important; /* Bright vivid green */
+}
+
+[data-theme="dark"] .heatmap-day.lvl-3 {
+  background-color: #4ade80 !important; /* Radiant mint green */
+  box-shadow: 0 0 3px rgba(74, 222, 128, 0.5) !important;
+}
+
+[data-theme="dark"] .heatmap-day.lvl-4 {
+  background-color: #86efac !important; /* Luminous electric green */
+  box-shadow: 0 0 5px rgba(134, 239, 172, 0.8) !important;
+}
+
+[data-theme="dark"] .heatmap-day:hover {
+  outline-color: #86efac !important;
+  transform: scale(1.45) !important;
+  box-shadow: 0 0 8px rgba(134, 239, 172, 1) !important;
+  z-index: 20 !important;
+}
+
+[data-theme="dark"] .heatmap-legend .heatmap-day {
+  border: none !important;
+}
+
+/* ==========================================================================
+   REALISTIC 3D TELEMETRY & COMPETENCY NETWORK (PBR-INSPIRED SCIENTIFIC SYSTEM)
+   Precision Optics, Hairline Filaments, Depth Fog, & Matte Glass Dossier
+   ========================================================================== */
+.radar-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.radar-view-toggles-wrap {
+  display: inline-flex;
+  background: #ffffff;
+  border: 1.5px solid var(--trainee-navy);
+  border-radius: 0px !important;
+  box-shadow: 2px 2px 0px var(--trainee-navy);
+  overflow: hidden;
+}
+
+.radar-view-toggle {
+  background: #ffffff;
+  border: none;
+  padding: 0.45rem 1.25rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--trainee-navy);
+  cursor: pointer;
+  border-radius: 0px !important;
+  transition: all 0.15s ease;
+  letter-spacing: 0.05em;
+}
+
+.radar-view-toggle:first-child {
+  border-right: 1.5px solid var(--trainee-navy);
+}
+
+.radar-view-toggle:hover {
+  background: #f1f5f9;
+}
+
+.radar-view-toggle.active {
+  background: var(--trainee-navy);
+  color: #ffffff;
+}
+
+/* 3D Visualizer Canvas Container */
+.skill-constellation-container {
+  width: 100%;
+  margin-top: 0.75rem;
+}
+
+.constellation-canvas-wrapper {
+  position: relative;
+  width: 100%;
+  height: 520px;
+  background: #060b13;
+  border: 1.5px solid var(--trainee-navy);
+  border-radius: 0px !important;
+  box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.9), 4px 4px 0px var(--trainee-navy);
+  overflow: hidden;
+  cursor: grab;
+}
+
+.constellation-canvas-wrapper:active {
+  cursor: grabbing;
+}
+
+#constellation-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Bottom Legend Bar */
+.constellation-legend-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.75rem;
+  flex-wrap: wrap;
+  background: rgba(6, 11, 19, 0.92);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  padding: 0.6rem 1rem;
+  border-radius: 0px !important;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.725rem;
+  font-weight: 700;
+  color: #94a3b8;
+  letter-spacing: 0.02em;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px !important;
+  display: inline-block;
+}
+
+.legend-dot.green { background: #10b981; box-shadow: 0 0 5px rgba(16, 185, 129, 0.6); }
+.legend-dot.orange { background: #f59e0b; box-shadow: 0 0 5px rgba(245, 158, 11, 0.6); }
+.legend-dot.cyan { background: #0ea5e9; box-shadow: 0 0 5px rgba(14, 165, 233, 0.6); }
+.legend-dot.purple { background: #a855f7; box-shadow: 0 0 5px rgba(168, 85, 247, 0.6); }
+
+/* Floating Precision Glass Dossier Tooltip Card */
+.constellation-tooltip-card {
+  position: absolute;
+  z-index: 50;
+  width: 295px;
+  background: rgba(8, 14, 24, 0.95);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-left: 3px solid #f59e0b;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.8), 0 0 20px rgba(14, 165, 233, 0.15);
+  backdrop-filter: blur(16px);
+  padding: 1.15rem;
+  pointer-events: none;
+  transform: translate(16px, 16px);
+  border-radius: 0px !important;
+}
+
+.tooltip-badge-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+
+.tooltip-domain-tag {
+  font-size: 0.675rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 0.06em;
+}
+
+.tooltip-status-badge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 0.15rem 0.5rem;
+  border-radius: 0px !important;
+}
+
+.tooltip-status-badge.mastered { background: #064e3b; color: #6ee7b7; border: 1px solid #059669; }
+.tooltip-status-badge.inprogress { background: #451a03; color: #fde68a; border: 1px solid #d97706; }
+.tooltip-status-badge.locked { background: #082f49; color: #7dd3fc; border: 1px solid #0284c7; }
+
+.tooltip-skill-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #f8fafc;
+  margin: 0 0 0.45rem 0;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.tooltip-skill-desc {
+  font-size: 0.775rem;
+  color: #94a3b8;
+  margin: 0 0 0.75rem 0;
+  line-height: 1.5;
+}
+
+.tooltip-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 0.55rem;
+  margin-bottom: 0.35rem;
+}
+
+.tooltip-score-label {
+  font-size: 0.725rem;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.tooltip-score-val {
+  font-size: 0.95rem;
+  font-weight: 900;
+  color: #38bdf8;
+  font-variant-numeric: tabular-nums;
+}
+
+.tooltip-prereq-note {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #f59e0b;
+}
+
+/* Dark Theme Overrides */
+[data-theme="dark"] .radar-view-toggles-wrap {
+  background: #0f172a;
+  border-color: #334155;
+  box-shadow: 2px 2px 0px #020617;
+}
+
+[data-theme="dark"] .radar-view-toggle {
+  background: #0f172a;
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .radar-view-toggle:first-child {
+  border-right-color: #334155;
+}
+
+[data-theme="dark"] .radar-view-toggle:hover {
+  background: #1e293b;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .radar-view-toggle.active {
+  background: #38bdf8;
+  color: #090d16;
+}
+
+[data-theme="dark"] .constellation-canvas-wrapper {
+  background: #03070e;
+  border-color: #334155;
+  box-shadow: 4px 4px 0px #020617;
+}
+
+[data-theme="dark"] .constellation-legend-bar {
+  background: rgba(3, 7, 14, 0.94);
+  border-top-color: #1e293b;
+}
+
+/* ==========================================================================
+   OFFICER TOP HERO GRID & CIRCULAR STREAK GRAPH SYSTEM
+   Blue Welcome Container (Orange Shadow) + Orange Streak Container Beside It
+   ========================================================================== */
+.officer-hero-grid {
+  display: grid;
+  grid-template-columns: 1.55fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  align-items: stretch;
+}
+
+@media (max-width: 960px) {
+  .officer-hero-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 1. The Front One: Blue Container with Orange Slab Behind It */
+.officer-welcome-card {
+  background: linear-gradient(135deg, #002b49 0%, #00172c 100%);
+  color: #ffffff;
+  padding: 1.75rem 2rem;
+  border: 1.5px solid #001524;
+  border-radius: 0px !important;
+  box-shadow: 4px 4px 0px #ea580c !important; /* Orange behind the main container */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.officer-cadre-tag {
+  font-size: 0.725rem;
+  font-weight: 800;
+  color: #fb923c;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+}
+
+/* 2. Beside It: The Orange Streak Container */
+.officer-streak-card {
+  background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+  color: #ffffff;
+  border: 1.5px solid #002b49;
+  border-radius: 0px !important;
+  box-shadow: 4px 4px 0px #002b49; /* Navy behind the streak container */
+  padding: 1.4rem 1.65rem;
+  display: flex;
+  align-items: center;
+  gap: 1.35rem;
+}
+
+.streak-graph-wrap {
+  position: relative;
+  width: 92px;
+  height: 92px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.streak-circular-svg {
+  transform: rotate(-90deg);
+  width: 92px;
+  height: 92px;
+}
+
+.streak-circle-bg {
+  stroke: rgba(255, 255, 255, 0.22);
+}
+
+.streak-circle-progress {
+  stroke: url(#streakGradient);
+  transition: stroke-dashoffset 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.streak-center-content {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.streak-num {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.streak-unit {
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: #ffedd5;
+  letter-spacing: 0.08em;
+  margin-top: 3px;
+}
+
+.streak-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.streak-badge-label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #ffedd5;
+  margin-bottom: 0.2rem;
+}
+
+.streak-title {
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: #ffffff;
+  margin: 0 0 0.25rem 0;
+  line-height: 1.25;
+}
+
+.streak-subtitle {
+  font-size: 0.775rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0 0 0.65rem 0;
+}
+
+.streak-mini-dots {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.day-dot {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 800;
+  border-radius: 0px !important;
+  background: rgba(0, 0, 0, 0.2);
+  color: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.day-dot.active {
+  background: #ffffff;
+  color: #c2410c;
+  border-color: #ffffff;
+}
+
+.day-dot.today {
+  background: #fde047;
+  color: #78350f;
+  font-weight: 900;
+  box-shadow: 0 0 8px rgba(253, 224, 71, 0.6);
+}
+
+/* Dark Theme Overrides */
+[data-theme="dark"] .officer-welcome-card {
+  background: linear-gradient(135deg, #0f1c2e 0%, #08101a 100%);
+  border-color: #334155;
+  box-shadow: 4px 4px 0px #ea580c !important; /* Orange behind welcome in dark mode */
+}
+
+[data-theme="dark"] .officer-streak-card {
+  background: linear-gradient(135deg, #c2410c 0%, #9a3412 100%);
+  border-color: #334155;
+  box-shadow: 4px 4px 0px #020617;
+}
+
+/* ==========================================================================
+   OFFICER TOP HERO GRID & CIRCULAR STREAK GRAPH SYSTEM
+   ========================================================================== */
+.officer-hero-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  align-items: stretch;
+}
+
+@media (max-width: 960px) {
+  .officer-hero-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.officer-welcome-card {
+  background: linear-gradient(135deg, #00223a 0%, #001524 100%);
+  color: #ffffff;
+  padding: 1.5rem 1.75rem;
+  border: 1.5px solid var(--trainee-navy);
+  border-radius: 0px !important;
+  box-shadow: 4px 4px 0px var(--trainee-navy);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.officer-cadre-tag {
+  font-size: 0.725rem;
+  font-weight: 800;
+  color: #fdba74;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.35rem;
+}
+
+.officer-streak-card {
+  background: #ffffff;
+  border: 1.5px solid var(--trainee-navy);
+  border-radius: 0px !important;
+  box-shadow: 4px 4px 0px var(--trainee-navy);
+  padding: 1.35rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.streak-graph-wrap {
+  position: relative;
+  width: 92px;
+  height: 92px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.streak-circular-svg {
+  transform: rotate(-90deg);
+  width: 92px;
+  height: 92px;
+}
+
+.streak-circle-bg {
+  stroke: #e2e8f0;
+}
+
+.streak-circle-progress {
+  transition: stroke-dashoffset 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.streak-center-content {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.streak-num {
+  font-size: 1.45rem;
+  font-weight: 900;
+  color: var(--trainee-navy);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.streak-unit {
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: #ea580c;
+  letter-spacing: 0.06em;
+  margin-top: 2px;
+}
+
+.streak-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.streak-badge-label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #ea580c;
+  margin-bottom: 0.2rem;
+}
+
+.streak-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--trainee-navy);
+  margin: 0 0 0.25rem 0;
+}
+
+.streak-subtitle {
+  font-size: 0.775rem;
+  color: #64748b;
+  margin: 0 0 0.65rem 0;
+}
+
+.streak-mini-dots {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.day-dot {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 800;
+  border-radius: 0px !important;
+  background: #f1f5f9;
+  color: #94a3b8;
+  border: 1px solid #cbd5e1;
+}
+
+.day-dot.active {
+  background: #ffedd5;
+  color: #c2410c;
+  border-color: #ea580c;
+}
+
+.day-dot.today {
+  background: #ea580c;
+  color: #ffffff;
+  font-weight: 900;
+  box-shadow: 0 0 6px rgba(234, 88, 12, 0.4);
+}
+
+/* Dark Theme Overrides for Streak Card */
+[data-theme="dark"] .officer-welcome-card {
+  background: #111827;
+  border-color: #334155;
+  box-shadow: 4px 4px 0px #020617;
+}
+
+[data-theme="dark"] .officer-streak-card {
+  background: #111827;
+  border-color: #334155;
+  box-shadow: 4px 4px 0px #020617;
+}
+
+[data-theme="dark"] .streak-circle-bg {
+  stroke: #1e293b;
+}
+
+[data-theme="dark"] .streak-num {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .streak-title {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .streak-subtitle {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .day-dot {
+  background: #1e293b;
+  border-color: #334155;
+  color: #64748b;
+}
+
+[data-theme="dark"] .day-dot.active {
+  background: #451a03;
+  color: #fdba74;
+  border-color: #ea580c;
+}
+
+[data-theme="dark"] .day-dot.today {
+  background: #ea580c;
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   ENHANCED STREAK GAUGE & TRANSLUCENT MILESTONE MODAL SYSTEM
+   Theme: Front Blue with Orange Back Component • Saffron/White Palette
+   ========================================================================== */
+.streak-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.25rem;
+}
+
+.streak-milestone-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.streak-milestone-tag {
+  font-size: 0.675rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #fb923c; /* Website Saffron */
+}
+
+.streak-milestone-link {
+  background: transparent;
+  border: none;
+  font-size: 0.775rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+  transition: color 0.15s ease;
+  letter-spacing: 0.01em;
+}
+
+.streak-milestone-link:hover {
+  color: #fb923c;
+}
+
+/* 1. The Streak Card: Front Blue with Orange Back Component */
+.officer-streak-card {
+  background: linear-gradient(135deg, #002b49 0%, #00172c 100%) !important; /* Front Color: Blue */
+  color: #ffffff;
+  border: 1.5px solid #001524;
+  border-radius: 0px !important;
+  box-shadow: 4px 4px 0px #ea580c !important; /* Back Component Color: Orange */
+  padding: 1.4rem 1.65rem;
+  display: flex;
+  align-items: center;
+  gap: 1.35rem;
+}
+
+/* Dark Theme Overrides for Streak Card */
+[data-theme="dark"] .officer-streak-card {
+  background: linear-gradient(135deg, #0f1c2e 0%, #08101a 100%) !important;
+  border-color: #334155;
+  box-shadow: 4px 4px 0px #ea580c !important; /* Orange behind in dark mode */
+}
+
+/* Translucent Frosted Glass Modal Backdrop */
+.milestone-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  padding: 1.25rem;
+  animation: modalFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Crisp White Modal Card (Government Theme: White, Navy, Saffron) */
+.milestone-modal-glass {
+  width: 100%;
+  max-width: 540px;
+  background: #ffffff !important; /* Pure White Background */
+  border: 2px solid #002b49 !important; /* Clean Navy Border */
+  border-radius: 0px !important;
+  box-shadow: 6px 6px 0px #ea580c, 0 20px 40px rgba(0, 0, 0, 0.25) !important; /* Saffron Shadow */
+  color: #0f172a !important; /* Dark legible text */
+  overflow: hidden;
+  animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalSlideUp {
+  from { transform: translateY(18px) scale(0.97); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* Modal Header */
+.milestone-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 1.6rem;
+  border-bottom: 1.5px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.modal-eyebrow {
+  font-size: 0.725rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #ea580c; /* Saffron */
+  letter-spacing: 0.06em;
+  display: block;
+}
+
+.modal-heading {
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: #002b49; /* Deep Navy */
+  margin: 0.15rem 0 0 0;
+}
+
+.modal-header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.btn-toggle-milestone-history {
+  background: #ffffff;
+  border: 1.5px solid #002b49;
+  color: #002b49;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0.4rem 0.85rem;
+  cursor: pointer;
+  border-radius: 0px !important;
+  transition: all 0.15s ease;
+}
+
+.btn-toggle-milestone-history:hover {
+  background: #002b49;
+  color: #ffffff;
+}
+
+.btn-milestone-close {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #475569;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0.4rem 0.85rem;
+  cursor: pointer;
+  border-radius: 0px !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.15s ease;
+}
+
+.btn-milestone-close:hover {
+  background: #dc2626;
+  border-color: #dc2626;
+  color: #ffffff;
+}
+
+.close-icon {
+  font-size: 0.85rem;
+}
+
+/* Sliding Viewport & Track */
+.milestone-slider-viewport {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  background: #ffffff;
+}
+
+.milestone-slider-track {
+  display: flex;
+  width: 200%;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.milestone-slider-track.show-history {
+  transform: translateX(-50%);
+}
+
+.milestone-pane {
+  width: 50%;
+  flex-shrink: 0;
+  padding: 1.35rem 1.6rem;
+  box-sizing: border-box;
+  background: #ffffff;
+}
+
+/* ==========================================================================
+   3D DATE WHEEL PICKER WIDGET (CLEAN WHITE & SAFFRON THEME)
+   ========================================================================== */
+.date-wheel-picker-container {
+  position: relative;
+  height: 200px;
+  background: #f8fafc; /* Clean Light Background */
+  border: 1.5px solid #cbd5e1;
+  border-radius: 0px !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  overflow: hidden;
+  perspective: 1000px;
+  margin-bottom: 1.25rem;
+}
+
+/* Gradient Occlusion Masks in White */
+.wheel-mask-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(to bottom, #ffffff 0%, rgba(255, 255, 255, 0.75) 60%, transparent 100%);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.wheel-mask-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(to top, #ffffff 0%, rgba(255, 255, 255, 0.75) 60%, transparent 100%);
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Center Highlight Selection Band (Saffron Accent) */
+.wheel-selection-indicator {
+  position: absolute;
+  top: 80px;
+  left: 0;
+  right: 0;
+  height: 40px;
+  border-top: 2px solid #ea580c;
+  border-bottom: 2px solid #ea580c;
+  background: rgba(234, 88, 12, 0.08);
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Wheel Columns */
+.wheel-column {
+  position: relative;
+  height: 100%;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-snap-type: y mandatory;
+  user-select: none;
+  cursor: grab;
+}
+
+.wheel-column::-webkit-scrollbar {
+  display: none;
+}
+
+.wheel-column:active {
+  cursor: grabbing;
+}
+
+#wheel-days { width: 85px; }
+#wheel-months { width: 145px; }
+#wheel-years { width: 95px; }
+
+.wheel-cylinder {
+  padding-top: 80px;
+  padding-bottom: 80px;
+  transform-style: preserve-3d;
+}
+
+.wheel-item {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #64748b;
+  scroll-snap-align: center;
+  transition: color 0.15s ease, transform 0.15s ease;
+  cursor: pointer;
+}
+
+.wheel-item.selected {
+  color: #002b49 !important; /* Deep Navy on Saffron Band */
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+
+/* Summary Card in Light/White Theme */
+.milestone-summary-card {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-left: 4px solid #ea580c;
+  padding: 0.9rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  gap: 1rem;
+}
+
+.summary-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-col-divider {
+  width: 1px;
+  height: 38px;
+  background: #cbd5e1;
+}
+
+.summary-label {
+  font-size: 0.675rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.2rem;
+}
+
+.summary-val {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #002b49;
+}
+
+.summary-val.highlight {
+  color: #ea580c; /* Saffron */
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+
+.summary-sub {
+  font-size: 0.725rem;
+  color: #475569;
+  margin-top: 0.15rem;
+}
+
+/* Modal Footer */
+.milestone-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.btn-cancel-modal {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.825rem;
+  font-weight: 800;
+  cursor: pointer;
+  border-radius: 0px !important;
+  transition: all 0.15s ease;
+}
+
+.btn-cancel-modal:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.btn-confirm-milestone {
+  background: #ea580c;
+  border: 1.5px solid #c2410c;
+  color: #ffffff;
+  padding: 0.6rem 1.5rem;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  border-radius: 0px !important;
+  box-shadow: 3px 3px 0px #002b49;
+  transition: all 0.15s ease;
+}
+
+.btn-confirm-milestone:hover {
+  background: #c2410c;
+  transform: translateY(-1px);
+}
+
+/* History Records in White Theme */
+.history-records-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  max-height: 310px;
+  overflow-y: auto;
+  padding-right: 0.35rem;
+  margin-bottom: 1.25rem;
+}
+
+.history-record-card {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 0px !important;
+  padding: 0.85rem 1rem;
+}
+
+.history-record-card.active-sprint {
+  border-color: #ea580c;
+  background: #fff7ed; /* Soft warm orange tint */
+}
+
+.record-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.55rem;
+}
+
+.record-badge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.2rem;
+}
+
+.record-badge.completed { color: #059669; }
+.record-badge.expired { color: #d97706; }
+.record-badge.inprogress { color: #ea580c; }
+
+.record-title {
+  font-size: 0.925rem;
+  font-weight: 800;
+  color: #002b49;
+  margin: 0 0 0.15rem 0;
+}
+
+.record-period {
+  font-size: 0.725rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.record-pct-box {
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: #059669;
+  font-variant-numeric: tabular-nums;
+}
+
+.record-pct-box.inprogress {
+  color: #ea580c;
+}
+
+.record-bar-track {
+  width: 100%;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 0px !important;
+  overflow: hidden;
+}
+
+.record-bar-fill {
+  height: 100%;
+  border-radius: 0px !important;
+  transition: width 0.4s ease;
+}
+
+.btn-back-to-picker {
+  background: #ffffff;
+  border: 1.5px solid #002b49;
+  color: #002b49;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.825rem;
+  font-weight: 800;
+  cursor: pointer;
+  border-radius: 0px !important;
+  transition: all 0.15s ease;
+}
+
+.btn-back-to-picker:hover {
+  background: #002b49;
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   SUBTASK 1, 2, 3, 4 ENHANCEMENTS
+   ========================================================================== */
+
+/* Subtask 1: Confirm Milestone Button Hover Animation
+   Front goes Blue (#002b49) and Behind Component goes Orange (#ea580c) */
+.btn-confirm-milestone {
+  background: #ea580c !important;
+  border: 1.5px solid #c2410c !important;
+  color: #ffffff !important;
+  padding: 0.65rem 1.6rem !important;
+  font-size: 0.85rem !important;
+  font-weight: 800 !important;
+  cursor: pointer !important;
+  border-radius: 0px !important;
+  box-shadow: 3px 3px 0px #002b49 !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.btn-confirm-milestone:hover:not(:disabled) {
+  background: #002b49 !important; /* Front component goes Blue */
+  border-color: #00172c !important;
+  color: #ffffff !important;
+  box-shadow: 4px 4px 0px #ea580c !important; /* Behind component goes Orange */
+  transform: translateY(-2px) !important;
+}
+
+/* Subtask 3: Target Senior Statistical Officer in Front (below Cadre Capability Architecture) */
+.radar-header-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.target-milestone-front-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(234, 88, 12, 0.08);
+  border: 1px solid #ea580c;
+  border-left: 3.5px solid #ea580c;
+  padding: 0.35rem 0.75rem;
+  margin: 0.35rem 0 0.5rem 0;
+  font-size: 0.785rem;
+  color: #002b49;
+  border-radius: 0px !important;
+}
+
+.target-milestone-front-badge .target-label {
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #ea580c;
+  font-size: 0.7rem;
+}
+
+.target-milestone-front-badge .target-title {
+  font-weight: 800;
+  color: #002b49;
+}
+
+[data-theme="dark"] .target-milestone-front-badge {
+  background: rgba(234, 88, 12, 0.16);
+  border-color: #ea580c;
+}
+
+[data-theme="dark"] .target-milestone-front-badge .target-title {
+  color: #ffffff;
+}
+
+/* Subtask 4: Government Terminology Explain Cards (2-3s Debounced Hover) */
+.gov-term-explain {
+  position: relative;
+  text-decoration: none !important; /* No dotted lines */
+  border-bottom: none !important;
+  cursor: default;
+}
+
+/* Floating "Ask AI" Button (2-Second Hover Trigger) */
+.btn-ask-ai-floating {
+  position: fixed;
+  z-index: 999999;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #002b49;
+  border: 1.5px solid #ea580c;
+  color: #ffffff;
+  font-size: 0.725rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  padding: 0.3rem 0.65rem;
+  border-radius: 0px !important;
+  box-shadow: 2.5px 2.5px 0px #ea580c;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(4px) scale(0.95);
+  transition: opacity 0.18s cubic-bezier(0.16, 1, 0.3, 1), transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), background 0.15s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.btn-ask-ai-floating.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.btn-ask-ai-floating:hover {
+  background: #ea580c;
+  border-color: #c2410c;
+  box-shadow: 2.5px 2.5px 0px #002b49;
+  color: #ffffff;
+  transform: translateY(-1px) scale(1.03);
+}
+
+.btn-ask-ai-floating svg {
+  color: #fb923c;
+  transition: color 0.15s ease;
+}
+
+.btn-ask-ai-floating:hover svg {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .btn-ask-ai-floating {
+  background: #0f172a;
+  border-color: #ea580c;
+  box-shadow: 2.5px 2.5px 0px #ea580c;
+}
+
+[data-theme="dark"] .btn-ask-ai-floating:hover {
+  background: #ea580c;
+  box-shadow: 2.5px 2.5px 0px #020617;
+}
+
+/* Search Bar Space Expansion */
+.trainee-topbar-left .admin-search-wrap {
+  width: 100%;
+  flex: 1;
+}
+
+.trainee-topbar-left .trainee-search-input {
+  width: 100%;
+}
+
+.heatmap-body-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+  width: 100%;
+  overflow: hidden; /* Prevent vertical jitter */
+}
+
+.heatmap-grid-wrapper {
+  overflow-x: auto;
+  overflow-y: hidden !important; /* Never spawn vertical scrollbars on hover */
+  padding: 5px 6px; /* Generous breathing room for hover scale */
+  flex: 1;
+  width: 100%;
+  scrollbar-width: thin;
+}
+
+.heatmap-grid {
+  display: grid;
+  grid-template-rows: repeat(7, 1fr);
+  grid-template-columns: repeat(52, minmax(0, 1fr));
+  gap: 3px;
+  width: 100%;
+  min-width: 680px;
+  padding: 2px;
+}
+
+.heatmap-day {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background-color: #e2e8f0;
+  border-radius: 1px;
+  transition: transform 0.15s ease, outline 0.15s ease;
+  cursor: pointer;
+}
+
+.heatmap-day:hover {
+  transform: scale(1.22); /* Smooth controlled scale that does not overflow container bounds */
+  outline: 1.5px solid var(--trainee-navy);
+  outline-offset: -1px;
+  z-index: 10;
+}
+/* Clear Chat Action Button in AI Study Mentor */
+.btn-clear-chat {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #ffffff;
+  font-size: 0.725rem;
+  font-weight: 700;
+  padding: 0.3rem 0.65rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  border-radius: 0px !important;
+  transition: all 0.15s ease;
+}
+
+.btn-clear-chat:hover {
+  background: #ea580c;
+  border-color: #c2410c;
+  color: #ffffff;
+}
+
+/* Also ensure .top-lang-btn has identical dimensions in public.css */
+.top-lang-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.4rem !important;
+  height: 28px !important;
+  padding: 0 0.55rem !important;
+  font-size: 0.775rem !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  box-sizing: border-box !important;
+}
+
+.top-theme-btn {
+  height: 28px !important;
+  box-sizing: border-box !important;
+}
+
+/* ==========================================================================
+   OFFICER STREAK CARD & MILESTONE TEXT VISIBILITY (NAVY FRONT + ORANGE BACK)
+   All text inside the streak card is explicitly light / high-contrast.
+   ========================================================================== */
+.officer-streak-card {
+  background: linear-gradient(135deg, #002b49 0%, #00172c 100%) !important;
+  color: #ffffff !important;
+  border: 1.5px solid #001524 !important;
+  border-radius: 0px !important;
+  box-shadow: 4px 4px 0px #ea580c !important;
+  padding: 1.4rem 1.65rem !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 1.35rem !important;
+}
+
+[data-theme="dark"] .officer-streak-card {
+  background: linear-gradient(135deg, #0f1c2e 0%, #08101a 100%) !important;
+  border-color: #334155 !important;
+  box-shadow: 4px 4px 0px #ea580c !important;
+}
+
+.officer-streak-card .streak-num {
+  font-size: 1.6rem !important;
+  font-weight: 900 !important;
+  color: #ffffff !important;
+  line-height: 1 !important;
+  font-variant-numeric: tabular-nums !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;
+}
+
+.officer-streak-card .streak-unit {
+  font-size: 0.65rem !important;
+  font-weight: 800 !important;
+  color: #fb923c !important;
+  letter-spacing: 0.08em !important;
+  margin-top: 2px !important;
+}
+
+.officer-streak-card .streak-title {
+  font-size: 1.15rem !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  margin: 0 0 0.25rem 0 !important;
+}
+
+.officer-streak-card .streak-subtitle {
+  font-size: 0.775rem !important;
+  color: #cbd5e1 !important;
+  margin: 0 0 0.65rem 0 !important;
+}
+
+.officer-streak-card .streak-milestone-tag {
+  font-size: 0.7rem !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  color: #fb923c !important;
+}
+
+.officer-streak-card .streak-milestone-link {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  font-size: 0.775rem !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  text-decoration: underline !important;
+  text-underline-offset: 2px !important;
+  cursor: pointer !important;
+  padding: 3px 9px !important;
+  border-radius: 4px !important;
+  display: inline-block !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  letter-spacing: 0.01em !important;
+}
+
+.officer-streak-card .streak-milestone-link:hover {
+  background: #ea580c !important;
+  color: #ffffff !important;
+  border-color: #ea580c !important;
+  text-decoration: none !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 8px rgba(234, 88, 12, 0.4) !important;
+}
+
+.officer-streak-card .day-dot {
+  width: 22px !important;
+  height: 22px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0.65rem !important;
+  font-weight: 800 !important;
+  border-radius: 0px !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #94a3b8 !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+}
+
+.officer-streak-card .day-dot.active {
+  background: #ea580c !important;
+  color: #ffffff !important;
+  border-color: #ea580c !important;
+}
+
+.officer-streak-card .day-dot.today {
+  background: #fbbf24 !important;
+  color: #002b49 !important;
+  font-weight: 900 !important;
+  border-color: #f59e0b !important;
+  box-shadow: 0 0 8px rgba(251, 191, 36, 0.6) !important;
+}
+
+/* Milestone Confirm Button Hover Animation: Front Blue, Behind Orange */
+.btn-confirm-milestone {
+  background: #ea580c !important;
+  border: 1.5px solid #c2410c !important;
+  color: #ffffff !important;
+  padding: 0.6rem 1.5rem !important;
+  font-size: 0.85rem !important;
+  font-weight: 800 !important;
+  cursor: pointer !important;
+  border-radius: 0px !important;
+  box-shadow: 3px 3px 0px #002b49 !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.btn-confirm-milestone:hover {
+  background: #002b49 !important; /* Front component turns blue */
+  border-color: #00172c !important;
+  color: #ffffff !important;
+  box-shadow: 4px 4px 0px #ea580c !important; /* Behind component turns orange */
+  transform: translate(-1px, -1px) !important;
+}
+
+/* ==========================================================================
+   CIRCULAR STREAK GAUGE: VIVID VISIBILITY IN BOTH BRIGHT & DARK MODES
+   ========================================================================== */
+.streak-circle-bg {
+  stroke: rgba(255, 255, 255, 0.18) !important;
+}
+
+.streak-circle-progress {
+  stroke: url(#streakGradient) !important;
+  filter: drop-shadow(0 0 5px rgba(251, 146, 60, 0.75)) !important;
+  transition: stroke-dashoffset 1.8s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+[data-theme="dark"] .streak-circle-bg {
+  stroke: rgba(255, 255, 255, 0.12) !important;
+}
+
+[data-theme="dark"] .streak-circle-progress {
+  stroke: url(#streakGradient) !important;
+  filter: drop-shadow(0 0 6px rgba(251, 146, 60, 0.9)) !important;
+}
+
+/* ==========================================================================
+   COMPREHENSIVE DARK THEME TYPOGRAPHY & CARD READABILITY FIXES
+   Guarantees NO text disappears in Dark Mode across all views & cards.
+   ========================================================================== */
+[data-theme="dark"] {
+  --trainee-navy: #f8fafc;
+  --gov-navy: #f8fafc;
+}
+
+[data-theme="dark"] body {
+  background-color: #090d16 !important;
+  color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5 {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] p {
+  color: #94a3b8 !important;
+}
+
+/* Elo Domain Cards in Dark Theme */
+[data-theme="dark"] .elo-card {
+  background-color: #111827 !important;
+  border-color: #334155 !important;
+  box-shadow: 4px 4px 0px #020617 !important;
+}
+
+[data-theme="dark"] .elo-card div[style*="color: #0f172a"],
+[data-theme="dark"] .elo-card div[style*="color:#0f172a"] {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .elo-domain-tag {
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .elo-score-val {
+  color: #fb923c !important;
+}
+
+/* Learning Pathways & Course Cards in Dark Theme */
+[data-theme="dark"] .course-card-gov {
+  background-color: #111827 !important;
+  border-color: #334155 !important;
+  box-shadow: 4px 4px 0px #020617 !important;
+}
+
+[data-theme="dark"] .course-badge-code {
+  color: #fdba74 !important;
+}
+
+[data-theme="dark"] .course-card-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .course-card-desc {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .course-card-footer span {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .course-progress-bar {
+  background-color: #1e293b !important;
+}
+
+/* Revision Cards in Dark Theme */
+[data-theme="dark"] .notebook-card {
+  background-color: #111827 !important;
+  border-color: #334155 !important;
+  box-shadow: 4px 4px 0px #020617 !important;
+}
+
+[data-theme="dark"] .notebook-topic {
+  color: #fdba74 !important;
+}
+
+[data-theme="dark"] .notebook-card-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .notebook-card-bullet {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .notebook-card-bullet strong {
+  color: #f8fafc !important;
+}
+
+/* Officer Service Profile Dossier in Dark Theme */
+[data-theme="dark"] .profile-overview-card {
+  background-color: #111827 !important;
+  border-color: #334155 !important;
+  box-shadow: 4px 4px 0px #020617 !important;
+}
+
+[data-theme="dark"] .profile-overview-card h3 {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .settings-item-row {
+  border-bottom-color: #1e293b !important;
+}
+
+[data-theme="dark"] .settings-item-row span {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .settings-item-row span[style*="color: #334155"],
+[data-theme="dark"] .settings-item-row span[style*="color: #002b49"] {
+  color: #f8fafc !important;
+}
+
+/* Timed Quiz Box in Dark Theme */
+[data-theme="dark"] .quiz-box-card {
+  background-color: #0f172a !important;
+  border-color: #334155 !important;
+}
+
+/* AI Study Mentor in Dark Theme */
+[data-theme="dark"] .ai-chat-card {
+  background-color: #111827 !important;
+  border-color: #334155 !important;
+}
+
+[data-theme="dark"] .chat-bubble.bot {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .chat-bubble.user {
+  background-color: #002b49 !important;
+  border-color: #ea580c !important;
+  color: #ffffff !important;
+}
+
+/* Translucent Milestone Modal in Dark Theme */
+[data-theme="dark"] .milestone-modal-glass {
+  background-color: #0f172a !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+  box-shadow: 6px 6px 0px #ea580c, 0 20px 40px rgba(0, 0, 0, 0.6) !important;
+}
+
+[data-theme="dark"] .milestone-modal-header {
+  border-bottom-color: #1e293b !important;
+}
+
+[data-theme="dark"] .modal-heading {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .date-wheel-picker-container {
+  background-color: #090d16 !important;
+  border-color: #334155 !important;
+}
+
+[data-theme="dark"] .wheel-item {
+  color: #64748b !important;
+}
+
+[data-theme="dark"] .wheel-item.selected {
+  color: #fb923c !important;
+}
+
+[data-theme="dark"] .wheel-selection-indicator {
+  background: rgba(234, 88, 12, 0.15) !important;
+  border-top-color: #ea580c !important;
+  border-bottom-color: #ea580c !important;
+}
+
+[data-theme="dark"] .milestone-summary-card {
+  background-color: #111827 !important;
+  border-color: #334155 !important;
+}
+
+[data-theme="dark"] .summary-label {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .summary-val {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .history-record-card {
+  background-color: #111827 !important;
+  border-color: #334155 !important;
+}
+
+[data-theme="dark"] .record-title {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .record-period {
+  color: #94a3b8 !important;
 }

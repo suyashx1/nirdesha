@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/admin.css">
   <link rel="stylesheet" href="css/public.css">
+  <link rel="stylesheet" href="css/ai-companion.css">
 </head>
 <body class="trainee-body">
 
@@ -56,23 +57,15 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
           </span>
           <span>My Courses & Tracks</span>
-          <span class="trainee-nav-badge">4 Active</span>
+          
         </a>
 
-        <!-- 3. Skill Radar & Gap Analysis -->
-        <a href="#skill-graph" class="trainee-nav-item" data-tab="skill-graph">
-          <span class="admin-nav-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
-          </span>
-          <span>2D Skill Radar</span>
-        </a>
-
-        <!-- 4. NotebookLM Revision Cards -->
-        <a href="#notebooklm" class="trainee-nav-item" data-tab="notebooklm">
+        <!-- 3. Revision Cards -->
+        <a href="#revision-cards" class="trainee-nav-item" data-tab="revision-cards">
           <span class="admin-nav-icon">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
           </span>
-          <span>NotebookLM Cards</span>
+          <span>Revision Cards</span>
         </a>
 
         <!-- 5. Timed Self-Evaluations -->
@@ -91,13 +84,7 @@
           <span>AI Study Mentor</span>
         </a>
 
-        <!-- 7. Verified Certificates -->
-        <a href="#certificates" class="trainee-nav-item" data-tab="certificates">
-          <span class="admin-nav-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-          </span>
-          <span>Verified Certificates</span>
-        </a>
+        
 
         <!-- 8. Officer Profile -->
         <a href="#profile" class="trainee-nav-item" data-tab="profile">
@@ -147,13 +134,38 @@
           </div>
         </div>
 
-        <div class="trainee-topbar-right">
-          <div class="trainee-pill-streak" title="Consistency Streak">
-            <span>🔥 14-Day Streak</span>
-          </div>
+                        <div class="trainee-topbar-right">
+          <!-- Regional Language Selector Button -->
+          <button class="top-lang-btn notranslate" id="lang-toggle-btn" translate="no" aria-haspopup="dialog" aria-expanded="false" title="Select regional language" style="margin-right: 0.35rem;">
+            🌐 <span id="current-lang-label" class="notranslate" translate="no">English</span> ▾
+          </button>
 
-          <div class="trainee-pill-rating" id="trainee-top-elo" title="Competitive Elo Rating">
-            <span>⚡ 1,485 Elo (Proficient)</span>
+          <!-- Theme Mode Dropdown (Hover-Activated: Dark / Bright / System) -->
+          <div class="top-theme-wrapper notranslate" id="theme-menu-wrapper" translate="no" style="margin-right: 0.25rem;">
+            <button class="top-theme-btn notranslate" id="theme-btn" aria-haspopup="true" aria-expanded="false" title="Theme (Dark / Bright / System)">
+              <span class="theme-icon-indicator" id="theme-active-icon" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              </span>
+              <span class="theme-btn-label" id="theme-active-label">System</span>
+              <span class="theme-caret" aria-hidden="true">▾</span>
+            </button>
+            <div class="top-theme-menu notranslate" id="theme-dropdown-menu" role="menu" aria-label="Select website theme">
+              <button class="theme-option-btn active" data-theme-mode="system" role="menuitem">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                <span>System</span>
+                <span class="theme-check-icon">✓</span>
+              </button>
+              <button class="theme-option-btn" data-theme-mode="light" role="menuitem">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                <span>Bright</span>
+                <span class="theme-check-icon">✓</span>
+              </button>
+              <button class="theme-option-btn" data-theme-mode="dark" role="menuitem">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                <span>Dark</span>
+                <span class="theme-check-icon">✓</span>
+              </button>
+            </div>
           </div>
 
           <a href="main.html" class="btn-admin-action" title="Open Public Home Portal">
@@ -171,17 +183,73 @@
              ====================================================================== -->
         <div class="trainee-view-tab" id="view-dashboard" style="display: block;">
           
-          <!-- Officer Welcome Banner -->
-          <div class="admin-welcome-banner" style="background: linear-gradient(135deg, #00223a 0%, #001524 100%);">
-            <div>
-              <h1 class="welcome-title">Welcome back, Officer Raman</h1>
-              <p class="welcome-sub">
-                Subordinate Statistical Service (SSS Cadre) • Target Milestone: <strong>Senior Statistical Officer (SSO) Cadre Benchmark</strong>
-              </p>
-            </div>
-            <div class="welcome-badges">
-              <div class="welcome-badge-item">🎯 82% Competency Match</div>
-              <div class="welcome-badge-item">🏆 Top 8% in Division</div>
+          <!-- Officer Top Section: Welcome Info & Circular Streak Card (Above Heatmap) -->
+          <div class="officer-hero-grid">
+            <!-- Left Container: Officer Welcome & Cadre Status -->
+            <div class="officer-welcome-card">
+              <div>
+                <div class="officer-cadre-tag gov-term-explain" data-term="subordinate-statistical-service">MoSPI • Subordinate Statistical Service (SSS)</div>
+                <h1 class="welcome-title">Welcome back, Officer Raman</h1>
+                <p class="welcome-sub">
+                  Target Milestone: <strong class="gov-term-explain" data-term="senior-statistical-officer">Senior Statistical Officer (SSO)</strong> <span class="gov-term-explain" data-term="cadre-benchmark">Cadre Benchmark</span> • Field Operations Division
+                </p>
+              </div>
+              </div>
+            <!-- Right Container: Enhanced Circular Streak Gauge Card (14-Day Streak) -->
+            <div class="officer-streak-card" id="streak-card-container">
+              <div class="streak-graph-wrap">
+                <svg class="streak-circular-svg" width="96" height="96" viewBox="0 0 100 100">
+                  <defs>
+                    <linearGradient id="streakGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#fef08a" />
+                      <stop offset="35%" stop-color="#fb923c" />
+                      <stop offset="100%" stop-color="#ea580c" />
+                    </linearGradient>
+                    <filter id="streakGlow" x="-20%" y="-20%" width="140%" height="140%">
+                      <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#ea580c" flood-opacity="0.7" />
+                    </filter>
+                  </defs>
+                  <!-- 8 Precision Radial Tick Marks (inspired by gauge-1.tsx) -->
+                  <g class="gauge-ticks" opacity="0.45" stroke="#ffffff" stroke-width="1.2">
+                    <line x1="50" y1="4" x2="50" y2="8.5" />
+                    <line x1="82.5" y1="17.5" x2="79.3" y2="20.7" />
+                    <line x1="96" y1="50" x2="91.5" y2="50" />
+                    <line x1="82.5" y1="82.5" x2="79.3" y2="79.3" />
+                    <line x1="50" y1="96" x2="50" y2="91.5" />
+                    <line x1="17.5" y1="82.5" x2="20.7" y2="79.3" />
+                    <line x1="4" y1="50" x2="8.5" y2="50" />
+                    <line x1="17.5" y1="17.5" x2="20.7" y2="20.7" />
+                  </g>
+                  <!-- Secondary Background Track Ring -->
+                  <circle class="streak-circle-bg" cx="50" cy="50" r="38" fill="none" stroke-width="7" stroke="rgba(255, 255, 255, 0.2)" />
+                  <!-- Primary Animated Progress Ring (Circumference = 238.76) -->
+                  <circle class="streak-circle-progress" id="streak-progress-ring" cx="50" cy="50" r="38" fill="none" stroke-width="7" stroke-dasharray="238.76" stroke-dashoffset="238.76" stroke-linecap="round" stroke="url(#streakGradient)" filter="url(#streakGlow)" />
+                </svg>
+                <div class="streak-center-content">
+                  <span class="streak-num" id="streak-animated-counter">0</span>
+                  <span class="streak-unit">DAYS</span>
+                </div>
+              </div>
+
+              <div class="streak-details">
+                <div class="streak-header-row">
+                  <div class="streak-milestone-group">
+                    <span class="streak-milestone-tag">MILESTONE</span>
+                    <button type="button" class="streak-milestone-link" id="btn-open-milestone">Set Milestone</button>
+                  </div>
+                </div>
+                <h3 class="streak-title">14 Consecutive Days</h3>
+                <p class="streak-subtitle" id="streak-milestone-desc">70% of 20-Day Target Milestone</p>
+                <div class="streak-mini-dots">
+                  <span class="day-dot active" title="Monday">M</span>
+                  <span class="day-dot active" title="Tuesday">T</span>
+                  <span class="day-dot active" title="Wednesday">W</span>
+                  <span class="day-dot active" title="Thursday">T</span>
+                  <span class="day-dot active" title="Friday">F</span>
+                  <span class="day-dot active" title="Saturday">S</span>
+                  <span class="day-dot active today" title="Sunday">S</span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -215,7 +283,7 @@
           <!-- Competitive Domain Elo Ratings -->
           <div style="margin-bottom: 1.25rem;">
             <h3 style="font-size: 1.15rem; font-weight: 800; color: #002b49; margin: 0 0 0.25rem 0;">
-              Competitive Skill Ratings (Per-Domain Elo)
+              <span class="gov-term-explain" data-term="competitive-skill-rating">Competitive Skill Ratings (Per-Domain Elo)</span>
             </h3>
             <p style="font-size: 0.8rem; color: #64748b; margin: 0;">
               Deterministic skill ratings computed from timed self-evaluations and formal NSSTA assessments.
@@ -230,7 +298,7 @@
                 <div class="elo-score-val">1,520</div>
               </div>
               <div>
-                <span class="elo-tier-badge advanced">⭐ Tier 3 • Advanced</span>
+                <span class="elo-tier-badge advanced">Tier 3 • Advanced</span>
               </div>
             </div>
 
@@ -241,7 +309,7 @@
                 <div class="elo-score-val">1,385</div>
               </div>
               <div>
-                <span class="elo-tier-badge intermediate">📈 Tier 2 • Intermediate</span>
+                <span class="elo-tier-badge intermediate">Tier 2 • Intermediate</span>
               </div>
             </div>
 
@@ -252,7 +320,7 @@
                 <div class="elo-score-val">1,440</div>
               </div>
               <div>
-                <span class="elo-tier-badge advanced">⭐ Tier 3 • Proficient</span>
+                <span class="elo-tier-badge advanced">Tier 3 • Proficient</span>
               </div>
             </div>
 
@@ -263,7 +331,122 @@
                 <div class="elo-score-val">1,610</div>
               </div>
               <div>
-                <span class="elo-tier-badge expert">🏆 Tier 4 • Expert</span>
+                <span class="elo-tier-badge expert">Tier 4 • Expert</span>
+              </div>
+            </div>
+          </div>
+
+                    <!-- 2D & 3D SKILL ARCHITECTURE & COMPETENCY MAP (INTEGRATED INTO LEARNING DASHBOARD) -->
+          <div class="skill-radar-dashboard-card" id="skill-radar-section">
+            <div class="radar-card-header">
+              <div class="radar-header-info">
+                <div class="radar-card-eyebrow gov-term-explain" data-term="cadre-capability-architecture">Cadre Capability Architecture</div>
+                <div class="target-milestone-front-badge gov-term-explain" data-term="senior-statistical-officer">
+                  <span class="target-label">Target Milestone:</span>
+                  <strong class="target-title">Senior Statistical Officer (SSO) Cadre Benchmark</strong>
+                </div>
+                <h3 class="radar-card-heading gov-term-explain" data-term="skill-architecture-and-role-alignment">
+                  Skill Architecture & Role Alignment
+                </h3>
+              </div>
+              <div class="radar-header-actions">
+                <div class="radar-view-toggles-wrap">
+                  <button type="button" class="radar-view-toggle active" id="btn-view-2d" title="2D View">2D</button>
+                  <button type="button" class="radar-view-toggle" id="btn-view-3d" title="3D View">3D</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2D PROGRESS BARS VIEW -->
+            <div class="skill-radar-grid" id="skill-radar-2d-view">
+              <div class="skill-radar-bars-col">
+                <!-- Skill 1 -->
+                <div class="radar-skill-item">
+                  <div class="radar-skill-label-row">
+                    <span class="radar-skill-name">Survey Sampling Design (NSSO Frame)</span>
+                    <span class="radar-skill-target"><strong class="radar-bar-num" data-target="94">0%</strong> / 100% Target</span>
+                  </div>
+                  <div class="radar-bar-track">
+                    <div class="radar-bar-fill" data-target="94" style="width: 0%; background: #15803d;"></div>
+                  </div>
+                </div>
+
+                <!-- Skill 2 -->
+                <div class="radar-skill-item">
+                  <div class="radar-skill-label-row">
+                    <span class="radar-skill-name">Macroeconomic & Deflator Analytics</span>
+                    <span class="radar-skill-target"><strong class="radar-bar-num" data-target="68">0%</strong> / 85% Target <span class="gap-pill">17% Gap</span></span>
+                  </div>
+                  <div class="radar-bar-track">
+                    <div class="radar-bar-fill" data-target="68" style="width: 0%; background: #ea580c;"></div>
+                  </div>
+                </div>
+
+                <!-- Skill 3 -->
+                <div class="radar-skill-item">
+                  <div class="radar-skill-label-row">
+                    <span class="radar-skill-name">Data Science & Statistical Computing in Python</span>
+                    <span class="radar-skill-target"><strong class="radar-bar-num" data-target="90">0%</strong> / 80% Target <span class="exceeded-pill">Exceeded</span></span>
+                  </div>
+                  <div class="radar-bar-track">
+                    <div class="radar-bar-fill" data-target="90" style="width: 0%; background: #15803d;"></div>
+                  </div>
+                </div>
+
+                <!-- Skill 4 -->
+                <div class="radar-skill-item">
+                  <div class="radar-skill-label-row">
+                    <span class="radar-skill-name">DPDP Act & Field Protocol Standards</span>
+                    <span class="radar-skill-target"><strong class="radar-bar-num" data-target="98">0%</strong> / 90% Target</span>
+                  </div>
+                  <div class="radar-bar-track">
+                    <div class="radar-bar-fill" data-target="98" style="width: 0%; background: #15803d;"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Recommendation Callout -->
+              <div class="skill-radar-recom-card">
+                <div class="recom-badge gov-term-explain" data-term="ai-guidance-recommendation">AI Guidance Recommendation</div>
+                <h4 class="recom-title"><span class="gov-term-explain" data-term="focus-track">Focus Track</span>: NSSTA Module 204</h4>
+                <p class="recom-text">
+                  Your survey methodology (94%) and DPDP compliance (98%) exceed the threshold for promotion to Senior Statistical Officer. Closing your 17% gap in Macroeconomic Deflators will achieve 100% promotion readiness.
+                </p>
+                <a href="#courses" class="btn-admin-action" data-tab="courses" style="font-size: 0.8rem; width: 100%; justify-content: center;">
+                  Launch Macro Deflator Module →
+                </a>
+              </div>
+            </div>
+
+            <!-- 3D SKILL CONSTELLATION VIEW (REALISTIC SCIENTIFIC TELEMETRY TOPOLOGY) -->
+            <div class="skill-constellation-container" id="skill-constellation-view" style="display: none;">
+              <div class="constellation-canvas-wrapper">
+                <canvas id="constellation-canvas"></canvas>
+                
+                <!-- Floating 3D Node Inspection Tooltip Card -->
+                <div class="constellation-tooltip-card" id="constellation-tooltip" style="display: none;">
+                  <div class="tooltip-badge-row">
+                    <span class="tooltip-domain-tag" id="tooltip-domain">Domain</span>
+                    <span class="tooltip-status-badge" id="tooltip-status">Mastered</span>
+                  </div>
+                  <h4 class="tooltip-skill-title" id="tooltip-title">Skill Title</h4>
+                  <p class="tooltip-skill-desc" id="tooltip-desc">Skill description</p>
+                  <div class="tooltip-meta-row">
+                    <span class="tooltip-score-label">Competency Score:</span>
+                    <strong class="tooltip-score-val" id="tooltip-score">94%</strong>
+                  </div>
+                  <div class="tooltip-action-row">
+                    <span class="tooltip-prereq-note" id="tooltip-prereq">Prerequisites Met</span>
+                  </div>
+                </div>
+
+                <!-- 3D Legend Bar -->
+                <div class="constellation-legend-bar">
+                  <div class="legend-item"><span class="legend-dot green"></span><span>Mastered (90%+)</span></div>
+                  <div class="legend-item"><span class="legend-dot orange"></span><span>In-Progress / Gap (60-89%)</span></div>
+                  <div class="legend-item"><span class="legend-dot cyan"></span><span>Promotional Lock (SSO Target)</span></div>
+                  <div class="legend-item"><span class="legend-dot purple"></span><span>Specialist Track (ISS Cadre)</span></div>
+                </div>
               </div>
             </div>
           </div>
@@ -282,7 +465,7 @@
               </p>
             </div>
             <button type="button" class="quiz-btn-start btn-open-quiz">
-              Take Diagnostic Assessment ⏱️
+              Start Competency Assessment
             </button>
           </div>
 
@@ -290,13 +473,13 @@
           <div style="margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center;">
             <div>
               <h3 style="font-size: 1.15rem; font-weight: 800; color: #002b49; margin: 0 0 0.25rem 0;">
-                NotebookLM-Style Revision Summaries
+                Revision Cards (Key Point Summaries)
               </h3>
               <p style="font-size: 0.8rem; color: #64748b; margin: 0;">
                 Bite-sized, exam-ready key point cards for fast revision before field surveys.
               </p>
             </div>
-            <a href="#notebooklm" class="trainee-nav-item" data-tab="notebooklm" style="font-size: 0.775rem; color: #ea580c; font-weight: 700; padding: 0;">View All Cards →</a>
+            <a href="#revision-cards" class="trainee-nav-item" data-tab="revision-cards" style="font-size: 0.775rem; color: #ea580c; font-weight: 700; padding: 0;">View All Cards →</a>
           </div>
 
           <div class="notebooklm-grid">
@@ -410,87 +593,12 @@
         </div>
 
         <!-- ======================================================================
-             VIEW 3: 2D SKILL RADAR & COMPETENCY TREE
+             VIEW 3: REVISION CARDS
              ====================================================================== -->
-        <div class="trainee-view-tab" id="view-skill-graph" style="display: none;">
+        <div class="trainee-view-tab" id="view-revision-cards" style="display: none;">
           <div style="margin-bottom: 1.5rem;">
             <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">
-              2D Skill Radar & Role Gap Analysis
-            </h2>
-            <p style="font-size: 0.85rem; color: #64748b; margin: 0;">
-              Safe 2D interactive baseline comparing your current verified skills vs. the Senior Statistical Officer (SSO) benchmark.
-            </p>
-          </div>
-
-          <div class="admin-panel-card" style="padding: 2rem;">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center;">
-              <div>
-                <h3 style="font-size: 1.15rem; font-weight: 800; color: #002b49; margin-bottom: 1rem;">
-                  Competency Domain Alignment
-                </h3>
-                
-                <div style="margin-bottom: 1.25rem;">
-                  <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem;">
-                    <span>Survey Sampling Design (NSSO Frame)</span>
-                    <span style="color: #15803d;">94% / 100% Target</span>
-                  </div>
-                  <div class="course-progress-bar" style="width: 100%; height: 10px;">
-                    <div class="course-progress-fill" style="width: 94%; background: #15803d;"></div>
-                  </div>
-                </div>
-
-                <div style="margin-bottom: 1.25rem;">
-                  <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem;">
-                    <span>Macroeconomic & Deflator Theory</span>
-                    <span style="color: #ea580c;">68% / 85% Target (Gap Identified)</span>
-                  </div>
-                  <div class="course-progress-bar" style="width: 100%; height: 10px;">
-                    <div class="course-progress-fill" style="width: 68%; background: #ea580c;"></div>
-                  </div>
-                </div>
-
-                <div style="margin-bottom: 1.25rem;">
-                  <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem;">
-                    <span>Data Science & Python Programming</span>
-                    <span style="color: #15803d;">90% / 80% Target (Benchmark Exceeded)</span>
-                  </div>
-                  <div class="course-progress-bar" style="width: 100%; height: 10px;">
-                    <div class="course-progress-fill" style="width: 90%; background: #15803d;"></div>
-                  </div>
-                </div>
-
-                <div style="margin-bottom: 1.25rem;">
-                  <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem;">
-                    <span>DPDP Act & Field Protocol Standards</span>
-                    <span style="color: #15803d;">98% / 90% Target</span>
-                  </div>
-                  <div class="course-progress-bar" style="width: 100%; height: 10px;">
-                    <div class="course-progress-fill" style="width: 98%; background: #15803d;"></div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Recommendation Card -->
-              <div style="background: #f8fafc; border: 1.5px solid #002b49; border-left: 4px solid #ea580c; padding: 1.5rem;">
-                <h4 style="font-size: 1rem; font-weight: 800; color: #002b49; margin: 0 0 0.5rem 0;">
-                  Targeted Learning Guidance
-                </h4>
-                <p style="font-size: 0.825rem; color: #475569; line-height: 1.6; margin-bottom: 1rem;">
-                  Your statistical sampling and DPDP scores exceed the required standard for promotion to Senior Statistical Officer. To close your remaining 17% gap in Macroeconomic Deflators, we recommend completing <strong>NSSTA Module 204</strong>.
-                </p>
-                <button class="btn-admin-action" style="font-size: 0.8rem;">Enroll in Recommended Module →</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ======================================================================
-             VIEW 4: NOTEBOOKLM REVISION CARDS
-             ====================================================================== -->
-        <div class="trainee-view-tab" id="view-notebooklm" style="display: none;">
-          <div style="margin-bottom: 1.5rem;">
-            <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">
-              NotebookLM Key-Point Revision Cards
+              Revision Cards (Exam & Field Summaries)
             </h2>
             <p style="font-size: 0.85rem; color: #64748b; margin: 0;">
               Distilled core principles for fast memorization and operational field readiness.
@@ -571,9 +679,15 @@
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2a10 10 0 1 0 10 10H12V2z"></path></svg>
                 <span>Officer Raman • Personal Study Session</span>
               </div>
-              <span class="admin-status-pill" style="background: rgba(255,255,255,0.15); color:#fff; border-color:rgba(255,255,255,0.3);">
-                Model: MoSPI-StatLLM v2
-              </span>
+              <div style="display: flex; align-items: center; gap: 0.65rem;">
+                <button type="button" class="btn-clear-chat" id="btn-clear-mentor-chat" title="Clear Study Session Chat">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                  <span>Clear Chat</span>
+                </button>
+                <span class="admin-status-pill" style="background: rgba(255,255,255,0.15); color:#fff; border-color:rgba(255,255,255,0.3);">
+                  Model: MoSPI-StatLLM v2
+                </span>
+              </div>
             </div>
 
             <div class="ai-chat-log" id="trainee-chat-log">
@@ -590,48 +704,7 @@
         </div>
 
         <!-- ======================================================================
-             VIEW 7: VERIFIED CERTIFICATES
-             ====================================================================== -->
-        <div class="trainee-view-tab" id="view-certificates" style="display: none;">
-          <div style="margin-bottom: 1.5rem;">
-            <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">
-              Nirdesha Verified Competency Certificates
-            </h2>
-            <p style="font-size: 0.85rem; color: #64748b; margin: 0;">
-              Official credentials issued under the authority of MoSPI and NSSTA.
-            </p>
-          </div>
-
-          <div class="admin-panel-card" style="padding: 2.5rem; border: 2px solid #002b49; text-align: center; max-width: 720px; margin: 0 auto;">
-            <div style="color: #ea580c; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem;">
-              Government of India • Ministry of Statistics & Programme Implementation
-            </div>
-            <h3 style="font-size: 1.75rem; font-weight: 900; color: #002b49; margin: 0 0 0.5rem 0;">
-              CERTIFICATE OF STATISTICAL COMPETENCY
-            </h3>
-            <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 1.5rem;">
-              This is to officially certify that
-            </p>
-            <div style="font-size: 1.5rem; font-weight: 800; color: #0f172a; border-bottom: 2px solid #ea580c; display: inline-block; padding-bottom: 0.35rem; margin-bottom: 1.25rem;">
-              Officer S. K. Raman (SSS-2024-8891)
-            </div>
-            <p style="font-size: 0.9rem; color: #334155; line-height: 1.6; max-width: 520px; margin: 0 auto 2rem auto;">
-              has demonstrated verified proficiency in <strong>Public Data Science & Statistical Computing in Python</strong> with an assessment score of <strong>91%</strong> (Accredited under NSSTA-305 standards).
-            </p>
-            <div style="display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #e2e8f0; padding-top: 1.5rem;">
-              <div>
-                <div style="font-weight: 800; color: #002b49; font-size: 0.85rem;">Dr. A. K. Verma</div>
-                <div style="font-size: 0.75rem; color: #64748b;">Director (Training), MoSPI</div>
-              </div>
-              <div style="background: #f8fafc; border: 1px dashed #002b49; padding: 0.4rem 0.85rem; font-size: 0.75rem; font-weight: 700; color: #002b49;">
-                QR VALIDATION: NIR-2026-9814-VERIFIED
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ======================================================================
-             VIEW 8: OFFICER PROFILE
+             VIEW 6: OFFICER PROFILE (ORIGINAL CLEAN SERVICE DOSSIER)
              ====================================================================== -->
         <div class="trainee-view-tab" id="view-profile" style="display: none;">
           <div style="margin-bottom: 1.5rem;">
@@ -724,7 +797,7 @@
 
         <!-- Result Feedback Box -->
         <div id="quiz-result-box" style="display: none; text-align: center; padding: 1.5rem 0;">
-          <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎉</div>
+          
           <h3 style="font-size: 1.35rem; font-weight: 800; color: #002b49; margin-bottom: 0.5rem;">Assessment Completed!</h3>
           <p style="font-size: 0.95rem; font-weight: 700; color: #166534;" id="quiz-score-val">
             80% Accuracy (118s used, 80% Time Efficiency)
@@ -745,6 +818,176 @@
     </div>
   </div>
 
-  <script src="js/public.js"></script>
-</body>
+    <!-- ==========================================================================
+         TRANSLUCENT MILESTONE MODAL WITH 3D DATE WHEEL PICKER & SLIDING HISTORY
+         ========================================================================== -->
+    <div class="milestone-modal-backdrop" id="milestone-modal" style="display: none;">
+      <div class="milestone-modal-glass">
+        
+        <!-- Modal Top Bar -->
+        <div class="milestone-modal-header">
+          <div class="modal-header-left">
+            <span class="modal-eyebrow" id="modal-eyebrow-text">Today: 2 September 2026</span>
+            <h2 class="modal-heading" id="modal-heading-text">Set Milestone Target</h2>
+          </div>
+          <div class="modal-header-right">
+            <button type="button" class="btn-toggle-milestone-history" id="btn-toggle-milestone-history">
+              <span id="history-toggle-label">Show History</span>
+            </button>
+            <button type="button" class="btn-milestone-close" id="btn-close-milestone" title="Close Modal">
+              <span>Close</span>
+              <span class="close-icon">✕</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Sliding Panes Viewport (2 Panes: Date Picker <-> History) -->
+        <div class="milestone-slider-viewport">
+          <div class="milestone-slider-track" id="milestone-slider-track">
+            
+            <!-- PANE 1: 3D DATE WHEEL PICKER -->
+            <div class="milestone-pane" id="pane-date-picker">
+
+
+              <!-- 3D Date Wheel Picker Container -->
+              <div class="date-wheel-picker-container" id="date-wheel-picker">
+                <!-- Top & Bottom Gradient Occlusion Masks -->
+                <div class="wheel-mask-top"></div>
+                <div class="wheel-mask-bottom"></div>
+                <div class="wheel-selection-indicator"></div>
+
+                <!-- Day Wheel -->
+                <div class="wheel-column" id="wheel-days" data-type="day">
+                  <div class="wheel-cylinder" id="cylinder-days">
+                    <!-- Populated dynamically via JS -->
+                  </div>
+                </div>
+
+                <!-- Month Wheel -->
+                <div class="wheel-column" id="wheel-months" data-type="month">
+                  <div class="wheel-cylinder" id="cylinder-months">
+                    <!-- Populated dynamically via JS -->
+                  </div>
+                </div>
+
+                <!-- Year Wheel -->
+                <div class="wheel-column" id="wheel-years" data-type="year">
+                  <div class="wheel-cylinder" id="cylinder-years">
+                    <!-- Populated dynamically via JS -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- Real-Time Target Date Computation Summary -->
+              <div class="milestone-summary-card">
+                <div class="summary-col">
+                  <span class="summary-label">Target Milestone Date</span>
+                  <strong class="summary-val" id="summary-target-date">22 September 2026</strong>
+                </div>
+                <div class="summary-col-divider"></div>
+                <div class="summary-col">
+                  <span class="summary-label">Calculated Days</span>
+                  <strong class="summary-val highlight" id="summary-days-count">20 Days Target</strong>
+                  <span class="summary-sub" id="summary-streak-diff">(+6 Days beyond current 14-day streak)</span>
+                </div>
+              </div>
+
+              <!-- Modal Action Buttons -->
+              <div class="milestone-modal-footer">
+                <button type="button" class="btn-cancel-modal" id="btn-cancel-milestone">Cancel</button>
+                <button type="button" class="btn-confirm-milestone" id="btn-confirm-milestone">Confirm Milestone Target</button>
+              </div>
+            </div>
+
+            <!-- PANE 2: MILESTONE & STREAK HISTORY -->
+            <div class="milestone-pane" id="pane-history">
+
+
+              <div class="history-records-list">
+                <!-- Record 1 -->
+                <div class="history-record-card">
+                  <div class="record-top">
+                    <div>
+                      <div class="record-badge completed">Milestone Achieved</div>
+                      <h4 class="record-title">Q1 Sampling Cadre Proficiency</h4>
+                      <p class="record-period">1 May 2026 – 21 May 2026 • 21-Day Goal</p>
+                    </div>
+                    <div class="record-pct-box">100%</div>
+                  </div>
+                  <div class="record-bar-track">
+                    <div class="record-bar-fill" style="width: 100%; background: #10b981;"></div>
+                  </div>
+                </div>
+
+                <!-- Record 2 -->
+                <div class="history-record-card">
+                  <div class="record-top">
+                    <div>
+                      <div class="record-badge completed">Milestone Achieved</div>
+                      <h4 class="record-title">Macroeconomic Deflators Fast-Track</h4>
+                      <p class="record-period">5 June 2026 – 19 June 2026 • 14-Day Goal</p>
+                    </div>
+                    <div class="record-pct-box">100%</div>
+                  </div>
+                  <div class="record-bar-track">
+                    <div class="record-bar-fill" style="width: 100%; background: #ea580c;"></div>
+                  </div>
+                </div>
+
+                <!-- Record 3 -->
+                <div class="history-record-card">
+                  <div class="record-top">
+                    <div>
+                      <div class="record-badge expired">Target Expired</div>
+                      <h4 class="record-title">DPDP Survey Ethics Compliance Sprint</h4>
+                      <p class="record-period">10 July 2026 – 20 July 2026 • 8 of 10 Days</p>
+                    </div>
+                    <div class="record-pct-box">80%</div>
+                  </div>
+                  <div class="record-bar-track">
+                    <div class="record-bar-fill" style="width: 80%; background: #f59e0b;"></div>
+                  </div>
+                </div>
+
+                <!-- Record 4 -->
+                <div class="history-record-card active-sprint">
+                  <div class="record-top">
+                    <div>
+                      <div class="record-badge inprogress">Current Active Sprint</div>
+                      <h4 class="record-title">Senior Statistical Officer (SSO) Milestone</h4>
+                      <p class="record-period" id="history-active-period">Target: 22 September 2026 • 14 of 20 Days</p>
+                    </div>
+                    <div class="record-pct-box inprogress" id="history-active-pct">70%</div>
+                  </div>
+                  <div class="record-bar-track">
+                    <div class="record-bar-fill inprogress" id="history-active-bar" style="width: 70%; background: #ea580c;"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- History Footer Actions -->
+              <div class="milestone-modal-footer">
+                <button type="button" class="btn-back-to-picker" id="btn-back-to-picker">Back to Date Picker</button>
+                <button type="button" class="btn-cancel-modal" id="btn-history-close">Close</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- Floating "Ask AI" Action Button (Appears on 2s Hover over Terms) -->
+    <button type="button" id="btn-ask-ai-floating" class="btn-ask-ai-floating" style="display: none;" title="Ask AI Study Mentor about this term">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><line x1="9" y1="10" x2="15" y2="10"></line></svg>
+      <span>Ask AI</span>
+    </button>
+    
+  <script src="js/public.js" defer></script>
+  <script src="js/ai-companion.js" defer></script>
+  <script src="js/translation.js" defer></script>
+
+  </body>
 </html>

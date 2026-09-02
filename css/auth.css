@@ -665,3 +665,82 @@
 [data-theme="dark"] .auth-nav-back {
   color: #38bdf8;
 }
+
+/* ==========================================================================
+   AUTH PORTAL DARK THEME ([data-theme="dark"])
+   ========================================================================== */
+[data-theme="dark"] .auth-page-wrapper {
+  background-color: #090d16 !important;
+}
+
+[data-theme="dark"] .auth-nav-back {
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .auth-main-card,
+[data-theme="dark"] .auth-info-card {
+  background-color: #111827 !important;
+  border: 1.5px solid #334155 !important;
+  box-shadow: 6px 6px 0px #020617 !important;
+}
+
+[data-theme="dark"] .auth-tabs-nav {
+  background-color: #0f172a !important;
+  border-bottom: 1.5px solid #334155 !important;
+}
+
+[data-theme="dark"] .auth-tab-btn {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .auth-tab-btn.active {
+  background-color: #111827 !important;
+  color: #ffffff !important;
+  border-bottom: 3px solid #ea580c !important;
+}
+
+[data-theme="dark"] .auth-card-title,
+[data-theme="dark"] .auth-info-title {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .auth-card-sub,
+[data-theme="dark"] .auth-info-desc {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .btn-sso-parichay {
+  background-color: #1e293b !important;
+  border: 1.5px solid #334155 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .form-label-gov {
+  color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .form-input-gov {
+  background-color: #090d16 !important;
+  border: 1.5px solid #334155 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .form-input-gov:focus {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2) !important;
+}
+
+[data-theme="dark"] .form-divider-line span {
+  background-color: #111827 !important;
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .form-link-action {
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .auth-help-box {
+  background-color: #0f172a !important;
+  border-left: 3px solid #ea580c !important;
+  color: #cbd5e1 !important;
+}
