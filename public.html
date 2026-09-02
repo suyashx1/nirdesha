@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Officer Learning & Competency Dashboard — Nirdesha | MoSPI, Government of India</title>
-  <meta name="description" content="Personalized learning guidance, competitive skill ratings, and competency diagnostics dashboard for public officials and statistical officers.">
+  <title>User Learning & Competency Dashboard — Nirdesha | MoSPI, Government of India</title>
+  <meta name="description" content="Personalized learning guidance, competitive skill ratings, and competency diagnostics dashboard for public users and statistical personnel.">
 
   <!-- Google Fonts: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,9 +22,9 @@
   <div class="trainee-shell">
     
     <!-- ==========================================================================
-         1. LEFT SIDEBAR (OFFICER / PUBLIC TRAINEE NAVIGATION)
+         1. LEFT SIDEBAR (USER LEARNING NAVIGATION)
          ========================================================================== -->
-    <aside class="trainee-sidebar" id="trainee-sidebar" aria-label="Officer Learning Navigation">
+    <aside class="trainee-sidebar" id="trainee-sidebar" aria-label="User Learning Navigation">
       <!-- Header -->
       <div class="trainee-sidebar-header">
         <svg class="trainee-emblem-icon" viewBox="0 0 100 120" fill="currentColor" aria-hidden="true">
@@ -35,7 +35,7 @@
         </svg>
         <div>
           <div class="trainee-brand-title">निर्देश <span>NIRDESHA</span></div>
-          <div class="trainee-brand-sub">Officer Learning Portal • MoSPI</div>
+          <div class="trainee-brand-sub">User Learning Portal • MoSPI</div>
         </div>
       </div>
 
@@ -86,16 +86,16 @@
 
         
 
-        <!-- 8. Officer Profile -->
+        <!-- 8. User Profile -->
         <a href="#profile" class="trainee-nav-item" data-tab="profile">
           <span class="admin-nav-icon">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
           </span>
-          <span>Officer Profile</span>
+          <span>User Profile</span>
         </a>
       </nav>
 
-      <!-- Bottom: Settings, Sign Out & Officer Card -->
+      <!-- Bottom: Settings, Sign Out & User Card -->
       <div class="trainee-sidebar-bottom">
         <a href="login.html" class="admin-nav-item nav-signout" id="trainee-signout-btn" title="Sign out of learning session">
           <span class="admin-nav-icon">
@@ -105,10 +105,10 @@
         </a>
 
         <div class="trainee-user-card">
-          <div class="trainee-avatar">SR</div>
+          <div class="trainee-avatar" id="public-sidebar-avatar">SR</div>
           <div class="trainee-user-details">
-            <span class="trainee-user-name">S. K. Raman</span>
-            <span class="trainee-user-role">Junior Statistical Officer (JSO)</span>
+            <span class="trainee-user-name" id="public-sidebar-name">S. K. Raman</span>
+            <span class="trainee-user-role" id="public-sidebar-role">Junior Statistical Officer (JSO)</span>
           </div>
         </div>
       </div>
@@ -704,48 +704,92 @@
         </div>
 
         <!-- ======================================================================
-             VIEW 6: OFFICER PROFILE (ORIGINAL CLEAN SERVICE DOSSIER)
+VIEW 6: OFFICER PROFILE (ORIGINAL CLEAN SERVICE DOSSIER)
              ====================================================================== -->
         <div class="trainee-view-tab" id="view-profile" style="display: none;">
           <div style="margin-bottom: 1.5rem;">
             <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">
-              Officer Service Profile
+              User Service Profile
             </h2>
             <p style="font-size: 0.85rem; color: #64748b; margin: 0;">
               Cadre records, employee roll number, and competency governance status.
             </p>
           </div>
 
-          <div class="profile-overview-card">
+          <!-- Document Drop AI Extraction Pipeline (Phase 2) -->
+          <div class="doc-drop-zone" id="public-pdf-drop-zone">
+            <input type="file" id="public-pdf-input" accept="application/pdf" style="display:none;">
+            <div class="doc-drop-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="12" y2="12"></line><line x1="15" y1="15" x2="12" y2="12"></line></svg>
+            </div>
+            <div class="doc-drop-content">
+              <div class="doc-drop-title">⚡ Document Drop AI Extraction Pipeline (PDF Resume / Service Record)</div>
+              <div class="doc-drop-sub">Drag & drop a PDF resume or service record here, or <span class="doc-drop-link" id="public-pdf-browse">browse file</span> to auto-parse Cadre, Division, and Baseline Skills.</div>
+            </div>
+          </div>
+
+          <!-- Shimmering Loading State for AI Extraction -->
+          <div class="shimmer-container" id="public-pdf-shimmer" style="display:none;">
+            <div class="shimmer-title-row">
+              <span class="status-dot-pulse"></span>
+              <span id="public-shimmer-status-text">⚡ Initializing MoSPI AI Document Extraction Engine...</span>
+            </div>
+            <div class="shimmer-block shimmer-bar"></div>
+            <div class="shimmer-block shimmer-bar" style="width: 75%;"></div>
+            <div class="shimmer-block shimmer-bar" style="width: 50%;"></div>
+          </div>
+
+          <div class="profile-overview-card" style="margin-top: 1.25rem;">
             <div class="profile-avatar-row">
-              <div class="profile-avatar-large" style="background: #0284c7;">SR</div>
-              <div>
-                <h3 style="font-size: 1.35rem; font-weight: 800; color: #002b49; margin: 0 0 0.25rem 0;">S. K. Raman</h3>
-                <div style="font-size: 0.85rem; color: #ea580c; font-weight: 700; margin-bottom: 0.25rem;">
-                  Junior Statistical Officer (JSO)
-                </div>
-                <div style="font-size: 0.775rem; color: #64748b;">
-                  Subordinate Statistical Service (SSS Cadre), MoSPI
-                </div>
+              <div class="profile-avatar-container">
+                <div class="profile-avatar-large" style="background: #0284c7;" id="public-profile-avatar">SR</div>
+                <button type="button" class="avatar-upload-overlay" id="public-avatar-btn" title="Change Avatar Image">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                </button>
+                <input type="file" id="public-avatar-file-input" accept="image/*" style="display:none;">
+              </div>
+
+              <div style="flex:1;">
+                <label class="profile-field-label">User Full Name</label>
+                <input type="text" id="public-profile-name" class="profile-input-field" value="S. K. Raman">
+                
+                <label class="profile-field-label" style="margin-top: 0.5rem;">Role / Designation</label>
+                <input type="text" id="public-profile-role" class="profile-input-field" value="Junior Statistical Officer (JSO)">
               </div>
             </div>
 
-            <div class="settings-group">
-              <div class="settings-item-row">
-                <span style="font-size: 0.85rem; font-weight: 700; color: #334155;">Login Access ID</span>
-                <span style="font-size: 0.85rem; font-weight: 700; color: #002b49;">public</span>
+            <div class="settings-group" style="margin-top: 1.25rem;">
+              <div class="profile-grid-fields">
+                <div>
+                  <label class="profile-field-label">Official Government Email</label>
+                  <input type="email" id="public-profile-email" class="profile-input-field" value="sk.raman@mospi.gov.in">
+                </div>
+                <div>
+                  <label class="profile-field-label">Employee Roll Code</label>
+                  <input type="text" id="public-profile-roll" class="profile-input-field" value="SSS-2024-8891">
+                </div>
+                <div>
+                  <label class="profile-field-label">Cadre Allocation</label>
+                  <input type="text" id="public-profile-cadre" class="profile-input-field" value="Subordinate Statistical Service (SSS Cadre)">
+                </div>
+                <div>
+                  <label class="profile-field-label">Division / Posting</label>
+                  <input type="text" id="public-profile-division" class="profile-input-field" value="Field Operations Division (NSSO / FOD)">
+                </div>
               </div>
-              <div class="settings-item-row">
-                <span style="font-size: 0.85rem; font-weight: 700; color: #334155;">Employee Roll Code</span>
-                <span style="font-size: 0.85rem; color: #002b49;">SSS-2024-8891</span>
+
+              <div style="margin-top: 1rem;">
+                <label class="profile-field-label">Baseline Skills & Competencies</label>
+                <input type="text" id="public-profile-skills" class="profile-input-field" value="Survey Sampling, CAPI Tablets, Python Data Science, DPDP Governance">
               </div>
-              <div class="settings-item-row">
-                <span style="font-size: 0.85rem; font-weight: 700; color: #334155;">Cadre Allocation</span>
-                <span style="font-size: 0.85rem; color: #002b49;">Field Operations Division (NSSO / FOD)</span>
-              </div>
-              <div class="settings-item-row">
-                <span style="font-size: 0.85rem; font-weight: 700; color: #334155;">Current Cadre Competency Rating</span>
-                <span class="badge-status-cert">1,485 Elo (Level 3 - Proficient)</span>
+
+              <div style="margin-top: 1.25rem; display: flex; align-items: center; justify-content: space-between;">
+                <button type="button" class="btn-admin-action" id="public-save-profile-btn">
+                  Save Profile Settings ✓
+                </button>
+                <div class="profile-toast-alert" id="public-profile-toast" style="display:none;">
+                  ✓ Profile & Avatar Saved Successfully!
+                </div>
               </div>
             </div>
           </div>

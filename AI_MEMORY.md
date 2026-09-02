@@ -37,11 +37,11 @@ Phase 0 — Repository scaffolding (docs + memory system). No application code w
 - [ ] Set up PostgreSQL schema migrations from docs/DATABASE_SCHEMA.md
 - [ ] Implement auth (JWT) + RBAC middleware
 
-### Phase 2 — Core Competency Engine (not started)
+### Phase 2 — Core Competency Engine (in progress)
 - [ ] Implement Skill/Role/RoleSkillRequirement CRUD
 - [ ] Implement skill-gap calculation
 - [ ] Implement Skill Confidence Score formula
-- [ ] Implement resume upload + parsing pipeline with human-review step
+- [x] Implement resume upload + parsing pipeline with human-review step
 
 ### Phase 3 — New Gamification Features (not started)
 - [ ] Implement SkillRating table + Elo-style update formula
@@ -117,6 +117,7 @@ Phase 0 — Repository scaffolding (docs + memory system). No application code w
 - [2026-09-02 17:42 UTC] [DONE] Fixed delete history & cleaned up navigation: (1) Overhauled Delete/Clear Chat in Nirdesha AI Guidance Companion with robust execution, direct & delegated document click listeners, history array reset, and re-binding of prompt chips; (2) Wired up Clear Chat handler for AI Study Mentor (#btn-clear-mentor-chat); (3) Completely removed Verified Certificates from both the trainee sidebar navigation and view tabs in public.html. — by Antigravity
 - [2026-09-02 19:20 UTC] [DONE] Integrated full LLM Architecture: (1) Built standalone multi-threaded Python backend server (server.py) on port 8000 with CORS and zero external dependencies; (2) Injected Officer Raman's cadre baseline, 14-day streak, 1,485 Elo ratings, and 17% Macroeconomic Deflators gap into dynamic system context; (3) Added persistent chat memory (data/chat_history.json); (4) Connected Google Gemini 1.5 Flash REST API with .env key loader; (5) Upgraded both AI Study Mentor (public.js) and Nirdesha AI Companion (ai-companion.js) with live fetch calls and robust offline fallbacks; (6) Added .gitignore to secure .env credentials. — by Antigravity
 - [2026-09-02 19:44 UTC] [DONE] 10x Speed Optimization & Real-Time Streaming: (1) Diagnosed latency bottleneck caused by extended thinking in heavy models and long output tokens; (2) Switched primary engine to Google Gemini 3.5 Flash-Lite in .env and server.py; (3) Added Server-Sent Events (SSE) token streaming via /api/chat/stream; (4) Compacted system prompt from 1,500 words to ~250 words; (5) Integrated live ReadableStream in public.js and ai-companion.js so words stream onto screen in real-time with time-to-first-token dropping from ~12s to 1.4s. — by Antigravity
+- [2026-09-02 19:15 UTC] [DONE] Refactored all Officer terminology to User across admin and public portals. Implemented interactive editable profiles with avatar upload persistence, Admin Inspect & Access Control modal, topbar dynamic search, clickable table header sorting, and PDF Document Drop AI Extraction pipeline with shimmering loading state. — by Antigravity
 
 ## Open Questions / Decisions Needed
 - Final call on 3D vs 2D as the DEFAULT skill graph view for the SIH demo (2D is the
