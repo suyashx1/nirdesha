@@ -1,0 +1,24 @@
+# Environment & Secrets (NEVER COMMIT)
+.env
+.env.local
+*.env
+
+# Python Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+
+# Python cache & bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Editor & Scratch files
+.vscode/
+.idea/
+tempCodeRunnerFile.*
+rgv.py
+main_backup_working.py
+*.log
