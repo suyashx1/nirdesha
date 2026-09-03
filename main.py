@@ -5,9 +5,11 @@ import logging
 from concurrent.futures import ThreadPoolExecutor, TimeoutError
 from typing import Optional
 
+import asyncio
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from google import genai
 from google.genai import types
@@ -26,11 +28,10 @@ app = FastAPI(
     description="Backend for SIH Competency Intelligence System with iGOT Karmayogi integration"
 )
 
-# Enable CORS for frontend integration
+# Enable CORS for frontend integration (compatible with any frontend port)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -76,6 +77,12 @@ EMPLOYEES = {
 
 class QuizRequest(BaseModel):
     text: str
+
+class ChatStreamRequest(BaseModel):
+    user_id: Optional[str] = "public"
+    message: str
+    role: Optional[str] = "mentor"
+    language: Optional[str] = "en"
 
 def clean_and_parse_json(raw_text: str):
     """
@@ -177,18 +184,16 @@ def home():
         "gemini_configured": client is not None,
         "supported_endpoints": [
             "/gaps/{employee_id}",
-            "/generate-quiz"
+            "/generate-quiz",
+            "/api/chat/stream"
         ]
     }
 
 @app.get("/gaps/{employee_id}")
 def get_gaps(employee_id: str):
-    employee = EMPLOYEES.get(employee_id.upper())
+    employee = EMPLOYEES.get(employee_id.upper()) or EMPLOYEES.get(employee_id)
     if not employee:
-        raise HTTPException(
-            status_code=404,
-            detail=f"Employee '{employee_id}' not found in iGOT Karmayogi database."
-        )
+        return {"error": "Employee not found"}
 
     skills_with_gap = []
     for skill in employee["skills"]:
@@ -268,3 +273,57 @@ Text:
         "quiz": build_fallback_quiz(content_text),
         "source": "fallback"
     }
+
+@app.post("/api/chat/stream")
+async def chat_stream(request: ChatStreamRequest):
+    """
+    Streaming AI chat endpoint for the frontend AI Companion and AI Mentor.
+    Uses Server-Sent Events (SSE) format: data: {"chunk": "..."} followed by data: [DONE]
+    """
+    user_msg = request.message.strip()
+    role = request.role or "mentor"
+    lang = request.language or "en"
+
+    async def event_generator():
+        system_instruction = (
+            f"You are the Nirdesha AI Assistant and Competency Mentor for the iGOT Karmayogi civil service platform. "
+            f"Your current persona/role is '{role}'. You help Indian civil servants, trainees, and administrators "
+            f"understand role competencies, skill gaps, learning pathways, and capacity building. "
+            f"Respond politely and clearly in language code '{lang}'. Keep answers helpful, encouraging, and actionable."
+        )
+
+        if not client or not user_msg:
+            fallback_text = (
+                f"Hello! I am your Nirdesha AI Competency Companion. Regarding your query: \"{user_msg}\", "
+                f"under the Mission Karmayogi capacity building framework, targeted upskilling in both domain competencies "
+                f"(such as Data Analytics and Public Policy) and behavioral competencies enhances public administration effectiveness."
+            )
+            for word in fallback_text.split(" "):
+                yield f"data: {json.dumps({'chunk': word + ' '})}\n\n"
+                await asyncio.sleep(0.04)
+            yield "data: [DONE]\n\n"
+            return
+
+        try:
+            full_prompt = f"{system_instruction}\n\nUser Question: {user_msg}"
+            response = client.models.generate_content_stream(
+                model="gemini-3.6-flash",
+                contents=full_prompt
+            )
+            for chunk in response:
+                if hasattr(chunk, "text") and chunk.text:
+                    yield f"data: {json.dumps({'chunk': chunk.text})}\n\n"
+            yield "data: [DONE]\n\n"
+        except Exception as e:
+            logger.warning(f"Error in chat streaming: {e}")
+            fallback_text = (
+                f"Regarding your query: \"{user_msg}\" — under the iGOT Karmayogi framework, "
+                f"civil servants are mapped against core competency standards. Please review your personalized skill dashboard "
+                f"to bridge your identified gaps with recommended NSSTA and iGOT modules."
+            )
+            for word in fallback_text.split(" "):
+                yield f"data: {json.dumps({'chunk': word + ' '})}\n\n"
+                await asyncio.sleep(0.04)
+            yield "data: [DONE]\n\n"
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
