@@ -80,12 +80,12 @@
           <span class="trainee-nav-badge" style="background:#0284c7;">New</span>
         </a>
 
-        <!-- 5. Timed Self-Evaluations -->
+        <!-- 5. AI Quiz -->
         <a href="#quiz" class="trainee-nav-item" data-tab="quiz">
           <span class="admin-nav-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z"></path><line x1="9" y1="21" x2="15" y2="21"></line><polygon points="12 6 13 8 15 9 13 10 12 12 11 10 9 9 11 8 12 6"></polygon></svg>
           </span>
-          <span>Timed Quiz Engine</span>
+          <span>AI Quiz</span>
         </a>
 
         <!-- 6. AI Study Mentor -->
@@ -94,6 +94,15 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10H12V2z"></path></svg>
           </span>
           <span>AI Study Mentor</span>
+        </a>
+
+        <!-- 6.5. Notes & Notebooks -->
+        <a href="#notes" class="trainee-nav-item" data-tab="notes">
+          <span class="admin-nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+          </span>
+          <span>Notes</span>
+          <span class="trainee-nav-badge" id="notes-sidebar-badge" style="background:#ea580c; display:none;">0</span>
         </a>
 
         <!-- 7. User Profile -->
@@ -644,15 +653,15 @@
         </div>
 
         <!-- ======================================================================
-             VIEW 5: TIMED ASSESSMENT ENGINE
+             VIEW 5: AI QUIZ ASSESSMENT ENGINE
              ====================================================================== -->
         <div class="trainee-view-tab" id="view-quiz" style="display: none;">
           <div style="margin-bottom: 1.5rem;">
             <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">
-              Fixed-Total-Time Self-Evaluation Engine
+              AI Quiz Assessment Engine
             </h2>
             <p style="font-size: 0.85rem; color: #64748b; margin: 0;">
-              Standardized MoSPI assessment engine evaluating practical execution speed and accuracy.
+              AI-driven adaptive MoSPI evaluations assessing practical execution speed, conceptual depth, and accuracy.
             </p>
           </div>
 
@@ -678,8 +687,8 @@
              VIEW 6: AI STUDY MENTOR
              ====================================================================== -->
         <div class="trainee-view-tab" id="view-ai-mentor" style="display: none;">
-          <div style="margin-bottom: 1.5rem;">
-            <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin: 0;">
+          <div id="mentor-page-heading" style="margin-bottom: 0.75rem;">
+            <h2 style="font-size: 1.35rem; font-weight: 800; color: #002b49; margin: 0;">
               Nirdesha Personal AI Study Mentor
             </h2>
           </div>
@@ -688,7 +697,7 @@
             <div class="ai-chat-header">
               <div class="ai-chat-title"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg><span>Chat Box</span>
               </div>
-              <div style="display: flex; align-items: center; gap: 0.65rem;">
+              <div class="ai-header-controls" style="display: flex; align-items: center; gap: 0.45rem; flex-shrink: 0;">
                 <!-- AI Study Mentor Language Selector -->
                 <div class="ai-lang-selector-wrap" id="mentor-lang-wrap">
                   <select id="mentor-lang-select" class="ai-lang-select" title="Choose language to speak and get answers">
@@ -705,17 +714,59 @@
                     <option value="Punjabi">ਪੰਜਾਬੀ (Punjabi)</option>
                   </select>
                 </div>
-                <button type="button" class="btn-clear-chat" id="btn-clear-mentor-chat" title="Clear Study Session Chat">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                  <span>Clear Chat</span>
+
+                <!-- Personalize AI Responses Button (Opens Customization Menu) -->
+                <button type="button" class="ai-header-btn btn-personalize-mentor" id="btn-personalize-mentor" data-tooltip="Personalize Responses" aria-label="Personalize Responses">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" y1="21" x2="4" y2="14"></line>
+                    <line x1="4" y1="10" x2="4" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12" y2="3"></line>
+                    <line x1="20" y1="21" x2="20" y2="16"></line>
+                    <line x1="20" y1="12" x2="20" y2="3"></line>
+                    <line x1="1" y1="14" x2="7" y2="14"></line>
+                    <line x1="9" y1="8" x2="15" y2="8"></line>
+                    <line x1="17" y1="16" x2="23" y2="16"></line>
+                  </svg>
                 </button>
-                
+
+                <!-- Clear Chat Icon Button -->
+                <button type="button" class="ai-header-btn btn-clear-chat" id="btn-clear-mentor-chat" data-tooltip="Clear Chat" aria-label="Clear Chat">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  </svg>
+                </button>
+
+                <!-- Full Screen / Shrink Screen Toggle Button (Unified) -->
+                <button type="button" class="ai-header-btn btn-fullscreen-mentor" id="btn-fullscreen-mentor" data-tooltip="Full Screen" aria-label="Toggle Full Screen or Shrink Screen">
+                  <svg class="icon-expand" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <polyline points="9 21 3 21 3 15"></polyline>
+                    <line x1="21" y1="3" x2="14" y2="10"></line>
+                    <line x1="3" y1="21" x2="10" y2="14"></line>
+                  </svg>
+                  <svg class="icon-compress" style="display:none;" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="4 14 10 14 10 20"></polyline>
+                    <polyline points="20 10 14 10 14 4"></polyline>
+                    <line x1="14" y1="10" x2="21" y2="3"></line>
+                    <line x1="3" y1="21" x2="10" y2="14"></line>
+                  </svg>
+                </button>
               </div>
             </div>
 
             <div class="ai-chat-log" id="trainee-chat-log">
               <div class="chat-bubble bot">
                 Namaste Officer Raman! I am your <strong>Nirdesha AI Study Mentor</strong>. I can clarify statistical formulas, explain NSS survey concepts, or help you prepare for the upcoming SSO cadre transition test. What would you like to explore?
+                <div class="ai-msg-actions">
+                  <button type="button" class="btn-ai-action btn-copy-response" title="Copy response" aria-label="Copy response">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                  </button>
+                  <button type="button" class="btn-ai-action btn-save-notes" title="Save in Notes" aria-label="Save in Notes">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -730,6 +781,69 @@
             <div class="ai-chat-input-row">
               <input type="text" class="ai-chat-input" id="trainee-chat-input" placeholder="Ask a study question (e.g., Explain Horvitz-Thompson formula or CPI weight calculation)...">
               <button type="button" class="btn-ai-send" id="trainee-chat-send">Ask Mentor</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ======================================================================
+             VIEW 6.5: TRAINEE NOTES & NOTEBOOKS
+             ====================================================================== -->
+        <div class="trainee-view-tab" id="view-notes" style="display: none;">
+          <div class="notes-header-row">
+            <div>
+              <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">
+                My Study Notes & Notebooks
+              </h2>
+              <p style="font-size: 0.85rem; color: #64748b; margin: 0;">
+                Organize saved derivations, formulas, and mentor answers into customizable notebooks.
+              </p>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <button type="button" class="btn-new-notebook" id="btn-create-notebook" title="Create a new notebook folder">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <span>New Notebook</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Notes Workspace Layout: Folders Sidebar + Notes Content Grid -->
+          <div class="notes-workspace-layout">
+            <!-- Left Folders Sidebar -->
+            <div class="notebooks-sidebar">
+              <div class="notebooks-sidebar-header">
+                <span style="font-size: 0.8rem; font-weight: 800; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em;">Notebook Folders</span>
+              </div>
+              <div class="notebooks-list" id="notebooks-list">
+                <!-- Dynamically generated notebook tabs: Notebook 1, Notebook 2, etc. -->
+              </div>
+            </div>
+
+            <!-- Right Notes Content Area -->
+            <div class="notes-content-area">
+              <!-- Active Notebook Header Bar -->
+              <div class="notes-toolbar">
+                <div class="active-notebook-meta">
+                  <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <h3 id="active-notebook-name" style="font-size: 1.2rem; font-weight: 800; color: #002b49; margin: 0;">Notebook 1</h3>
+                    <button type="button" class="btn-notebook-action" id="btn-rename-active-notebook" title="Rename Notebook" aria-label="Rename Notebook">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    </button>
+                    <button type="button" class="btn-notebook-action text-danger" id="btn-delete-active-notebook" title="Delete Notebook" aria-label="Delete Notebook" style="display: none;">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    </button>
+                  </div>
+                  <span class="badge-notes-count" id="active-notebook-count">0 Notes</span>
+                </div>
+                <div class="notes-search-wrap">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                  <input type="text" id="notes-search-input" placeholder="Search snippets in this notebook...">
+                </div>
+              </div>
+
+              <!-- Notes Snippets Grid -->
+              <div class="notes-snippets-grid" id="notes-snippets-grid">
+                <!-- Snippet cards will be rendered here -->
+              </div>
             </div>
           </div>
         </div>
@@ -1104,6 +1218,130 @@
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><line x1="9" y1="10" x2="15" y2="10"></line></svg>
       <span>Ask AI</span>
     </button>
+
+    <!-- ==========================================================================
+         TRAINEE NOTEBOOK CREATION & RENAME MODAL (STYLED LIKE MILESTONE MODAL)
+         ========================================================================== -->
+    <div class="milestone-modal-backdrop" id="notebook-modal" style="display: none;">
+      <div class="milestone-modal-glass" style="max-width: 480px;">
+        <div class="milestone-modal-header">
+          <div class="modal-header-left">
+            <span class="modal-eyebrow" id="notebook-modal-eyebrow">Trainee Study Workspace</span>
+            <h2 class="modal-heading" id="notebook-modal-heading">Create New Notebook</h2>
+          </div>
+          <div class="modal-header-right">
+            <button type="button" class="btn-milestone-close" id="btn-close-notebook-modal" title="Close Modal">
+              <span>Close</span>
+              <span class="close-icon">✕</span>
+            </button>
+          </div>
+        </div>
+
+        <div style="padding: 1.5rem 1.75rem 1.25rem 1.75rem;">
+          <label for="notebook-name-input" style="display: block; font-size: 0.82rem; font-weight: 700; color: #002b49; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;">Notebook Folder Name</label>
+          <input type="text" id="notebook-name-input" class="notebook-styled-input" placeholder="e.g. Sampling Formulas, Macro Deflators, NSSO Guidelines..." maxlength="60">
+          <p style="margin: 0.65rem 0 0 0; font-size: 0.8rem; color: #64748b; line-height: 1.45;">
+            Folders allow you to segment and categorize your saved AI Mentor answers, equations, and survey notes for targeted revision.
+          </p>
+        </div>
+
+        <div class="milestone-modal-footer">
+          <button type="button" class="btn-cancel-modal" id="btn-cancel-notebook">Cancel</button>
+          <button type="button" class="btn-confirm-milestone" id="btn-confirm-notebook">Create Notebook</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         AI STUDY MENTOR PERSONALIZATION SETTINGS MODAL
+         ========================================================================== -->
+    <div class="milestone-modal-backdrop" id="ai-persona-modal" style="display: none;">
+      <div class="milestone-modal-glass" style="max-width: 600px;">
+        <div class="milestone-modal-header">
+          <div class="modal-header-left">
+            <span class="modal-eyebrow">AI Study Mentor Preferences</span>
+            <h2 class="modal-heading">Personalize AI Responses</h2>
+          </div>
+          <div class="modal-header-right">
+            <button type="button" class="btn-milestone-close" id="btn-close-persona-modal" title="Close Modal">
+              <span>Close</span>
+              <span class="close-icon">✕</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="persona-modal-body" style="padding: 1.25rem 1.75rem; max-height: 68vh; overflow-y: auto;">
+          <!-- 1. Answer Structure / Format -->
+          <div class="persona-setting-group">
+            <label class="persona-group-label">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+              Response Format & Layout
+            </label>
+            <div class="persona-options-grid" id="persona-format-options">
+              <button type="button" class="persona-chip-btn active" data-format="detailed">Detailed Theory</button>
+              <button type="button" class="persona-chip-btn" data-format="bullets">Bullet Points</button>
+              <button type="button" class="persona-chip-btn" data-format="numbered">Numbered Steps</button>
+              <button type="button" class="persona-chip-btn" data-format="table">Tabular Layout</button>
+              <button type="button" class="persona-chip-btn" data-format="notes">Study Notes</button>
+            </div>
+          </div>
+
+          <!-- 2. Response Length / Word Limit -->
+          <div class="persona-setting-group">
+            <label class="persona-group-label">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 12h10M7 8h10M7 16h6"/></svg>
+              Word Limit & Detail Level
+            </label>
+            <div class="persona-options-grid" id="persona-length-options">
+              <button type="button" class="persona-chip-btn" data-length="concise">Concise (~80 words)</button>
+              <button type="button" class="persona-chip-btn active" data-length="standard">Standard (~200 words)</button>
+              <button type="button" class="persona-chip-btn" data-length="comprehensive">Comprehensive (In-depth)</button>
+            </div>
+          </div>
+
+          <!-- 3. Tone & Delivery Style -->
+          <div class="persona-setting-group">
+            <label class="persona-group-label">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              Tone & Teaching Voice
+            </label>
+            <div class="persona-options-grid" id="persona-tone-options">
+              <button type="button" class="persona-chip-btn active" data-tone="mentor">Mentor & Encouraging</button>
+              <button type="button" class="persona-chip-btn" data-tone="formal">Administrative / Official</button>
+              <button type="button" class="persona-chip-btn" data-tone="direct">Direct / Exam Scoring</button>
+              <button type="button" class="persona-chip-btn" data-tone="simplified">Plain / Simple English</button>
+            </div>
+          </div>
+
+          <!-- 4. Special Academic Content Filters -->
+          <div class="persona-setting-group" style="margin-bottom: 0.5rem;">
+            <label class="persona-group-label">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Academic Focus Enhancers
+            </label>
+            <div class="persona-checkbox-list">
+              <label class="persona-toggle-item">
+                <input type="checkbox" id="persona-toggle-math" checked>
+                <span>Always render LaTeX / KaTeX mathematical formulas & equations</span>
+              </label>
+              <label class="persona-toggle-item">
+                <input type="checkbox" id="persona-toggle-nss" checked>
+                <span>Include NSSO field examples & Multiplier applications</span>
+              </label>
+              <label class="persona-toggle-item">
+                <input type="checkbox" id="persona-toggle-exam" checked>
+                <span>Include SSO Exam Tips & common marking traps</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="milestone-modal-footer">
+          <button type="button" class="btn-cancel-modal" id="btn-reset-persona">Reset Defaults</button>
+          <button type="button" class="btn-confirm-milestone" id="btn-save-persona">Apply & Save Preferences</button>
+        </div>
+      </div>
+    </div>
 
     <!-- Interactive eLab Project Workspace Modal -->
     <div class="elab-workspace-modal" id="elab-workspace-modal" role="dialog" aria-modal="true">

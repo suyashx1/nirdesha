@@ -507,11 +507,31 @@ document.addEventListener('DOMContentLoaded', () => {
     'Punjabi': "ਪੰਜਾਬੀ ਵਿੱਚ ਸਵਾਲ ਪੁੱਛੋ..."
   };
 
-  function sendTraineeChatMessage(text, sender = 'bot') {
+  function appendResponseActions(bubble, query = '') {
+    if (!bubble || bubble.querySelector('.ai-msg-actions')) return;
+    if (query) bubble.setAttribute('data-query', query);
+
+    const actionRow = document.createElement('div');
+    actionRow.className = 'ai-msg-actions';
+    actionRow.innerHTML = `
+      <button type="button" class="btn-ai-action btn-copy-response" title="Copy response" aria-label="Copy response">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+      </button>
+      <button type="button" class="btn-ai-action btn-save-notes" title="Save in Notes" aria-label="Save in Notes">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+      </button>
+    `;
+    bubble.appendChild(actionRow);
+  }
+
+  function sendTraineeChatMessage(text, sender = 'bot', query = '') {
     if (!traineeChatLog) return;
     const bubble = document.createElement('div');
     bubble.className = `chat-bubble ${sender}`;
     bubble.innerHTML = (sender === "bot" && window.NirdeshaFormatter) ? window.NirdeshaFormatter.format(text) : text.replace(/\n/g, "<br>");
+    if (sender === 'bot') {
+      appendResponseActions(bubble, query);
+    }
     traineeChatLog.appendChild(bubble);
     traineeChatLog.scrollTop = traineeChatLog.scrollHeight;
     return bubble;
@@ -543,17 +563,38 @@ document.addEventListener('DOMContentLoaded', () => {
     btnClearMentorChat.addEventListener('click', () => {
       if (traineeChatLog) {
         traineeChatLog.innerHTML = '';
+        sessionStorage.removeItem('nirdesha_mentor_chat_log');
         const greeting = MENTOR_DEFAULT_GREETINGS[currentMentorLang] || MENTOR_DEFAULT_GREETINGS['English'];
         sendTraineeChatMessage(greeting, 'bot');
       }
     });
   }
 
+  // Restore persistent chat history if page was refreshed
+  try {
+    const savedChat = sessionStorage.getItem('nirdesha_mentor_chat_log');
+    if (savedChat && traineeChatLog) {
+      traineeChatLog.innerHTML = savedChat;
+    }
+  } catch (e) {}
+
+  function persistTraineeChatLog() {
+    try {
+      if (traineeChatLog) {
+        sessionStorage.setItem('nirdesha_mentor_chat_log', traineeChatLog.innerHTML);
+      }
+    } catch (e) {}
+  }
+
+  let isMentorStreaming = false;
+
   // Send message with real-time streaming
   async function handleTraineeChat(query) {
-    if (!query || !query.trim()) return;
+    if (!query || !query.trim() || isMentorStreaming) return;
+    isMentorStreaming = true;
     sendTraineeChatMessage(query, 'user');
     if (traineeChatInput) traineeChatInput.value = '';
+    persistTraineeChatLog();
 
     const botBubble = document.createElement('div');
     botBubble.className = 'chat-bubble bot';
@@ -572,7 +613,8 @@ document.addEventListener('DOMContentLoaded', () => {
           user_id: 'public',
           message: query,
           role: 'mentor',
-          language: currentMentorLang
+          language: currentMentorLang,
+          personalization: typeof getAiPersonalizationSettings === 'function' ? getAiPersonalizationSettings() : {}
         })
       });
 
@@ -624,30 +666,47 @@ document.addEventListener('DOMContentLoaded', () => {
         // Finalize formatting on complete response
         if (accumulatedText.trim()) {
           botBubble.innerHTML = window.NirdeshaFormatter ? window.NirdeshaFormatter.format(accumulatedText) : accumulatedText.replace(/\n/g, '<br>');
+          appendResponseActions(botBubble, query);
           traineeChatLog.scrollTop = traineeChatLog.scrollHeight;
+          persistTraineeChatLog();
+          isMentorStreaming = false;
           return;
         }
       }
     } catch (err) {
       console.warn('AI Mentor server stream error:', err);
+    } finally {
+      isMentorStreaming = false;
     }
 
     if (!hasReceivedFirstToken) {
       botBubble.innerHTML = "I am ready to assist your statistical studies. What specific concept or formula would you like to review?";
+      appendResponseActions(botBubble, query);
       traineeChatLog.scrollTop = traineeChatLog.scrollHeight;
     }
+    persistTraineeChatLog();
   }
 
   if (traineeChatSend && traineeChatInput) {
-    traineeChatSend.addEventListener('click', () => handleTraineeChat(traineeChatInput.value));
+    traineeChatSend.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      handleTraineeChat(traineeChatInput.value);
+    });
     traineeChatInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') handleTraineeChat(traineeChatInput.value);
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        e.stopPropagation();
+        handleTraineeChat(traineeChatInput.value);
+      }
     });
   }
 
   // Quick Chips in AI Study Mentor
   document.querySelectorAll('.mentor-chip').forEach(chip => {
-    chip.addEventListener('click', () => {
+    chip.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       const q = chip.getAttribute('data-query');
       if (q) handleTraineeChat(q);
     });
@@ -2238,7 +2297,695 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderElabProjects();
 
-  
+  initAskAiHoverEngine();
 
+
+  // ==========================================================================
+  // AI STUDY MENTOR FULLSCREEN & SHRINK SCREEN TOGGLE (SAME BUTTON)
+  // ==========================================================================
+  const btnFullscreenMentor = document.getElementById('btn-fullscreen-mentor');
+  const aiChatContainer = document.querySelector('.ai-chat-container');
+
+  if (aiChatContainer && btnFullscreenMentor) {
+    function toggleMentorFullscreen(forceState) {
+      const isFs = typeof forceState === 'boolean' ? forceState : !aiChatContainer.classList.contains('is-fullscreen');
+
+      if (isFs) {
+        aiChatContainer.classList.add('is-fullscreen');
+        document.body.classList.add('mentor-fullscreen-active');
+        try { sessionStorage.setItem('nirdesha_mentor_fs', 'true'); } catch (e) {}
+      } else {
+        aiChatContainer.classList.remove('is-fullscreen');
+        document.body.classList.remove('mentor-fullscreen-active');
+        try { sessionStorage.setItem('nirdesha_mentor_fs', 'false'); } catch (e) {}
+      }
+
+      const iconExpand = btnFullscreenMentor.querySelector('.icon-expand');
+      const iconCompress = btnFullscreenMentor.querySelector('.icon-compress');
+      if (iconExpand && iconCompress) {
+        iconExpand.style.display = isFs ? 'none' : 'block';
+        iconCompress.style.display = isFs ? 'block' : 'none';
+      }
+      btnFullscreenMentor.setAttribute('data-tooltip', isFs ? 'Shrink Screen' : 'Full Screen');
+      btnFullscreenMentor.setAttribute('title', isFs ? 'Shrink Screen' : 'Full Screen');
+
+      if (traineeChatLog) traineeChatLog.scrollTop = traineeChatLog.scrollHeight;
+      if (isFs && traineeChatInput) {
+        setTimeout(() => traineeChatInput.focus(), 60);
+      }
+    }
+
+    btnFullscreenMentor.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleMentorFullscreen();
+    });
+
+    // Escape key exits fullscreen / shrinks back
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && aiChatContainer.classList.contains('is-fullscreen')) {
+        toggleMentorFullscreen(false);
+      }
+    });
+
+    // Restore persistent fullscreen state if preserved in session
+    try {
+      if (sessionStorage.getItem('nirdesha_mentor_fs') === 'true') {
+        toggleMentorFullscreen(true);
+      }
+    } catch (e) {}
+  }
+
+  // ==========================================================================
+  // DELEGATED COPY & SAVE IN NOTES LISTENERS FOR CHAT BUBBLES
+  // ==========================================================================
+  document.addEventListener('click', async (e) => {
+    // 1. COPY BUTTON
+    const copyBtn = e.target.closest('.btn-copy-response');
+    if (copyBtn) {
+      e.preventDefault();
+      e.stopPropagation();
+      const bubble = copyBtn.closest('.chat-bubble');
+      if (bubble) {
+        const clone = bubble.cloneNode(true);
+        const actions = clone.querySelector('.ai-msg-actions');
+        if (actions) actions.remove();
+        const textToCopy = clone.innerText.replace('⚡ Thinking...', '').trim();
+        try {
+          await navigator.clipboard.writeText(textToCopy);
+          copyBtn.classList.add('is-copied');
+          copyBtn.title = 'Copied!';
+          copyBtn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+          setTimeout(() => {
+            copyBtn.classList.remove('is-copied');
+            copyBtn.title = 'Copy response';
+            copyBtn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
+          }, 1800);
+        } catch (err) {
+          console.warn('Clipboard write error:', err);
+        }
+      }
+      return;
+    }
+
+    // 2. SAVE IN NOTES BUTTON
+    const saveBtn = e.target.closest('.btn-save-notes');
+    if (saveBtn) {
+      e.preventDefault();
+      e.stopPropagation();
+      const bubble = saveBtn.closest('.chat-bubble');
+      if (bubble && window.NirdeshaNotes) {
+        const clone = bubble.cloneNode(true);
+        const actions = clone.querySelector('.ai-msg-actions');
+        if (actions) actions.remove();
+        const formattedHtml = clone.innerHTML;
+        const plainText = clone.innerText.replace('⚡ Thinking...', '').trim();
+
+        let noteTitle = bubble.getAttribute('data-query') || '';
+        if (!noteTitle) {
+          const firstLine = plainText.split('\n')[0].replace(/<[^>]+>/g, '').trim();
+          noteTitle = firstLine.slice(0, 60) || 'Study Note Snippet';
+        }
+
+        window.NirdeshaNotes.saveSnippet({
+          title: noteTitle,
+          html: formattedHtml,
+          text: plainText,
+          source: 'AI Study Mentor'
+        });
+
+        saveBtn.classList.add('is-saved');
+        saveBtn.title = 'Saved in Notes!';
+        saveBtn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>`;
+        setTimeout(() => {
+          saveBtn.classList.remove('is-saved');
+          saveBtn.title = 'Save in Notes';
+          saveBtn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>`;
+        }, 2200);
+      }
+      return;
+    }
+  });
+
+  // ==========================================================================
+  // TRAINEE NOTES & NOTEBOOKS SYSTEM (FOLDERS, SNIPPETS, PINNING, MOVING)
+  // ==========================================================================
+
+  function initNotesEngine() {
+    const STORAGE_KEY = 'nirdesha_trainee_notebooks';
+
+    function loadNotesData() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const data = JSON.parse(raw);
+          if (data && data.notebooks && data.notebooks.length > 0) {
+            return data;
+          }
+        }
+      } catch (e) {}
+
+      return {
+        activeNotebookId: 'nb_1',
+        notebooks: [
+          { id: 'nb_1', name: 'Notebook 1', createdAt: Date.now() }
+        ],
+        notes: []
+      };
+    }
+
+    let notesState = loadNotesData();
+
+    function persistNotesData() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(notesState));
+      } catch (e) {}
+      updateNotesBadge();
+    }
+
+    function updateNotesBadge() {
+      const badge = document.getElementById('notes-sidebar-badge');
+      if (badge) {
+        const total = notesState.notes.length;
+        badge.textContent = total;
+        badge.style.display = total > 0 ? 'inline-block' : 'none';
+      }
+    }
+
+    const notebooksListEl = document.getElementById('notebooks-list');
+    const activeNotebookNameEl = document.getElementById('active-notebook-name');
+    const activeNotebookCountEl = document.getElementById('active-notebook-count');
+    const btnRenameActiveNb = document.getElementById('btn-rename-active-notebook');
+    const btnDeleteActiveNb = document.getElementById('btn-delete-active-notebook');
+    const btnCreateNb = document.getElementById('btn-create-notebook');
+    const notesSearchInput = document.getElementById('notes-search-input');
+    const notesGridEl = document.getElementById('notes-snippets-grid');
+
+    let currentSearchTerm = '';
+
+    function escapeHtml(str) {
+      return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function getActiveNotebook() {
+      return notesState.notebooks.find(nb => nb.id === notesState.activeNotebookId) || notesState.notebooks[0];
+    }
+
+    function renderNotebooksList() {
+      if (!notebooksListEl) return;
+      notebooksListEl.innerHTML = '';
+
+      notesState.notebooks.forEach(nb => {
+        const count = notesState.notes.filter(n => n.notebookId === nb.id).length;
+        const isActive = nb.id === notesState.activeNotebookId;
+
+        const item = document.createElement('div');
+        item.className = `notebook-tab-item ${isActive ? 'active' : ''}`;
+        item.setAttribute('data-id', nb.id);
+        item.innerHTML = `
+          <div class="notebook-tab-name">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+            <span title="${escapeHtml(nb.name)}">${escapeHtml(nb.name)}</span>
+          </div>
+          <span class="notebook-tab-count">${count}</span>
+        `;
+
+        item.addEventListener('click', () => {
+          notesState.activeNotebookId = nb.id;
+          persistNotesData();
+          renderNotesUI();
+        });
+
+        notebooksListEl.appendChild(item);
+      });
+    }
+
+    function renderNotesGrid() {
+      if (!notesGridEl) return;
+      notesGridEl.innerHTML = '';
+
+      const activeNb = getActiveNotebook();
+      let notesInNb = notesState.notes.filter(n => n.notebookId === activeNb.id);
+
+      if (currentSearchTerm) {
+        const lower = currentSearchTerm.toLowerCase();
+        notesInNb = notesInNb.filter(n => (n.title && n.title.toLowerCase().includes(lower)) || (n.text && n.text.toLowerCase().includes(lower)));
+      }
+
+      // Sort: pinned notes first, then by creation date descending
+      notesInNb.sort((a, b) => {
+        if (a.isPinned && !b.isPinned) return -1;
+        if (!a.isPinned && b.isPinned) return 1;
+        return (b.createdAt || 0) - (a.createdAt || 0);
+      });
+
+      if (notesInNb.length === 0) {
+        notesGridEl.innerHTML = `
+          <div class="empty-notes-prompt">
+            <div class="empty-notes-icon">📖</div>
+            <h4 style="margin: 0 0 0.5rem 0; font-weight: 800; color: #002b49;">No Notes Saved Yet</h4>
+            <p style="margin: 0; font-size: 0.85rem;">
+              ${currentSearchTerm ? 'No notes matched your search query.' : 'Click the <strong>Save in Notes</strong> icon below any AI Study Mentor response to store formulas and explanations here.'}
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      notesInNb.forEach(note => {
+        const card = document.createElement('div');
+        card.className = `note-card ${note.isPinned ? 'is-pinned' : ''}`;
+        card.setAttribute('data-note-id', note.id);
+
+        const dateStr = note.createdAt ? new Date(note.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : 'Saved Note';
+
+        let moveOptionsHtml = '';
+        notesState.notebooks.forEach(nb => {
+          const selected = nb.id === note.notebookId ? 'selected' : '';
+          moveOptionsHtml += `<option value="${nb.id}" ${selected}>📁 ${escapeHtml(nb.name)}</option>`;
+        });
+
+        card.innerHTML = `
+          <div>
+            <div class="note-card-header">
+              <h4 class="note-card-title" title="${escapeHtml(note.title || 'Study Note')}">
+                ${escapeHtml(note.title || 'Study Note')}
+              </h4>
+              <div class="note-card-controls">
+                <button type="button" class="btn-pin-note ${note.isPinned ? 'active' : ''}" title="${note.isPinned ? 'Unpin note' : 'Pin note'}" aria-label="${note.isPinned ? 'Unpin note' : 'Pin note'}">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="${note.isPinned ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path></svg>
+                </button>
+                <button type="button" class="btn-copy-note" title="Copy note" aria-label="Copy note">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                </button>
+                <button type="button" class="btn-del-note" title="Delete note" aria-label="Delete note">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                </button>
+              </div>
+            </div>
+            <div class="note-card-body">
+              ${note.html || note.text || ''}
+            </div>
+          </div>
+          <div class="note-card-footer">
+            <span>${dateStr}</span>
+            <div style="display:flex; align-items:center; gap:4px;">
+              <span style="font-size:0.68rem; color:#94a3b8;">Move:</span>
+              <select class="note-move-select" title="Move to another notebook">
+                ${moveOptionsHtml}
+              </select>
+            </div>
+          </div>
+        `;
+
+        const btnPin = card.querySelector('.btn-pin-note');
+        if (btnPin) {
+          btnPin.addEventListener('click', () => {
+            note.isPinned = !note.isPinned;
+            persistNotesData();
+            renderNotesUI();
+          });
+        }
+
+        const btnCopy = card.querySelector('.btn-copy-note');
+        if (btnCopy) {
+          btnCopy.addEventListener('click', async () => {
+            try {
+              await navigator.clipboard.writeText(note.text || card.querySelector('.note-card-body').innerText);
+              btnCopy.title = 'Copied!';
+              setTimeout(() => btnCopy.title = 'Copy note', 1500);
+            } catch (err) {}
+          });
+        }
+
+        const btnDel = card.querySelector('.btn-del-note');
+        if (btnDel) {
+          btnDel.addEventListener('click', () => {
+            if (confirm('Delete this note snippet?')) {
+              notesState.notes = notesState.notes.filter(n => n.id !== note.id);
+              persistNotesData();
+              renderNotesUI();
+            }
+          });
+        }
+
+        const moveSelect = card.querySelector('.note-move-select');
+        if (moveSelect) {
+          moveSelect.addEventListener('change', (e) => {
+            const targetNbId = e.target.value;
+            if (targetNbId && targetNbId !== note.notebookId) {
+              note.notebookId = targetNbId;
+              persistNotesData();
+              renderNotesUI();
+            }
+          });
+        }
+
+        notesGridEl.appendChild(card);
+      });
+    }
+
+    function renderNotesUI() {
+      const activeNb = getActiveNotebook();
+      if (activeNotebookNameEl) activeNotebookNameEl.textContent = activeNb.name;
+
+      const count = notesState.notes.filter(n => n.notebookId === activeNb.id).length;
+      if (activeNotebookCountEl) activeNotebookCountEl.textContent = `${count} ${count === 1 ? 'Note' : 'Notes'}`;
+
+      if (btnDeleteActiveNb) {
+        btnDeleteActiveNb.style.display = notesState.notebooks.length > 1 ? 'inline-flex' : 'none';
+      }
+
+      renderNotebooksList();
+      renderNotesGrid();
+      updateNotesBadge();
+    }
+
+    function openNotebookModal(mode, currentVal, onConfirm) {
+      const modal = document.getElementById('notebook-modal');
+      const heading = document.getElementById('notebook-modal-heading');
+      const eyebrow = document.getElementById('notebook-modal-eyebrow');
+      const input = document.getElementById('notebook-name-input');
+      const confirmBtn = document.getElementById('btn-confirm-notebook');
+      const cancelBtn = document.getElementById('btn-cancel-notebook');
+      const closeBtn = document.getElementById('btn-close-notebook-modal');
+      if (!modal || !input || !confirmBtn) return;
+
+      if (mode === 'create') {
+        heading.textContent = 'Create New Notebook';
+        eyebrow.textContent = 'Trainee Knowledge Base';
+        confirmBtn.textContent = 'Create Notebook';
+        confirmBtn.style.background = '';
+        input.style.display = 'block';
+        input.value = currentVal || `Notebook ${notesState.notebooks.length + 1}`;
+      } else {
+        heading.textContent = 'Rename Notebook Folder';
+        eyebrow.textContent = 'Trainee Knowledge Base';
+        confirmBtn.textContent = 'Save Changes';
+        confirmBtn.style.background = '';
+        input.style.display = 'block';
+        input.value = currentVal;
+      }
+
+      modal.style.display = 'flex';
+      setTimeout(() => {
+        input.focus();
+        input.select();
+      }, 50);
+
+      function closeModal() {
+        modal.style.display = 'none';
+        confirmBtn.onclick = null;
+        cancelBtn.onclick = null;
+        closeBtn.onclick = null;
+        modal.onclick = null;
+        input.onkeydown = null;
+      }
+
+      function handleConfirm() {
+        const val = input.value.trim();
+        if (val) {
+          closeModal();
+          onConfirm(val);
+        }
+      }
+
+      confirmBtn.onclick = (e) => { e.preventDefault(); handleConfirm(); };
+      cancelBtn.onclick = (e) => { e.preventDefault(); closeModal(); };
+      closeBtn.onclick = (e) => { e.preventDefault(); closeModal(); };
+      modal.onclick = (e) => { if (e.target === modal) closeModal(); };
+      input.onkeydown = (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          handleConfirm();
+        } else if (e.key === 'Escape') {
+          closeModal();
+        }
+      };
+    }
+
+    if (btnCreateNb) {
+      btnCreateNb.addEventListener('click', (e) => {
+        e.preventDefault();
+        const nextNum = notesState.notebooks.length + 1;
+        openNotebookModal('create', `Notebook ${nextNum}`, (name) => {
+          const newId = `nb_${Date.now()}`;
+          notesState.notebooks.push({
+            id: newId,
+            name: name,
+            createdAt: Date.now()
+          });
+          notesState.activeNotebookId = newId;
+          persistNotesData();
+          renderNotesUI();
+        });
+      });
+    }
+
+    if (btnRenameActiveNb) {
+      btnRenameActiveNb.addEventListener('click', (e) => {
+        e.preventDefault();
+        const activeNb = getActiveNotebook();
+        openNotebookModal('rename', activeNb.name, (newName) => {
+          activeNb.name = newName;
+          persistNotesData();
+          renderNotesUI();
+        });
+      });
+    }
+
+    if (btnDeleteActiveNb) {
+      btnDeleteActiveNb.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (notesState.notebooks.length <= 1) return;
+        const activeNb = getActiveNotebook();
+        const modal = document.getElementById('notebook-modal');
+        const heading = document.getElementById('notebook-modal-heading');
+        const eyebrow = document.getElementById('notebook-modal-eyebrow');
+        const input = document.getElementById('notebook-name-input');
+        const confirmBtn = document.getElementById('btn-confirm-notebook');
+        const cancelBtn = document.getElementById('btn-cancel-notebook');
+        const closeBtn = document.getElementById('btn-close-notebook-modal');
+        if (!modal || !confirmBtn) return;
+
+        heading.textContent = `Delete "${activeNb.name}"?`;
+        eyebrow.textContent = 'Confirm Notebook Removal';
+        confirmBtn.textContent = 'Delete Folder';
+        confirmBtn.style.background = '#dc2626';
+        input.style.display = 'none';
+        const label = modal.querySelector('label[for="notebook-name-input"]');
+        const originalLabelText = label ? label.textContent : 'Notebook Folder Name';
+        if (label) label.textContent = 'Any notes inside will be preserved and moved to your primary notebook.';
+
+        modal.style.display = 'flex';
+
+        function closeModal() {
+          modal.style.display = 'none';
+          input.style.display = 'block';
+          confirmBtn.style.background = '';
+          if (label) label.textContent = originalLabelText;
+          confirmBtn.onclick = null;
+          cancelBtn.onclick = null;
+          closeBtn.onclick = null;
+          modal.onclick = null;
+        }
+
+        confirmBtn.onclick = (ev) => {
+          ev.preventDefault();
+          const fallbackNb = notesState.notebooks.find(nb => nb.id !== activeNb.id);
+          notesState.notes.forEach(n => {
+            if (n.notebookId === activeNb.id) {
+              n.notebookId = fallbackNb.id;
+            }
+          });
+          notesState.notebooks = notesState.notebooks.filter(nb => nb.id !== activeNb.id);
+          notesState.activeNotebookId = fallbackNb.id;
+          persistNotesData();
+          renderNotesUI();
+          closeModal();
+        };
+
+        cancelBtn.onclick = closeModal;
+        closeBtn.onclick = closeModal;
+        modal.onclick = (ev) => { if (ev.target === modal) closeModal(); };
+      });
+    }
+
+    if (notesSearchInput) {
+      notesSearchInput.addEventListener('input', (e) => {
+        currentSearchTerm = e.target.value.trim();
+        renderNotesGrid();
+      });
+    }
+
+    window.NirdeshaNotes = {
+      saveSnippet: function({ title, html, text, source }) {
+        const activeNb = getActiveNotebook();
+        const newNote = {
+          id: `note_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
+          notebookId: activeNb.id,
+          title: title || 'Study Note Snippet',
+          html: html || '',
+          text: text || '',
+          source: source || 'AI Study Mentor',
+          isPinned: false,
+          createdAt: Date.now()
+        };
+        notesState.notes.unshift(newNote);
+        persistNotesData();
+        renderNotesUI();
+      }
+    };
+
+    renderNotesUI();
+  }
+
+  initNotesEngine();
+
+  // ==========================================================================
+  // AI STUDY MENTOR PERSONALIZATION SETTINGS ENGINE
+  // ==========================================================================
+  const AI_PERSONA_STORAGE_KEY = 'nirdesha_ai_persona_settings';
+  const DEFAULT_AI_PERSONA = {
+    format: 'detailed',       // 'detailed' | 'bullets' | 'numbered' | 'table' | 'notes'
+    length: 'standard',       // 'concise' | 'standard' | 'comprehensive'
+    tone: 'mentor',           // 'mentor' | 'formal' | 'direct' | 'simplified'
+    includeMath: true,
+    includeFieldExamples: true,
+    includeExamTips: true
+  };
+
+  function getAiPersonalizationSettings() {
+    try {
+      const saved = localStorage.getItem(AI_PERSONA_STORAGE_KEY);
+      if (saved) {
+        return { ...DEFAULT_AI_PERSONA, ...JSON.parse(saved) };
+      }
+    } catch (e) {}
+    return { ...DEFAULT_AI_PERSONA };
+  }
+
+  function saveAiPersonalizationSettings(settings) {
+    try {
+      localStorage.setItem(AI_PERSONA_STORAGE_KEY, JSON.stringify(settings));
+    } catch (e) {}
+  }
+
+  function initAiPersonalizationEngine() {
+    const btnOpenPersona = document.getElementById('btn-personalize-mentor');
+    const modal = document.getElementById('ai-persona-modal');
+    const btnClose = document.getElementById('btn-close-persona-modal');
+    const btnSave = document.getElementById('btn-save-persona');
+    const btnReset = document.getElementById('btn-reset-persona');
+    if (!btnOpenPersona || !modal) return;
+
+    let currentSettings = getAiPersonalizationSettings();
+
+    function updateModalUI() {
+      // 1. Format options
+      document.querySelectorAll('#persona-format-options .persona-chip-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-format') === currentSettings.format);
+      });
+
+      // 2. Length options
+      document.querySelectorAll('#persona-length-options .persona-chip-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-length') === currentSettings.length);
+      });
+
+      // 3. Tone options
+      document.querySelectorAll('#persona-tone-options .persona-chip-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-tone') === currentSettings.tone);
+      });
+
+      // 4. Checkboxes
+      const chkMath = document.getElementById('persona-toggle-math');
+      const chkNss = document.getElementById('persona-toggle-nss');
+      const chkExam = document.getElementById('persona-toggle-exam');
+      if (chkMath) chkMath.checked = !!currentSettings.includeMath;
+      if (chkNss) chkNss.checked = !!currentSettings.includeFieldExamples;
+      if (chkExam) chkExam.checked = !!currentSettings.includeExamTips;
+    }
+
+    function openPersonaModal() {
+      currentSettings = getAiPersonalizationSettings();
+      updateModalUI();
+      modal.style.display = 'flex';
+    }
+
+    function closePersonaModal() {
+      modal.style.display = 'none';
+    }
+
+    btnOpenPersona.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      openPersonaModal();
+    });
+
+    if (btnClose) btnClose.addEventListener('click', closePersonaModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closePersonaModal();
+    });
+
+    // Chip selections
+    document.querySelectorAll('#persona-format-options .persona-chip-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentSettings.format = btn.getAttribute('data-format');
+        updateModalUI();
+      });
+    });
+
+    document.querySelectorAll('#persona-length-options .persona-chip-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentSettings.length = btn.getAttribute('data-length');
+        updateModalUI();
+      });
+    });
+
+    document.querySelectorAll('#persona-tone-options .persona-chip-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentSettings.tone = btn.getAttribute('data-tone');
+        updateModalUI();
+      });
+    });
+
+    // Save button
+    if (btnSave) {
+      btnSave.addEventListener('click', (e) => {
+        e.preventDefault();
+        const chkMath = document.getElementById('persona-toggle-math');
+        const chkNss = document.getElementById('persona-toggle-nss');
+        const chkExam = document.getElementById('persona-toggle-exam');
+        currentSettings.includeMath = chkMath ? chkMath.checked : true;
+        currentSettings.includeFieldExamples = chkNss ? chkNss.checked : true;
+        currentSettings.includeExamTips = chkExam ? chkExam.checked : true;
+
+        saveAiPersonalizationSettings(currentSettings);
+        btnSave.textContent = 'Saved Preferences!';
+        setTimeout(() => {
+          btnSave.textContent = 'Apply & Save Preferences';
+          closePersonaModal();
+        }, 600);
+      });
+    }
+
+    // Reset button
+    if (btnReset) {
+      btnReset.addEventListener('click', (e) => {
+        e.preventDefault();
+        currentSettings = { ...DEFAULT_AI_PERSONA };
+        saveAiPersonalizationSettings(currentSettings);
+        updateModalUI();
+      });
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.style.display === 'flex') {
+        closePersonaModal();
+      }
+    });
+  }
+
+  initAiPersonalizationEngine();
 
 });

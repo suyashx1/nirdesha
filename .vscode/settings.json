@@ -1,3 +1,21 @@
 {
-    "livePreview.defaultPreviewPath": "/main.html"
+  "livePreview.defaultPreviewPath": "/main.html",
+  "livePreview.fileWatcherDelay": 1000,
+  "livePreview.ignoreFiles": [
+    "data/**",
+    "**/*.json",
+    "scratch/**",
+    "AI_MEMORY.md",
+    "**/*.log",
+    "**/*.tmp"
+  ],
+  "liveServer.settings.ignoreFiles": [
+    ".vscode/**",
+    "data/**",
+    "**/*.json",
+    "scratch/**",
+    "AI_MEMORY.md",
+    "**/*.log",
+    "**/*.tmp"
+  ]
 }

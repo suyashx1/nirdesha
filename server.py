@@ -48,39 +48,32 @@ def load_env():
 
 CONFIG = load_env()
 
-# Persistent Storage
-def get_user_history(user_id="public"):
-    if not os.path.exists(HISTORY_FILE):
-        return []
-    try:
-        with open(HISTORY_FILE, "r", encoding="utf-8") as f:
-            data = json.load(f)
-            return data.get(user_id, [])
-    except Exception:
-        return []
+# In-Memory Cache with Optional Startup Seed
+_MEMORY_HISTORY = {}
 
-def save_user_history(user_id, history):
-    os.makedirs(DATA_DIR, exist_ok=True)
-    data = {}
+def get_user_history(user_id="public"):
+    if user_id in _MEMORY_HISTORY:
+        return _MEMORY_HISTORY[user_id]
     if os.path.exists(HISTORY_FILE):
         try:
             with open(HISTORY_FILE, "r", encoding="utf-8") as f:
                 data = json.load(f)
+                _MEMORY_HISTORY[user_id] = data.get(user_id, [])
+                return _MEMORY_HISTORY[user_id]
         except Exception:
-            data = {}
-    # Keep last 8 messages for optimal speed and context efficiency
-    data[user_id] = history[-8:]
-    try:
-        with open(HISTORY_FILE, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
-    except Exception as e:
-        print(f"[Error] writing history: {e}")
+            pass
+    _MEMORY_HISTORY[user_id] = []
+    return _MEMORY_HISTORY[user_id]
+
+def save_user_history(user_id, history):
+    # Keep last 10 messages in memory
+    _MEMORY_HISTORY[user_id] = history[-10:]
 
 def clear_user_history(user_id="public"):
-    save_user_history(user_id, [])
+    _MEMORY_HISTORY[user_id] = []
 
 # High-Speed Role-Specific Context Builder with Persona Separation & Length Control
-def build_system_context(user_id="public", role="mentor", language="English"):
+def build_system_context(user_id="public", role="mentor", language="English", personalization=None):
     lang_clean = language.strip() if language else "English"
     if lang_clean.lower() != "english":
         lang_directive = f"""
@@ -132,11 +125,58 @@ STRICT BOUNDARY (OUT OF CONTEXT ONLY):
 
     else:
         # role == "mentor"
+        persona_rules = []
+        if personalization and isinstance(personalization, dict):
+            fmt = personalization.get("format", "detailed")
+            length = personalization.get("length", "standard")
+            tone = personalization.get("tone", "mentor")
+            inc_math = personalization.get("includeMath", True)
+            inc_nss = personalization.get("includeFieldExamples", True)
+            inc_exam = personalization.get("includeExamTips", True)
+
+            # 1. Format Directive
+            if fmt == "table":
+                persona_rules.append("MANDATORY OUTPUT FORMAT: Format your answer primarily using clean Markdown pipe tables comparing concepts, metrics, formulas, or cases.")
+            elif fmt == "bullets":
+                persona_rules.append("MANDATORY OUTPUT FORMAT: Format your entire answer using organized, crisp bullet points (dashes or asterisks) with bold lead keywords. Avoid long essay paragraphs.")
+            elif fmt == "numbered":
+                persona_rules.append("MANDATORY OUTPUT FORMAT: Format your answer as sequential numbered steps (1., 2., 3., etc.), breaking down the logic or method step-by-step.")
+            elif fmt == "notes":
+                persona_rules.append("MANDATORY OUTPUT FORMAT: Format your response as high-yield 'Trainee Revision Notes' with distinct sections: Definition, Key Formula, Exam Rule, and Memory Mnemonics.")
+            else: # detailed
+                persona_rules.append("MANDATORY OUTPUT FORMAT: Provide a comprehensive, structured academic explanation with clear subheadings, formulas, and conceptual breakdown.")
+
+            # 2. Length Directive
+            if length == "concise":
+                persona_rules.append("STRICT LENGTH CONSTRAINT: Keep your entire response concise and under 90 words. Give only high-yield essentials with zero filler.")
+            elif length == "standard":
+                persona_rules.append("LENGTH CONSTRAINT: Keep your response well-balanced (approx. 180 to 250 words), focused and directly addressing the prompt.")
+            elif length == "comprehensive":
+                persona_rules.append("LENGTH DIRECTIVE: Provide an extensive, thorough, in-depth deep dive with complete conceptual background and proofs.")
+
+            # 3. Tone Directive
+            if tone == "formal":
+                persona_rules.append("TONE & VOICE: Use a strictly formal, authoritative MoSPI statistical cadre administrative tone. Official, precise, and professional.")
+            elif tone == "mentor":
+                persona_rules.append("TONE & VOICE: Use an encouraging, patient, pedagogical tutor mentor tone focused on helping the officer understand and master the concept.")
+            elif tone == "direct":
+                persona_rules.append("TONE & VOICE: Direct, no-nonsense, straight to the point. Focus strictly on examination scoring criteria with zero small talk.")
+            elif tone == "simplified":
+                persona_rules.append("TONE & VOICE: Use simplified everyday language, intuitive real-world analogies, and explain any technical terms in plain words.")
+
+            # 4. Content Enhancers
+            if inc_math:
+                persona_rules.append("MATH INSTRUCTION: Always provide explicit mathematical notation and LaTeX equations ($...$ for inline, $$...$$ for display equations).")
+            if inc_nss:
+                persona_rules.append("PRACTICAL CONTEXT: Include practical NSS / MoSPI field survey application examples (e.g. FSU/SSU sampling, village/block multipliers).")
+            if inc_exam:
+                persona_rules.append("EXAM FOCUS: Include a dedicated 'SSO Exam Tip' or 'Common Exam Trap' callout to help the officer pass cadre promotion examinations.")
+
+        persona_block = "\n- ".join(persona_rules)
+        persona_directive = f"\nUSER PERSONALIZATION PREFERENCES (MANDATORY TO FOLLOW):\n- {persona_block}\n" if persona_block else ""
+
         return f"""You are the NIRDESHA AI STUDY MENTOR.
 YOUR SOLE ROLE: Academic tutor for Officer S. K. Raman (JSO) for MoSPI statistical examinations, NSSTA curriculum, and SSO promotion benchmarks.
-
-NO RESTRICTION ON LENGTH:
-- You have NO word count or length restriction. You are fully allowed to provide comprehensive, thorough, in-depth academic explanations, step-by-step mathematical proofs, formula derivations, and detailed syllabus advice.
 
 OFFICER CONTEXT:
 - Officer: S. K. Raman (Junior Statistical Officer, SSS Cadre, NSSO Field Operations Division).
@@ -155,7 +195,8 @@ STRICT BOUNDARY:
 - If asked website questions, reply: "I am your dedicated AI Study Mentor for statistical theory and exam preparation. For help with navigating website features, settings, arranging courses, or setting your milestone streak, please ask the Nirdesha AI Guidance Companion on the bottom-right corner of your screen."
 
 {no_intro_rule}
-{lang_directive}"""
+{lang_directive}
+{persona_directive}"""
 
 # Ultra-Fast Stream Generator with Smart Cascading & No Mid-Stream Cutoff
 def stream_gemini(messages, system_instruction, api_key, model="gemini-3.1-flash-lite", role="mentor"):
@@ -198,7 +239,7 @@ def stream_gemini(messages, system_instruction, api_key, model="gemini-3.1-flash
         req = urllib.request.Request(url, data=req_data, headers={"Content-Type": "application/json"})
         try:
             has_yielded = False
-            with urllib.request.urlopen(req, timeout=12) as resp:
+            with urllib.request.urlopen(req, timeout=45) as resp:
                 for line in resp:
                     line_str = line.decode("utf-8").strip()
                     if line_str.startswith("data: "):
@@ -347,9 +388,10 @@ class NirdeshaAPIHandler(BaseHTTPRequestHandler):
                 self.send_json(200, {"reply": "Please paste your GEMINI_API_KEY in the .env file."})
                 return
 
+            personalization = payload.get("personalization", {})
             history = get_user_history(session_key)
             history.append({"sender": "user", "text": user_message})
-            system_instruction = build_system_context(user_id, role, language)
+            system_instruction = build_system_context(user_id, role, language, personalization)
 
             # Start SSE Stream
             self.send_response(200)

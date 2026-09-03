@@ -3478,3 +3478,1144 @@ body.sidebar-collapsed .admin-nav-icon {
   border-color: #334155;
   color: #fdba74;
 }
+
+/* ==========================================================================
+   AI STUDY MENTOR RESPONSIVE SCREEN-FIT CONTAINER
+   Ensures the entire chat interface (header, log, chips, input)
+   fits 100% inside the viewport without page scrolling.
+   ========================================================================== */
+#view-ai-mentor {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+#view-ai-mentor .ai-chat-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: calc(100vh - 195px) !important;
+  min-height: 420px !important;
+  max-height: calc(100vh - 175px) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background: #ffffff !important;
+  border: 1.5px solid #002b49 !important;
+  border-radius: 4px !important;
+  box-shadow: 0 4px 16px rgba(0, 43, 73, 0.08) !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+}
+
+[data-theme="dark"] #view-ai-mentor .ai-chat-container {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Chat Header: High contrast, rigid no-wrap */
+#view-ai-mentor .ai-chat-header {
+  flex-shrink: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 0.75rem 1.25rem !important;
+  background: #002b49 !important;
+  color: #ffffff !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 1rem !important;
+}
+
+[data-theme="dark"] #view-ai-mentor .ai-chat-header {
+  background: #0b1324 !important;
+  border-bottom: 1.5px solid #1e293b !important;
+}
+
+.ai-header-controls {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.45rem !important;
+  flex-shrink: 0 !important;
+}
+
+/* Middle Chat Log: The ONLY element that scrolls vertically */
+#view-ai-mentor .ai-chat-log {
+  flex: 1 1 auto !important;
+  height: auto !important;
+  min-height: 120px !important;
+  overflow-y: auto !important;
+  padding: 1.25rem 1.5rem !important;
+  background: #f8fafc !important;
+  box-sizing: border-box !important;
+}
+
+[data-theme="dark"] #view-ai-mentor .ai-chat-log {
+  background: #09101d !important;
+}
+
+/* Quick Prompt Chips: Pinned right above the input row */
+#view-ai-mentor .mentor-chips-container {
+  flex-shrink: 0 !important;
+  padding: 0.45rem 1.25rem !important;
+  background: #ffffff !important;
+  border-top: 1px solid #e2e8f0 !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.4rem !important;
+  box-sizing: border-box !important;
+}
+
+[data-theme="dark"] #view-ai-mentor .mentor-chips-container {
+  background: #0e172a !important;
+  border-top-color: #1e293b !important;
+}
+
+/* Input Row: Permanently visible at bottom of chat box */
+#view-ai-mentor .ai-chat-input-row {
+  flex-shrink: 0 !important;
+  padding: 0.65rem 1.25rem 0.85rem 1.25rem !important;
+  background: #ffffff !important;
+  border-top: 1.5px solid #e2e8f0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.65rem !important;
+  box-sizing: border-box !important;
+}
+
+[data-theme="dark"] #view-ai-mentor .ai-chat-input-row {
+  background: #0e172a !important;
+  border-top-color: #1e293b !important;
+}
+
+#view-ai-mentor .ai-chat-input {
+  flex: 1 !important;
+  padding: 0.6rem 0.95rem !important;
+  font-size: 0.85rem !important;
+  border: 1.5px solid #cbd5e1 !important;
+  border-radius: 4px !important;
+  background: #f8fafc !important;
+  color: #0f172a !important;
+  outline: none !important;
+}
+
+[data-theme="dark"] #view-ai-mentor .ai-chat-input {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+#view-ai-mentor .btn-ai-send {
+  flex-shrink: 0 !important;
+  padding: 0.6rem 1.25rem !important;
+  font-size: 0.825rem !important;
+  font-weight: 700 !important;
+  background: #002b49 !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+#view-ai-mentor .btn-ai-send:hover {
+  background: #ea580c !important;
+}
+
+.ai-chat-header .ai-chat-title {
+  color: #ffffff !important;
+  font-size: 1rem !important;
+  font-weight: 800 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.6rem !important;
+}
+
+.ai-chat-header .ai-chat-title svg {
+  stroke: #ffffff !important;
+}
+
+/* Header Action Buttons (Icon-Only with Hover Tooltip Reveal) */
+.ai-header-btn {
+  position: relative !important;
+  width: 32px !important;
+  height: 32px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  color: #ffffff !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  transition: all 0.18s ease !important;
+}
+
+.ai-header-btn svg {
+  stroke: #ffffff !important;
+  transition: transform 0.15s ease !important;
+}
+
+.ai-header-btn:hover {
+  background: #ea580c !important;
+  border-color: #ea580c !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 6px rgba(234, 88, 12, 0.35) !important;
+  transform: translateY(-1px) !important;
+}
+
+.ai-header-btn.btn-clear-chat:hover {
+  background: #ef4444 !important;
+  border-color: #ef4444 !important;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.35) !important;
+}
+
+.ai-header-btn.is-active {
+  background: #ea580c !important;
+  border-color: #ea580c !important;
+}
+
+/* Hover Tooltip Reveal */
+.ai-header-btn::after {
+  content: attr(data-tooltip) !important;
+  position: absolute !important;
+  top: calc(100% + 7px) !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  background: #001f35 !important;
+  color: #ffffff !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  padding: 4px 8px !important;
+  border-radius: 4px !important;
+  white-space: nowrap !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: opacity 0.15s ease, transform 0.15s ease !important;
+  z-index: 1000 !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+}
+
+.ai-header-btn:hover::after {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateX(-50%) translateY(2px) !important;
+}
+
+/* Compact / Shrink View Mode */
+.ai-chat-container.is-shrunk .ai-chat-log {
+  height: 220px !important;
+  max-height: 220px !important;
+  transition: all 0.2s ease !important;
+}
+
+.ai-chat-container.is-shrunk {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Language Selector */
+.ai-lang-select {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  color: #ffffff !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  padding: 0.35rem 0.75rem !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  outline: none !important;
+  font-family: inherit !important;
+  transition: all 0.18s ease !important;
+}
+
+.ai-lang-select:hover,
+.ai-lang-select:focus {
+  border-color: #ea580c !important;
+  background: rgba(255, 255, 255, 0.25) !important;
+}
+
+.ai-lang-select option {
+  background: #002b49 !important;
+  color: #ffffff !important;
+}
+
+/* ==========================================================================
+   AI STUDY MENTOR IMMERSIVE FULLSCREEN MODE
+   ========================================================================== */
+body.mentor-fullscreen-active {
+  overflow: hidden !important;
+}
+
+/* Trainee console navigation tabs and topbar completely disappear in fullscreen mode */
+body.mentor-fullscreen-active .trainee-sidebar,
+body.mentor-fullscreen-active aside#trainee-sidebar,
+body.mentor-fullscreen-active .trainee-sidebar-nav,
+body.mentor-fullscreen-active .trainee-sidebar-bottom,
+body.mentor-fullscreen-active .trainee-mobile-btn,
+body.mentor-fullscreen-active .trainee-mobile-toggle,
+body.mentor-fullscreen-active .trainee-header,
+body.mentor-fullscreen-active .trainee-topbar,
+body.mentor-fullscreen-active header.trainee-topbar,
+body.mentor-fullscreen-active #mentor-page-heading,
+body.mentor-fullscreen-active #nirdesha-ai-companion-root,
+body.mentor-fullscreen-active #companion-popup-window,
+body.mentor-fullscreen-active #nirdesha-text-select-popup,
+body.mentor-fullscreen-active .selection-ask-ai-popup {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Ancestor wrappers remain intact without transform to anchor position:fixed cleanly */
+body.mentor-fullscreen-active .trainee-shell,
+body.mentor-fullscreen-active .trainee-main,
+body.mentor-fullscreen-active .trainee-content-area,
+body.mentor-fullscreen-active #view-ai-mentor {
+  display: block !important;
+  transform: none !important;
+  perspective: none !important;
+  filter: none !important;
+  overflow: visible !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+}
+
+#view-ai-mentor .ai-chat-container.is-fullscreen,
+body.mentor-fullscreen-active #view-ai-mentor .ai-chat-container,
+.ai-chat-container.is-fullscreen {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  min-height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  z-index: 99999999 !important;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  background: #ffffff !important;
+}
+
+[data-theme="dark"] #view-ai-mentor .ai-chat-container.is-fullscreen,
+[data-theme="dark"] body.mentor-fullscreen-active #view-ai-mentor .ai-chat-container,
+[data-theme="dark"] .ai-chat-container.is-fullscreen {
+  background: #09101d !important;
+}
+
+/* 1. FIXED, IMMOVABLE TOP RIBBON */
+#view-ai-mentor .ai-chat-container.is-fullscreen .ai-chat-header,
+body.mentor-fullscreen-active #view-ai-mentor .ai-chat-header,
+.ai-chat-container.is-fullscreen .ai-chat-header {
+  flex-shrink: 0 !important;
+  position: sticky !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 100 !important;
+  padding: 0.85rem 2rem !important;
+  margin: 0 !important;
+  background: #002b49 !important;
+  color: #ffffff !important;
+  border-bottom: 2px solid #ea580c !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+[data-theme="dark"] #view-ai-mentor .ai-chat-container.is-fullscreen .ai-chat-header,
+[data-theme="dark"] body.mentor-fullscreen-active #view-ai-mentor .ai-chat-header,
+[data-theme="dark"] .ai-chat-container.is-fullscreen .ai-chat-header {
+  background: #0b1324 !important;
+  border-bottom-color: #ea580c !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* 2. SCROLLABLE MIDDLE CHAT LOG (Fills full vertical space cleanly) */
+#view-ai-mentor .ai-chat-container.is-fullscreen .ai-chat-log,
+body.mentor-fullscreen-active #view-ai-mentor .ai-chat-log,
+.ai-chat-container.is-fullscreen .ai-chat-log {
+  flex: 1 1 0% !important;
+  height: 100% !important;
+  max-height: none !important;
+  overflow-y: auto !important;
+  padding: 1.5rem 3rem !important;
+  margin: 0 !important;
+  background: #f8fafc !important;
+  box-sizing: border-box !important;
+}
+
+[data-theme="dark"] #view-ai-mentor .ai-chat-container.is-fullscreen .ai-chat-log,
+[data-theme="dark"] body.mentor-fullscreen-active #view-ai-mentor .ai-chat-log,
+[data-theme="dark"] .ai-chat-container.is-fullscreen .ai-chat-log {
+  background: #09101d !important;
+}
+
+/* 3. PROMPT CHIPS PINNED ABOVE INPUT */
+#view-ai-mentor .ai-chat-container.is-fullscreen .mentor-chips-container,
+body.mentor-fullscreen-active #view-ai-mentor .mentor-chips-container,
+.ai-chat-container.is-fullscreen .mentor-chips-container {
+  flex-shrink: 0 !important;
+  padding: 0.5rem 3rem 0.35rem 3rem !important;
+  margin: 0 !important;
+  background: #ffffff !important;
+  border-top: 1px solid #e2e8f0 !important;
+  box-sizing: border-box !important;
+}
+
+[data-theme="dark"] #view-ai-mentor .ai-chat-container.is-fullscreen .mentor-chips-container,
+[data-theme="dark"] body.mentor-fullscreen-active #view-ai-mentor .mentor-chips-container,
+[data-theme="dark"] .ai-chat-container.is-fullscreen .mentor-chips-container {
+  background: #0e172a !important;
+  border-top-color: #1e293b !important;
+}
+
+/* 4. IMMOVABLE BOTTOM ENTER DIALOG BOX PINNED FLUSH TO SCREEN BOTTOM */
+#view-ai-mentor .ai-chat-container.is-fullscreen .ai-chat-input-row,
+body.mentor-fullscreen-active #view-ai-mentor .ai-chat-input-row,
+.ai-chat-container.is-fullscreen .ai-chat-input-row {
+  flex-shrink: 0 !important;
+  position: relative !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  margin: 0 !important;
+  margin-top: auto !important;
+  z-index: 100 !important;
+  padding: 0.85rem 3rem 1.15rem 3rem !important;
+  background: #ffffff !important;
+  border-top: 1.5px solid #e2e8f0 !important;
+  box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.06) !important;
+  box-sizing: border-box !important;
+}
+
+[data-theme="dark"] #view-ai-mentor .ai-chat-container.is-fullscreen .ai-chat-input-row,
+[data-theme="dark"] body.mentor-fullscreen-active #view-ai-mentor .ai-chat-input-row,
+[data-theme="dark"] .ai-chat-container.is-fullscreen .ai-chat-input-row {
+  background: #0e172a !important;
+  border-top-color: #1e293b !important;
+  box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* ==========================================================================
+   NOTEBOOK & AI PERSONALIZATION MODAL STYLES (MATCHES MILESTONE MODAL)
+   ========================================================================== */
+.notebook-styled-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #0f172a;
+  background: #f8fafc;
+  border: 2px solid #002b49;
+  border-radius: 0px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.notebook-styled-input:focus {
+  border-color: #ea580c;
+  box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.2);
+  background: #ffffff;
+}
+
+[data-theme="dark"] .notebook-styled-input {
+  background: #1e293b;
+  color: #f8fafc;
+  border-color: #38bdf8;
+}
+
+[data-theme="dark"] .notebook-styled-input:focus {
+  border-color: #ea580c;
+  background: #0f172a;
+}
+
+.persona-setting-group {
+  margin-bottom: 1.25rem;
+}
+
+.persona-group-label {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #002b49;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.55rem;
+}
+
+[data-theme="dark"] .persona-group-label {
+  color: #38bdf8;
+}
+
+.persona-options-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.persona-chip-btn {
+  padding: 0.42rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 4px;
+  border: 1.5px solid #cbd5e1;
+  background: #f8fafc;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.persona-chip-btn:hover {
+  border-color: #002b49;
+  color: #002b49;
+}
+
+.persona-chip-btn.active {
+  background: #002b49;
+  color: #ffffff;
+  border-color: #002b49;
+  box-shadow: 2px 2px 0px #ea580c;
+}
+
+[data-theme="dark"] .persona-chip-btn {
+  background: #1e293b;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .persona-chip-btn:hover {
+  border-color: #38bdf8;
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .persona-chip-btn.active {
+  background: #ea580c;
+  border-color: #ea580c;
+  color: #ffffff;
+  box-shadow: 2px 2px 0px #0284c7;
+}
+
+.persona-checkbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  background: rgba(0, 43, 73, 0.03);
+  padding: 0.75rem 0.95rem;
+  border: 1px solid rgba(0, 43, 73, 0.1);
+}
+
+[data-theme="dark"] .persona-checkbox-list {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.persona-toggle-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #1e293b;
+  cursor: pointer;
+}
+
+[data-theme="dark"] .persona-toggle-item {
+  color: #e2e8f0;
+}
+
+.persona-toggle-item input[type="checkbox"] {
+  accent-color: #ea580c;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   RESPONSE ACTION FOOTER (COPY & SAVE IN NOTES)
+   ========================================================================== */
+.ai-msg-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 0.65rem;
+  padding-top: 0.45rem;
+  border-top: 1px solid rgba(0, 43, 73, 0.08);
+}
+
+[data-theme="dark"] .ai-msg-actions {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+.btn-ai-action {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #64748b;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.15s ease;
+}
+
+.btn-ai-action:hover {
+  background: #f8fafc;
+  color: #002b49;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+.btn-ai-action.btn-save-notes:hover {
+  color: #ea580c;
+  border-color: #ea580c;
+}
+
+.btn-ai-action.is-saved {
+  color: #ea580c !important;
+  border-color: #ea580c !important;
+  background: #fff7ed !important;
+}
+
+.btn-ai-action.is-copied {
+  color: #16a34a !important;
+  border-color: #16a34a !important;
+  background: #f0fdf4 !important;
+}
+
+[data-theme="dark"] .btn-ai-action {
+  background: #1e293b;
+  border-color: #334155;
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .btn-ai-action:hover {
+  background: #334155;
+  color: #f8fafc;
+  border-color: #64748b;
+}
+
+[data-theme="dark"] .btn-ai-action.is-saved {
+  background: rgba(234, 88, 12, 0.18) !important;
+  color: #fb923c !important;
+  border-color: #fb923c !important;
+}
+
+[data-theme="dark"] .btn-ai-action.is-copied {
+  background: rgba(22, 163, 74, 0.18) !important;
+  color: #4ade80 !important;
+  border-color: #4ade80 !important;
+}
+
+/* Tooltip hover presentation */
+.btn-ai-action[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: calc(100% + 5px);
+  right: 0;
+  background: #002b49;
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 1000;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+
+[data-theme="dark"] .btn-ai-action[title]:hover::after {
+  background: #0f172a;
+  border: 1px solid #334155;
+}
+
+/* ==========================================================================
+   TRAINEE NOTES & NOTEBOOKS SYSTEM
+   ========================================================================== */
+.notes-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.btn-new-notebook {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #002b49;
+  color: #ffffff;
+  border: 1px solid #002b49;
+  padding: 8px 16px;
+  font-size: 0.825rem;
+  font-weight: 700;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.btn-new-notebook:hover {
+  background: #ea580c;
+  border-color: #ea580c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.25);
+}
+
+.notes-workspace-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+@media (max-width: 880px) {
+  .notes-workspace-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.notebooks-sidebar {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="dark"] .notebooks-sidebar {
+  background: #0f172a;
+  border-color: #1e293b;
+}
+
+.notebooks-sidebar-header {
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 0.75rem;
+}
+
+[data-theme="dark"] .notebooks-sidebar-header {
+  border-bottom-color: #1e293b;
+}
+
+.notebooks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.notebook-tab-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: 4px;
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+}
+
+.notebook-tab-item:hover {
+  background: #f8fafc;
+  color: #002b49;
+}
+
+.notebook-tab-item.active {
+  background: #f1f5f9;
+  color: #002b49;
+  border-color: #cbd5e1;
+  font-weight: 700;
+  border-left: 3px solid #ea580c;
+}
+
+[data-theme="dark"] .notebook-tab-item {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .notebook-tab-item:hover {
+  background: #1e293b;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .notebook-tab-item.active {
+  background: #1e293b;
+  color: #38bdf8;
+  border-color: #334155;
+  border-left: 3px solid #ea580c;
+}
+
+.notebook-tab-name {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.notebook-tab-count {
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 10px;
+  background: #e2e8f0;
+  color: #475569;
+  font-weight: 700;
+}
+
+[data-theme="dark"] .notebook-tab-count {
+  background: #334155;
+  color: #cbd5e1;
+}
+
+.notes-content-area {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 1.25rem;
+  min-height: 480px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="dark"] .notes-content-area {
+  background: #0f172a;
+  border-color: #1e293b;
+}
+
+.notes-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+[data-theme="dark"] .notes-toolbar {
+  border-bottom-color: #1e293b;
+}
+
+.active-notebook-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.badge-notes-count {
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: #f1f5f9;
+  color: #002b49;
+  padding: 3px 8px;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+}
+
+[data-theme="dark"] .badge-notes-count {
+  background: #1e293b;
+  color: #38bdf8;
+  border-color: #334155;
+}
+
+.btn-notebook-action {
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #64748b;
+  transition: all 0.15s ease;
+}
+
+.btn-notebook-action:hover {
+  background: #f1f5f9;
+  color: #002b49;
+  border-color: #cbd5e1;
+}
+
+.btn-notebook-action.text-danger:hover {
+  color: #dc2626;
+  border-color: #f87171;
+  background: #fef2f2;
+}
+
+[data-theme="dark"] .btn-notebook-action {
+  border-color: #334155;
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .btn-notebook-action:hover {
+  background: #1e293b;
+  color: #f8fafc;
+}
+
+.notes-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.notes-search-wrap svg {
+  position: absolute;
+  left: 10px;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.notes-search-wrap input {
+  padding: 6px 12px 6px 30px;
+  font-size: 0.8rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #f8fafc;
+  color: #0f172a;
+  outline: none;
+  width: 220px;
+  transition: all 0.15s ease;
+}
+
+.notes-search-wrap input:focus {
+  border-color: #002b49;
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(0, 43, 73, 0.1);
+}
+
+[data-theme="dark"] .notes-search-wrap input {
+  background: #1e293b;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+.notes-snippets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1rem;
+}
+
+@media (max-width: 600px) {
+  .notes-snippets-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.note-card {
+  position: relative;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.note-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.note-card.is-pinned {
+  border: 2px solid #ea580c;
+  background: #fffbf7;
+  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.12);
+}
+
+[data-theme="dark"] .note-card {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .note-card:hover {
+  border-color: #475569;
+}
+
+[data-theme="dark"] .note-card.is-pinned {
+  border-color: #ea580c;
+  background: #182234;
+}
+
+.note-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+[data-theme="dark"] .note-card-header {
+  border-bottom-color: #334155;
+}
+
+.note-card-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #002b49;
+  margin: 0;
+  line-height: 1.35;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+[data-theme="dark"] .note-card-title {
+  color: #f8fafc;
+}
+
+.note-card-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.btn-pin-note,
+.btn-copy-note,
+.btn-del-note {
+  position: relative;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.btn-pin-note:hover,
+.btn-copy-note:hover {
+  background: #f1f5f9;
+  color: #002b49;
+}
+
+.btn-del-note:hover {
+  background: #fef2f2;
+  color: #ef4444;
+}
+
+.btn-pin-note.active {
+  color: #ea580c;
+}
+
+/* Tooltip hover presentation on note card buttons */
+.btn-pin-note[title]:hover::after,
+.btn-copy-note[title]:hover::after,
+.btn-del-note[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: calc(100% + 4px);
+  right: 0;
+  background: #002b49;
+  color: #ffffff;
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 3px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.25);
+}
+
+.note-card-body {
+  font-size: 0.825rem;
+  color: #334155;
+  line-height: 1.5;
+  max-height: 240px;
+  overflow-y: auto;
+  margin-bottom: 0.75rem;
+}
+
+[data-theme="dark"] .note-card-body {
+  color: #cbd5e1;
+}
+
+.note-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.7rem;
+  color: #94a3b8;
+  padding-top: 0.5rem;
+  border-top: 1px solid #f8fafc;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+[data-theme="dark"] .note-card-footer {
+  border-top-color: #334155;
+}
+
+.note-move-select {
+  font-size: 0.7rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 3px;
+  padding: 2px 6px;
+  background: #f8fafc;
+  color: #475569;
+  cursor: pointer;
+  outline: none;
+}
+
+[data-theme="dark"] .note-move-select {
+  background: #0f172a;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+.empty-notes-prompt {
+  text-align: center;
+  padding: 3.5rem 1.5rem;
+  color: #64748b;
+  grid-column: 1 / -1;
+}
+
+.empty-notes-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+  color: #cbd5e1;
+}
+
