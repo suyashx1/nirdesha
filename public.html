@@ -16,6 +16,10 @@
   <link rel="stylesheet" href="css/admin.css">
   <link rel="stylesheet" href="css/public.css">
   <link rel="stylesheet" href="css/ai-companion.css">
+  <!-- KaTeX Math Rendering & Nirdesha AI Visual Formatter -->
+  <link rel="stylesheet" href="vendor/katex/katex.min.css">
+  <script src="vendor/katex/katex.min.js"></script>
+  <script src="js/ai-formatter.js"></script>
 </head>
 <body class="trainee-body">
 
@@ -675,17 +679,14 @@
              ====================================================================== -->
         <div class="trainee-view-tab" id="view-ai-mentor" style="display: none;">
           <div style="margin-bottom: 1.5rem;">
-            <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">
+            <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin: 0;">
               Nirdesha Personal AI Study Mentor
             </h2>
-            <p style="font-size: 0.85rem; color: #64748b; margin: 0;">
-              Your dedicated statistical learning tutor. Ask questions about formulas, sampling designs, or circular interpretations.
-            </p>
           </div>
 
           <div class="ai-chat-container">
             <div class="ai-chat-header">
-              <div class="ai-chat-title"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg><span>Officer Raman • AI Study Mentor</span>
+              <div class="ai-chat-title"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg><span>Chat Box</span>
               </div>
               <div style="display: flex; align-items: center; gap: 0.65rem;">
                 <!-- AI Study Mentor Language Selector -->

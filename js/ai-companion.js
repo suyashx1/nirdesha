@@ -55,7 +55,6 @@
             <div class="companion-header-avatar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></div>
             <div class="companion-header-titles">
               <h3 class="companion-title">Nirdesha AI Guidance</h3>
-               MoSPI-StatLLM • Active</span>
             </div>
           </div>
 
@@ -319,7 +318,10 @@
           const decoder = new TextDecoder('utf-8');
           let buffer = '';
 
-          while (true) {
+          let isStreamDone = false;
+          let lastRenderTime = 0;
+
+          while (!isStreamDone) {
             const { done, value } = await reader.read();
             if (done) break;
 
@@ -329,7 +331,10 @@
 
             for (const line of lines) {
               const trimmed = line.trim();
-              if (trimmed === 'data: [DONE]') break;
+              if (trimmed === 'data: [DONE]') {
+                isStreamDone = true;
+                break;
+              }
               if (trimmed.startsWith('data: ')) {
                 try {
                   const parsed = JSON.parse(trimmed.slice(6));
@@ -339,8 +344,13 @@
                       hasReceivedFirstToken = true;
                     }
                     accumulatedText += parsed.chunk.replace(/\*/g, "");
-                    botMsg.innerHTML = accumulatedText.replace(/\n/g, '<br>');
-                    chatBody.scrollTop = chatBody.scrollHeight;
+                    
+                    const now = Date.now();
+                    if (now - lastRenderTime > 80) {
+                      lastRenderTime = now;
+                      botMsg.innerHTML = window.NirdeshaFormatter ? window.NirdeshaFormatter.format(accumulatedText) : accumulatedText.replace(/\n/g, '<br>');
+                      chatBody.scrollTop = chatBody.scrollHeight;
+                    }
                   }
                 } catch (e) {}
               }
@@ -348,7 +358,9 @@
           }
 
           if (accumulatedText.trim()) {
+            botMsg.innerHTML = window.NirdeshaFormatter ? window.NirdeshaFormatter.format(accumulatedText) : accumulatedText.replace(/\n/g, '<br>');
             companionHistory.push({ sender: 'bot', text: accumulatedText });
+            chatBody.scrollTop = chatBody.scrollHeight;
             return;
           }
         }
@@ -379,7 +391,7 @@
           reply = COMPANION_KNOWLEDGE['streak'];
         }
 
-        botMsg.innerHTML = reply.replace(/\n/g, '<br>');
+        botMsg.innerHTML = window.NirdeshaFormatter ? window.NirdeshaFormatter.format(reply) : reply.replace(/\n/g, "<br>");
         companionHistory.push({ sender: 'bot', text: reply });
         chatBody.scrollTop = chatBody.scrollHeight;
       }
@@ -394,12 +406,182 @@
         }
       });
     }
+
+    // Expose global invoker for external triggers & text selection engine
+    window.askNirdeshaGuidance = function(queryText) {
+      if (!queryText || !queryText.trim()) return;
+      
+      // 1. Open popup window
+      if (typeof openPopup === 'function') {
+        openPopup();
+      } else if (popup) {
+        popup.classList.add('is-open');
+        if (promptBubble) promptBubble.style.display = 'none';
+      }
+
+      // 2. Put query in input and send
+      if (input) {
+        input.value = queryText;
+        setTimeout(() => {
+          handleSend();
+          if (chatBody) chatBody.scrollTop = chatBody.scrollHeight;
+        }, 50);
+      }
+    };
+  }
+
+  // ==========================================================================
+  // UNIVERSAL TEXT SELECTION & DOUBLE-TAP "ASK AI GUIDANCE" ENGINE
+  // ==========================================================================
+  function initTextSelectionEngine() {
+    let selectionPopup = document.getElementById('nirdesha-text-select-popup');
+    if (!selectionPopup) {
+      selectionPopup = document.createElement('div');
+      selectionPopup.id = 'nirdesha-text-select-popup';
+      selectionPopup.className = 'selection-ask-ai-popup';
+      selectionPopup.innerHTML = `
+        <button type="button" class="btn-selection-ask-ai" id="btn-selection-ask-ai" title="Ask Nirdesha AI Guidance about this text">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+          </svg>
+          <span>Ask AI Guidance</span>
+        </button>
+      `;
+      document.body.appendChild(selectionPopup);
+    }
+
+    const btnAsk = document.getElementById('btn-selection-ask-ai');
+    let currentSelectedText = '';
+
+    function checkAndShowPopup() {
+      setTimeout(() => {
+        const selection = window.getSelection();
+        if (!selection || selection.isCollapsed || selection.rangeCount === 0) {
+          hidePopup();
+          return;
+        }
+
+        const rawText = selection.toString().trim();
+        if (rawText.length < 2) {
+          hidePopup();
+          return;
+        }
+
+        const active = document.activeElement;
+        if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable)) {
+          hidePopup();
+          return;
+        }
+
+        currentSelectedText = rawText;
+
+        try {
+          const range = selection.getRangeAt(0);
+          const rect = range.getBoundingClientRect();
+          if (!rect || (rect.width === 0 && rect.height === 0)) {
+            hidePopup();
+            return;
+          }
+
+          const btnWidth = 145;
+          const btnHeight = 34;
+          let top = rect.top - btnHeight - 8;
+          let left = rect.left + (rect.width / 2) - (btnWidth / 2);
+
+          if (top < 10) {
+            top = rect.bottom + 8;
+          }
+          if (left < 10) left = 10;
+          if (left + btnWidth > window.innerWidth - 10) {
+            left = window.innerWidth - btnWidth - 10;
+          }
+
+          selectionPopup.style.top = `${top + window.scrollY}px`;
+          selectionPopup.style.left = `${left + window.scrollX}px`;
+          selectionPopup.style.display = 'block';
+          requestAnimationFrame(() => {
+            selectionPopup.classList.add('visible');
+          });
+        } catch (e) {
+          hidePopup();
+        }
+      }, 40);
+    }
+
+    function hidePopup() {
+      if (selectionPopup) {
+        selectionPopup.classList.remove('visible');
+        setTimeout(() => {
+          if (!selectionPopup.classList.contains('visible')) {
+            selectionPopup.style.display = 'none';
+          }
+        }, 150);
+      }
+    }
+
+    document.addEventListener('mouseup', (e) => {
+      if (e.target.closest('#nirdesha-text-select-popup')) return;
+      checkAndShowPopup();
+    });
+
+    document.addEventListener('dblclick', (e) => {
+      if (e.target.closest('#nirdesha-text-select-popup')) return;
+      checkAndShowPopup();
+    });
+
+    document.addEventListener('touchend', (e) => {
+      if (e.target.closest('#nirdesha-text-select-popup')) return;
+      checkAndShowPopup();
+    });
+
+    document.addEventListener('mousedown', (e) => {
+      if (!e.target.closest('#nirdesha-text-select-popup')) {
+        hidePopup();
+      }
+    });
+
+    function handleAskClick(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      const sel = window.getSelection();
+      const fallbackSel = sel ? sel.toString().trim() : '';
+      const textToQuery = currentSelectedText || fallbackSel;
+
+      hidePopup();
+
+      if (textToQuery && typeof window.askNirdeshaGuidance === 'function') {
+        const cleanSnippet = textToQuery.length > 120 ? textToQuery.slice(0, 117) + '...' : textToQuery;
+        window.askNirdeshaGuidance(`Explain this Nirdesha website feature and its context: "${cleanSnippet}"`);
+      }
+    }
+
+    if (btnAsk) {
+      btnAsk.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      });
+
+      btnAsk.addEventListener('touchstart', (e) => {
+        e.stopPropagation();
+      }, { passive: true });
+
+      btnAsk.addEventListener('click', handleAskClick);
+      btnAsk.addEventListener('touchend', handleAskClick);
+    }
   }
 
   // Initialize on DOM ready
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAiCompanion);
+    document.addEventListener('DOMContentLoaded', () => {
+      initAiCompanion();
+      initTextSelectionEngine();
+    });
   } else {
     initAiCompanion();
+    initTextSelectionEngine();
   }
 })();

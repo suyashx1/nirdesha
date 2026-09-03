@@ -511,7 +511,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!traineeChatLog) return;
     const bubble = document.createElement('div');
     bubble.className = `chat-bubble ${sender}`;
-    bubble.innerHTML = text.replace(/\n/g, '<br>');
+    bubble.innerHTML = (sender === "bot" && window.NirdeshaFormatter) ? window.NirdeshaFormatter.format(text) : text.replace(/\n/g, "<br>");
     traineeChatLog.appendChild(bubble);
     traineeChatLog.scrollTop = traineeChatLog.scrollHeight;
     return bubble;
@@ -581,7 +581,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const decoder = new TextDecoder('utf-8');
         let buffer = '';
 
-        while (true) {
+        let isStreamDone = false;
+        let lastRenderTime = 0;
+
+        while (!isStreamDone) {
           const { done, value } = await reader.read();
           if (done) break;
 
@@ -591,7 +594,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
           for (const line of lines) {
             const trimmed = line.trim();
-            if (trimmed === 'data: [DONE]') break;
+            if (trimmed === 'data: [DONE]') {
+              isStreamDone = true;
+              break;
+            }
             if (trimmed.startsWith('data: ')) {
               try {
                 const parsed = JSON.parse(trimmed.slice(6));
@@ -601,15 +607,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     hasReceivedFirstToken = true;
                   }
                   accumulatedText += parsed.chunk;
-                  botBubble.innerHTML = accumulatedText.replace(/\n/g, '<br>');
-                  traineeChatLog.scrollTop = traineeChatLog.scrollHeight;
+                  
+                  // Throttled fast rendering during stream to prevent DOM freeze
+                  const now = Date.now();
+                  if (now - lastRenderTime > 80) {
+                    lastRenderTime = now;
+                    botBubble.innerHTML = window.NirdeshaFormatter ? window.NirdeshaFormatter.format(accumulatedText) : accumulatedText.replace(/\n/g, '<br>');
+                    traineeChatLog.scrollTop = traineeChatLog.scrollHeight;
+                  }
                 }
               } catch (e) {}
             }
           }
         }
 
-        if (accumulatedText.trim()) return;
+        // Finalize formatting on complete response
+        if (accumulatedText.trim()) {
+          botBubble.innerHTML = window.NirdeshaFormatter ? window.NirdeshaFormatter.format(accumulatedText) : accumulatedText.replace(/\n/g, '<br>');
+          traineeChatLog.scrollTop = traineeChatLog.scrollHeight;
+          return;
+        }
       }
     } catch (err) {
       console.warn('AI Mentor server stream error:', err);

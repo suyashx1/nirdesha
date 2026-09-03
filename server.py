@@ -79,13 +79,13 @@ def save_user_history(user_id, history):
 def clear_user_history(user_id="public"):
     save_user_history(user_id, [])
 
-# High-Speed Role-Specific Context Builder with Strict Persona Separation & Multilingual Support
+# High-Speed Role-Specific Context Builder with Persona Separation & Length Control
 def build_system_context(user_id="public", role="mentor", language="English"):
     lang_clean = language.strip() if language else "English"
     if lang_clean.lower() != "english":
         lang_directive = f"""
 LANGUAGE MANDATE:
-You MUST formulate and write your entire response strictly in {lang_clean} (using its official native script, e.g., Devanagari for Hindi, Odia script for Odia, etc.).
+You MUST formulate and write your entire response strictly in {lang_clean} (using its official native script).
 - Use simple, everyday, clear language that anyone can easily understand.
 - Translate all concepts and technical terms into intuitive, natural {lang_clean}.
 - Do NOT reply in English unless specifically instructed by the user."""
@@ -99,27 +99,33 @@ LANGUAGE MANDATE:
 CRITICAL CONVERSATIONAL RULES:
 - NEVER introduce yourself or announce who you are (NEVER say "Hello Officer Raman, I am your...", "Namaste! As your AI...", or "Welcome to Nirdesha...").
 - ONLY greet if the user explicitly greets you (e.g. if the user says "hello", "hi", "namaste", reply with a brief "Hello Officer Raman" or "Namaste!").
-- Otherwise, dive DIRECTLY into the answer immediately without any opening pleasantries or filler.
-- Keep answers short, crisp, concise, and focused on the exact question asked."""
+- Otherwise, dive DIRECTLY into the answer immediately without any opening pleasantries or filler."""
 
     if role == "guidance":
         return f"""You are the NIRDESHA AI GUIDANCE ASSISTANT.
 YOUR SOLE ROLE: On-screen website guide and navigation assistant for the Nirdesha portal.
 
-WHAT YOU ANSWER:
-1. Website Navigation: Navigating tabs, 'My Courses & Tracks', Timed Quiz Engine, Revision Cards, and Profile.
-2. Setting Milestones: The 20-day target and 365-day milestone wheel, 14-day streak, and continuity benefits.
-3. 52-Week Learning Heatmap: How the annual grid tracks daily activity and what cell colors mean.
-4. Settings & Account: Editing profile info, avatar uploads, theme switching (System / Bright / Dark), and portal languages.
+CRITICAL LENGTH RULE FOR GUIDANCE:
+- TALK SHORT. POINT-TO-POINT ONLY.
+- Maximum 2 to 3 concise bullet points.
+- No asterisks (*), use clean dashes (-) for bullets.
+- Never give introductory self-announcements unless explicitly greeted.
 
-STRICT BOUNDARY:
-- DO NOT provide academic study guidance, formula derivations, mathematical proofs, or cadre exam tutoring.
-- If asked a study/formula question, reply: "I am your Nirdesha Website Guidance Assistant for website features and navigation. For in-depth statistical coaching, formulas, and cadre exam preparation, please visit the dedicated AI Study Mentor in the Public Learning Dashboard."
+WHAT YOU ALWAYS ANSWER (ALL WEBSITE & PORTAL FEATURES):
+1. Website Features, Metrics & Cards:
+   - "Competitive Skill Ratings (Per-Domain Elo)": Explain that it is Nirdesha's rating system evaluating test accuracy, latency, and question difficulty across specific statistical domains to measure cadre readiness.
+   - "Cadre Benchmarks & Targets": Promotion targets, JSO baseline, and SSO 85% proficiency thresholds.
+   - "52-Week Learning Consistency Heatmap": Daily activity grid, streak continuity, and color intensities.
+   - "14-Day Streak & Milestone Wheel": 20-day target, 365-day milestone wheel, and streak rewards.
+   - "My Courses, Tracks & Timed Quizzes": Course arrangement, syllabus tracking, timed assessment engine.
+   - "Theme, Settings, Profile & Language": Theme switcher (Light/Dark/System), profile editing, avatar uploads, and multilingual controls.
+   - "Admin Portal, Column Sorting & PDF Drop": Navigating user tables, search filters, permission toggles, and syllabus document extraction.
+2. Selected On-Screen Text & Terms:
+   - When asked about ANY text, feature, button, or sentence selected on the website, ALWAYS explain its meaning, context, and role on the Nirdesha portal in 2 to 3 concise bullet points.
 
-STRICT NO-ASTERISK RULE:
-- ABSOLUTELY DO NOT USE ANY ASTERISK SYMBOLS (*) IN YOUR RESPONSE.
-- NEVER use bold markdown with asterisks like **text**. Use clean plain text.
-- NEVER use asterisks for bullet points like * item. Use numbers (1., 2., 3.) or hyphens (- ).
+STRICT BOUNDARY (OUT OF CONTEXT ONLY):
+- ONLY redirect if the question is a pure academic textbook derivation or homework request with zero relation to the website (for example: "Derive Horvitz-Thompson variance step by step" or "Prove Central Limit Theorem"): "For in-depth mathematical proofs and statistical theory, please visit the dedicated AI Study Mentor in the Public Learning Dashboard."
+- If the question asks about ANY website feature, metric, score, card, or on-screen term (such as Elo ratings, heatmaps, streaks, benchmarks), ALWAYS answer it directly.
 
 {no_intro_rule}
 {lang_directive}"""
@@ -128,6 +134,9 @@ STRICT NO-ASTERISK RULE:
         # role == "mentor"
         return f"""You are the NIRDESHA AI STUDY MENTOR.
 YOUR SOLE ROLE: Academic tutor for Officer S. K. Raman (JSO) for MoSPI statistical examinations, NSSTA curriculum, and SSO promotion benchmarks.
+
+NO RESTRICTION ON LENGTH:
+- You have NO word count or length restriction. You are fully allowed to provide comprehensive, thorough, in-depth academic explanations, step-by-step mathematical proofs, formula derivations, and detailed syllabus advice.
 
 OFFICER CONTEXT:
 - Officer: S. K. Raman (Junior Statistical Officer, SSS Cadre, NSSO Field Operations Division).
@@ -147,37 +156,48 @@ STRICT BOUNDARY:
 
 {no_intro_rule}
 {lang_directive}"""
-# Fast Stream Generator
-def stream_gemini(messages, system_instruction, api_key, model="gemini-3.5-flash-lite"):
-    candidate_models = [model]
-    for m in ["gemini-3.5-flash-lite", "gemini-3.5-flash"]:
-        if m not in candidate_models:
-            candidate_models.append(m)
+
+# Ultra-Fast Stream Generator with Smart Cascading & No Mid-Stream Cutoff
+def stream_gemini(messages, system_instruction, api_key, model="gemini-3.1-flash-lite", role="mentor"):
+    candidate_models = ["gemini-3.1-flash-lite", "gemini-flash-latest", "gemini-3.7-flash", "gemini-3.5-flash"]
+    if model in candidate_models:
+        candidate_models.remove(model)
+        candidate_models.insert(0, model)
 
     contents = []
-    # Include up to last 6 messages
     for msg in messages[-6:]:
-        role = "user" if msg["sender"] == "user" else "model"
+        role_type = "user" if msg["sender"] == "user" else "model"
         contents.append({
-            "role": role,
+            "role": role_type,
             "parts": [{"text": msg["text"]}]
         })
 
-    payload = {
-        "system_instruction": {"parts": [{"text": system_instruction}]},
-        "contents": contents,
-        "generationConfig": {
-            "temperature": 0.5,
-            "maxOutputTokens": 400,
-            "topP": 0.95
-        }
-    }
-    req_data = json.dumps(payload).encode("utf-8")
+    # Length Control:
+    # Mentor is completely unrestricted (4096 tokens) to prevent ever cutting off in mid-stream
+    # Guidance is short point-to-point (220 tokens)
+    max_tokens = 4096 if role == "mentor" else 220
 
     for current_model in candidate_models:
+        gen_config = {
+            "temperature": 0.35,
+            "maxOutputTokens": max_tokens,
+            "topP": 0.95
+        }
+        # Add thinkingConfig only to models that support it to prevent HTTP 400
+        if "3.7" in current_model or "3.5" in current_model:
+            gen_config["thinkingConfig"] = {"thinkingBudget": 0}
+
+        payload = {
+            "system_instruction": {"parts": [{"text": system_instruction}]},
+            "contents": contents,
+            "generationConfig": gen_config
+        }
+        req_data = json.dumps(payload).encode("utf-8")
+
         url = f"https://generativelanguage.googleapis.com/v1beta/models/{current_model}:streamGenerateContent?alt=sse&key={api_key}"
         req = urllib.request.Request(url, data=req_data, headers={"Content-Type": "application/json"})
         try:
+            has_yielded = False
             with urllib.request.urlopen(req, timeout=12) as resp:
                 for line in resp:
                     line_str = line.decode("utf-8").strip()
@@ -189,20 +209,20 @@ def stream_gemini(messages, system_instruction, api_key, model="gemini-3.5-flash
                             for p in parts:
                                 chunk = p.get("text", "")
                                 if chunk:
-                                    if "ABSOLUTELY DO NOT USE ANY ASTERISK" in system_instruction:
-                                        chunk = chunk.replace("*", "")
+                                    has_yielded = True
                                     yield chunk
+            if has_yielded:
                 return
         except Exception as e:
-            print(f"[{current_model} stream error]: {e}, trying next model...")
+            print(f"[{current_model} stream error]: {e}, falling over to next model...")
             continue
 
-    yield "Apologies Officer Raman, temporary latency detected. Please try asking again."
+    yield "Apologies, temporary network latency detected. Please try asking again."
 
 # Non-streaming fallback
-def call_gemini_api(messages, system_instruction, api_key, model="gemini-3.5-flash-lite"):
+def call_gemini_api(messages, system_instruction, api_key, model="gemini-3.5-flash", role="mentor"):
     full_text = []
-    for chunk in stream_gemini(messages, system_instruction, api_key, model):
+    for chunk in stream_gemini(messages, system_instruction, api_key, model, role):
         full_text.append(chunk)
     return "".join(full_text)
 
@@ -237,7 +257,7 @@ class NirdeshaAPIHandler(BaseHTTPRequestHandler):
             resp = {
                 "status": "healthy",
                 "gemini_api_configured": has_key,
-                "model": config.get("GEMINI_MODEL", "gemini-3.5-flash-lite"),
+                "model": config.get("GEMINI_MODEL", "gemini-3.1-flash-lite"),
                 "streaming_supported": True,
                 "message": "Nirdesha Ultra-Fast AI Server is running." if has_key else "Add GEMINI_API_KEY to .env"
             }
@@ -321,7 +341,7 @@ class NirdeshaAPIHandler(BaseHTTPRequestHandler):
 
             config = load_env()
             api_key = config.get("GEMINI_API_KEY", "").strip()
-            model = config.get("GEMINI_MODEL", "gemini-3.5-flash-lite")
+            model = config.get("GEMINI_MODEL", "gemini-3.1-flash-lite")
 
             if not api_key:
                 self.send_json(200, {"reply": "Please paste your GEMINI_API_KEY in the .env file."})
@@ -342,7 +362,7 @@ class NirdeshaAPIHandler(BaseHTTPRequestHandler):
 
             full_reply = []
             try:
-                for chunk in stream_gemini(history, system_instruction, api_key, model):
+                for chunk in stream_gemini(history, system_instruction, api_key, model, role):
                     full_reply.append(chunk)
                     sse_line = f"data: {json.dumps({'chunk': chunk})}\n\n"
                     self.wfile.write(sse_line.encode("utf-8"))
@@ -375,7 +395,7 @@ class NirdeshaAPIHandler(BaseHTTPRequestHandler):
 
             config = load_env()
             api_key = config.get("GEMINI_API_KEY", "").strip()
-            model = config.get("GEMINI_MODEL", "gemini-3.5-flash-lite")
+            model = config.get("GEMINI_MODEL", "gemini-3.1-flash-lite")
 
             if not api_key:
                 self.send_json(200, {"reply": "Please paste your GEMINI_API_KEY in the .env file.", "status": "offline"})
@@ -385,7 +405,7 @@ class NirdeshaAPIHandler(BaseHTTPRequestHandler):
             history.append({"sender": "user", "text": user_message})
             system_instruction = build_system_context(user_id, role, language)
 
-            bot_reply = call_gemini_api(history, system_instruction, api_key, model)
+            bot_reply = call_gemini_api(history, system_instruction, api_key, model, role)
             history.append({"sender": "bot", "text": bot_reply})
             save_user_history(user_id, history)
 
