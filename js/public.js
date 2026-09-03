@@ -92,12 +92,36 @@ document.addEventListener('DOMContentLoaded', () => {
   const initialTheme = localStorage.getItem('nirdesha_theme_mode') || 'system';
   applyThemeMode(initialTheme, false);
 
-  // 1. SIDEBAR TAB NAVIGATION & MOBILE DRAWER
+  // 1. SIDEBAR COLLAPSE TOGGLE & TAB NAVIGATION
   // ==========================================================================
   const navItems = document.querySelectorAll('.trainee-nav-item[data-tab]');
   const viewTabs = document.querySelectorAll('.trainee-view-tab');
   const sidebar = document.getElementById('trainee-sidebar');
   const mobileToggle = document.getElementById('trainee-mobile-toggle');
+  const sidebarToggleBtn = document.getElementById('trainee-sidebar-toggle');
+  const MENU_SVG = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>`;
+  const CLOSE_SVG = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+
+  function updateSidebarToggleIcon(isCollapsed) {
+    if (!sidebarToggleBtn) return;
+    sidebarToggleBtn.innerHTML = isCollapsed ? MENU_SVG : CLOSE_SVG;
+    sidebarToggleBtn.setAttribute('title', isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar');
+  }
+
+  const initialCollapsed = localStorage.getItem('nirdesha_sidebar_collapsed') === 'true';
+  if (initialCollapsed) {
+    document.body.classList.add('sidebar-collapsed');
+  }
+  updateSidebarToggleIcon(initialCollapsed);
+
+  if (sidebarToggleBtn) {
+    sidebarToggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('sidebar-collapsed');
+      const isCollapsed = document.body.classList.contains('sidebar-collapsed');
+      localStorage.setItem('nirdesha_sidebar_collapsed', isCollapsed ? 'true' : 'false');
+      updateSidebarToggleIcon(isCollapsed);
+    });
+  }
 
   function switchTab(tabId) {
     navItems.forEach(item => {
@@ -111,6 +135,9 @@ document.addEventListener('DOMContentLoaded', () => {
     viewTabs.forEach(view => {
       if (view.id === `view-${tabId}`) {
         view.style.display = 'block';
+        view.style.animation = 'none';
+        view.offsetHeight; // trigger reflow
+        view.style.animation = 'tabFadeInUp 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards';
       } else {
         view.style.display = 'none';
       }
@@ -1826,6 +1853,330 @@ document.addEventListener('DOMContentLoaded', () => {
       hideAskAiButton();
     }, { passive: true });
   }
+
+  // ==========================================================================
+  // eLab HANDS-ON PROJECT PRACTICE ENVIRONMENT MODULE
+  // ==========================================================================
+  const DEFAULT_ELAB_PROJECTS = [
+    {
+      id: 'proj-portfolio',
+      title: 'Build a Personal Portfolio',
+      category: 'Web Development',
+      difficulty: 'Beginner',
+      estimatedTime: '2 Hours',
+      description: 'Create a clean, responsive personal portfolio website showcasing your government project contributions, statistics skills, and certificates.',
+      objectives: [
+        'Master semantic HTML5 page layout structure',
+        'Implement responsive CSS flexbox/grid system',
+        'Deploy personal showcase page'
+      ],
+      requirements: [
+        'Modern web browser (Chrome, Edge, or Firefox)',
+        'Basic understanding of HTML and CSS syntax'
+      ],
+      resources: [
+        'MDN Web Docs: HTML & CSS Fundamentals',
+        'Nirdesha Component Style Guidelines'
+      ],
+      tasks: [
+        { id: 't1', text: 'Set up semantic HTML layout (Header, Nav, Projects, Footer)', done: true },
+        { id: 't2', text: 'Style hero section and project card grid using CSS flexbox', done: true },
+        { id: 't3', text: 'Add interactive hover animations and responsive media queries', done: false },
+        { id: 't4', text: 'Integrate contact form and deploy portfolio site', done: false },
+        { id: 't5', text: 'Verify cross-browser compatibility and responsive layout', done: false }
+      ]
+    },
+    {
+      id: 'proj-cpi-pipeline',
+      title: 'National CPI Data Processing Pipeline',
+      category: 'Data Analysis',
+      difficulty: 'Intermediate',
+      estimatedTime: '4 Hours',
+      description: 'Build a Python statistics script to clean, validate, and compute Consumer Price Index (CPI) weights from raw state survey samples.',
+      objectives: [
+        'Clean noisy survey microdata using pandas',
+        'Apply Laspeyres price index formula',
+        'Export verified JSON reports for MoSPI database'
+      ],
+      requirements: [
+        'Python 3.10+ runtime environment',
+        'pandas & numpy Python packages'
+      ],
+      resources: [
+        'MoSPI CPI Calculation Methodology Whitepaper (2024)',
+        'NSS Microdata Processing Guide'
+      ],
+      tasks: [
+        { id: 't1', text: 'Load raw state survey CSV dataset into Pandas DataFrame', done: true },
+        { id: 't2', text: 'Identify and remove outlier price quotations across urban/rural sectors', done: false },
+        { id: 't3', text: 'Calculate weighted price relative indices per commodity group', done: false },
+        { id: 't4', text: 'Generate summary CSV and JSON diagnostic reports', done: false }
+      ]
+    },
+    {
+      id: 'proj-sampling-calc',
+      title: 'Sample Survey Sampling Calculator',
+      category: 'MoSPI Statistics',
+      difficulty: 'Beginner',
+      estimatedTime: '3 Hours',
+      description: 'Develop an interactive sampling error and sample size calculator based on NSS survey stratification guidelines.',
+      objectives: [
+        'Calculate simple random sampling error bounds',
+        'Implement Horvitz-Thompson estimator formula',
+        'Visualize confidence intervals'
+      ],
+      requirements: [
+        'Basic probability & statistics knowledge'
+      ],
+      resources: [
+        'NSSTA Sampling Methodology Manual',
+        'Horvitz-Thompson Estimator Reference'
+      ],
+      tasks: [
+        { id: 't1', text: 'Implement standard error calculation formula for SRSWOR', done: false },
+        { id: 't2', text: 'Add sample size estimation calculator for fixed margin of error', done: false },
+        { id: 't3', text: 'Create UI control inputs for confidence level selection (90%, 95%, 99%)', done: false }
+      ]
+    },
+    {
+      id: 'proj-budget-dash',
+      title: 'Government Budget Analytics Dashboard',
+      category: 'Web Development',
+      difficulty: 'Advanced',
+      estimatedTime: '6 Hours',
+      description: 'Design and render an executive spending dashboard with interactive charts, departmental allocations, and breakdown filters.',
+      objectives: [
+        'Build dynamic gauge and bar charts',
+        'Process multi-year budget allocation JSON files',
+        'Implement high-contrast dark theme mode'
+      ],
+      requirements: [
+        'JavaScript ES6+ and SVG basics'
+      ],
+      resources: [
+        'Union Budget Sector Dataset',
+        'Nirdesha SVG Data Viz Guide'
+      ],
+      tasks: [
+        { id: 't1', text: 'Structure dashboard header and metric summary cards', done: true },
+        { id: 't2', text: 'Render SVG bar charts for departmental budget allocations', done: true },
+        { id: 't3', text: 'Add interactive year and sector filter dropdowns', done: true },
+        { id: 't4', text: 'Implement dark/bright high-contrast accessibility mode', done: true }
+      ]
+    }
+  ];
+
+  function loadElabProjects() {
+    const saved = localStorage.getItem('nirdesha_elab_projects');
+    if (!saved) return DEFAULT_ELAB_PROJECTS;
+    try {
+      return JSON.parse(saved);
+    } catch(e) {
+      return DEFAULT_ELAB_PROJECTS;
+    }
+  }
+
+  function saveElabProjects(projects) {
+    localStorage.setItem('nirdesha_elab_projects', JSON.stringify(projects));
+  }
+
+  let elabProjects = loadElabProjects();
+  let currentCatFilter = 'all';
+  let currentDiffFilter = 'all';
+
+  const elabGrid = document.getElementById('elab-projects-grid');
+  const elabCompletedStat = document.getElementById('elab-stats-completed');
+  const elabModal = document.getElementById('elab-workspace-modal');
+  const elabModalTitle = document.getElementById('elab-modal-title');
+  const elabModalCat = document.getElementById('elab-modal-cat');
+  const elabModalBody = document.getElementById('elab-modal-body');
+  const elabModalClose = document.getElementById('elab-modal-close');
+
+  function calculateProjectProgress(project) {
+    if (!project.tasks || project.tasks.length === 0) return 0;
+    const completed = project.tasks.filter(t => t.done).length;
+    return Math.round((completed / project.tasks.length) * 100);
+  }
+
+  function renderElabProjects() {
+    if (!elabGrid) return;
+
+    let completedCount = 0;
+    elabProjects.forEach(p => {
+      if (calculateProjectProgress(p) === 100) completedCount++;
+    });
+
+    if (elabCompletedStat) {
+      elabCompletedStat.textContent = `${completedCount} / ${elabProjects.length}`;
+    }
+
+    const filtered = elabProjects.filter(p => {
+      const matchCat = currentCatFilter === 'all' || p.category === currentCatFilter;
+      const matchDiff = currentDiffFilter === 'all' || p.difficulty === currentDiffFilter;
+      return matchCat && matchDiff;
+    });
+
+    elabGrid.innerHTML = '';
+
+    if (filtered.length === 0) {
+      elabGrid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:3rem; color:#94a3b8;">No projects match the selected filters.</div>';
+      return;
+    }
+
+    filtered.forEach(project => {
+      const progress = calculateProjectProgress(project);
+      const diffClass = project.difficulty.toLowerCase();
+
+      const card = document.createElement('div');
+      card.className = 'elab-project-card';
+      card.innerHTML = `
+        <div>
+          <div class="elab-card-tags">
+            <span class="elab-tag-cat">${project.category}</span>
+            <span class="elab-tag-diff elab-diff-${diffClass}">${project.difficulty}</span>
+          </div>
+          <h3 class="elab-project-title">${project.title}</h3>
+          <p class="elab-project-desc">${project.description}</p>
+        </div>
+
+        <div>
+          <div class="elab-progress-wrapper">
+            <div class="elab-progress-label">
+              <span>Progress: ${progress}%</span>
+              <span>⏱ ${project.estimatedTime}</span>
+            </div>
+            <div class="elab-progress-bar">
+              <div class="elab-progress-fill" style="width: ${progress}%;"></div>
+            </div>
+          </div>
+
+          <div class="elab-card-actions">
+            <button class="btn-elab-action btn-elab-primary" data-open-workspace="${project.id}">
+              ${progress === 100 ? 'Review Project' : (progress > 0 ? 'Continue Project' : 'Start Project')}
+            </button>
+            <button class="btn-elab-action btn-elab-secondary" data-open-workspace="${project.id}">
+              View Instructions
+            </button>
+          </div>
+        </div>
+      `;
+
+      elabGrid.appendChild(card);
+    });
+
+    elabGrid.querySelectorAll('[data-open-workspace]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const projId = btn.getAttribute('data-open-workspace');
+        openElabWorkspace(projId);
+      });
+    });
+  }
+
+  function openElabWorkspace(projId) {
+    const project = elabProjects.find(p => p.id === projId);
+    if (!project || !elabModal) return;
+
+    if (elabModalTitle) elabModalTitle.textContent = project.title;
+    if (elabModalCat) elabModalCat.textContent = `${project.category} • ${project.difficulty}`;
+
+    const progress = calculateProjectProgress(project);
+
+    if (elabModalBody) {
+      elabModalBody.innerHTML = `
+        <div style="background: rgba(0,43,73,0.04); padding: 1rem 1.25rem; border-left: 4px solid var(--trainee-saffron);">
+          <p style="margin:0 0 0.5rem 0; font-size:0.9rem; line-height:1.5; color:#334155;">${project.description}</p>
+          <div style="display:flex; justify-content:space-between; gap: 1rem; font-size: 0.8rem; font-weight: 700; color: #64748b;">
+            <span>Estimated Duration: ${project.estimatedTime}</span>
+            <span>Overall Progress: ${progress}%</span>
+          </div>
+        </div>
+
+        <div>
+          <h4 style="font-size:0.95rem; font-weight:800; color:#002b49; margin:0 0 0.5rem 0;">🎯 Learning Objectives</h4>
+          <ul style="margin:0; padding-left:1.25rem; font-size:0.85rem; color:#475569; line-height:1.6;">
+            ${project.objectives.map(obj => `<li>${obj}</li>`).join('')}
+          </ul>
+        </div>
+
+        <div>
+          <h4 style="font-size:0.95rem; font-weight:800; color:#002b49; margin:0 0 0.5rem 0;">📋 Prerequisites & Requirements</h4>
+          <ul style="margin:0; padding-left:1.25rem; font-size:0.85rem; color:#475569; line-height:1.6;">
+            ${project.requirements.map(req => `<li>${req}</li>`).join('')}
+          </ul>
+        </div>
+
+        <div>
+          <h4 style="font-size:0.95rem; font-weight:800; color:#002b49; margin:0 0 0.75rem 0;">✅ Step-by-Step Checkpoints</h4>
+          <div style="display:flex; flex-direction:column; gap:0.5rem;">
+            ${project.tasks.map((task, idx) => `
+              <label class="elab-task-item">
+                <input type="checkbox" data-task-id="${task.id}" ${task.done ? 'checked' : ''}>
+                <div>
+                  <span style="font-size:0.85rem; font-weight:700; color:#0f172a; ${task.done ? 'text-decoration: line-through; opacity: 0.7;' : ''}">
+                    Step ${idx + 1}: ${task.text}
+                  </span>
+                </div>
+              </label>
+            `).join('')}
+          </div>
+        </div>
+
+        <div>
+          <h4 style="font-size:0.95rem; font-weight:800; color:#002b49; margin:0 0 0.5rem 0;">📚 Resources & Help</h4>
+          <ul style="margin:0; padding-left:1.25rem; font-size:0.85rem; color:#0284c7; line-height:1.6;">
+            ${project.resources.map(res => `<li><a href="#" style="color:#0284c7; font-weight:600;">${res}</a></li>`).join('')}
+          </ul>
+        </div>
+      `;
+
+      elabModalBody.querySelectorAll('input[type="checkbox"]').forEach(chk => {
+        chk.addEventListener('change', () => {
+          const taskId = chk.getAttribute('data-task-id');
+          const task = project.tasks.find(t => t.id === taskId);
+          if (task) {
+            task.done = chk.checked;
+            saveElabProjects(elabProjects);
+            renderElabProjects();
+            openElabWorkspace(project.id);
+          }
+        });
+      });
+    }
+
+    elabModal.classList.add('is-open');
+  }
+
+  if (elabModalClose && elabModal) {
+    elabModalClose.addEventListener('click', () => {
+      elabModal.classList.remove('is-open');
+    });
+
+    elabModal.addEventListener('click', (e) => {
+      if (e.target === elabModal) {
+        elabModal.classList.remove('is-open');
+      }
+    });
+  }
+
+  document.querySelectorAll('[data-filter-cat]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-filter-cat]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentCatFilter = btn.getAttribute('data-filter-cat');
+      renderElabProjects();
+    });
+  });
+
+  document.querySelectorAll('[data-filter-diff]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-filter-diff]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentDiffFilter = btn.getAttribute('data-filter-diff');
+      renderElabProjects();
+    });
+  });
+
+  renderElabProjects();
 
   initAskAiHoverEngine();
 });

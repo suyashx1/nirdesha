@@ -2696,3 +2696,461 @@ body.trainee-body {
 [data-theme="dark"] .record-period {
   color: #94a3b8 !important;
 }
+
+/* ==========================================================================
+   STABLE COLLAPSED SIDEBAR (CLICK-ONLY TOGGLE, NO HOVER EXPANSION)
+   ========================================================================== */
+:root {
+  --trainee-sidebar-collapsed-w: 68px;
+}
+
+.trainee-sidebar {
+  width: var(--trainee-sidebar-w);
+  overflow: hidden;
+  box-sizing: border-box;
+  transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.trainee-main {
+  margin-left: var(--trainee-sidebar-w);
+  transition: margin-left 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Collapsed State Layout */
+body.sidebar-collapsed .trainee-sidebar {
+  width: var(--trainee-sidebar-collapsed-w);
+}
+
+body.sidebar-collapsed .trainee-main {
+  margin-left: var(--trainee-sidebar-collapsed-w);
+}
+
+/* Hide all text labels, badges, categories, and brand title in collapsed mode */
+body.sidebar-collapsed .trainee-brand-info,
+body.sidebar-collapsed .trainee-brand-title,
+body.sidebar-collapsed .trainee-brand-sub,
+body.sidebar-collapsed .trainee-nav-category,
+body.sidebar-collapsed .trainee-nav-item > span:not(.admin-nav-icon),
+body.sidebar-collapsed .admin-nav-item > span:not(.admin-nav-icon),
+body.sidebar-collapsed .trainee-nav-badge,
+body.sidebar-collapsed .admin-nav-badge,
+body.sidebar-collapsed .trainee-user-details {
+  display: none !important;
+}
+
+/* Centered layout for collapsed header, nav items, signout, and user card */
+body.sidebar-collapsed .trainee-sidebar-header {
+  justify-content: center !important;
+  padding: 1.25rem 0 !important;
+}
+
+body.sidebar-collapsed .trainee-nav-item,
+body.sidebar-collapsed .admin-nav-item,
+body.sidebar-collapsed .nav-signout {
+  justify-content: center !important;
+  padding: 0.75rem 0 !important;
+  gap: 0 !important;
+}
+
+body.sidebar-collapsed .trainee-user-card {
+  justify-content: center !important;
+  padding: 0.5rem 0 !important;
+  background: transparent !important;
+  border: none !important;
+  margin-top: 0 !important;
+}
+
+/* Center emblems & icons */
+body.sidebar-collapsed .admin-nav-icon {
+  margin: 0 auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Sidebar Toggle Hamburger Button */
+.trainee-sidebar-toggle {
+  background: transparent;
+  border: 1px solid rgba(203, 213, 225, 0.6);
+  color: #334155;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 0px !important;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.trainee-sidebar-toggle:hover {
+  background-color: #f1f5f9;
+  border-color: #002b49;
+  color: #002b49;
+}
+
+[data-theme="dark"] .trainee-sidebar-toggle {
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .trainee-sidebar-toggle:hover {
+  background-color: #1e293b;
+  color: #ffffff;
+}
+
+/* Tab Entrance Animation & Interactive Polish */
+@keyframes tabFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.trainee-view-tab {
+  animation: tabFadeInUp 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ==========================================================================
+   eLab MODULE STYLES (Hands-on Project Practice Environment)
+   ========================================================================== */
+.elab-header-banner {
+  background: linear-gradient(135deg, #00223a 0%, #003865 100%);
+  color: #ffffff;
+  padding: 1.75rem 2rem;
+  border-bottom: 3px solid var(--trainee-saffron);
+  margin-bottom: 1.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.elab-header-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: 0 0 0.4rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.elab-badge-pill {
+  font-size: 0.7rem;
+  font-weight: 800;
+  background-color: var(--trainee-saffron);
+  color: #ffffff;
+  padding: 0.2rem 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.elab-header-desc {
+  font-size: 0.9rem;
+  color: #cbd5e1;
+  margin: 0;
+  max-width: 720px;
+}
+
+.elab-filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  padding: 1rem 1.25rem;
+  background: #ffffff;
+  border: 1px solid var(--trainee-border);
+}
+
+[data-theme="dark"] .elab-filter-bar {
+  background: #111827;
+  border-color: #334155;
+}
+
+.elab-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.elab-filter-btn {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.elab-filter-btn:hover, .elab-filter-btn.active {
+  background: #002b49;
+  color: #ffffff;
+  border-color: #002b49;
+}
+
+[data-theme="dark"] .elab-filter-btn {
+  background: #1e293b;
+  border-color: #334155;
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .elab-filter-btn:hover, [data-theme="dark"] .elab-filter-btn.active {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
+}
+
+.elab-projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.elab-project-card {
+  background: #ffffff;
+  border: 1px solid var(--trainee-border);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+}
+
+.elab-project-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+  border-color: #94a3b8;
+}
+
+[data-theme="dark"] .elab-project-card {
+  background: #111827;
+  border-color: #334155;
+}
+
+.elab-card-tags {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+}
+
+.elab-tag-cat {
+  font-size: 0.725rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #0284c7;
+  background: rgba(2, 132, 199, 0.1);
+  padding: 0.2rem 0.5rem;
+}
+
+.elab-tag-diff {
+  font-size: 0.725rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+}
+
+.elab-diff-beginner { background: #ecfdf5; color: #047857; }
+.elab-diff-intermediate { background: #fffbebf; color: #b45309; }
+.elab-diff-advanced { background: #fef2f2; color: #b91c1c; }
+
+[data-theme="dark"] .elab-diff-beginner { background: rgba(4, 120, 87, 0.2); color: #34d399; }
+[data-theme="dark"] .elab-diff-intermediate { background: rgba(180, 83, 9, 0.2); color: #fbbf24; }
+[data-theme="dark"] .elab-diff-advanced { background: rgba(185, 28, 28, 0.2); color: #f87171; }
+
+.elab-project-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 0.5rem 0;
+}
+
+[data-theme="dark"] .elab-project-title {
+  color: #ffffff;
+}
+
+.elab-project-desc {
+  font-size: 0.825rem;
+  color: #64748b;
+  margin-bottom: 1.25rem;
+  line-height: 1.45;
+}
+
+[data-theme="dark"] .elab-project-desc {
+  color: #94a3b8;
+}
+
+.elab-progress-wrapper {
+  margin-bottom: 1.25rem;
+}
+
+.elab-progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #475569;
+  margin-bottom: 0.35rem;
+}
+
+[data-theme="dark"] .elab-progress-label {
+  color: #cbd5e1;
+}
+
+.elab-progress-bar {
+  height: 8px;
+  background: #e2e8f0;
+  width: 100%;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .elab-progress-bar {
+  background: #1e293b;
+}
+
+.elab-progress-fill {
+  height: 100%;
+  background: var(--trainee-saffron);
+  transition: width 0.3s ease;
+}
+
+.elab-card-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-elab-action {
+  flex: 1;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.825rem;
+  font-weight: 700;
+  text-align: center;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-elab-primary {
+  background-color: #002b49;
+  color: #ffffff;
+}
+
+.btn-elab-primary:hover {
+  background-color: var(--trainee-saffron);
+}
+
+.btn-elab-secondary {
+  background-color: transparent;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+
+.btn-elab-secondary:hover {
+  background-color: #f1f5f9;
+  border-color: #002b49;
+}
+
+[data-theme="dark"] .btn-elab-secondary {
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .btn-elab-secondary:hover {
+  background-color: #1e293b;
+  color: #ffffff;
+}
+
+/* Interactive Workspace Modal */
+.elab-workspace-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.elab-workspace-modal.is-open {
+  display: flex;
+  animation: fadeIn 0.2s ease forwards;
+}
+
+.elab-workspace-content {
+  background: #ffffff;
+  border: 2px solid #002b49;
+  width: 100%;
+  max-width: 860px;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .elab-workspace-content {
+  background: #0f172a;
+  border-color: #0284c7;
+}
+
+.elab-workspace-header {
+  padding: 1.25rem 1.75rem;
+  background: #00223a;
+  color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 3px solid var(--trainee-saffron);
+}
+
+.elab-workspace-body {
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.elab-task-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.85rem;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  transition: background 0.15s ease;
+}
+
+.elab-task-item:hover {
+  background: #f1f5f9;
+}
+
+[data-theme="dark"] .elab-task-item {
+  border-color: #334155;
+  background: #111827;
+}
+
+[data-theme="dark"] .elab-task-item:hover {
+  background: #1e293b;
+}
+
+.elab-task-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--trainee-saffron);
+  cursor: pointer;
+  margin-top: 0.15rem;
+}
+

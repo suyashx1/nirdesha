@@ -1734,3 +1734,75 @@ ADMIN OFFICER PROFILE INSPECTION MODAL (READ-ONLY)
   justify-content: flex-end;
   gap: 0.75rem;
 }
+
+/* ==========================================================================
+   ADMIN STABLE COLLAPSED SIDEBAR (CLICK-ONLY TOGGLE, NO HOVER EXPANSION)
+   ========================================================================== */
+:root {
+  --admin-sidebar-collapsed-w: 68px;
+}
+
+.admin-sidebar {
+  width: var(--admin-sidebar-w);
+  overflow: hidden;
+  box-sizing: border-box;
+  transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.admin-main {
+  margin-left: var(--admin-sidebar-w);
+  transition: margin-left 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Collapsed State Layout */
+body.sidebar-collapsed .admin-sidebar {
+  width: var(--admin-sidebar-collapsed-w);
+}
+
+body.sidebar-collapsed .admin-main {
+  margin-left: var(--admin-sidebar-collapsed-w);
+}
+
+/* Hide text labels, badges, categories, user details, and brand title in collapsed mode */
+body.sidebar-collapsed .admin-brand-info,
+body.sidebar-collapsed .admin-brand-title,
+body.sidebar-collapsed .admin-brand-sub,
+body.sidebar-collapsed .admin-nav-category,
+body.sidebar-collapsed .admin-nav-item > span:not(.admin-nav-icon),
+body.sidebar-collapsed .admin-nav-badge,
+body.sidebar-collapsed .admin-user-details {
+  display: none !important;
+}
+
+/* Centered layout for collapsed header, nav items, signout, and user card */
+body.sidebar-collapsed .admin-sidebar-header {
+  justify-content: center !important;
+  padding: 1.25rem 0 !important;
+}
+
+body.sidebar-collapsed .admin-nav-item,
+body.sidebar-collapsed .nav-signout {
+  justify-content: center !important;
+  padding: 0.75rem 0 !important;
+  gap: 0 !important;
+}
+
+body.sidebar-collapsed .admin-user-card {
+  justify-content: center !important;
+  padding: 0.5rem 0 !important;
+  background: transparent !important;
+  border: none !important;
+  margin-top: 0 !important;
+}
+
+body.sidebar-collapsed .admin-nav-icon {
+  margin: 0 auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.admin-view-tab {
+  animation: tabFadeInUp 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+

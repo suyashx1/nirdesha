@@ -93,12 +93,36 @@ document.addEventListener('DOMContentLoaded', () => {
   const initialTheme = localStorage.getItem('nirdesha_theme_mode') || 'system';
   applyThemeMode(initialTheme, false);
 
-  // 1. SIDEBAR TAB NAVIGATION & MOBILE DRAWER
+  // 1. SIDEBAR COLLAPSE TOGGLE & TAB NAVIGATION
   // ==========================================================================
   const navItems = document.querySelectorAll('.admin-nav-item[data-tab]');
   const viewTabs = document.querySelectorAll('.admin-view-tab');
   const sidebar = document.getElementById('admin-sidebar');
   const mobileToggle = document.getElementById('admin-mobile-toggle');
+  const sidebarToggleBtn = document.getElementById('admin-sidebar-toggle');
+  const MENU_SVG = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>`;
+  const CLOSE_SVG = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+
+  function updateAdminSidebarToggleIcon(isCollapsed) {
+    if (!sidebarToggleBtn) return;
+    sidebarToggleBtn.innerHTML = isCollapsed ? MENU_SVG : CLOSE_SVG;
+    sidebarToggleBtn.setAttribute('title', isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar');
+  }
+
+  const initialCollapsed = localStorage.getItem('nirdesha_sidebar_collapsed') === 'true';
+  if (initialCollapsed) {
+    document.body.classList.add('sidebar-collapsed');
+  }
+  updateAdminSidebarToggleIcon(initialCollapsed);
+
+  if (sidebarToggleBtn) {
+    sidebarToggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('sidebar-collapsed');
+      const isCollapsed = document.body.classList.contains('sidebar-collapsed');
+      localStorage.setItem('nirdesha_sidebar_collapsed', isCollapsed ? 'true' : 'false');
+      updateAdminSidebarToggleIcon(isCollapsed);
+    });
+  }
 
   function switchTab(tabId) {
     navItems.forEach(item => {
@@ -112,6 +136,9 @@ document.addEventListener('DOMContentLoaded', () => {
     viewTabs.forEach(view => {
       if (view.id === `view-${tabId}`) {
         view.classList.add('active');
+        view.style.animation = 'none';
+        view.offsetHeight; // trigger reflow
+        view.style.animation = 'tabFadeInUp 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards';
       } else {
         view.classList.remove('active');
       }

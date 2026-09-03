@@ -33,7 +33,7 @@
           <rect x="25" y="104" width="50" height="4" rx="1"/>
           <rect x="20" y="110" width="60" height="4" rx="1"/>
         </svg>
-        <div>
+        <div class="trainee-brand-info">
           <div class="trainee-brand-title">निर्देश <span>NIRDESHA</span></div>
           <div class="trainee-brand-sub">User Learning Portal • MoSPI</div>
         </div>
@@ -57,7 +57,6 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
           </span>
           <span>My Courses & Tracks</span>
-          
         </a>
 
         <!-- 3. Revision Cards -->
@@ -66,6 +65,15 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
           </span>
           <span>Revision Cards</span>
+        </a>
+
+        <!-- 4. eLab Practice Projects -->
+        <a href="#elab" class="trainee-nav-item" data-tab="elab">
+          <span class="admin-nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+          </span>
+          <span>eLab Projects</span>
+          <span class="trainee-nav-badge" style="background:#0284c7;">New</span>
         </a>
 
         <!-- 5. Timed Self-Evaluations -->
@@ -84,9 +92,7 @@
           <span>AI Study Mentor</span>
         </a>
 
-        
-
-        <!-- 8. User Profile -->
+        <!-- 7. User Profile -->
         <a href="#profile" class="trainee-nav-item" data-tab="profile">
           <span class="admin-nav-icon">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
@@ -122,6 +128,10 @@
       <!-- Top Command Bar -->
       <header class="trainee-topbar">
         <div class="trainee-topbar-left">
+          <button class="trainee-sidebar-toggle" id="trainee-sidebar-toggle" aria-label="Toggle sidebar collapse" title="Collapse/Expand Sidebar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+          
           <button class="trainee-mobile-btn" id="trainee-mobile-toggle" aria-label="Toggle navigation drawer">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
           </button>
@@ -704,7 +714,52 @@
         </div>
 
         <!-- ======================================================================
-VIEW 6: OFFICER PROFILE (ORIGINAL CLEAN SERVICE DOSSIER)
+             VIEW 4.5: eLab (HANDS-ON PROJECT PRACTICE ENVIRONMENT)
+             ====================================================================== -->
+        <div class="trainee-view-tab" id="view-elab" style="display: none;">
+          <!-- Header Banner -->
+          <div class="elab-header-banner">
+            <div>
+              <h2 class="elab-header-title">
+                <span>⚡ eLab Practice Environment</span>
+                <span class="elab-badge-pill">Learn by Building</span>
+              </h2>
+              <p class="elab-header-desc">
+                Practice MoSPI statistical modeling, web dashboard components, and data automation through real-world hands-on projects with step-by-step guidance.
+              </p>
+            </div>
+            <div>
+              <div style="font-size: 0.8rem; opacity: 0.9;">Total Projects Completed</div>
+              <div style="font-size: 1.75rem; font-weight: 800; color: #fb923c;" id="elab-stats-completed">1 / 4</div>
+            </div>
+          </div>
+
+          <!-- Filter & Category Bar -->
+          <div class="elab-filter-bar">
+            <div class="elab-filter-group">
+              <span style="font-size: 0.8rem; font-weight: 800; color: #64748b; margin-right: 0.5rem;">CATEGORY:</span>
+              <button class="elab-filter-btn active" data-filter-cat="all">All Topics</button>
+              <button class="elab-filter-btn" data-filter-cat="Web Development">Web Development</button>
+              <button class="elab-filter-btn" data-filter-cat="Data Analysis">Data Analysis</button>
+              <button class="elab-filter-btn" data-filter-cat="MoSPI Statistics">MoSPI Statistics</button>
+            </div>
+            <div class="elab-filter-group">
+              <span style="font-size: 0.8rem; font-weight: 800; color: #64748b; margin-right: 0.5rem;">DIFFICULTY:</span>
+              <button class="elab-filter-btn active" data-filter-diff="all">All Levels</button>
+              <button class="elab-filter-btn" data-filter-diff="Beginner">Beginner</button>
+              <button class="elab-filter-btn" data-filter-diff="Intermediate">Intermediate</button>
+              <button class="elab-filter-btn" data-filter-diff="Advanced">Advanced</button>
+            </div>
+          </div>
+
+          <!-- Projects Grid Container -->
+          <div class="elab-projects-grid" id="elab-projects-grid">
+            <!-- Dynamic project cards rendered via js/public.js -->
+          </div>
+        </div>
+
+        <!-- ======================================================================
+             VIEW 6: OFFICER PROFILE (ORIGINAL CLEAN SERVICE DOSSIER)
              ====================================================================== -->
         <div class="trainee-view-tab" id="view-profile" style="display: none;">
           <div style="margin-bottom: 1.5rem;">
@@ -1028,6 +1083,22 @@ VIEW 6: OFFICER PROFILE (ORIGINAL CLEAN SERVICE DOSSIER)
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><line x1="9" y1="10" x2="15" y2="10"></line></svg>
       <span>Ask AI</span>
     </button>
+
+    <!-- Interactive eLab Project Workspace Modal -->
+    <div class="elab-workspace-modal" id="elab-workspace-modal" role="dialog" aria-modal="true">
+      <div class="elab-workspace-content">
+        <div class="elab-workspace-header">
+          <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+            <span style="font-size: 1.15rem; font-weight: 800;" id="elab-modal-title">Build a Personal Portfolio</span>
+            <span class="elab-tag-cat" id="elab-modal-cat">Web Development</span>
+          </div>
+          <button type="button" id="elab-modal-close" style="background:none; border:none; color:#ffffff; font-size:1.5rem; cursor:pointer;" title="Close workspace">&times;</button>
+        </div>
+        <div class="elab-workspace-body" id="elab-modal-body">
+          <!-- Dynamic workspace content rendered via JS -->
+        </div>
+      </div>
+    </div>
     
   <script src="js/public.js" defer></script>
   <script src="js/ai-companion.js" defer></script>
