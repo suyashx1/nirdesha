@@ -386,3 +386,32 @@
   border-color: #334155;
   color: #f8fafc;
 }
+
+/* Companion Header Language Dropdown (Compact & Neat) */
+.companion-lang-select {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #002b49;
+  padding: 1px 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border-radius: 3px !important;
+  cursor: pointer;
+  outline: none;
+  height: 25px;
+  max-width: 82px;
+  font-family: inherit;
+  transition: all 0.15s ease;
+}
+
+.companion-lang-select:hover,
+.companion-lang-select:focus {
+  border-color: #ea580c;
+}
+
+.companion-lang-select option {
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 0.8rem;
+}
+

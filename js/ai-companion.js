@@ -16,7 +16,7 @@
     'default': "Namaste! I am your Nirdesha AI Guidance Companion. You can ask me about MoSPI survey guidelines, statistical formulas, SSS cadre promotion requirements, or navigating this platform."
   };
 
-  const DEFAULT_GREETING = "Namaste! I am your <strong>Nirdesha AI Guidance Companion</strong>. Do you need any help with official MoSPI guidelines, statistical methodologies, or navigating this portal?";
+  const DEFAULT_GREETING = "Namaste! I am your <strong>Nirdesha Website Guidance Assistant</strong>. I help you navigate the portal, set milestones, track learning on the heatmap, arrange courses, and configure settings. How can I guide you with the website today?";
 
   // Conversation history array
   const companionHistory = [];
@@ -41,10 +41,7 @@
         </div>
 
         <button type="button" class="companion-avatar-btn" id="companion-avatar-btn" title="Open AI Guidance Companion" aria-label="Open AI Guidance Assistant">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-            <line x1="9" y1="10" x2="15" y2="10"/>
-          </svg>
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
           <span class="companion-online-dot"></span>
         </button>
       </div>
@@ -55,24 +52,33 @@
         
         <div class="companion-header">
           <div class="companion-header-brand">
-            <div class="companion-header-avatar">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/></svg>
-            </div>
+            <div class="companion-header-avatar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></div>
             <div class="companion-header-titles">
               <h3 class="companion-title">Nirdesha AI Guidance</h3>
-              <span class="companion-status"><span class="companion-status-indicator"></span> MoSPI-StatLLM • Active</span>
+               MoSPI-StatLLM • Active</span>
             </div>
           </div>
 
           <div class="companion-header-actions">
+            <!-- Companion Language Selector -->
+            <select class="companion-lang-select" id="companion-lang-select" title="Choose language for AI guidance">
+              <option value="English" selected>🌐 EN</option>
+              <option value="Hindi">हिंदी</option>
+              <option value="Odia">ଓଡ଼ିଆ</option>
+              <option value="Bengali">বাংলা</option>
+              <option value="Marathi">मराठी</option>
+              <option value="Gujarati">ગુજરાતી</option>
+              <option value="Tamil">தமிழ்</option>
+              <option value="Telugu">తెలుగు</option>
+              <option value="Kannada">ಕನ್ನಡ</option>
+              <option value="Malayalam">മലയാളം</option>
+              <option value="Punjabi">ਪੰਜਾਬੀ</option>
+            </select>
             <!-- Clear / Delete Chat History Button -->
             <button type="button" class="companion-action-btn" id="companion-btn-clear" title="Clear / Delete Chat History" aria-label="Clear Chat History">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="pointer-events: none;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
             </button>
-            <!-- Fullscreen / Expand Button -->
-            <button type="button" class="companion-action-btn" id="companion-btn-fullscreen" title="Open Full Screen" aria-label="Fullscreen">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="pointer-events: none;"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
-            </button>
+            
             <!-- Close Button -->
             <button type="button" class="companion-action-btn btn-close" id="companion-btn-close" title="Close Companion" aria-label="Close">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="pointer-events: none;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -87,10 +93,10 @@
           </div>
 
           <div class="companion-chips-container">
-            <button type="button" class="companion-chip" data-query="Explain SSO Cadre Benchmark">SSO Cadre Benchmark</button>
-            <button type="button" class="companion-chip" data-query="How does NSS sampling work?">Sampling Design</button>
-            <button type="button" class="companion-chip" data-query="Explain DPDP Act 2023 compliance">DPDP Act Rules</button>
-            <button type="button" class="companion-chip" data-query="How does the 365-day streak work?">Milestone Streaks</button>
+            <button type="button" class="companion-chip" data-query="How do I set my milestone streak?">Set Milestones</button>
+            <button type="button" class="companion-chip" data-query="Explain the learning consistency heatmap">52-Week Heatmap</button>
+            <button type="button" class="companion-chip" data-query="Where do I arrange my courses?">My Courses</button>
+            <button type="button" class="companion-chip" data-query="How to change theme and profile settings?">Theme & Settings</button>
           </div>
         </div>
 
@@ -173,6 +179,56 @@
     }
     bindChipClicks();
 
+    
+    let companionLanguage = 'English';
+    const companionLangSelect = document.getElementById('companion-lang-select');
+
+    const COMPANION_LANG_GREETINGS = {
+      'English': "Namaste! I am your <strong>Nirdesha Website Guidance Assistant</strong>. I help you navigate the portal, set milestones, track learning on the heatmap, arrange courses, and configure settings. How can I guide you with the website today?",
+      'Hindi': "नमस्ते! मैं आपका <strong>निर्देशा वेबसाइट मार्गदर्शन सहायक</strong> हूँ। मैं आपको पोर्टल नेविगेट करने, माइलस्टोन सेट करने, हीटमैप पर सीखने की निरंतरता देखने और सेटिंग्स बदलने में मदद करता हूँ। मैं आज वेबसाइट के लिए आपकी क्या सहायता करूँ?",
+      'Odia': "ନମସ୍କାର! ମୁଁ ଆପଣଙ୍କର <strong>ନିର୍ଦ୍ଦେଶା ୱେବସାଇଟ୍ ମାର୍ଗଦର୍ଶନ ସହାୟକ</strong>। ମୁଁ ଆପଣଙ୍କୁ ପୋର୍ଟାଲ୍ ବ୍ୟବହାର କରିବା, ମାଇଲଷ୍ଟୋନ୍ ସେଟ୍ କରିବା, ହିଟମ୍ୟାପ୍ ଦେଖିବା ଏବଂ ସେଟିଂସ୍ ପରିବର୍ତ୍ତନ କରିବାରେ ସାହାଯ୍ୟ କରିବି। ଆଜି ମୁଁ ୱେବସାଇଟ୍ ପାଇଁ ଆପଣଙ୍କୁ କିପରି ସାହାଯ୍ୟ କରିପାରିବି?",
+      'Bengali': "নমস্কার! আমি আপনার <strong>নির্দেশা ওয়েবসাইট গাইডেন্স অ্যাসিস্ট্যান্ট</strong>। পোর্টাল ব্যবহার, মাইলস্টোন সেট করা এবং সেটিংস পরিবর্তনে আমি সাহায্য করি।",
+      'Marathi': "नमस्ते! मी तुमचा <strong>निर्देशा संकेतस्थळ मार्गदर्शन सहाय्यक</strong> आहे. पोर्टल वापरणे आणि सेटिंग्स बदलण्यात मी मदत करतो.",
+      'Gujarati': "નમસ્તે! હું તમારો <strong>નિર્દેશા વેબસાઇટ માર્ગદર્શન સહાયક</strong> છું. પોર્ટલ પર નેવિગેટ કરવા અને સેટિંગ્સ બદલવામાં હું મદદ કરીશ.",
+      'Tamil': "வணக்கம்! நான் உங்கள் <strong>நிர்தேஷா வலைத்தள வழிகாட்டி</strong>. தள வழிசெலுத்தல் மற்றும் அமைப்புகளில் நான் உதவுகிறேன்.",
+      'Telugu': "నమస్కారం! నేను మీ <strong>నిర్దేశ వెబ్‌సైట్ మార్గదర్శిని</strong>. పోర్టల్ నావిగేషన్ మరియు సెట్టింగ్‌లలో సహాయం చేస్తాను.",
+      'Kannada': "ನಮಸ್ಕಾರ! ನಾನು ನಿಮ್ಮ <strong>ನಿರ್ದೇಶಾ ವೆಬ್‌ಸೈಟ್ ಮಾರ್ಗದರ್ಶಕ</strong>. ಪೋರ್ಟಲ್ ಬಳಕೆ ಮತ್ತು ಸೆಟ್ಟಿಂಗ್ಸ್‌ಗಳಲ್ಲಿ ಸಹಾಯ ಮಾಡುತ್ತೇನೆ.",
+      'Malayalam': "നമസ്കാരം! ഞാൻ നിങ്ങളുടെ <strong>നിർദ്ദേശ വെബ്സൈറ്റ് ഗൈഡൻസ് അസിസ്റ്റന്റ്</strong> ആണ്. പോർട്ടൽ ഉപയോഗത്തിൽ ഞാൻ സഹായിക്കാം.",
+      'Punjabi': "ਨਮਸਤੇ! ਮੈਂ ਤੁਹਾਡਾ <strong>ਨਿਰਦੇਸ਼ਾ ਵੈੱਬਸਾਈਟ ਮਾਰਗਦਰਸ਼ਨ ਸਹਾਇਕ</strong> ਹਾਂ। ਪੋਰਟਲ ਵਰਤੋਂ ਵਿੱਚ ਮੈਂ ਮਦਦ ਕਰਾਂਗਾ।"
+    };
+
+    const COMPANION_LANG_PLACEHOLDERS = {
+      'English': "Ask a website navigation question...",
+      'Hindi': "वेबसाइट से जुड़ा कोई भी प्रश्न पूछें...",
+      'Odia': "ୱେବସାଇଟ୍ ସମ୍ବନ୍ଧୀୟ ପ୍ରଶ୍ନ ପଚାରନ୍ତୁ...",
+      'Bengali': "ওয়েবসাইট সংক্রান্ত প্রশ্ন জিজ্ঞাসা করুন...",
+      'Marathi': "संकेतस्थळाबद्दल प्रश्न विचारा...",
+      'Gujarati': "વેબસાઇટ વિશે પ્રશ્ન પૂછો...",
+      'Tamil': "வலைத்தளம் குறித்த கேள்விகளைக் கேளுங்கள்...",
+      'Telugu': "వెబ్‌సైట్ గురించిన ప్రశ్నలు అడగండి...",
+      'Kannada': "ವೆಬ್‌ಸೈಟ್ ಕುರಿತ ಪ್ರಶ್ನೆಗಳನ್ನು ಕೇಳಿ...",
+      'Malayalam': "വെബ്സൈറ്റ് സംബന്ധമായ ചോദ്യങ്ങൾ ചോദിക്കുക...",
+      'Punjabi': "ਵੈੱਬਸਾਈਟ ਬਾਰੇ ਸਵਾਲ ਪੁੱਛੋ..."
+    };
+
+    if (companionLangSelect) {
+      companionLangSelect.addEventListener('change', () => {
+        companionLanguage = companionLangSelect.value;
+        const greeting = COMPANION_LANG_GREETINGS[companionLanguage] || COMPANION_LANG_GREETINGS['English'];
+        const placeholder = COMPANION_LANG_PLACEHOLDERS[companionLanguage] || COMPANION_LANG_PLACEHOLDERS['English'];
+
+        if (input) input.placeholder = placeholder;
+
+        if (chatBody) {
+          const langMsg = document.createElement('div');
+          langMsg.className = 'companion-msg bot';
+          langMsg.innerHTML = `🌐 <strong>Language set to ${companionLanguage}</strong><br>${greeting}`;
+          chatBody.appendChild(langMsg);
+          chatBody.scrollTop = chatBody.scrollHeight;
+        }
+      });
+    }
+
     // CLEAR / DELETE CHAT HISTORY FUNCTION
     function executeClearChat() {
       companionHistory.length = 0;
@@ -188,10 +244,10 @@
           </div>
 
           <div class="companion-chips-container">
-            <button type="button" class="companion-chip" data-query="Explain SSO Cadre Benchmark">SSO Cadre Benchmark</button>
-            <button type="button" class="companion-chip" data-query="How does NSS sampling work?">Sampling Design</button>
-            <button type="button" class="companion-chip" data-query="Explain DPDP Act 2023 compliance">DPDP Act Rules</button>
-            <button type="button" class="companion-chip" data-query="How does the 365-day streak work?">Milestone Streaks</button>
+            <button type="button" class="companion-chip" data-query="How do I set my milestone streak?">Set Milestones</button>
+            <button type="button" class="companion-chip" data-query="Explain the learning consistency heatmap">52-Week Heatmap</button>
+            <button type="button" class="companion-chip" data-query="Where do I arrange my courses?">My Courses</button>
+            <button type="button" class="companion-chip" data-query="How to change theme and profile settings?">Theme & Settings</button>
           </div>
         `;
         bindChipClicks();
@@ -217,51 +273,7 @@
       }
     });
 
-    // FULL SCREEN BUTTON: SYNC CHAT HISTORY TO AI STUDY MENTOR (ON PUBLIC.HTML)
-    if (btnFullscreen) {
-      btnFullscreen.addEventListener('click', () => {
-        const mentorView = document.getElementById('view-ai-mentor');
-        const traineeChatLog = document.getElementById('trainee-chat-log');
-
-        if (mentorView && traineeChatLog) {
-          // Inside public portal with AI Study Mentor:
-          closePopup();
-
-          // 1. Switch to AI Study Mentor Tab
-          const mentorTabBtn = document.querySelector('[data-tab="ai-mentor"]');
-          if (mentorTabBtn) {
-            mentorTabBtn.click();
-          } else if (typeof switchTab === 'function') {
-            switchTab('ai-mentor');
-          }
-
-          // 2. Transfer / Sync conversation history into AI Study Mentor
-          const messagesToSync = companionHistory.filter((_, idx) => idx > 0);
-          if (messagesToSync.length > 0) {
-            const divider = document.createElement('div');
-            divider.className = 'chat-sync-divider';
-            divider.innerHTML = '<span class="sync-tag">Transferred Session • Nirdesha AI Guidance</span>';
-            traineeChatLog.appendChild(divider);
-
-            messagesToSync.forEach(item => {
-              const bubble = document.createElement('div');
-              bubble.className = `chat-bubble ${item.sender === 'user' ? 'user' : 'bot'}`;
-              bubble.innerHTML = item.text;
-              traineeChatLog.appendChild(bubble);
-            });
-
-            traineeChatLog.scrollTop = traineeChatLog.scrollHeight;
-          }
-        } else {
-          // Non-mentor pages (admin, main, login): Expand in-page fullscreen
-          if (!isFullscreenMode) {
-            enterFullscreenOverlay();
-          } else {
-            exitFullscreenOverlay();
-          }
-        }
-      });
-    }
+    // Fullscreen option removed per user requirement
 
     // MESSAGING LOGIC
     function appendMessage(text, sender = 'bot') {
@@ -298,9 +310,7 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            user_id: 'public',
-            message: q,
-            role: 'companion'
+            user_id: 'public', message: q, role: 'guidance', language: companionLanguage
           })
         });
 
@@ -328,7 +338,7 @@
                       botMsg.innerHTML = '';
                       hasReceivedFirstToken = true;
                     }
-                    accumulatedText += parsed.chunk;
+                    accumulatedText += parsed.chunk.replace(/\*/g, "");
                     botMsg.innerHTML = accumulatedText.replace(/\n/g, '<br>');
                     chatBody.scrollTop = chatBody.scrollHeight;
                   }

@@ -469,34 +469,92 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================================================
-  // 6. INTERACTIVE AI STUDY MENTOR CHAT
+  // 6. INTERACTIVE AI STUDY MENTOR CHAT & MULTILINGUAL ENGINE
   // ==========================================================================
   const traineeChatLog = document.getElementById('trainee-chat-log');
   const traineeChatInput = document.getElementById('trainee-chat-input');
   const traineeChatSend = document.getElementById('trainee-chat-send');
+  const btnClearMentorChat = document.getElementById('btn-clear-mentor-chat');
+  const mentorLangSelect = document.getElementById('mentor-lang-select');
 
-  const TRAINEE_RESPONSES = {
-    "formula": "The formula for the Horvitz-Thompson Estimator for a population total is: Y_HT = Sum(y_i / pi_i), where pi_i is the inclusion probability of the i-th sampling unit. In NSSO stratified multi-stage designs, inverse inclusion probabilities represent multiplier weights.",
-    "cpi": "Consumer Price Index (CPI-Combined) base 2012=100 uses Laspeyres modified formulation. Price relatives are aggregated with weighting diagrams derived from Consumer Expenditure Surveys (CES).",
-    "dpdp": "Under DPDP Act 2023 Section 8, public survey records must anonymize individual identifiable tokens (Aadhaar/Phone) before statistical dataset release.",
-    "default": "Based on the NSSTA Training Syllabus, this topic is covered under Module 101. Review your NotebookLM summary cards for quick revision before attempting the timed assessment."
+  let currentMentorLang = 'English';
+
+  const MENTOR_DEFAULT_GREETINGS = {
+    'English': "Namaste Officer Raman! I am your <strong>Nirdesha AI Study Mentor</strong>. I specialize exclusively in statistical theory, MoSPI syllabus, formulas, and closing your 17% promotional gap in Macro Deflators. What would you like to study?",
+    'Hindi': "नमस्ते अधिकारी रमन! मैं आपका <strong>निर्देशा एआई स्टडी मेंटर</strong> हूँ। मैं विशेष रूप से सांख्यिकी सिद्धांतों, MoSPI पाठ्यक्रम, सूत्रों और मैक्रो डिफ्लेटर में आपके 17% अंतर को पूरा करने में सहायता करता हूँ। आज क्या पढ़ना चाहेंगे?",
+    'Odia': "ନମସ୍କାର ଅଧିକାରୀ ରମଣ! ମୁଁ ଆପଣଙ୍କର <strong>ନିର୍ଦ୍ଦେଶା ଏଆଇ ଷ୍ଟଡି ମେଣ୍ଟର</strong>। ମୁଁ ପରିସଂଖ୍ୟାନ ତତ୍ତ୍ୱ, MoSPI ପାଠ୍ୟକ୍ରମ, ସୂତ୍ର ଏବଂ ମ୍ୟାକ୍ରୋ ଡିଫ୍ଲେଟରରେ ଥିବା ୧୭% ପଦୋନ୍ନତି ବ୍ୟବଧାନ ପୂରଣ କରିବାରେ ଆପଣଙ୍କୁ ସାହାଯ୍ୟ କରିବି। ଆଜି ଆପଣ କ’ଣ ପଢ଼ିବାକୁ ଚାହାଁନ୍ତି?",
+    'Bengali': "নমস্কার অফিসার রমন! আমি আপনার <strong>নির্দেশা এআই স্টাডি মেন্টর</strong>। আমি পরিসংখ্যান তত্ত্ব, MoSPI পাঠ্যক্রম এবং আপনার ম্যাক্রো ডিফ্লেটরের ১৭% ঘাটতি পূরণে সাহায্য করব। আজ কি পড়তে চান?",
+    'Marathi': "नमस्ते अधिकारी रमण! मी तुमचा <strong>निर्देशा एआय स्टडी मेंटॉर</strong> आहे. सांख्यिकी सिद्धांत, MoSPI अभ्यासक्रम आणि मॅक्रो डिफ्लेटरमधील तुमची १७% तूट भरून काढण्यात मी मदत करतो. आज काय अभ्यास करायचा आहे?",
+    'Gujarati': "નમસ્તે અધિકારી રમણ! હું તમારો <strong>નિર્દેશા એઆઈ સ્ટડી મેન્ટર</strong> છું. આંકડાશાસ્ત્ર, MoSPI અભ્યાસક્રમ અને મેક્રો ડિફ્લેટર્સમાં તમારી ૧૭% ગેપ ઘટાડવામાં મદદ કરીશ. આજે શું શીખવું છે?",
+    'Tamil': "வணக்கம் அதிகாரி ராமன்! நான் உங்கள் <strong>நிர்தேஷா AI படிப்பு வழிகாட்டி</strong>. புள்ளியியல் கோட்பாடுகள், MoSPI பாடத்திட்டம் மற்றும் மேக்ரோ குறைப்பான்களில் உங்கள் 17% இடைவெளியை நிரப்ப உதவ தயாராக உள்ளேன்.",
+    'Telugu': "నమస్కారం అధికாரி రామన్! నేను మీ <strong>నిర్దేశ AI స్టడీ మెంటార్</strong>ని. గణాంక సిద్ధాಂತాలు, MoSPI సిలబస్ మరియు స్థూల ద్రవ్యోల్బణ లోటును తగ్గించడంలో మీకు సహాయం చేస్తాను.",
+    'Kannada': "ನಮಸ್ಕಾರ ಅಧಿಕಾರಿ ರಾಮನ್! ನಾನು ನಿಮ್ಮ <strong>ನಿರ್ದೇಶಾ AI ಅಧ್ಯಯನ ಮಾರ್ಗದರ್ಶಿ</strong>. ಸಂಖ್ಯಾಶಾಸ್ತ್ರ ಸಿದ್ಧಾಂತಗಳು ಮತ್ತು MoSPI ಪರೀಕ್ಷಾ ಸಿದ್ಧತೆಗೆ ಸಹಾಯ ಮಾಡುತ್ತೇನೆ.",
+    'Malayalam': "നമസ്കാരം ഓഫീസർ രാമൻ! ഞാൻ നിങ്ങളുടെ <strong>നിർദ്ദേശ AI സ്റ്റഡി മെന്റർ</strong> ആണ്. സ്റ്റാറ്റിസ്റ്റിക്കൽ സിദ്ധാന്തങ്ങളിലും പരീക്ഷാ തയ്യാറെടുപ്പിലും ഞാൻ സഹായിക്കാം.",
+    'Punjabi': "ਨਮਸਤੇ ਅਧਿਕਾਰੀ ਰਮਨ! ਮੈਂ ਤੁਹਾਡਾ <strong>ਨਿਰਦੇਸ਼ਾ AI ਸਟੱਡੀ ਮੈਂਟਰ</strong> ਹਾਂ। ਮੈਂ ਅੰਕੜਾ ਸਿਧਾਂਤਾਂ ਅਤੇ MoSPI ਸਿਲੇਬਸ ਦੀ ਤਿਆਰੀ ਵਿੱਚ ਮਦਦ ਕਰਾਂਗਾ।"
+  };
+
+  const MENTOR_INPUT_PLACEHOLDERS = {
+    'English': "Ask a study question (e.g., Explain Horvitz-Thompson formula or CPI deflator)...",
+    'Hindi': "हिंदी में अध्ययन का प्रश्न पूछें (उदा. हॉरविट्ज़-थॉम्पसन सूत्र समझाइए)...",
+    'Odia': "ଓଡ଼ିଆରେ ଅଧ୍ୟୟନ ପ୍ରଶ୍ନ ପଚାରନ୍ତୁ (ଯଥା: ହର୍ଭିଟ୍ଜ୍-ଥମ୍ପସନ୍ ସୂତ୍ର ବୁଝାନ୍ତୁ)...",
+    'Bengali': "বাংলায় পড়াশোনার প্রশ্ন জিজ্ঞাসা করুন...",
+    'Marathi': "मराठीत अभ्यासाचा प्रश्न विचारा...",
+    'Gujarati': "ગુજરાતીમાં અભ્યાસનો પ્રશ્ન પૂછો...",
+    'Tamil': "தமிழில் படிப்பு கேள்விகளைக் கேளுங்கள்...",
+    'Telugu': "తెలుగులో అధ్యయన ప్రశ్నలను అడగండి...",
+    'Kannada': "ಕನ್ನಡದಲ್ಲಿ ಪ್ರಶ್ನೆಗಳನ್ನು ಕೇಳಿ...",
+    'Malayalam': "മലയാളത്തിൽ ചോദ്യങ്ങൾ ചോദിക്കുക...",
+    'Punjabi': "ਪੰਜਾਬੀ ਵਿੱਚ ਸਵਾਲ ਪੁੱਛੋ..."
   };
 
   function sendTraineeChatMessage(text, sender = 'bot') {
     if (!traineeChatLog) return;
     const bubble = document.createElement('div');
     bubble.className = `chat-bubble ${sender}`;
-    bubble.textContent = text;
+    bubble.innerHTML = text.replace(/\n/g, '<br>');
     traineeChatLog.appendChild(bubble);
     traineeChatLog.scrollTop = traineeChatLog.scrollHeight;
+    return bubble;
   }
 
-    async function handleTraineeChat(query) {
-    if (!query.trim()) return;
+  // Language selector listener for AI Study Mentor
+  if (mentorLangSelect) {
+    mentorLangSelect.addEventListener('change', () => {
+      currentMentorLang = mentorLangSelect.value;
+      const placeholder = MENTOR_INPUT_PLACEHOLDERS[currentMentorLang] || MENTOR_INPUT_PLACEHOLDERS['English'];
+      const greeting = MENTOR_DEFAULT_GREETINGS[currentMentorLang] || MENTOR_DEFAULT_GREETINGS['English'];
+
+      if (traineeChatInput) {
+        traineeChatInput.placeholder = placeholder;
+      }
+
+      if (traineeChatLog) {
+        const langNotice = document.createElement('div');
+        langNotice.className = 'chat-bubble bot';
+        langNotice.innerHTML = `🌐 <strong>Language set to ${currentMentorLang}</strong><br>${greeting}`;
+        traineeChatLog.appendChild(langNotice);
+        traineeChatLog.scrollTop = traineeChatLog.scrollHeight;
+      }
+    });
+  }
+
+  // Clear chat listener for AI Study Mentor
+  if (btnClearMentorChat) {
+    btnClearMentorChat.addEventListener('click', () => {
+      if (traineeChatLog) {
+        traineeChatLog.innerHTML = '';
+        const greeting = MENTOR_DEFAULT_GREETINGS[currentMentorLang] || MENTOR_DEFAULT_GREETINGS['English'];
+        sendTraineeChatMessage(greeting, 'bot');
+      }
+    });
+  }
+
+  // Send message with real-time streaming
+  async function handleTraineeChat(query) {
+    if (!query || !query.trim()) return;
     sendTraineeChatMessage(query, 'user');
     if (traineeChatInput) traineeChatInput.value = '';
 
-    // Create bot response bubble immediately
     const botBubble = document.createElement('div');
     botBubble.className = 'chat-bubble bot';
     botBubble.innerHTML = '<span style="color:#64748b; font-style:italic;">⚡ Thinking...</span>';
@@ -507,14 +565,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let hasReceivedFirstToken = false;
 
     try {
-      // 1. Try Ultra-Fast Streaming Endpoint (/api/chat/stream)
       const response = await fetch('http://127.0.0.1:8000/api/chat/stream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           user_id: 'public',
           message: query,
-          role: 'mentor'
+          role: 'mentor',
+          language: currentMentorLang
         })
       });
 
@@ -529,7 +587,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           buffer += decoder.decode(value, { stream: true });
           const lines = buffer.split(/\r?\n/);
-          buffer = lines.pop(); // keep partial line
+          buffer = lines.pop();
 
           for (const line of lines) {
             const trimmed = line.trim();
@@ -551,26 +609,14 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         }
 
-        if (accumulatedText.trim()) {
-          return;
-        }
+        if (accumulatedText.trim()) return;
       }
     } catch (err) {
-      // Server offline - fallback
+      console.warn('AI Mentor server stream error:', err);
     }
 
-    // 2. Offline instant fallback if server is unreachable
     if (!hasReceivedFirstToken) {
-      const q = query.toLowerCase();
-      let reply = TRAINEE_RESPONSES["default"];
-      if (q.includes('formula') || q.includes('sampling') || q.includes('weight')) {
-        reply = TRAINEE_RESPONSES["formula"];
-      } else if (q.includes('cpi') || q.includes('inflation') || q.includes('deflator')) {
-        reply = TRAINEE_RESPONSES["cpi"];
-      } else if (q.includes('dpdp') || q.includes('privacy') || q.includes('law')) {
-        reply = TRAINEE_RESPONSES["dpdp"];
-      }
-      botBubble.innerHTML = reply.replace(/\n/g, '<br>');
+      botBubble.innerHTML = "I am ready to assist your statistical studies. What specific concept or formula would you like to review?";
       traineeChatLog.scrollTop = traineeChatLog.scrollHeight;
     }
   }
@@ -581,17 +627,14 @@ document.addEventListener('DOMContentLoaded', () => {
       if (e.key === 'Enter') handleTraineeChat(traineeChatInput.value);
     });
   }
-  // Clear AI Study Mentor Chat Handler
-  const btnClearMentorChat = document.getElementById('btn-clear-mentor-chat');
-  if (btnClearMentorChat && traineeChatLog) {
-    btnClearMentorChat.addEventListener('click', () => {
-      traineeChatLog.innerHTML = `
-        <div class="chat-bubble bot">
-          Namaste Officer Raman! I am your <strong>Nirdesha AI Study Mentor</strong>. I can clarify statistical formulas, explain NSS survey concepts, or help you prepare for the upcoming SSO cadre transition test. What would you like to explore?
-        </div>
-      `;
+
+  // Quick Chips in AI Study Mentor
+  document.querySelectorAll('.mentor-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const q = chip.getAttribute('data-query');
+      if (q) handleTraineeChat(q);
     });
-  }
+  });
 
 
   // 6. 2D SKILL RADAR PROGRESS ANIMATION (0 to Target over 1.8 seconds)
@@ -2178,5 +2221,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderElabProjects();
 
-  initAskAiHoverEngine();
+  
+
+
 });

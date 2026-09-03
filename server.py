@@ -79,20 +79,74 @@ def save_user_history(user_id, history):
 def clear_user_history(user_id="public"):
     save_user_history(user_id, [])
 
-# High-Speed Concise Context Builder (<250 words for sub-second processing)
-def build_system_context(user_id="public", role="mentor"):
-    role_desc = "AI Study Mentor for MoSPI cadre progression" if role == "mentor" else "on-screen AI Guidance Companion"
-    return f"""You are Nirdesha AI ({role_desc}).
-Officer Profile: S. K. Raman (Junior Statistical Officer, SSS Cadre, NSSO Field Ops).
-Milestone Streak: 14 consecutive days (70% of 20-day target).
-Competency Ratings:
-- DPDP Act: 1,610 Elo (Expert, 98%)
-- Sampling Theory: 1,520 Elo (Advanced, 94%)
-- Python Data Science: 1,440 Elo (Proficient, 90%)
-- Macro Deflators: 1,385 Elo (68% - 17% promotional gap below 85% SSO benchmark).
-Key Formulas: Horvitz-Thompson Y_HT = Sum(y_i / pi_i); CPI Laspeyres base 2012; GDP Deflator = Nominal/Real*100; DPDP Sec 8 de-identification.
-Instructions: Address as Officer Raman. Be concise, punchy, and helpful. Prioritize closing his 17% deflator gap."""
+# High-Speed Role-Specific Context Builder with Strict Persona Separation & Multilingual Support
+def build_system_context(user_id="public", role="mentor", language="English"):
+    lang_clean = language.strip() if language else "English"
+    if lang_clean.lower() != "english":
+        lang_directive = f"""
+LANGUAGE MANDATE:
+You MUST formulate and write your entire response strictly in {lang_clean} (using its official native script, e.g., Devanagari for Hindi, Odia script for Odia, etc.).
+- Use simple, everyday, clear language that anyone can easily understand.
+- Translate all concepts and technical terms into intuitive, natural {lang_clean}.
+- Do NOT reply in English unless specifically instructed by the user."""
+    else:
+        lang_directive = """
+LANGUAGE MANDATE:
+- Respond in simple, clear, easy-to-understand English.
+- If the user writes or speaks to you in Hindi, Odia, or any other regional language, match their language and reply in that language using simple, accessible words."""
 
+    no_intro_rule = """
+CRITICAL CONVERSATIONAL RULES:
+- NEVER introduce yourself or announce who you are (NEVER say "Hello Officer Raman, I am your...", "Namaste! As your AI...", or "Welcome to Nirdesha...").
+- ONLY greet if the user explicitly greets you (e.g. if the user says "hello", "hi", "namaste", reply with a brief "Hello Officer Raman" or "Namaste!").
+- Otherwise, dive DIRECTLY into the answer immediately without any opening pleasantries or filler.
+- Keep answers short, crisp, concise, and focused on the exact question asked."""
+
+    if role == "guidance":
+        return f"""You are the NIRDESHA AI GUIDANCE ASSISTANT.
+YOUR SOLE ROLE: On-screen website guide and navigation assistant for the Nirdesha portal.
+
+WHAT YOU ANSWER:
+1. Website Navigation: Navigating tabs, 'My Courses & Tracks', Timed Quiz Engine, Revision Cards, and Profile.
+2. Setting Milestones: The 20-day target and 365-day milestone wheel, 14-day streak, and continuity benefits.
+3. 52-Week Learning Heatmap: How the annual grid tracks daily activity and what cell colors mean.
+4. Settings & Account: Editing profile info, avatar uploads, theme switching (System / Bright / Dark), and portal languages.
+
+STRICT BOUNDARY:
+- DO NOT provide academic study guidance, formula derivations, mathematical proofs, or cadre exam tutoring.
+- If asked a study/formula question, reply: "I am your Nirdesha Website Guidance Assistant for website features and navigation. For in-depth statistical coaching, formulas, and cadre exam preparation, please visit the dedicated AI Study Mentor in the Public Learning Dashboard."
+
+STRICT NO-ASTERISK RULE:
+- ABSOLUTELY DO NOT USE ANY ASTERISK SYMBOLS (*) IN YOUR RESPONSE.
+- NEVER use bold markdown with asterisks like **text**. Use clean plain text.
+- NEVER use asterisks for bullet points like * item. Use numbers (1., 2., 3.) or hyphens (- ).
+
+{no_intro_rule}
+{lang_directive}"""
+
+    else:
+        # role == "mentor"
+        return f"""You are the NIRDESHA AI STUDY MENTOR.
+YOUR SOLE ROLE: Academic tutor for Officer S. K. Raman (JSO) for MoSPI statistical examinations, NSSTA curriculum, and SSO promotion benchmarks.
+
+OFFICER CONTEXT:
+- Officer: S. K. Raman (Junior Statistical Officer, SSS Cadre, NSSO Field Operations Division).
+- Streak: 14-day study streak (70% toward 20-day target).
+- Focus Gap: Macroeconomic Deflators (1,385 Elo - 68%, 17% below 85% SSO benchmark).
+- Core Formulas: Horvitz-Thompson Y_HT = Sum(y_i / pi_i); CPI modified Laspeyres base 2012; GDP Deflator = (Nominal/Real)*100; DPDP Act 2023 Sec 8.
+
+WHAT YOU ANSWER:
+1. Statistical Theory & Survey Sampling Design (SRS, Stratified multi-stage, Horvitz-Thompson).
+2. National Accounts & Deflators (CPI vs GDP deflator, supply-use tables, price relatives).
+3. Closing Officer Raman's 17% gap in Macro Deflators for his Senior Statistical Officer promotion.
+4. Python for statistics and DPDP Act compliance.
+
+STRICT BOUNDARY:
+- DO NOT answer website navigation, UI troubleshooting, or portal settings questions.
+- If asked website questions, reply: "I am your dedicated AI Study Mentor for statistical theory and exam preparation. For help with navigating website features, settings, arranging courses, or setting your milestone streak, please ask the Nirdesha AI Guidance Companion on the bottom-right corner of your screen."
+
+{no_intro_rule}
+{lang_directive}"""
 # Fast Stream Generator
 def stream_gemini(messages, system_instruction, api_key, model="gemini-3.5-flash-lite"):
     candidate_models = [model]
@@ -135,6 +189,8 @@ def stream_gemini(messages, system_instruction, api_key, model="gemini-3.5-flash
                             for p in parts:
                                 chunk = p.get("text", "")
                                 if chunk:
+                                    if "ABSOLUTELY DO NOT USE ANY ASTERISK" in system_instruction:
+                                        chunk = chunk.replace("*", "")
                                     yield chunk
                 return
         except Exception as e:
@@ -193,6 +249,42 @@ class NirdeshaAPIHandler(BaseHTTPRequestHandler):
             history = get_user_history(user_id)
             self.send_json(200, {"user_id": user_id, "history": history})
             return
+        # Static File Serving
+        clean_path = path.lstrip("/\\")
+        if not clean_path:
+            clean_path = "main.html"
+
+        file_path = os.path.normpath(os.path.join(BASE_DIR, clean_path))
+        # Security check: must remain inside BASE_DIR
+        if file_path.startswith(BASE_DIR) and os.path.isfile(file_path):
+            ext = os.path.splitext(file_path)[1].lower()
+            mime_types = {
+                ".html": "text/html; charset=utf-8",
+                ".css": "text/css; charset=utf-8",
+                ".js": "application/javascript; charset=utf-8",
+                ".json": "application/json; charset=utf-8",
+                ".svg": "image/svg+xml",
+                ".png": "image/png",
+                ".jpg": "image/jpeg",
+                ".jpeg": "image/jpeg",
+                ".ico": "image/x-icon",
+                ".woff2": "font/woff2",
+                ".woff": "font/woff"
+            }
+            content_type = mime_types.get(ext, "application/octet-stream")
+            try:
+                with open(file_path, "rb") as f:
+                    content = f.read()
+                self.send_response(200)
+                self.send_header("Content-Type", content_type)
+                self.send_header("Content-Length", str(len(content)))
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.send_header("Connection", "close")
+                self.end_headers()
+                self.wfile.write(content)
+                return
+            except Exception as e:
+                print(f"[Error serving {clean_path}]: {e}")
 
         self.send_json(404, {"error": "Not Found"})
 
@@ -209,6 +301,8 @@ class NirdeshaAPIHandler(BaseHTTPRequestHandler):
 
         if path == "/api/chat/clear":
             user_id = payload.get("user_id", "public")
+            role = payload.get("role", "mentor")
+            clear_user_history(f"{user_id}_{role}")
             clear_user_history(user_id)
             self.send_json(200, {"status": "cleared", "user_id": user_id})
             return
@@ -217,7 +311,9 @@ class NirdeshaAPIHandler(BaseHTTPRequestHandler):
         if path == "/api/chat/stream":
             user_id = payload.get("user_id", "public")
             user_message = payload.get("message", "").strip()
-            role = payload.get("role", "mentor")
+            role = payload.get("role", "mentor") # "mentor" or "guidance"
+            language = payload.get("language", "English")
+            session_key = f"{user_id}_{role}"
 
             if not user_message:
                 self.send_json(400, {"error": "Empty message"})
@@ -231,9 +327,9 @@ class NirdeshaAPIHandler(BaseHTTPRequestHandler):
                 self.send_json(200, {"reply": "Please paste your GEMINI_API_KEY in the .env file."})
                 return
 
-            history = get_user_history(user_id)
+            history = get_user_history(session_key)
             history.append({"sender": "user", "text": user_message})
-            system_instruction = build_system_context(user_id, role)
+            system_instruction = build_system_context(user_id, role, language)
 
             # Start SSE Stream
             self.send_response(200)
@@ -262,14 +358,16 @@ class NirdeshaAPIHandler(BaseHTTPRequestHandler):
             final_text = "".join(full_reply)
             if final_text:
                 history.append({"sender": "bot", "text": final_text})
-                save_user_history(user_id, history)
+                save_user_history(session_key, history)
             return
 
         # 2. Standard Fast REST Chat (/api/chat)
         if path == "/api/chat":
             user_id = payload.get("user_id", "public")
             user_message = payload.get("message", "").strip()
-            role = payload.get("role", "mentor")
+            role = payload.get("role", "mentor") # "mentor" or "guidance"
+            language = payload.get("language", "English")
+            session_key = f"{user_id}_{role}"
 
             if not user_message:
                 self.send_json(400, {"error": "Empty message"})
@@ -283,9 +381,9 @@ class NirdeshaAPIHandler(BaseHTTPRequestHandler):
                 self.send_json(200, {"reply": "Please paste your GEMINI_API_KEY in the .env file.", "status": "offline"})
                 return
 
-            history = get_user_history(user_id)
+            history = get_user_history(session_key)
             history.append({"sender": "user", "text": user_message})
-            system_instruction = build_system_context(user_id, role)
+            system_instruction = build_system_context(user_id, role, language)
 
             bot_reply = call_gemini_api(history, system_instruction, api_key, model)
             history.append({"sender": "bot", "text": bot_reply})

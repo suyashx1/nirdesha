@@ -3154,3 +3154,80 @@ body.sidebar-collapsed .admin-nav-icon {
   margin-top: 0.15rem;
 }
 
+
+/* ==========================================================================
+   AI STUDY MENTOR LANGUAGE SELECTOR & STUDY CHIPS
+   ========================================================================== */
+.ai-lang-selector-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.ai-lang-select {
+  background: #001f35;
+  border: 1.5px solid #ea580c;
+  color: #ffffff;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  border-radius: 0px !important;
+  cursor: pointer;
+  outline: none;
+  font-family: inherit;
+  transition: all 0.15s ease;
+}
+
+.ai-lang-select:hover,
+.ai-lang-select:focus {
+  border-color: #fb923c;
+  background: #002b49;
+}
+
+.ai-lang-select option {
+  background: #002b49;
+  color: #ffffff;
+}
+
+.mentor-chips-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.65rem 1.5rem;
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+}
+
+.mentor-chip {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  color: #002b49;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 0px !important;
+  transition: all 0.15s ease;
+}
+
+.mentor-chip:hover {
+  background: #ea580c;
+  border-color: #ea580c;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .mentor-chips-container {
+  background: #0f172a;
+  border-top-color: #1e293b;
+}
+
+[data-theme="dark"] .mentor-chip {
+  background: #1e293b;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .mentor-chip:hover {
+  background: #ea580c;
+  border-color: #ea580c;
+  color: #ffffff;
+}
