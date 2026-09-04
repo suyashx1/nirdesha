@@ -150,7 +150,10 @@
         </a>
 
         <div class="trainee-user-card">
-          <div class="trainee-avatar" id="public-sidebar-avatar">SR</div>
+          <div class="trainee-avatar" id="public-sidebar-avatar">
+            <img id="public-sidebar-avatar-img" src="" alt="Avatar" style="display:none; width:100%; height:100%; object-fit:cover; border-radius:0;">
+            <span id="public-sidebar-avatar-text">SR</span>
+          </div>
           <div class="trainee-user-details">
             <span class="trainee-user-name" id="public-sidebar-name">S. K. Raman</span>
             <span class="trainee-user-role" id="public-sidebar-role">Junior Statistical Officer (JSO)</span>
@@ -675,6 +678,16 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                 <span id="btn-revision-toggle-label">Reveal All Keys</span>
               </button>
+              <button type="button" class="btn-recycle-flashcards" id="btn-view-recycle-flashcards" title="View deleted flashcards (10 days recovery)" style="padding: 0.45rem 0.95rem; font-size: 0.8rem; display: flex; align-items: center; gap: 0.45rem; background: #fff5f5; color: #991b1b; border: 1.5px solid #fca5a5; border-radius: 4px; font-weight: 700; cursor: pointer; transition: all 0.15s ease;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  <line x1="10" y1="11" x2="10" y2="17"></line>
+                  <line x1="14" y1="11" x2="14" y2="17"></line>
+                </svg>
+                <span>Recycle Bin</span>
+                <span class="badge-recycle-count" id="recycle-flashcards-count" style="background: #ef4444; color: #ffffff; padding: 1px 6px; border-radius: 10px; font-size: 0.68rem; font-weight: 800;">0</span>
+              </button>
             </div>
           </div>
 
@@ -703,6 +716,33 @@
           <!-- Dynamic Revision Cards Grid -->
           <div class="notebooklm-grid" id="revision-cards-grid">
             <!-- Dynamically populated flashcards -->
+          </div>
+
+          <!-- Flashcard Recycle Bin View (10 Days Recovery Window) -->
+          <div class="recycle-bin-view" id="flashcard-recycle-bin-view" style="display: none;">
+            <div class="recycle-header-bar" style="background: #fff5f5; border: 1.5px solid #fca5a5; padding: 1rem 1.25rem; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.25rem;">
+              <div>
+                <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: #dc2626; letter-spacing: 0.5px;">Flashcards Recovery Archive</div>
+                <h3 style="font-size: 1.25rem; font-weight: 800; color: #991b1b; margin: 0 0 0.25rem 0;">
+                  Flashcard Recycle Bin (10 Days Recovery)
+                </h3>
+                <p style="font-size: 0.8rem; color: #64748b; margin: 0;">
+                  Deleted flashcards are kept here for 10 days before permanent purging. Restore any card back to your active revision deck anytime.
+                </p>
+              </div>
+              <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                <button type="button" class="btn-empty-recycle" id="btn-empty-flashcard-recycle" title="Permanently purge all recycled flashcards">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                  <span>Empty Bin</span>
+                </button>
+                <button type="button" class="btn-close-recycle" id="btn-close-flashcard-recycle" title="Return to active revision deck">
+                  <span>← Back to Revision Cards</span>
+                </button>
+              </div>
+            </div>
+            <div class="notebooklm-grid" id="recycle-flashcards-grid">
+              <!-- Dynamically populated recycled flashcards -->
+            </div>
           </div>
         </div>
 
@@ -1464,6 +1504,7 @@
                 <div class="profile-identity-bar">
                   <div class="identity-left">
                     <div class="profile-avatar-overlap" id="public-profile-avatar-box">
+                      <img id="public-profile-avatar-img" src="" alt="Officer Profile Picture" style="display:none; width:100%; height:100%; object-fit:cover; position:absolute; inset:0; z-index:1; border-radius:0;">
                       <span id="public-profile-avatar-initials">SR</span>
                       <button type="button" class="avatar-edit-icon-btn" id="public-avatar-quick-btn" title="Change Avatar Photo" aria-label="Change Avatar Photo">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
@@ -1945,6 +1986,21 @@
                     <div class="profile-field-wrap">
                       <input type="text" id="public-profile-initials" class="profile-input-field expandable-field clickable-popup" data-label="Avatar Initials" maxlength="4" value="SR">
                       <button type="button" class="btn-field-expand" data-target="public-profile-initials" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+
+                  <div class="profile-form-group">
+                    <label class="profile-field-label">
+                      <span>Officer Profile Photo</span>
+                    </label>
+                    <div style="display:flex; align-items:center; gap:0.5rem; margin-top:3px;">
+                      <button type="button" class="btn-admin-outline" id="btn-edit-mode-upload-photo" style="padding: 0.45rem 0.85rem; font-size: 0.8rem; display: flex; align-items: center; gap: 0.4rem;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                        <span>Choose Photo</span>
+                      </button>
+                      <button type="button" class="btn-admin-outline" id="btn-edit-mode-remove-photo" style="padding: 0.45rem 0.85rem; font-size: 0.8rem; color: #dc2626; border-color: #fca5a5;">
+                        <span>Remove Photo</span>
+                      </button>
                     </div>
                   </div>
                 </div>

@@ -475,28 +475,58 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function setAvatarVisuals(src, initials) {
     const textInitials = initials || currentOfficerProfile.avatarInitials || 'SR';
+    const avatarImgEl = document.getElementById('public-profile-avatar-img');
+    const sidebarAvatarImg = document.getElementById('public-sidebar-avatar-img');
+    const sidebarAvatarText = document.getElementById('public-sidebar-avatar-text');
+
     if (src) {
       if (dossierAvatarBox) {
-        dossierAvatarBox.style.backgroundImage = `url(${src})`;
-        dossierAvatarBox.style.backgroundSize = 'cover';
-        dossierAvatarBox.style.backgroundPosition = 'center';
+        dossierAvatarBox.classList.add('has-custom-avatar');
+        dossierAvatarBox.style.setProperty('background-image', `url("${src}")`, 'important');
+        dossierAvatarBox.style.setProperty('background-size', 'cover', 'important');
+        dossierAvatarBox.style.setProperty('background-position', 'center', 'important');
       }
-      if (dossierInitials) dossierInitials.style.display = 'none';
-      if (sidebarAvatar) {
-        sidebarAvatar.style.backgroundImage = `url(${src})`;
+      if (avatarImgEl) {
+        avatarImgEl.src = src;
+        avatarImgEl.style.display = 'block';
+      }
+      if (dossierInitials) {
+        dossierInitials.style.display = 'none';
+      }
+      if (sidebarAvatarImg) {
+        sidebarAvatarImg.src = src;
+        sidebarAvatarImg.style.display = 'block';
+      }
+      if (sidebarAvatarText) {
+        sidebarAvatarText.style.display = 'none';
+      }
+      if (sidebarAvatar && !sidebarAvatarImg) {
+        sidebarAvatar.style.backgroundImage = `url("${src}")`;
         sidebarAvatar.style.backgroundSize = 'cover';
-        sidebarAvatar.style.backgroundPosition = 'center';
         sidebarAvatar.textContent = '';
       }
     } else {
       if (dossierAvatarBox) {
-        dossierAvatarBox.style.backgroundImage = 'none';
+        dossierAvatarBox.classList.remove('has-custom-avatar');
+        dossierAvatarBox.style.removeProperty('background-image');
+      }
+      if (avatarImgEl) {
+        avatarImgEl.style.display = 'none';
+        avatarImgEl.src = '';
       }
       if (dossierInitials) {
         dossierInitials.style.display = 'block';
         dossierInitials.textContent = textInitials;
       }
-      if (sidebarAvatar) {
+      if (sidebarAvatarImg) {
+        sidebarAvatarImg.style.display = 'none';
+        sidebarAvatarImg.src = '';
+      }
+      if (sidebarAvatarText) {
+        sidebarAvatarText.style.display = 'inline';
+        sidebarAvatarText.textContent = textInitials;
+      }
+      if (sidebarAvatar && !sidebarAvatarImg) {
         sidebarAvatar.style.backgroundImage = 'none';
         sidebarAvatar.textContent = textInitials;
       }
@@ -910,13 +940,47 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnSaveProfile) btnSaveProfile.addEventListener('click', saveOfficerProfileData);
   if (btnSaveProfileBottom) btnSaveProfileBottom.addEventListener('click', saveOfficerProfileData);
 
-  // Quick Avatar upload
+  // Quick Avatar upload & Edit Mode Photo Handlers
+  const btnEditModeUploadPhoto = document.getElementById('btn-edit-mode-upload-photo');
+  const btnEditModeRemovePhoto = document.getElementById('btn-edit-mode-remove-photo');
+
   if (avatarQuickBtn && avatarFileInput) {
     avatarQuickBtn.addEventListener('click', () => avatarFileInput.click());
+  }
+  if (btnEditModeUploadPhoto && avatarFileInput) {
+    btnEditModeUploadPhoto.addEventListener('click', () => avatarFileInput.click());
+  }
+  if (btnEditModeRemovePhoto) {
+    btnEditModeRemovePhoto.addEventListener('click', () => {
+      currentOfficerProfile.avatarImg = '';
+      try {
+        localStorage.removeItem('nirdesha_public_avatar');
+        localStorage.setItem('nirdesha_officer_profile', JSON.stringify(currentOfficerProfile));
+        localStorage.setItem('nirdesha_public_profile', JSON.stringify(currentOfficerProfile));
+      } catch (err) {}
+      setAvatarVisuals('', currentOfficerProfile.avatarInitials);
+      showNirdeshaToast('Officer profile photo removed. Initials restored.');
+    });
+  }
 
+  if (avatarFileInput) {
     avatarFileInput.addEventListener('change', (e) => {
-      const file = e.target.files[0];
+      const file = e.target.files && e.target.files[0];
       if (!file) return;
+
+      // Validate image format
+      if (!file.type.startsWith('image/')) {
+        alert('Please upload a valid image file (PNG, JPG, WebP, GIF).');
+        avatarFileInput.value = '';
+        return;
+      }
+
+      // 5MB limit
+      if (file.size > 5 * 1024 * 1024) {
+        alert('File size exceeds 5MB limit. Please upload an image under 5MB.');
+        avatarFileInput.value = '';
+        return;
+      }
 
       const reader = new FileReader();
       reader.onload = (event) => {
@@ -930,6 +994,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
           console.warn('Could not persist avatar to localStorage:', err);
         }
+        showNirdeshaToast('✓ Officer profile picture updated successfully!');
       };
       reader.readAsDataURL(file);
     });
@@ -8566,6 +8631,7 @@ Official digital marksheet archived in Nirdesha Competency Cloud.`;
 
   function initRevisionCardsDeckEngine() {
     const STORAGE_KEY = 'nirdesha_revision_flashcards';
+    const RECYCLE_STORAGE_KEY = 'nirdesha_recycled_flashcards';
 
     function loadRevisionDeck() {
       try {
@@ -8595,6 +8661,193 @@ Official digital marksheet archived in Nirdesha Competency Cloud.`;
       updateCounts();
     }
 
+    // ------------------------------------------------------------------------
+    // FLASHCARD RECYCLE BIN (10-DAY RECOVERY SYSTEM - SAME AS NOTES CONCEPT)
+    // ------------------------------------------------------------------------
+    function getRecycledFlashcards() {
+      try {
+        const raw = localStorage.getItem(RECYCLE_STORAGE_KEY);
+        if (raw) {
+          let list = JSON.parse(raw);
+          if (Array.isArray(list)) {
+            // Auto-purge items older than 10 days (10 days * 24h * 3600s * 1000ms)
+            const TEN_DAYS_MS = 10 * 24 * 60 * 60 * 1000;
+            const now = Date.now();
+            list = list.filter(item => (now - (item.deletedAt || now)) <= TEN_DAYS_MS);
+            if (list.length > 10) list = list.slice(0, 10);
+            return list;
+          }
+        }
+      } catch (e) {}
+      return [];
+    }
+
+    function saveRecycledFlashcards(list) {
+      if (list.length > 10) list = list.slice(0, 10);
+      try {
+        localStorage.setItem(RECYCLE_STORAGE_KEY, JSON.stringify(list));
+      } catch (e) {}
+      updateRecycleCount();
+    }
+
+    function updateRecycleCount() {
+      const countBadge = document.getElementById('recycle-flashcards-count');
+      if (countBadge) {
+        const list = getRecycledFlashcards();
+        countBadge.textContent = list.length;
+      }
+    }
+
+    function moveToRecycleFlashcards(card) {
+      const list = getRecycledFlashcards();
+      const recycledItem = {
+        ...card,
+        deletedAt: Date.now()
+      };
+      list.unshift(recycledItem);
+      saveRecycledFlashcards(list);
+    }
+
+    const btnViewRecycle = document.getElementById('btn-view-recycle-flashcards');
+    const recycleView = document.getElementById('flashcard-recycle-bin-view');
+    const cardsGrid = document.getElementById('revision-cards-grid');
+    const cardsToolbar = document.querySelector('.revision-cards-toolbar');
+    const btnCloseRecycle = document.getElementById('btn-close-flashcard-recycle');
+    const btnEmptyRecycle = document.getElementById('btn-empty-flashcard-recycle');
+    const recycleGridEl = document.getElementById('recycle-flashcards-grid');
+
+    function showFlashcardRecycleBin() {
+      if (cardsGrid) cardsGrid.style.display = 'none';
+      if (cardsToolbar) cardsToolbar.style.display = 'none';
+      if (recycleView) recycleView.style.display = 'block';
+      renderRecycleFlashcardsGrid();
+    }
+
+    function hideFlashcardRecycleBin() {
+      if (recycleView) recycleView.style.display = 'none';
+      if (cardsToolbar) cardsToolbar.style.display = 'flex';
+      if (cardsGrid) cardsGrid.style.display = 'grid';
+      renderRevisionCardsUI();
+    }
+
+    function renderRecycleFlashcardsGrid() {
+      if (!recycleGridEl) return;
+      recycleGridEl.innerHTML = '';
+      updateRecycleCount();
+
+      const list = getRecycledFlashcards();
+      if (list.length === 0) {
+        recycleGridEl.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1.5rem; background: #fffafa; border: 1.5px dashed #fca5a5; border-radius: 6px;">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem; color: #991b1b;"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#991b1b" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></div>
+            <h4 style="margin: 0 0 0.35rem 0; font-weight: 800; color: #991b1b;">Flashcard Recycle Bin is Empty</h4>
+            <p style="margin: 0; font-size: 0.82rem; color: #64748b;">
+              Deleted flashcards are kept here for 10 days before automatic purge. Any deleted card can be restored with one click.
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      const TEN_DAYS_MS = 10 * 24 * 60 * 60 * 1000;
+      const now = Date.now();
+
+      list.forEach(card => {
+        const cardEl = document.createElement('div');
+        cardEl.className = 'notebook-card';
+        cardEl.style.borderLeft = '5px solid #dc2626';
+
+        const deletedDate = new Date(card.deletedAt || now).toLocaleDateString(undefined, {
+          month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+        });
+
+        // 10-day recovery calculation
+        const msLeft = Math.max(0, TEN_DAYS_MS - (now - (card.deletedAt || now)));
+        const daysLeft = Math.max(1, Math.ceil(msLeft / (24 * 60 * 60 * 1000)));
+
+        cardEl.innerHTML = `
+          <div>
+            <div class="flashcard-header">
+              <div style="display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;">
+                <span class="notebook-topic" style="color: #dc2626;">${escapeHtml(card.topic || 'Revision')}</span>
+                <span class="recycle-flashcard-countdown">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  <span>${daysLeft} day${daysLeft > 1 ? 's' : ''} recovery left</span>
+                </span>
+              </div>
+              <div style="font-size: 0.7rem; color: #64748b;">Deleted: ${deletedDate}</div>
+            </div>
+
+            <h4 class="notebook-card-title">${escapeHtml(card.title || 'Revision Concept')}</h4>
+
+            <div class="flashcard-question-box" style="margin-bottom: 0.65rem;">
+              <span class="flashcard-question-label">Recall Prompt:</span>
+              ${escapeHtml(card.question || '')}
+            </div>
+
+            <div class="flashcard-key-rule" style="margin-bottom: 0.65rem;">
+              <span class="flashcard-rule-label">KEY TAKEAWAY:</span>
+              <div class="flashcard-rule-text">${escapeHtml(card.summary || '')}</div>
+            </div>
+          </div>
+
+          <div class="flashcard-footer" style="margin-top: auto; padding-top: 0.65rem; border-top: 1px dashed #fca5a5; display: flex; justify-content: space-between; align-items: center;">
+            <button type="button" class="btn-restore-flashcard" title="Restore this flashcard to your revision deck">
+              <span>↺ Restore to Deck</span>
+            </button>
+            <button type="button" class="btn-purge-flashcard" title="Permanently delete this flashcard">
+              <span>✕ Delete Forever</span>
+            </button>
+          </div>
+        `;
+
+        // Restore Handler
+        cardEl.querySelector('.btn-restore-flashcard').addEventListener('click', () => {
+          const restoredCard = { ...card };
+          delete restoredCard.deletedAt;
+
+          revisionDeck.unshift(restoredCard);
+          saveRevisionDeck();
+
+          const updatedList = getRecycledFlashcards().filter(c => c.id !== card.id);
+          saveRecycledFlashcards(updatedList);
+
+          renderRecycleFlashcardsGrid();
+          showNirdeshaToast(`✓ Restored "${escapeHtml(card.title)}" back to your active Revision Cards!`);
+        });
+
+        // Purge Handler
+        cardEl.querySelector('.btn-purge-flashcard').addEventListener('click', () => {
+          if (confirm(`Permanently purge "${card.title}"? This cannot be undone.`)) {
+            const updatedList = getRecycledFlashcards().filter(c => c.id !== card.id);
+            saveRecycledFlashcards(updatedList);
+            renderRecycleFlashcardsGrid();
+            showNirdeshaToast(`Permanently deleted "${escapeHtml(card.title)}".`);
+          }
+        });
+
+        recycleGridEl.appendChild(cardEl);
+      });
+    }
+
+    if (btnViewRecycle) {
+      btnViewRecycle.addEventListener('click', showFlashcardRecycleBin);
+    }
+    if (btnCloseRecycle) {
+      btnCloseRecycle.addEventListener('click', hideFlashcardRecycleBin);
+    }
+    if (btnEmptyRecycle) {
+      btnEmptyRecycle.addEventListener('click', () => {
+        const list = getRecycledFlashcards();
+        if (list.length === 0) return;
+        if (confirm('Permanently purge all deleted flashcards in the Recycle Bin?')) {
+          saveRecycledFlashcards([]);
+          renderRecycleFlashcardsGrid();
+          showNirdeshaToast('Flashcard Recycle Bin emptied.');
+        }
+      });
+    }
+
     let activeFilter = 'all';
     let activeSearch = '';
     let allFlipped = false;
@@ -8609,6 +8862,8 @@ Official digital marksheet archived in Nirdesha Competency Cloud.`;
       if (elPinned) elPinned.textContent = revisionDeck.filter(c => c.isPinned).length;
       if (elNotes) elNotes.textContent = revisionDeck.filter(c => c.isCustom).length;
       if (elCadre) elCadre.textContent = revisionDeck.filter(c => !c.isCustom).length;
+
+      updateRecycleCount();
     }
 
     function renderRevisionCardsUI() {
@@ -8676,6 +8931,7 @@ Official digital marksheet archived in Nirdesha Competency Cloud.`;
           </div>
         `).join('');
 
+        // ALL FLASHCARDS HAVE PIN BUTTON AND DELETE ICON BUTTON
         cardEl.innerHTML = `
           <div>
             <div class="flashcard-header">
@@ -8695,11 +8951,9 @@ Official digital marksheet archived in Nirdesha Competency Cloud.`;
                 <button type="button" class="btn-pin-flashcard ${card.isPinned ? 'active' : ''}" title="${card.isPinned ? 'Unpin from priority revision' : 'Pin for urgent exam revision'}" aria-label="${card.isPinned ? 'Unpin from priority revision' : 'Pin for urgent exam revision'}">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="${card.isPinned ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path></svg>
                 </button>
-                ${card.isCustom ? `
-                  <button type="button" class="btn-del-flashcard" title="Delete Flashcard" aria-label="Delete Flashcard">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                  </button>
-                ` : ''}
+                <button type="button" class="btn-del-flashcard" title="Move to Recycle Bin (10 days recovery)" aria-label="Delete Flashcard">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                </button>
               </div>
             </div>
 
@@ -8759,16 +9013,34 @@ Official digital marksheet archived in Nirdesha Competency Cloud.`;
           });
         }
 
-        // Delete Handler
+        // Delete Handler: Moves to Recycle Bin with 10 days recovery
         const btnDel = cardEl.querySelector('.btn-del-flashcard');
         if (btnDel) {
           btnDel.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (confirm(`Remove "${card.title}" from Revision Cards?`)) {
-              revisionDeck = revisionDeck.filter(c => c.id !== card.id);
-              saveRevisionDeck();
-              renderRevisionCardsUI();
-              showNirdeshaToast(`Removed "${escapeHtml(card.title)}" from Revision Cards.`);
+            moveToRecycleFlashcards(card);
+            revisionDeck = revisionDeck.filter(c => c.id !== card.id);
+            saveRevisionDeck();
+            renderRevisionCardsUI();
+
+            showNirdeshaToast(`✓ "${escapeHtml(card.title)}" moved to Flashcard Recycle Bin (10 days recovery)! <a href="#" class="toast-undo-flashcard" style="color:#fdba74;text-decoration:underline;font-weight:700;margin-left:6px;">Undo / Restore</a>`);
+
+            const undoBtn = document.querySelector('.toast-undo-flashcard');
+            if (undoBtn) {
+              undoBtn.addEventListener('click', (ev) => {
+                ev.preventDefault();
+                const recList = getRecycledFlashcards();
+                const restored = recList.find(c => c.id === card.id);
+                if (restored) {
+                  delete restored.deletedAt;
+                  revisionDeck.unshift(restored);
+                  saveRevisionDeck();
+                  const remaining = recList.filter(c => c.id !== card.id);
+                  saveRecycledFlashcards(remaining);
+                  renderRevisionCardsUI();
+                  showNirdeshaToast(`✓ Restored "${escapeHtml(card.title)}" back to Revision Cards!`);
+                }
+              });
             }
           });
         }
