@@ -65,7 +65,7 @@ window.googleTranslateElementInit = function() {
           <div class="lang-modal-header notranslate" translate="no">
             <div class="lang-modal-title-group notranslate" translate="no">
               <h3 id="lang-modal-title" class="notranslate" translate="no">
-                <span>🌐</span> Select Your Regional Language | अपनी भाषा चुनें
+                <span></span> Select Your Regional Language | अपनी भाषा चुनें
               </h3>
               <p class="lang-modal-subtitle notranslate" translate="no">
                 National Competency Intelligence & Guidance Platform — MoSPI, Government of India

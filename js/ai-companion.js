@@ -61,7 +61,7 @@
           <div class="companion-header-actions">
             <!-- Companion Language Selector -->
             <select class="companion-lang-select" id="companion-lang-select" title="Choose language for AI guidance">
-              <option value="English" selected>🌐 EN</option>
+              <option value="English" selected> EN</option>
               <option value="Hindi">हिंदी</option>
               <option value="Odia">ଓଡ଼ିଆ</option>
               <option value="Bengali">বাংলা</option>
@@ -221,7 +221,7 @@
         if (chatBody) {
           const langMsg = document.createElement('div');
           langMsg.className = 'companion-msg bot';
-          langMsg.innerHTML = `🌐 <strong>Language set to ${companionLanguage}</strong><br>${greeting}`;
+          langMsg.innerHTML = ` <strong>Language set to ${companionLanguage}</strong><br>${greeting}`;
           chatBody.appendChild(langMsg);
           chatBody.scrollTop = chatBody.scrollHeight;
         }
@@ -296,7 +296,7 @@
       // Create bot response message immediately
       const botMsg = document.createElement('div');
       botMsg.className = 'companion-msg bot';
-      botMsg.innerHTML = '<span style="color:#64748b; font-style:italic;">⚡ Thinking...</span>';
+      botMsg.innerHTML = '<span style="color:#64748b; font-style:italic;"> Thinking...</span>';
       chatBody.appendChild(botMsg);
       chatBody.scrollTop = chatBody.scrollHeight;
 

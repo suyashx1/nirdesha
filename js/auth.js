@@ -307,14 +307,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!authPdfShimmer || !authShimmerStatusText) return;
 
     authPdfShimmer.style.display = 'block';
-    authShimmerStatusText.textContent = `⚡ Initializing MoSPI AI Document Extraction Engine for "${file.name}"...`;
+    authShimmerStatusText.textContent = ` Initializing MoSPI AI Document Extraction Engine for "${file.name}"...`;
 
     setTimeout(() => {
-      authShimmerStatusText.textContent = `📄 Parsing PDF structure & official service credentials...`;
+      authShimmerStatusText.textContent = ` Parsing PDF structure & official service credentials...`;
     }, 600);
 
     setTimeout(() => {
-      authShimmerStatusText.textContent = `🤖 Auto-fetching Name, Email, Cadre, Employee Code & Division...`;
+      authShimmerStatusText.textContent = ` Auto-fetching Name, Email, Cadre, Employee Code & Division...`;
     }, 1200);
 
     setTimeout(() => {

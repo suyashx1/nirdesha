@@ -174,6 +174,14 @@ document.addEventListener('DOMContentLoaded', () => {
       window.renderSkillGapGrid();
     }
 
+    if (tabId === 'profile' && typeof window.renderPublicOfficerDossier === 'function') {
+      window.renderPublicOfficerDossier();
+    }
+
+    if (tabId === 'revision-cards' && typeof window.renderRevisionCardsUI === 'function') {
+      window.renderRevisionCardsUI();
+    }
+
     if (window.innerWidth <= 900 && sidebar) {
       sidebar.classList.remove('open');
     }
@@ -185,6 +193,19 @@ document.addEventListener('DOMContentLoaded', () => {
       const tabId = item.getAttribute('data-tab');
       if (tabId) switchTab(tabId);
     });
+  });
+
+  // Fast jump navigation from profile cards to other tabs
+  document.addEventListener('click', (e) => {
+    const jumpBtn = e.target.closest('.btn-card-tab-jump[data-jump-tab]');
+    if (jumpBtn) {
+      e.preventDefault();
+      const targetTab = jumpBtn.getAttribute('data-jump-tab');
+      if (targetTab) {
+        switchTab(targetTab);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
   });
 
   if (window.location.hash) {
@@ -315,7 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (eloDeltaDisplay) eloDeltaDisplay.textContent = `+28 Elo (Domain: Survey Sampling & Theory)`;
 
     const topElo = document.getElementById('trainee-top-elo');
-    if (topElo) topElo.textContent = '⚡ 1,513 Elo (Level 3 - Proficient)';
+    if (topElo) topElo.textContent = '1,513 Elo (Level 3 - Proficient)';
   }
 
   if (quizSubmitBtn) {
@@ -326,94 +347,572 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================================================
-  // 4. INTERACTIVE PROFILE & AVATAR UPLOAD HANDLER
+  // 4. INTERACTIVE OFFICER CADRE PROFILE & EDIT ENGINE (MATCHING OFFICIAL DOSSIER)
   // ==========================================================================
-  const profileName = document.getElementById('public-profile-name');
-  const profileRole = document.getElementById('public-profile-role');
-  const profileEmail = document.getElementById('public-profile-email');
-  const profileRoll = document.getElementById('public-profile-roll');
-  const profileCadre = document.getElementById('public-profile-cadre');
-  const profileDivision = document.getElementById('public-profile-division');
-  const profileSkills = document.getElementById('public-profile-skills');
-  const profileAvatar = document.getElementById('public-profile-avatar');
+  const DEFAULT_PUBLIC_PROFILE = {
+    name: 'S. K. Raman',
+    role: 'Junior Statistical Officer (JSO)',
+    division: 'Field Operations Division (NSSO / FOD)',
+    cadreSeal: 'Verified SSS Cadre',
+    status: 'Supervising NSS 80th Round socio-economic surveys & CAPI data verification in Western Zone • Preparing for Senior Statistical Officer (SSO) 2027 benchmark.',
+    station: 'FOD Regional Office, Pune / New Delhi',
+    tenure: '2024 Batch (2 Years Completed)',
+    email: 'raman.sk@mospi.gov.in',
+    cadre: 'Subordinate Statistical Service (SSS)',
+    ministry: 'MoSPI, Government of India',
+    roll: 'SSS-2024-8891',
+    skills: 'Survey Sampling, CAPI Verification, Macro Deflators, Python Computing, DPDP Act 2023, NSS Frame Design',
+    baseline: '1,485 Elo (Level 3 - Proficient)',
+    avatarInitials: 'SR',
+    avatarImg: '',
+    currentWork: [
+      { title: 'NSS 80th Round Socio-Economic Survey', desc: 'Field supervision across Western Zone sampling units, primary verification of CAPI electronic schedules, and non-response calibration.' },
+      { title: 'Annual Survey of Industries (ASI) 2025-26', desc: 'Factory register audits, capital structure reporting verification, and consistency cross-checks against MCA-21 filings.' },
+      { title: 'Periodic Labour Force Survey (PLFS) Validation', desc: 'Quarterly household enumeration monitoring, sampling weight verification, and preliminary data pipeline validation.' }
+    ],
+    futureWork: [
+      { title: 'Senior Statistical Officer (SSO) Cadre Benchmark', desc: 'Achieving 100% curriculum readiness across NSSTA Module 204 (Macro Deflators) and statutory DPDP compliance protocols.' },
+      { title: 'National Accounts Division (NAD) Transition Desk', desc: 'Planned deployment for supply-use table balance reconciliation and implicit price deflator benchmarking.' }
+    ],
+    socialLinks: {
+      linkedin: 'https://linkedin.com/in/sk-raman-mospi',
+      github: 'https://github.com/sk-raman-stat',
+      twitter: 'https://x.com/sk_raman_stat',
+      website: 'https://raman-statistics.gov.in',
+      research: 'https://igotkarmayogi.gov.in/profile/sk-raman-8891'
+    }
+  };
+
+  let currentOfficerProfile = { ...DEFAULT_PUBLIC_PROFILE };
+
+  // View Mode Elements
+  const profileViewMode = document.getElementById('profile-view-mode');
+  const profileEditMode = document.getElementById('profile-edit-mode');
+  const btnToggleEditProfile = document.getElementById('btn-toggle-edit-profile');
+  const btnCancelEdit = document.getElementById('public-cancel-edit-btn');
+  const btnCancelEditBottom = document.getElementById('public-cancel-edit-btn-bottom');
+  const btnSaveProfile = document.getElementById('public-save-profile-btn');
+  const btnSaveProfileBottom = document.getElementById('public-save-profile-btn-bottom');
+  const profileToast = document.getElementById('public-profile-toast');
+
+  // Form Input Elements
+  const inputProfileName = document.getElementById('public-profile-name');
+  const inputProfileRole = document.getElementById('public-profile-role');
+  const inputProfileCadreSeal = document.getElementById('public-profile-cadre-seal');
+  const inputProfileDivision = document.getElementById('public-profile-division');
+  const inputProfileInitials = document.getElementById('public-profile-initials');
+  const inputProfileStatus = document.getElementById('public-profile-status');
+  const inputProfileCadre = document.getElementById('public-profile-cadre');
+  const inputProfileMinistry = document.getElementById('public-profile-ministry');
+  const inputProfileStation = document.getElementById('public-profile-station');
+  const inputProfileTenure = document.getElementById('public-profile-tenure');
+  const inputProfileEmail = document.getElementById('public-profile-email');
+  const inputProfileRoll = document.getElementById('public-profile-roll');
+  const inputProfileSkills = document.getElementById('public-profile-skills');
+  const inputProfileBaseline = document.getElementById('public-profile-baseline');
+
+  // Social & Web Links Form Inputs
+  const inputSocialLinkedin = document.getElementById('public-profile-social-linkedin');
+  const inputSocialGithub = document.getElementById('public-profile-social-github');
+  const inputSocialTwitter = document.getElementById('public-profile-social-twitter');
+  const inputSocialWebsite = document.getElementById('public-profile-social-website');
+  const inputSocialResearch = document.getElementById('public-profile-social-research');
+
+  // Work & Targets Form Inputs
+  const inputWork1Title = document.getElementById('public-edit-work1-title');
+  const inputWork1Desc = document.getElementById('public-edit-work1-desc');
+  const inputWork2Title = document.getElementById('public-edit-work2-title');
+  const inputWork2Desc = document.getElementById('public-edit-work2-desc');
+  const inputWork3Title = document.getElementById('public-edit-work3-title');
+  const inputWork3Desc = document.getElementById('public-edit-work3-desc');
+  const inputTarget1Title = document.getElementById('public-edit-target1-title');
+  const inputTarget1Desc = document.getElementById('public-edit-target1-desc');
+  const inputTarget2Title = document.getElementById('public-edit-target2-title');
+  const inputTarget2Desc = document.getElementById('public-edit-target2-desc');
+
+  // Dossier Display Elements
+  const dossierName = document.getElementById('public-dossier-name');
+  const dossierSealText = document.getElementById('public-dossier-seal-text');
+  const dossierRole = document.getElementById('public-dossier-role');
+  const dossierStatus = document.getElementById('public-dossier-status');
+  const dossierCadre = document.getElementById('public-dossier-cadre');
+  const dossierMinistry = document.getElementById('public-dossier-ministry');
+  const dossierStation = document.getElementById('public-dossier-station');
+  const dossierTenure = document.getElementById('public-dossier-tenure');
+  const dossierEmail = document.getElementById('public-dossier-email');
+  const dossierRoll = document.getElementById('public-dossier-roll');
+  const dossierBaseline = document.getElementById('public-dossier-baseline');
+  const dossierInitials = document.getElementById('public-profile-avatar-initials');
+  const dossierAvatarBox = document.getElementById('public-profile-avatar-box');
+  const skillsGrid = document.getElementById('public-profile-skills-grid');
+  const currentWorkWrap = document.getElementById('public-profile-current-work-list');
+  const futureWorkWrap = document.getElementById('public-profile-future-work-list');
+  const dossierSocialLinksBar = document.getElementById('public-dossier-social-links');
+  const profileSocialList = document.getElementById('public-profile-social-list');
+  const btnQuickAttachSocial = document.getElementById('btn-quick-attach-social');
+
+  // Sidebar Elements
   const sidebarAvatar = document.getElementById('public-sidebar-avatar');
   const sidebarName = document.getElementById('public-sidebar-name');
   const sidebarRole = document.getElementById('public-sidebar-role');
-  const saveProfileBtn = document.getElementById('public-save-profile-btn');
-  const profileToast = document.getElementById('public-profile-toast');
 
-  const avatarBtn = document.getElementById('public-avatar-btn');
+  // Avatar Upload Elements
+  const avatarQuickBtn = document.getElementById('public-avatar-quick-btn');
   const avatarFileInput = document.getElementById('public-avatar-file-input');
 
-  function loadSavedProfile() {
-    const saved = localStorage.getItem('nirdesha_public_profile');
-    if (saved) {
-      try {
-        const data = JSON.parse(saved);
-        if (profileName && data.name) profileName.value = data.name;
-        if (profileRole && data.role) profileRole.value = data.role;
-        if (profileEmail && data.email) profileEmail.value = data.email;
-        if (profileRoll && data.roll) profileRoll.value = data.roll;
-        if (profileCadre && data.cadre) profileCadre.value = data.cadre;
-        if (profileDivision && data.division) profileDivision.value = data.division;
-        if (profileSkills && data.skills) profileSkills.value = data.skills;
+  function loadOfficerProfileData() {
+    try {
+      const saved = localStorage.getItem('nirdesha_officer_profile') || localStorage.getItem('nirdesha_public_profile');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        currentOfficerProfile = { ...DEFAULT_PUBLIC_PROFILE, ...parsed };
+      }
+    } catch (e) {
+      console.warn('Could not read officer profile from localStorage:', e);
+    }
+    return currentOfficerProfile;
+  }
 
-        if (sidebarName && data.name) sidebarName.textContent = data.name;
-        if (sidebarRole && data.role) sidebarRole.textContent = data.role;
+  function setAvatarVisuals(src, initials) {
+    const textInitials = initials || currentOfficerProfile.avatarInitials || 'SR';
+    if (src) {
+      if (dossierAvatarBox) {
+        dossierAvatarBox.style.backgroundImage = `url(${src})`;
+        dossierAvatarBox.style.backgroundSize = 'cover';
+        dossierAvatarBox.style.backgroundPosition = 'center';
+      }
+      if (dossierInitials) dossierInitials.style.display = 'none';
+      if (sidebarAvatar) {
+        sidebarAvatar.style.backgroundImage = `url(${src})`;
+        sidebarAvatar.style.backgroundSize = 'cover';
+        sidebarAvatar.style.backgroundPosition = 'center';
+        sidebarAvatar.textContent = '';
+      }
+    } else {
+      if (dossierAvatarBox) {
+        dossierAvatarBox.style.backgroundImage = 'none';
+      }
+      if (dossierInitials) {
+        dossierInitials.style.display = 'block';
+        dossierInitials.textContent = textInitials;
+      }
+      if (sidebarAvatar) {
+        sidebarAvatar.style.backgroundImage = 'none';
+        sidebarAvatar.textContent = textInitials;
+      }
+    }
+  }
 
-        if (data.avatarImg) {
-          setAvatarImage(data.avatarImg);
+  function renderPublicOfficerDossier(data) {
+    const p = data || currentOfficerProfile;
+
+    // Header & Identity
+    if (dossierName) dossierName.textContent = p.name;
+    if (dossierSealText) dossierSealText.textContent = p.cadreSeal || 'Verified SSS Cadre';
+    if (dossierRole) dossierRole.textContent = `${p.role} • ${p.division}`;
+    if (dossierStatus) dossierStatus.textContent = `"${p.status}"`;
+
+    // Service Records
+    if (dossierCadre) dossierCadre.textContent = p.cadre;
+    if (dossierMinistry) dossierMinistry.textContent = p.ministry;
+    if (dossierStation) dossierStation.textContent = p.station;
+    if (dossierTenure) dossierTenure.textContent = p.tenure;
+    if (dossierEmail) dossierEmail.textContent = p.email;
+    if (dossierRoll) dossierRoll.textContent = p.roll;
+    if (dossierBaseline) dossierBaseline.textContent = p.baseline || '1,485 Elo (Level 3 - Proficient)';
+
+    // Assessment Parameters Sync (Skill Gap & AI Quiz)
+    const paramEloEl = document.getElementById('profile-param-elo');
+    if (paramEloEl) {
+      const savedElo = localStorage.getItem('nirdesha_trainee_elo');
+      if (savedElo) {
+        paramEloEl.textContent = parseInt(savedElo, 10).toLocaleString();
+      }
+    }
+    const paramReadinessEl = document.getElementById('profile-param-readiness');
+    if (paramReadinessEl) {
+      const savedReadiness = localStorage.getItem('nirdesha_readiness_index');
+      if (savedReadiness) {
+        paramReadinessEl.textContent = savedReadiness + '%';
+      }
+    }
+    const paramBonusEl = document.getElementById('profile-param-bonus');
+    if (paramBonusEl) {
+      const savedBonus = localStorage.getItem('nirdesha_mastery_bonus');
+      if (savedBonus) {
+        paramBonusEl.textContent = '+' + savedBonus + ' pts';
+      }
+    }
+
+    // Avatar
+    const customAvatar = p.avatarImg || localStorage.getItem('nirdesha_public_avatar') || '';
+    setAvatarVisuals(customAvatar, p.avatarInitials);
+
+    // Sidebar sync
+    if (sidebarName) sidebarName.textContent = p.name;
+    if (sidebarRole) sidebarRole.textContent = p.role;
+
+    // Equal-Sized Competency Pills with Tooltips
+    if (skillsGrid) {
+      skillsGrid.innerHTML = '';
+      const skillList = Array.isArray(p.skills)
+        ? p.skills
+        : (typeof p.skills === 'string' ? p.skills.split(',').map(s => s.trim()).filter(Boolean) : []);
+
+      skillList.forEach(s => {
+        const box = document.createElement('div');
+        box.className = 'competency-box';
+        box.setAttribute('data-tooltip', `Verified Competency: ${s} (MoSPI Accredited)`);
+        box.innerHTML = `
+          <div class="competency-box-inner">
+            <span class="competency-icon-dot"></span>
+            <span class="competency-box-title" title="${s}">${s}</span>
+          </div>
+          <span class="competency-badge-verified">✓</span>
+        `;
+        skillsGrid.appendChild(box);
+      });
+    }
+
+    // Current Operational Duties
+    if (currentWorkWrap && p.currentWork) {
+      currentWorkWrap.innerHTML = '';
+      p.currentWork.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'work-item';
+        row.innerHTML = `
+          <div class="work-bullet"></div>
+          <div>
+            <h4 class="work-title">${item.title}</h4>
+            <p class="work-desc">${item.desc}</p>
+          </div>
+        `;
+        currentWorkWrap.appendChild(row);
+      });
+    }
+
+    // Future Transition Targets
+    if (futureWorkWrap && p.futureWork) {
+      futureWorkWrap.innerHTML = '';
+      p.futureWork.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'work-item';
+        row.innerHTML = `
+          <div class="work-bullet orange"></div>
+          <div>
+            <h4 class="work-title">${item.title}</h4>
+            <p class="work-desc">${item.desc}</p>
+          </div>
+        `;
+        futureWorkWrap.appendChild(row);
+      });
+    }
+
+    // Connected Social & Professional Profiles
+    const socialPlatforms = [
+      {
+        key: 'linkedin',
+        name: 'LinkedIn',
+        class: 'chip-linkedin',
+        iconBoxClass: 'icon-linkedin',
+        iconSvg: '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.45 1.45 0 1 0 0-2.9 1.45 1.45 0 0 0 0 2.9m1.39 9.74v-8.37H5.07v8.37h2.78z"/></svg>'
+      },
+      {
+        key: 'github',
+        name: 'GitHub',
+        class: 'chip-github',
+        iconBoxClass: 'icon-github',
+        iconSvg: '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>'
+      },
+      {
+        key: 'twitter',
+        name: 'Twitter / X',
+        class: 'chip-twitter',
+        iconBoxClass: 'icon-twitter',
+        iconSvg: '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>'
+      },
+      {
+        key: 'website',
+        name: 'Portfolio',
+        class: 'chip-website',
+        iconBoxClass: 'icon-website',
+        iconSvg: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>'
+      },
+      {
+        key: 'research',
+        name: 'iGOT / Research',
+        class: 'chip-research',
+        iconBoxClass: 'icon-research',
+        iconSvg: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>'
+      }
+    ];
+
+    const socialData = p.socialLinks || {};
+
+    // 1. Render Header Social Links Bar
+    if (dossierSocialLinksBar) {
+      dossierSocialLinksBar.innerHTML = '';
+      let attachedCount = 0;
+      socialPlatforms.forEach(plat => {
+        const rawUrl = (socialData[plat.key] || '').trim();
+        if (rawUrl) {
+          attachedCount++;
+          const href = /^https?:\/\//i.test(rawUrl) ? rawUrl : 'https://' + rawUrl;
+          const chip = document.createElement('a');
+          chip.href = href;
+          chip.target = '_blank';
+          chip.rel = 'noopener noreferrer';
+          chip.className = `profile-social-chip ${plat.class}`;
+          chip.setAttribute('title', `Open ${plat.name}: ${rawUrl}`);
+          chip.innerHTML = `
+            ${plat.iconSvg}
+            <span>${plat.name}</span>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="opacity:0.7;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          `;
+          dossierSocialLinksBar.appendChild(chip);
         }
-      } catch (err) {
-        console.error("Error loading public profile:", err);
-      }
+      });
+
+      // Quick attach button in the bar
+      const attachBtn = document.createElement('button');
+      attachBtn.type = 'button';
+      attachBtn.className = 'profile-social-chip chip-attach';
+      attachBtn.setAttribute('title', 'Attach or edit social & professional profile links');
+      attachBtn.innerHTML = `
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        <span>${attachedCount > 0 ? '+ Attach More Links' : '+ Attach Social Links'}</span>
+      `;
+      attachBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.openSocialLinksEdit();
+      });
+      dossierSocialLinksBar.appendChild(attachBtn);
+    }
+
+    // 2. Render Left Column Social List
+    if (profileSocialList) {
+      profileSocialList.innerHTML = '';
+      socialPlatforms.forEach(plat => {
+        const rawUrl = (socialData[plat.key] || '').trim();
+        const row = document.createElement('div');
+        row.className = 'profile-social-item';
+
+        if (rawUrl) {
+          const href = /^https?:\/\//i.test(rawUrl) ? rawUrl : 'https://' + rawUrl;
+          const displayUrl = rawUrl.replace(/^https?:\/\/(www\.)?/i, '').replace(/\/$/, '');
+          row.innerHTML = `
+            <div class="profile-social-item-left">
+              <div class="profile-social-icon-box ${plat.iconBoxClass}">
+                ${plat.iconSvg}
+              </div>
+              <div class="profile-social-info">
+                <span class="profile-social-platform">${plat.name}</span>
+                <span class="profile-social-url" title="${rawUrl}">${displayUrl}</span>
+              </div>
+            </div>
+            <a href="${href}" target="_blank" rel="noopener noreferrer" class="profile-social-action-btn" title="Open ${plat.name}">
+              <span>Visit</span>
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            </a>
+          `;
+        } else {
+          row.innerHTML = `
+            <div class="profile-social-item-left">
+              <div class="profile-social-icon-box ${plat.iconBoxClass}" style="opacity: 0.5;">
+                ${plat.iconSvg}
+              </div>
+              <div class="profile-social-info">
+                <span class="profile-social-platform" style="color: #64748b;">${plat.name}</span>
+                <span class="profile-social-url" style="font-style: italic;">Not attached yet</span>
+              </div>
+            </div>
+            <button type="button" class="profile-social-empty-badge" data-key="${plat.key}">
+              + Attach
+            </button>
+          `;
+          const emptyBtn = row.querySelector('.profile-social-empty-badge');
+          if (emptyBtn) {
+            emptyBtn.addEventListener('click', () => {
+              window.openSocialLinksEdit(plat.key);
+            });
+          }
+        }
+        profileSocialList.appendChild(row);
+      });
     }
   }
 
-  function setAvatarImage(src) {
-    if (profileAvatar) {
-      profileAvatar.style.backgroundImage = `url(${src})`;
-      profileAvatar.style.backgroundSize = 'cover';
-      profileAvatar.style.backgroundPosition = 'center';
-      profileAvatar.textContent = '';
+  window.renderPublicOfficerDossier = renderPublicOfficerDossier;
+
+  window.openSocialLinksEdit = function(fieldKey) {
+    if (profileViewMode) profileViewMode.style.display = 'none';
+    if (profileEditMode) profileEditMode.style.display = 'block';
+    const targetSection = document.getElementById('section-edit-social-links');
+    if (targetSection) {
+      targetSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
-    if (sidebarAvatar) {
-      sidebarAvatar.style.backgroundImage = `url(${src})`;
-      sidebarAvatar.style.backgroundSize = 'cover';
-      sidebarAvatar.style.backgroundPosition = 'center';
-      sidebarAvatar.textContent = '';
+    const targetInput = fieldKey ? document.getElementById(`public-profile-social-${fieldKey}`) : inputSocialLinkedin;
+    if (targetInput) {
+      targetInput.focus();
+      targetInput.select();
     }
-  }
+  };
 
-  loadSavedProfile();
-
-  if (saveProfileBtn) {
-    saveProfileBtn.addEventListener('click', () => {
-      const data = {
-        name: profileName ? profileName.value : '',
-        role: profileRole ? profileRole.value : '',
-        email: profileEmail ? profileEmail.value : '',
-        roll: profileRoll ? profileRoll.value : '',
-        cadre: profileCadre ? profileCadre.value : '',
-        division: profileDivision ? profileDivision.value : '',
-        skills: profileSkills ? profileSkills.value : '',
-        avatarImg: localStorage.getItem('nirdesha_public_avatar') || ''
-      };
-
-      localStorage.setItem('nirdesha_public_profile', JSON.stringify(data));
-
-      if (sidebarName) sidebarName.textContent = data.name;
-      if (sidebarRole) sidebarRole.textContent = data.role;
-
-      if (profileToast) {
-        profileToast.style.display = 'block';
-        setTimeout(() => { profileToast.style.display = 'none'; }, 3000);
-      }
+  if (btnQuickAttachSocial) {
+    btnQuickAttachSocial.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.openSocialLinksEdit();
     });
   }
 
-  if (avatarBtn && avatarFileInput) {
-    avatarBtn.addEventListener('click', () => avatarFileInput.click());
+  function populateEditForm(p) {
+    if (inputProfileName) inputProfileName.value = p.name || '';
+    if (inputProfileRole) inputProfileRole.value = p.role || '';
+    if (inputProfileCadreSeal) inputProfileCadreSeal.value = p.cadreSeal || 'Verified SSS Cadre';
+    if (inputProfileDivision) inputProfileDivision.value = p.division || '';
+    if (inputProfileInitials) inputProfileInitials.value = p.avatarInitials || 'SR';
+    if (inputProfileStatus) inputProfileStatus.value = p.status || '';
+    if (inputProfileCadre) inputProfileCadre.value = p.cadre || '';
+    if (inputProfileMinistry) inputProfileMinistry.value = p.ministry || 'MoSPI, Government of India';
+    if (inputProfileStation) inputProfileStation.value = p.station || '';
+    if (inputProfileTenure) inputProfileTenure.value = p.tenure || '';
+    if (inputProfileEmail) inputProfileEmail.value = p.email || '';
+    if (inputProfileRoll) inputProfileRoll.value = p.roll || '';
+    if (inputProfileSkills) {
+      inputProfileSkills.value = Array.isArray(p.skills) ? p.skills.join(', ') : (p.skills || '');
+    }
+    if (inputProfileBaseline) inputProfileBaseline.value = p.baseline || '1,485 Elo (Level 3 - Proficient)';
+
+    // Social & Web Links
+    const s = p.socialLinks || {};
+    if (inputSocialLinkedin) inputSocialLinkedin.value = s.linkedin || '';
+    if (inputSocialGithub) inputSocialGithub.value = s.github || '';
+    if (inputSocialTwitter) inputSocialTwitter.value = s.twitter || '';
+    if (inputSocialWebsite) inputSocialWebsite.value = s.website || '';
+    if (inputSocialResearch) inputSocialResearch.value = s.research || '';
+
+    // Work items
+    if (p.currentWork && p.currentWork[0]) {
+      if (inputWork1Title) inputWork1Title.value = p.currentWork[0].title || '';
+      if (inputWork1Desc) inputWork1Desc.value = p.currentWork[0].desc || '';
+    }
+    if (p.currentWork && p.currentWork[1]) {
+      if (inputWork2Title) inputWork2Title.value = p.currentWork[1].title || '';
+      if (inputWork2Desc) inputWork2Desc.value = p.currentWork[1].desc || '';
+    }
+    if (p.currentWork && p.currentWork[2]) {
+      if (inputWork3Title) inputWork3Title.value = p.currentWork[2].title || '';
+      if (inputWork3Desc) inputWork3Desc.value = p.currentWork[2].desc || '';
+    }
+
+    // Future items
+    if (p.futureWork && p.futureWork[0]) {
+      if (inputTarget1Title) inputTarget1Title.value = p.futureWork[0].title || '';
+      if (inputTarget1Desc) inputTarget1Desc.value = p.futureWork[0].desc || '';
+    }
+    if (p.futureWork && p.futureWork[1]) {
+      if (inputTarget2Title) inputTarget2Title.value = p.futureWork[1].title || '';
+      if (inputTarget2Desc) inputTarget2Desc.value = p.futureWork[1].desc || '';
+    }
+  }
+
+  function saveOfficerProfileData() {
+    const updated = {
+      ...currentOfficerProfile,
+      name: inputProfileName ? inputProfileName.value.trim() : currentOfficerProfile.name,
+      role: inputProfileRole ? inputProfileRole.value.trim() : currentOfficerProfile.role,
+      cadreSeal: inputProfileCadreSeal ? inputProfileCadreSeal.value.trim() : currentOfficerProfile.cadreSeal,
+      division: inputProfileDivision ? inputProfileDivision.value.trim() : currentOfficerProfile.division,
+      avatarInitials: inputProfileInitials ? inputProfileInitials.value.trim().toUpperCase() : currentOfficerProfile.avatarInitials,
+      status: inputProfileStatus ? inputProfileStatus.value.trim() : currentOfficerProfile.status,
+      cadre: inputProfileCadre ? inputProfileCadre.value.trim() : currentOfficerProfile.cadre,
+      ministry: inputProfileMinistry ? inputProfileMinistry.value.trim() : currentOfficerProfile.ministry,
+      station: inputProfileStation ? inputProfileStation.value.trim() : currentOfficerProfile.station,
+      tenure: inputProfileTenure ? inputProfileTenure.value.trim() : currentOfficerProfile.tenure,
+      email: inputProfileEmail ? inputProfileEmail.value.trim() : currentOfficerProfile.email,
+      roll: inputProfileRoll ? inputProfileRoll.value.trim() : currentOfficerProfile.roll,
+      skills: inputProfileSkills ? inputProfileSkills.value.trim() : currentOfficerProfile.skills,
+      baseline: inputProfileBaseline ? inputProfileBaseline.value.trim() : currentOfficerProfile.baseline,
+      socialLinks: {
+        linkedin: inputSocialLinkedin ? inputSocialLinkedin.value.trim() : (currentOfficerProfile.socialLinks?.linkedin || ''),
+        github: inputSocialGithub ? inputSocialGithub.value.trim() : (currentOfficerProfile.socialLinks?.github || ''),
+        twitter: inputSocialTwitter ? inputSocialTwitter.value.trim() : (currentOfficerProfile.socialLinks?.twitter || ''),
+        website: inputSocialWebsite ? inputSocialWebsite.value.trim() : (currentOfficerProfile.socialLinks?.website || ''),
+        research: inputSocialResearch ? inputSocialResearch.value.trim() : (currentOfficerProfile.socialLinks?.research || '')
+      },
+      currentWork: [
+        {
+          title: inputWork1Title ? inputWork1Title.value.trim() : (currentOfficerProfile.currentWork[0]?.title || ''),
+          desc: inputWork1Desc ? inputWork1Desc.value.trim() : (currentOfficerProfile.currentWork[0]?.desc || '')
+        },
+        {
+          title: inputWork2Title ? inputWork2Title.value.trim() : (currentOfficerProfile.currentWork[1]?.title || ''),
+          desc: inputWork2Desc ? inputWork2Desc.value.trim() : (currentOfficerProfile.currentWork[1]?.desc || '')
+        },
+        {
+          title: inputWork3Title ? inputWork3Title.value.trim() : (currentOfficerProfile.currentWork[2]?.title || ''),
+          desc: inputWork3Desc ? inputWork3Desc.value.trim() : (currentOfficerProfile.currentWork[2]?.desc || '')
+        }
+      ],
+      futureWork: [
+        {
+          title: inputTarget1Title ? inputTarget1Title.value.trim() : (currentOfficerProfile.futureWork[0]?.title || ''),
+          desc: inputTarget1Desc ? inputTarget1Desc.value.trim() : (currentOfficerProfile.futureWork[0]?.desc || '')
+        },
+        {
+          title: inputTarget2Title ? inputTarget2Title.value.trim() : (currentOfficerProfile.futureWork[1]?.title || ''),
+          desc: inputTarget2Desc ? inputTarget2Desc.value.trim() : (currentOfficerProfile.futureWork[1]?.desc || '')
+        }
+      ]
+    };
+
+    currentOfficerProfile = updated;
+
+    try {
+      localStorage.setItem('nirdesha_officer_profile', JSON.stringify(updated));
+      localStorage.setItem('nirdesha_public_profile', JSON.stringify(updated));
+    } catch (e) {
+      console.warn('Could not save profile to localStorage:', e);
+    }
+
+    renderPublicOfficerDossier(updated);
+
+    // Switch view
+    if (profileEditMode) profileEditMode.style.display = 'none';
+    if (profileViewMode) profileViewMode.style.display = 'block';
+
+    // Show toast
+    if (profileToast) {
+      profileToast.textContent = '✓ Profile & Cadre Dossier Updated Successfully!';
+      profileToast.style.display = 'block';
+      setTimeout(() => { profileToast.style.display = 'none'; }, 3500);
+    }
+  }
+
+  // Toggle View <-> Edit mode
+  if (btnToggleEditProfile) {
+    btnToggleEditProfile.addEventListener('click', () => {
+      populateEditForm(currentOfficerProfile);
+      if (profileViewMode) profileViewMode.style.display = 'none';
+      if (profileEditMode) profileEditMode.style.display = 'block';
+      window.scrollTo({ top: profileEditMode.offsetTop - 80, behavior: 'smooth' });
+    });
+  }
+
+  const cancelEditHandler = () => {
+    if (profileEditMode) profileEditMode.style.display = 'none';
+    if (profileViewMode) profileViewMode.style.display = 'block';
+  };
+
+  if (btnCancelEdit) btnCancelEdit.addEventListener('click', cancelEditHandler);
+  if (btnCancelEditBottom) btnCancelEditBottom.addEventListener('click', cancelEditHandler);
+
+  if (btnSaveProfile) btnSaveProfile.addEventListener('click', saveOfficerProfileData);
+  if (btnSaveProfileBottom) btnSaveProfileBottom.addEventListener('click', saveOfficerProfileData);
+
+  // Quick Avatar upload
+  if (avatarQuickBtn && avatarFileInput) {
+    avatarQuickBtn.addEventListener('click', () => avatarFileInput.click());
 
     avatarFileInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
@@ -422,12 +921,173 @@ document.addEventListener('DOMContentLoaded', () => {
       const reader = new FileReader();
       reader.onload = (event) => {
         const dataUrl = event.target.result;
-        setAvatarImage(dataUrl);
-        localStorage.setItem('nirdesha_public_avatar', dataUrl);
+        currentOfficerProfile.avatarImg = dataUrl;
+        setAvatarVisuals(dataUrl, currentOfficerProfile.avatarInitials);
+        try {
+          localStorage.setItem('nirdesha_public_avatar', dataUrl);
+          localStorage.setItem('nirdesha_officer_profile', JSON.stringify(currentOfficerProfile));
+          localStorage.setItem('nirdesha_public_profile', JSON.stringify(currentOfficerProfile));
+        } catch (err) {
+          console.warn('Could not persist avatar to localStorage:', err);
+        }
       };
       reader.readAsDataURL(file);
     });
   }
+
+  // Initial load & render
+  loadOfficerProfileData();
+  renderPublicOfficerDossier(currentOfficerProfile);
+
+  // ==========================================================================
+  // 4.5. FULL PARAGRAPH & TEXT EDITOR POP-UP ENGINE FOR PROFILE FIELDS
+  // ==========================================================================
+  const profileExpandModal = document.getElementById('profile-text-expand-modal');
+  const profileExpandTitle = document.getElementById('profile-expand-modal-title');
+  const profileExpandTextarea = document.getElementById('profile-expand-textarea');
+  const profileExpandCounts = document.getElementById('profile-expand-counts');
+  const btnProfileExpandClose = document.getElementById('profile-expand-close-btn');
+  const btnProfileExpandCancel = document.getElementById('profile-expand-cancel-btn');
+  const btnProfileExpandApply = document.getElementById('profile-expand-apply-btn');
+  const toggleClickToPopup = document.getElementById('toggle-click-to-popup');
+
+  let activeExpandInput = null;
+  let originalExpandContent = '';
+
+  function updateExpandCounts(val) {
+    if (!profileExpandCounts) return;
+    const len = val ? val.length : 0;
+    const words = (val && val.trim()) ? val.trim().split(/\s+/).length : 0;
+    profileExpandCounts.textContent = `${len} characters • ${words} words`;
+  }
+
+  function openProfileExpandModal(inputEl) {
+    if (!profileExpandModal || !inputEl) return;
+    activeExpandInput = inputEl;
+    const label = inputEl.getAttribute('data-label') || 
+                  (inputEl.closest('.profile-form-group')?.querySelector('.profile-field-label span')?.textContent) || 
+                  'Field';
+
+    if (profileExpandTitle) {
+      profileExpandTitle.textContent = `Editing: ${label}`;
+    }
+
+    const currentVal = inputEl.value || '';
+    originalExpandContent = currentVal;
+
+    if (profileExpandTextarea) {
+      profileExpandTextarea.value = currentVal;
+      updateExpandCounts(currentVal);
+    }
+
+    profileExpandModal.style.display = 'flex';
+
+    setTimeout(() => {
+      if (profileExpandTextarea) {
+        profileExpandTextarea.focus();
+        profileExpandTextarea.setSelectionRange(profileExpandTextarea.value.length, profileExpandTextarea.value.length);
+      }
+    }, 60);
+  }
+
+  function closeProfileExpandModal(checkDirty = true) {
+    if (!profileExpandModal) return;
+
+    if (checkDirty && profileExpandTextarea && profileExpandTextarea.value !== originalExpandContent) {
+      const discard = confirm("You have unsaved edits in this pop-up dialog. Discard changes and exit?");
+      if (!discard) return;
+    }
+
+    profileExpandModal.style.display = 'none';
+    if (activeExpandInput) {
+      activeExpandInput.focus();
+    }
+  }
+
+  function applyProfileExpandModal() {
+    if (!activeExpandInput || !profileExpandTextarea) return;
+    const newVal = profileExpandTextarea.value;
+    activeExpandInput.value = newVal;
+
+    // Trigger synthetic input & change events
+    activeExpandInput.dispatchEvent(new Event('input', { bubbles: true }));
+    activeExpandInput.dispatchEvent(new Event('change', { bubbles: true }));
+
+    // Visual pulse feedback
+    activeExpandInput.classList.add('field-just-applied');
+    setTimeout(() => activeExpandInput.classList.remove('field-just-applied'), 1300);
+
+    profileExpandModal.style.display = 'none';
+  }
+
+  if (profileExpandTextarea) {
+    profileExpandTextarea.addEventListener('input', () => {
+      updateExpandCounts(profileExpandTextarea.value);
+    });
+
+    profileExpandTextarea.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        applyProfileExpandModal();
+      }
+    });
+  }
+
+  if (btnProfileExpandApply) {
+    btnProfileExpandApply.addEventListener('click', applyProfileExpandModal);
+  }
+
+  if (btnProfileExpandClose) {
+    btnProfileExpandClose.addEventListener('click', () => closeProfileExpandModal(true));
+  }
+
+  if (btnProfileExpandCancel) {
+    btnProfileExpandCancel.addEventListener('click', () => closeProfileExpandModal(true));
+  }
+
+  // Backdrop click auto-dismiss with unsaved warning
+  if (profileExpandModal) {
+    profileExpandModal.addEventListener('click', (e) => {
+      if (e.target === profileExpandModal) {
+        closeProfileExpandModal(true);
+      }
+    });
+  }
+
+  // Global ESC key listener for pop-up modal
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && profileExpandModal && profileExpandModal.style.display === 'flex') {
+      closeProfileExpandModal(true);
+    }
+  });
+
+  // Wire all input / textarea clicks & expand buttons
+  function initProfileExpandTriggers() {
+    const editContainer = document.getElementById('profile-edit-mode');
+    if (!editContainer) return;
+
+    // Expand two-arrow icon buttons [ ⤢ ]
+    editContainer.querySelectorAll('.btn-field-expand').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const targetId = btn.getAttribute('data-target');
+        const targetEl = document.getElementById(targetId);
+        if (targetEl) openProfileExpandModal(targetEl);
+      });
+    });
+
+    // Clicking any input or textarea in the form
+    editContainer.querySelectorAll('.profile-input-field').forEach(inputEl => {
+      inputEl.addEventListener('click', () => {
+        if (!toggleClickToPopup || toggleClickToPopup.checked) {
+          openProfileExpandModal(inputEl);
+        }
+      });
+    });
+  }
+
+  initProfileExpandTriggers();
 
   // ==========================================================================
   // 5. DOCUMENT DROP AI EXTRACTION PIPELINE (PHASE 2 PARSER)
@@ -472,25 +1132,35 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!pdfShimmer || !shimmerStatusText) return;
 
     pdfShimmer.style.display = 'block';
-    shimmerStatusText.textContent = `⚡ Initializing MoSPI AI Document Extraction Engine for "${file.name}"...`;
+    shimmerStatusText.textContent = `Initializing MoSPI AI Document Extraction Engine for "${file.name}"...`;
 
     setTimeout(() => {
-      shimmerStatusText.textContent = `📄 Parsing PDF structure & service credentials...`;
+      shimmerStatusText.textContent = `Parsing PDF structure & service credentials...`;
     }, 600);
 
     setTimeout(() => {
-      shimmerStatusText.textContent = `🤖 Auto-populating Cadre, Division & Baseline Skills...`;
+      shimmerStatusText.textContent = `Auto-populating Cadre, Division & Baseline Skills...`;
     }, 1200);
 
     setTimeout(() => {
       pdfShimmer.style.display = 'none';
 
-      if (profileCadre) profileCadre.value = "Subordinate Statistical Service (SSS Cadre)";
-      if (profileDivision) profileDivision.value = "NSSO Field Operations Division (FOD), Regional Office";
-      if (profileSkills) profileSkills.value = "Survey Sampling Theory, CAPI Tablet Operations, Python Computing, DPDP Compliance";
+      currentOfficerProfile.cadre = "Subordinate Statistical Service (SSS Cadre)";
+      currentOfficerProfile.division = "NSSO Field Operations Division (FOD), Regional Office";
+      currentOfficerProfile.skills = "Survey Sampling Theory, CAPI Tablet Operations, Python Computing, DPDP Compliance";
+
+      try {
+        localStorage.setItem('nirdesha_officer_profile', JSON.stringify(currentOfficerProfile));
+        localStorage.setItem('nirdesha_public_profile', JSON.stringify(currentOfficerProfile));
+      } catch (e) {
+        console.warn('Could not persist extracted profile:', e);
+      }
+
+      renderPublicOfficerDossier(currentOfficerProfile);
+      populateEditForm(currentOfficerProfile);
 
       if (profileToast) {
-        profileToast.textContent = `✓ AI Extracted Profile Data from "${file.name}" — Review & Click Save!`;
+        profileToast.textContent = `✓ AI Extracted Profile Data from "${file.name}" — Service Dossier Updated!`;
         profileToast.style.display = 'block';
         setTimeout(() => { profileToast.style.display = 'none'; }, 4000);
       }
@@ -580,7 +1250,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (traineeChatLog) {
         const langNotice = document.createElement('div');
         langNotice.className = 'chat-bubble bot';
-        langNotice.innerHTML = `🌐 <strong>Language set to ${currentMentorLang}</strong><br>${greeting}`;
+        langNotice.innerHTML = `<strong>Language set to ${currentMentorLang}</strong><br>${greeting}`;
         traineeChatLog.appendChild(langNotice);
         traineeChatLog.scrollTop = traineeChatLog.scrollHeight;
       }
@@ -770,7 +1440,7 @@ document.addEventListener('DOMContentLoaded', () => {
         confirmBubble.innerHTML = `
           <div style="border-left: 3px solid #ea580c; padding-left: 0.75rem;">
             <strong style="color: #002b49; font-size: 0.95rem; display: block; margin-bottom: 4px;">
-              🎯 Custom Quiz Generated: "${escapeHtml(newQuiz.title)}"
+              Custom Quiz Generated: "${escapeHtml(newQuiz.title)}"
             </strong>
             <p style="font-size: 0.82rem; color: #334155; margin: 0 0 0.75rem 0;">
               Generated with parameters: <strong>${newQuiz.questions.length} Questions</strong> • <strong>${detectedDiff}</strong> • <strong>${newQuiz.topic}</strong>.
@@ -817,7 +1487,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const botBubble = document.createElement('div');
     botBubble.className = 'chat-bubble bot';
-    botBubble.innerHTML = '<span style="color:#64748b; font-style:italic;">⚡ Thinking...</span>';
+    botBubble.innerHTML = '<span style="color:#64748b; font-style:italic;">Thinking...</span>';
     traineeChatLog.appendChild(botBubble);
     traineeChatLog.scrollTop = traineeChatLog.scrollHeight;
 
@@ -1831,7 +2501,7 @@ document.addEventListener('DOMContentLoaded', () => {
         summaryDaysCount.style.color = '#dc2626';
       }
       if (summaryStreakDiff) {
-        summaryStreakDiff.textContent = '⚠️ Milestone cannot exceed 365 days (1 year maximum allowed).';
+        summaryStreakDiff.textContent = 'Milestone cannot exceed 365 days (1 year maximum allowed).';
         summaryStreakDiff.style.color = '#dc2626';
       }
       if (btnConfirmMilestone) {
@@ -1910,8 +2580,16 @@ document.addEventListener('DOMContentLoaded', () => {
     buildWheels();
   }
 
-  function closeModal() {
+  function closeModal(force) {
     if (!modal) return;
+    if (!force) {
+      const descInput = document.getElementById('streak-milestone-desc');
+      if (descInput && descInput.value && descInput.value.trim().length > 0) {
+        if (!confirm("You have unsaved milestone target notes. Discard changes and exit?")) {
+          return;
+        }
+      }
+    }
     modal.style.display = 'none';
     document.body.style.overflow = '';
     if (sliderTrack) {
@@ -2387,7 +3065,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="elab-progress-wrapper">
             <div class="elab-progress-label">
               <span>Progress: ${progress}%</span>
-              <span>⏱ ${project.estimatedTime}</span>
+              <span>${project.estimatedTime}</span>
             </div>
             <div class="elab-progress-bar">
               <div class="elab-progress-fill" style="width: ${progress}%;"></div>
@@ -2436,21 +3114,21 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
 
         <div>
-          <h4 style="font-size:0.95rem; font-weight:800; color:#002b49; margin:0 0 0.5rem 0;">🎯 Learning Objectives</h4>
+          <h4 style="font-size:0.95rem; font-weight:800; color:#002b49; margin:0 0 0.5rem 0;">Learning Objectives</h4>
           <ul style="margin:0; padding-left:1.25rem; font-size:0.85rem; color:#475569; line-height:1.6;">
             ${project.objectives.map(obj => `<li>${obj}</li>`).join('')}
           </ul>
         </div>
 
         <div>
-          <h4 style="font-size:0.95rem; font-weight:800; color:#002b49; margin:0 0 0.5rem 0;">📋 Prerequisites & Requirements</h4>
+          <h4 style="font-size:0.95rem; font-weight:800; color:#002b49; margin:0 0 0.5rem 0;">Prerequisites & Requirements</h4>
           <ul style="margin:0; padding-left:1.25rem; font-size:0.85rem; color:#475569; line-height:1.6;">
             ${project.requirements.map(req => `<li>${req}</li>`).join('')}
           </ul>
         </div>
 
         <div>
-          <h4 style="font-size:0.95rem; font-weight:800; color:#002b49; margin:0 0 0.75rem 0;">✅ Step-by-Step Checkpoints</h4>
+          <h4 style="font-size:0.95rem; font-weight:800; color:#002b49; margin:0 0 0.75rem 0;">Step-by-Step Checkpoints</h4>
           <div style="display:flex; flex-direction:column; gap:0.5rem;">
             ${project.tasks.map((task, idx) => `
               <label class="elab-task-item">
@@ -2466,7 +3144,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
 
         <div>
-          <h4 style="font-size:0.95rem; font-weight:800; color:#002b49; margin:0 0 0.5rem 0;">📚 Resources & Help</h4>
+          <h4 style="font-size:0.95rem; font-weight:800; color:#002b49; margin:0 0 0.5rem 0;">Resources & Help</h4>
           <ul style="margin:0; padding-left:1.25rem; font-size:0.85rem; color:#0284c7; line-height:1.6;">
             ${project.resources.map(res => `<li><a href="#" style="color:#0284c7; font-weight:600;">${res}</a></li>`).join('')}
           </ul>
@@ -2595,7 +3273,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const clone = bubble.cloneNode(true);
         const actions = clone.querySelector('.ai-msg-actions');
         if (actions) actions.remove();
-        const textToCopy = clone.innerText.replace('⚡ Thinking...', '').trim();
+        const textToCopy = clone.innerText.replace('Thinking...', '').trim();
         try {
           await navigator.clipboard.writeText(textToCopy);
           copyBtn.classList.add('is-copied');
@@ -2624,7 +3302,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const actions = clone.querySelector('.ai-msg-actions');
         if (actions) actions.remove();
         const formattedHtml = clone.innerHTML;
-        const plainText = clone.innerText.replace('⚡ Thinking...', '').trim();
+        const plainText = clone.innerText.replace('Thinking...', '').trim();
 
         let noteTitle = bubble.getAttribute('data-query') || '';
         if (!noteTitle) {
@@ -2840,7 +3518,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (notesInNb.length === 0) {
         notesGridEl.innerHTML = `
           <div class="empty-notes-prompt">
-            <div class="empty-notes-icon">📖</div>
+            <div class="empty-notes-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></div>
             <h4 style="margin: 0 0 0.5rem 0; font-weight: 800; color: #002b49;">No Notes Saved Yet</h4>
             <p style="margin: 0; font-size: 0.85rem;">
               ${currentSearchTerm ? 'No notes matched your search query.' : 'Click the <strong>Save in Notes</strong> icon below any AI Study Mentor response to store formulas and explanations here.'}
@@ -2860,7 +3538,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let moveOptionsHtml = '';
         notesState.notebooks.forEach(nb => {
           const selected = nb.id === note.notebookId ? 'selected' : '';
-          moveOptionsHtml += `<option value="${nb.id}" ${selected}>📁 ${escapeHtml(nb.name)}</option>`;
+          moveOptionsHtml += `<option value="${nb.id}" ${selected}>${escapeHtml(nb.name)}</option>`;
         });
 
         card.innerHTML = `
@@ -2870,6 +3548,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 ${escapeHtml(note.title || 'Study Note')}
               </h4>
               <div class="note-card-controls">
+                <button type="button" class="btn-note-gen-flashcard" title="Convert important parts into Revision Flashcard" aria-label="Convert into Revision Flashcard">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="M12 4v16"></path></svg>
+                  <span>Flashcard</span>
+                </button>
                 <button type="button" class="btn-pin-note ${note.isPinned ? 'active' : ''}" title="${note.isPinned ? 'Unpin note' : 'Pin note'}" aria-label="${note.isPinned ? 'Unpin note' : 'Pin note'}">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="${note.isPinned ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path></svg>
                 </button>
@@ -2895,6 +3577,29 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
           </div>
         `;
+
+        const btnGenFc = card.querySelector('.btn-note-gen-flashcard');
+        if (btnGenFc) {
+          btnGenFc.addEventListener('click', () => {
+            const activeNb = getActiveNotebook();
+            const flashcard = extractRevisionFlashcard(note, activeNb ? activeNb.name : 'Study Notes');
+            if (typeof window.addFlashcardToRevisionDeck === 'function') {
+              window.addFlashcardToRevisionDeck(flashcard);
+            }
+            btnGenFc.innerHTML = '✓ Added!';
+            btnGenFc.style.background = '#16a34a';
+            btnGenFc.style.color = '#ffffff';
+            btnGenFc.style.borderColor = '#16a34a';
+            setTimeout(() => {
+              btnGenFc.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="M12 4v16"></path></svg><span>Flashcard</span>`;
+              btnGenFc.style.background = '';
+              btnGenFc.style.color = '';
+              btnGenFc.style.borderColor = '';
+            }, 1800);
+
+            showNirdeshaToast(`✓ High-Yield Revision Flashcard created for "${escapeHtml(note.title || 'Note')}"! <a href="#revision-cards" class="toast-tab-link" style="color:#fdba74;text-decoration:underline;font-weight:700;margin-left:6px;">View in Revision Cards →</a>`);
+          });
+        }
 
         const btnPin = card.querySelector('.btn-pin-note');
         if (btnPin) {
@@ -3009,10 +3714,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
+      function attemptCloseNotebook() {
+        const val = input.value.trim();
+        if (val && val !== currentVal) {
+          if (!confirm("You have an unsaved notebook folder name. Discard changes and exit?")) {
+            return;
+          }
+        }
+        closeModal();
+      }
+
       confirmBtn.onclick = (e) => { e.preventDefault(); handleConfirm(); };
-      cancelBtn.onclick = (e) => { e.preventDefault(); closeModal(); };
-      closeBtn.onclick = (e) => { e.preventDefault(); closeModal(); };
-      modal.onclick = (e) => { if (e.target === modal) closeModal(); };
+      cancelBtn.onclick = (e) => { e.preventDefault(); attemptCloseNotebook(); };
+      closeBtn.onclick = (e) => { e.preventDefault(); attemptCloseNotebook(); };
+      modal.onclick = (e) => { if (e.target === modal) attemptCloseNotebook(); };
       input.onkeydown = (e) => {
         if (e.key === 'Enter') {
           e.preventDefault();
@@ -3562,7 +4277,7 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
       if (list.length === 0) {
         recycleGridEl.innerHTML = `
           <div style="grid-column: 1 / -1; text-align: center; padding: 3.5rem 1.5rem; background: #fffafa; border: 1.5px dashed #fca5a5; border-radius: 6px;">
-            <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">🗑️</div>
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem; color: #991b1b;"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#991b1b" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></div>
             <h4 style="margin: 0 0 0.35rem 0; font-weight: 800; color: #991b1b;">Recycle Bin is Empty</h4>
             <p style="margin: 0; font-size: 0.82rem; color: #64748b;">
               Deleted notes and saved chat sessions will appear here (retains up to 10 latest deleted items).
@@ -3662,6 +4377,131 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
       }
     };
 
+    // ----------------------------------------------------------------------
+    // NOTEBOOK FLASHCARDS GENERATION MODAL
+    // ----------------------------------------------------------------------
+    const btnGenNbFlashcards = document.getElementById('btn-gen-notebook-flashcards');
+    const genModal = document.getElementById('generate-flashcards-modal');
+    const genModalClose = document.getElementById('btn-close-flashcard-modal');
+    const genModalCancel = document.getElementById('btn-cancel-flashcard-modal');
+    const genModalConfirm = document.getElementById('btn-confirm-generate-flashcards');
+    const genModalNbName = document.getElementById('flashcard-modal-notebook-name');
+    const genModalScopeAll = document.getElementById('scope-all-notes');
+    const genModalScopeSelected = document.getElementById('scope-selected-notes');
+    const genModalChecklist = document.getElementById('flashcard-notes-checklist');
+    const genModalCount = document.getElementById('flashcard-modal-selection-count');
+
+    function openFlashcardGenModal() {
+      if (!genModal) return;
+      const activeNb = getActiveNotebook();
+      const notesInNb = notesState.notes.filter(n => n.notebookId === activeNb.id);
+
+      if (genModalNbName) genModalNbName.textContent = activeNb.name;
+      if (genModalScopeAll) genModalScopeAll.checked = true;
+
+      renderFlashcardChecklist(notesInNb);
+      updateFlashcardSelectionCount(notesInNb);
+      genModal.style.display = 'flex';
+    }
+
+    function closeFlashcardGenModal() {
+      if (genModal) genModal.style.display = 'none';
+    }
+
+    function renderFlashcardChecklist(notesInNb) {
+      if (!genModalChecklist) return;
+      genModalChecklist.innerHTML = '';
+
+      if (notesInNb.length === 0) {
+        genModalChecklist.innerHTML = '<div style="font-size:0.8rem; color:#64748b; padding:0.5rem;">No notes in this notebook yet to convert into flashcards.</div>';
+        return;
+      }
+
+      notesInNb.forEach((note, idx) => {
+        const row = document.createElement('label');
+        row.style.cssText = 'display:flex; align-items:center; gap:0.5rem; font-size:0.82rem; color:#0f172a; padding:0.35rem 0.4rem; border-radius:4px; cursor:pointer; transition:background 0.12s ease;';
+        row.addEventListener('mouseenter', () => row.style.background = '#f1f5f9');
+        row.addEventListener('mouseleave', () => row.style.background = 'transparent');
+
+        row.innerHTML = `
+          <input type="checkbox" class="chk-flashcard-note" data-note-id="${note.id}" checked style="accent-color:#ea580c; width:15px; height:15px;">
+          <span style="font-weight:700; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(note.title || 'Note')}">
+            ${idx + 1}. ${escapeHtml(note.title || 'Untitled Note')}
+          </span>
+          <span style="font-size:0.68rem; color:#64748b; background:#f1f5f9; padding:2px 6px; border-radius:3px;">
+            ${(note.tags && note.tags[0]) || 'Revision'}
+          </span>
+        `;
+        genModalChecklist.appendChild(row);
+      });
+
+      genModalChecklist.querySelectorAll('.chk-flashcard-note').forEach(chk => {
+        chk.addEventListener('change', () => {
+          updateFlashcardSelectionCount(notesInNb);
+        });
+      });
+    }
+
+    function updateFlashcardSelectionCount(notesInNb) {
+      if (!genModalCount) return;
+      const checkedBoxes = genModalChecklist ? genModalChecklist.querySelectorAll('.chk-flashcard-note:checked') : [];
+      genModalCount.textContent = `${checkedBoxes.length} of ${notesInNb.length} Notes Selected`;
+    }
+
+    if (btnGenNbFlashcards) {
+      btnGenNbFlashcards.addEventListener('click', openFlashcardGenModal);
+    }
+    if (genModalClose) genModalClose.addEventListener('click', closeFlashcardGenModal);
+    if (genModalCancel) genModalCancel.addEventListener('click', closeFlashcardGenModal);
+
+    if (genModal) {
+      genModal.addEventListener('click', (e) => {
+        if (e.target === genModal) closeFlashcardGenModal();
+      });
+    }
+
+    if (genModalScopeAll && genModalScopeSelected) {
+      genModalScopeAll.addEventListener('change', () => {
+        if (genModalScopeAll.checked && genModalChecklist) {
+          genModalChecklist.querySelectorAll('.chk-flashcard-note').forEach(c => c.checked = true);
+          const activeNb = getActiveNotebook();
+          const notesInNb = notesState.notes.filter(n => n.notebookId === activeNb.id);
+          updateFlashcardSelectionCount(notesInNb);
+        }
+      });
+    }
+
+    if (genModalConfirm) {
+      genModalConfirm.addEventListener('click', () => {
+        const activeNb = getActiveNotebook();
+        const notesInNb = notesState.notes.filter(n => n.notebookId === activeNb.id);
+
+        let selectedNotes = [];
+        if (genModalScopeAll && genModalScopeAll.checked) {
+          selectedNotes = notesInNb;
+        } else {
+          const checkedIds = new Set(
+            Array.from(genModalChecklist.querySelectorAll('.chk-flashcard-note:checked'))
+              .map(c => c.getAttribute('data-note-id'))
+          );
+          selectedNotes = notesInNb.filter(n => checkedIds.has(n.id));
+        }
+
+        if (selectedNotes.length === 0) {
+          alert('Please select at least one note to generate flashcards.');
+          return;
+        }
+
+        const generatedCards = selectedNotes.map(n => extractRevisionFlashcard(n, activeNb.name));
+        if (typeof window.addFlashcardsBatchToRevisionDeck === 'function') {
+          window.addFlashcardsBatchToRevisionDeck(generatedCards);
+        }
+
+        closeFlashcardGenModal();
+        showNirdeshaToast(`✓ ${generatedCards.length} Revision Flashcard${generatedCards.length > 1 ? 's' : ''} generated from "${escapeHtml(activeNb.name)}"! <a href="#revision-cards" class="toast-tab-link" style="color:#fdba74;text-decoration:underline;font-weight:700;margin-left:6px;">View in Revision Cards →</a>`);
+      });
+    }
+
     renderNotesUI();
   }
 
@@ -3731,13 +4571,22 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
       if (chkExam) chkExam.checked = !!currentSettings.includeExamTips;
     }
 
+    let originalPersonaSnapshot = '';
     function openPersonaModal() {
       currentSettings = getAiPersonalizationSettings();
+      originalPersonaSnapshot = JSON.stringify(currentSettings);
       updateModalUI();
       modal.style.display = 'flex';
     }
 
     function closePersonaModal() {
+      if (originalPersonaSnapshot && JSON.stringify(currentSettings) !== originalPersonaSnapshot) {
+        if (!confirm("You have unsaved AI Study Mentor preference changes. Discard changes and exit?")) {
+          return;
+        }
+        currentSettings = JSON.parse(originalPersonaSnapshot);
+        updateModalUI();
+      }
       modal.style.display = 'none';
     }
 
@@ -3937,7 +4786,7 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
       if (mentorConvos.length === 0) {
         historyList.innerHTML = `
           <div style="text-align: center; padding: 2.5rem 1rem; color: #64748b; font-size: 0.8rem;">
-            <div style="font-size: 1.8rem; margin-bottom: 0.5rem; opacity: 0.6;">💬</div>
+            <div style="margin-bottom: 0.5rem;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></div>
             <strong style="color: #002b49; display: block; margin-bottom: 4px;">No Past Conversations</strong>
             <span>Ask any question to your AI Mentor to begin recording up to 10 past sessions.</span>
           </div>
@@ -4619,6 +5468,13 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
     }
 
     function closeRemindModal() {
+      const customNote = document.getElementById('remind-custom-note');
+      if (customNote && customNote.value.trim().length > 0) {
+        if (!confirm("You have an unsaved reminder note. Discard changes and exit?")) {
+          return;
+        }
+        customNote.value = '';
+      }
       if (remindModal) remindModal.style.display = 'none';
       activeRemindNotifId = null;
     }
@@ -4946,7 +5802,7 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
     wizardBubble.innerHTML = `
       <div class="claude-quiz-wizard-card" id="active-quiz-wizard">
         <div class="wizard-header-title">
-          <span style="font-size: 1.25rem;">🧠</span>
+          <span class="wizard-icon" style="display:inline-flex; align-items:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#002b49" stroke-width="2"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z"/><line x1="9" y1="21" x2="15" y2="21"/></svg></span>
           <span>Interactive Cadre Quiz Architect</span>
         </div>
         <p style="font-size: 0.8rem; color: #64748b; margin: 0;">
@@ -4957,10 +5813,10 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
         <div>
           <div class="wizard-section-title">1. Assessment Objective</div>
           <div class="wizard-pill-grid" id="wiz-goal-grid">
-            <button type="button" class="wizard-pill-opt selected" data-val="Exam Prep (SSO/JSO Cadre)">🎯 Exam Prep (SSO/JSO)</button>
-            <button type="button" class="wizard-pill-opt" data-val="Interview Prep">💼 Interview Drill</button>
-            <button type="button" class="wizard-pill-opt" data-val="Practical Evaluation">📊 Practical Evaluation</button>
-            <button type="button" class="wizard-pill-opt" data-val="Random Fast Drill">🎲 Random Fast Drill</button>
+            <button type="button" class="wizard-pill-opt selected" data-val="Exam Prep (SSO/JSO Cadre)">Exam Prep (SSO/JSO)</button>
+            <button type="button" class="wizard-pill-opt" data-val="Interview Prep">Interview Drill</button>
+            <button type="button" class="wizard-pill-opt" data-val="Practical Evaluation">Practical Evaluation</button>
+            <button type="button" class="wizard-pill-opt" data-val="Random Fast Drill">Random Fast Drill</button>
           </div>
         </div>
 
@@ -5031,10 +5887,10 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
         <!-- Actions -->
         <div class="wizard-actions-row">
           <button type="button" class="btn-wizard-random" id="btn-wizard-random">
-            🎲 Random Smart Fill
+            Random Smart Fill
           </button>
           <button type="button" class="btn-wizard-submit" id="btn-wizard-submit">
-            🚀 Create & Push to AI Quiz
+            Create & Push to AI Quiz
           </button>
         </div>
       </div>
@@ -5132,7 +5988,7 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
         confirmBubble.innerHTML = `
           <div style="border-left: 3px solid #ea580c; padding-left: 0.75rem;">
             <strong style="color: #002b49; font-size: 0.95rem; display: block; margin-bottom: 4px;">
-              🎉 Custom Quiz Ready: "${escapeHtml(newQuiz.title)}"
+              Custom Quiz Ready: "${escapeHtml(newQuiz.title)}"
             </strong>
             <p style="font-size: 0.82rem; color: #334155; margin: 0 0 0.75rem 0;">
               ${newQuiz.questions.length} Questions • ${diff} • Timing: ${newQuiz.questionTime ? newQuiz.questionTime + 's/Q' : 'Total Exam Timer'}.
@@ -5354,8 +6210,8 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
           <div class="custom-quiz-card-meta">
             <span class="custom-quiz-tag" style="color: #ea580c; background: #fff7ed;">${escapeHtml(quiz.difficulty || 'Standard')}</span>
             <span class="custom-quiz-tag">${quiz.questions ? quiz.questions.length : 5} Questions</span>
-            <span class="custom-quiz-tag">⏱️ ${timeLabel}</span>
-            <span class="custom-quiz-tag">⚡ Speed Points Active</span>
+            <span class="custom-quiz-tag">${timeLabel}</span>
+            <span class="custom-quiz-tag">Speed Bonus Active</span>
           </div>
         </div>
         <button type="button" class="btn-launch-custom-quiz">
@@ -5677,7 +6533,7 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
     if (proctorQTextEl) {
       proctorQTextEl.innerHTML = `
         <div style="text-align:center; padding: 1.5rem 0;">
-          <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎉</div>
+          
           <h2 style="font-size: 1.45rem; font-weight: 900; color: #002b49; margin: 0 0 4px 0;">Assessment Completed!</h2>
           <p style="font-size: 0.85rem; color: #64748b; margin: 0 0 1.25rem 0;">
             Accuracy: <strong>${accuracy}% (${correctCount}/${totalCount})</strong> • Speed Bonus: <strong style="color:#0284c7;">+${totalSpeedPointsEarned} pts</strong>
@@ -6025,15 +6881,15 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
     });
     const avgAcc = totalQuizzes > 0 ? Math.round(totalAcc / totalQuizzes) : 85;
 
-    const waText = `📊 *MoSPI NSSTA — Quarterly Cadre Performance Digest*
-👤 *Candidate:* Officer Raman (Roll: MoSPI/2026/SSS-4821)
-📅 *Cycle:* Q3 2026 (July - September)
+    const waText = `*MoSPI NSSTA — Quarterly Cadre Performance Digest*
+*Candidate:* Officer Raman (Roll: MoSPI/2026/SSS-4821)
+*Cycle:* Q3 2026 (July - September)
 ────────────────────────────
-🎯 *Assessments Completed:* ${totalQuizzes} Quizzes
-📈 *Overall Accuracy:* ${avgAcc}%
-⚡ *Total Speed Bonus:* +${totalSpeed} pts
-🏆 *SSS Cadre Standing:* Top 5% (Promotion Benchmark Cleared)
-⭐ *Strongest Competency:* Survey Sampling & Variance Estimation
+*Assessments Completed:* ${totalQuizzes} Quizzes
+*Overall Accuracy:* ${avgAcc}%
+*Total Speed Bonus:* +${totalSpeed} pts
+*SSS Cadre Standing:* Top 5% (Promotion Benchmark Cleared)
+*Strongest Competency:* Survey Sampling & Variance Estimation
 ────────────────────────────
 Official digital marksheet archived in Nirdesha Competency Cloud.`;
 
@@ -6378,7 +7234,7 @@ Official digital marksheet archived in Nirdesha Competency Cloud.`;
     if (elReadiness) {
       const total = gaps.length || 1;
       const rate = Math.round((resolvedCount / total) * 100);
-      elReadiness.textContent = `${Math.max(65, rate)}% (SSO Track)`;
+      elReadiness.textContent = `${Math.max(65, rate)}%`;
     }
     if (elBonus) elBonus.textContent = `+${resolvedCount * 50} pts`;
   }
@@ -6477,7 +7333,7 @@ Official digital marksheet archived in Nirdesha Competency Cloud.`;
       card.className = `skill-gap-card ${isResolved ? 'is-resolved' : ''}`;
 
       const sevClass = isResolved ? 'severity-resolved' : (gap.severity === 'high' ? 'severity-high' : 'severity-mod');
-      const sevText = isResolved ? '✓ Mastered & Remediated' : (gap.severity === 'high' ? '⚠️ High Attention Required' : 'Moderate Gap');
+      const sevText = isResolved ? '✓ Cleared & Mastered' : (gap.severity === 'high' ? 'High Attention Required' : 'Moderate Gap');
       const progressColor = isResolved ? '#16a34a' : (gap.severity === 'high' ? '#dc2626' : '#ea580c');
       const dateStr = new Date(gap.lastMistakeDate || Date.now()).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
 
@@ -6502,19 +7358,19 @@ Official digital marksheet archived in Nirdesha Competency Cloud.`;
           </div>
 
           <div style="font-size: 0.72rem; color: #64748b; margin-bottom: 0.5rem;">
-            <span>❌ ${gap.mistakesCount || 1} mistake(s) logged</span> • <span>Last recorded: ${dateStr}</span>
+            <span>${gap.mistakesCount || 1} mistake(s) logged</span> • <span>Last recorded: ${dateStr}</span>
           </div>
         </div>
 
         <div class="sg-actions-row">
           <button type="button" class="btn-why-gap" data-gap-id="${gap.id}">
-            ❓ Why?
+            Why?
           </button>
           <button type="button" class="btn-prep-gap" data-gap-id="${gap.id}">
-            🧠 Suggest Preparation
+            Suggest Preparation
           </button>
           <button type="button" class="btn-retest-gap" data-gap-id="${gap.id}">
-            ⚡ Retest Topic
+            Retest Topic
           </button>
         </div>
       `;
@@ -6695,7 +7551,7 @@ Official digital marksheet archived in Nirdesha Competency Cloud.`;
       contentEl.innerHTML = `
         <!-- Section 1: Diagnosis -->
         <div class="prep-section-block" style="border-left: 3.5px solid #0284c7;">
-          <h5 class="prep-block-title">🔍 Diagnostic Root-Cause Analysis</h5>
+          <h5 class="prep-block-title">Diagnostic Root-Cause Analysis</h5>
           <p style="font-size: 0.83rem; color: #334155; line-height: 1.5; margin: 0;">
             ${escapeHtml(roadmap.diagnosis || '')}
           </p>
@@ -6703,22 +7559,22 @@ Official digital marksheet archived in Nirdesha Competency Cloud.`;
 
         <!-- Section 2: Formulas -->
         <div class="prep-section-block" style="border-left: 3.5px solid #ea580c;">
-          <h5 class="prep-block-title">📐 Key Mathematical Formulas & Theorems to Memorize</h5>
+          <h5 class="prep-block-title">Key Mathematical Formulas & Theorems to Memorize</h5>
           <p style="font-size: 0.78rem; color: #64748b; margin: 0 0 0.5rem 0;">
-            Commit these exact expressions to memory before attempting your remediation retest:
+            Commit these exact expressions to memory before attempting your topic retest:
           </p>
           ${formulasHtml}
         </div>
 
         <!-- Section 3: 30-Min Sprint -->
         <div class="prep-section-block" style="border-left: 3.5px solid #16a34a;">
-          <h5 class="prep-block-title">⏱️ 30-Minute High-Yield Study Sprint Checklist</h5>
+          <h5 class="prep-block-title">30-Minute High-Yield Study Sprint Checklist</h5>
           ${routineHtml}
         </div>
 
         <!-- Section 4: Official Manual Citation -->
         <div class="prep-section-block" style="border-left: 3.5px solid #002b49; background: #f8fafc;">
-          <h5 class="prep-block-title">📖 Official MoSPI Training Reference</h5>
+          <h5 class="prep-block-title">Official MoSPI Training Reference</h5>
           <p style="font-size: 0.8rem; color: #002b49; font-weight: 700; margin: 0;">
             ${escapeHtml(roadmap.reference || 'MoSPI Cadre Training Material')}
           </p>
@@ -6743,8 +7599,26 @@ Official digital marksheet archived in Nirdesha Competency Cloud.`;
   let retestQuestionIndex = 0;
   let retestUserAnswers = [];
 
-  if (btnCloseRetest) btnCloseRetest.addEventListener('click', () => retestModal.style.display = 'none');
-  if (btnCancelRetest) btnCancelRetest.addEventListener('click', () => retestModal.style.display = 'none');
+  let isRetestActive = false;
+
+  function closeRetestModal() {
+    if (isRetestActive) {
+      if (!confirm("Retest is currently in progress. Exit without completing? Your retest progress will not be saved.")) {
+        return;
+      }
+    }
+    isRetestActive = false;
+    if (retestModal) retestModal.style.display = 'none';
+    renderSkillGapGrid();
+  }
+
+  if (btnCloseRetest) btnCloseRetest.onclick = closeRetestModal;
+  if (btnCancelRetest) btnCancelRetest.onclick = closeRetestModal;
+  if (retestModal) {
+    retestModal.addEventListener('click', (e) => {
+      if (e.target === retestModal) closeRetestModal();
+    });
+  }
 
   function openRetestModal(gap) {
     if (!retestModal) return;
@@ -6753,8 +7627,9 @@ Official digital marksheet archived in Nirdesha Competency Cloud.`;
     retestUserAnswers = [];
 
     const titleEl = document.getElementById('retest-modal-topic-title');
-    if (titleEl) titleEl.textContent = `Remediation Retest: ${gap.topic}`;
+    if (titleEl) titleEl.textContent = `Topic Retest: ${gap.topic}`;
 
+    isRetestActive = true;
     retestModal.style.display = 'flex';
     renderRetestQuestion(0);
   }
@@ -6831,6 +7706,7 @@ Official digital marksheet archived in Nirdesha Competency Cloud.`;
     const totalQ = currentRetestGap.retestQuestions.length;
     const correctQ = retestUserAnswers.filter(a => a.isCorrect).length;
     const accuracy = Math.round((correctQ / totalQ) * 100);
+    isRetestActive = false;
     const passed = accuracy >= 66; // 2 out of 3 or higher
 
     if (passed) {
@@ -6857,9 +7733,9 @@ Official digital marksheet archived in Nirdesha Competency Cloud.`;
     if (retestBodyEl) {
       retestBodyEl.innerHTML = `
         <div style="text-align: center; padding: 2rem 1rem;">
-          <div style="font-size: 3rem; margin-bottom: 0.5rem;">${passed ? '🏆' : '📚'}</div>
+          
           <h3 style="font-size: 1.35rem; font-weight: 900; color: #002b49; margin: 0 0 6px 0;">
-            ${passed ? 'Skill Gap Remediated & Mastered!' : 'Retest Completed — Needs Further Review'}
+            ${passed ? 'Weak Area Cleared & Mastered!' : 'Retest Completed — Needs Further Review'}
           </h3>
           <p style="font-size: 0.85rem; color: #64748b; margin: 0 0 1.25rem 0;">
             Accuracy: <strong>${accuracy}% (${correctQ} / ${totalQ} correct)</strong>
@@ -6884,7 +7760,119 @@ Official digital marksheet archived in Nirdesha Competency Cloud.`;
     }
   }
 
+  // --------------------------------------------------------------------------
+  // SKILL GAP METRIC DOCUMENTATION MODAL ("HOW IT WORKS")
+  // --------------------------------------------------------------------------
+  const metricDocModal = document.getElementById('metric-doc-modal');
+  const btnCloseMetricDoc = document.getElementById('btn-close-metric-doc');
+  const btnDoneMetricDoc = document.getElementById('btn-done-metric-doc');
+  const metricDocPills = document.querySelectorAll('#metric-doc-pills .notif-pill');
+
+  function openMetricDoc(metricKey) {
+    if (!metricDocModal) return;
+    const key = metricKey || 'active';
+
+    if (metricDocPills) {
+      metricDocPills.forEach(p => {
+        const isTarget = p.getAttribute('data-doc-target') === key;
+        p.classList.toggle('active', isTarget);
+      });
+    }
+
+    document.querySelectorAll('.metric-doc-pane').forEach(pane => {
+      pane.style.display = pane.id === `doc-pane-${key}` ? 'block' : 'none';
+    });
+
+    metricDocModal.style.display = 'flex';
+  }
+
+  if (metricDocPills) {
+    metricDocPills.forEach(pill => {
+      pill.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const target = pill.getAttribute('data-doc-target');
+        openMetricDoc(target);
+      });
+    });
+  }
+
+  if (btnCloseMetricDoc) btnCloseMetricDoc.addEventListener('click', () => metricDocModal.style.display = 'none');
+  if (btnDoneMetricDoc) btnDoneMetricDoc.addEventListener('click', () => metricDocModal.style.display = 'none');
+
+  document.querySelectorAll('.btn-metric-how').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const key = btn.getAttribute('data-metric') || 'active';
+      openMetricDoc(key);
+    });
+  });
+
+  document.querySelectorAll('.metric-interactive-box').forEach(box => {
+    box.addEventListener('click', () => {
+      const key = box.getAttribute('data-metric-key') || 'active';
+      openMetricDoc(key);
+    });
+  });
+
+
+  // --------------------------------------------------------------------------
+  // AI QUIZ METRIC DOCUMENTATION MODAL ("HOW IT WORKS")
+  // --------------------------------------------------------------------------
+  const quizMetricDocModal = document.getElementById('quiz-metric-doc-modal');
+  const btnCloseQuizMetricDoc = document.getElementById('btn-close-quiz-metric-doc');
+  const btnDoneQuizMetricDoc = document.getElementById('btn-done-quiz-metric-doc');
+  const quizMetricDocPills = document.querySelectorAll('#quiz-metric-doc-pills .notif-pill');
+
+  function openQuizMetricDoc(metricKey) {
+    if (!quizMetricDocModal) return;
+    const key = metricKey || 'elo';
+
+    if (quizMetricDocPills) {
+      quizMetricDocPills.forEach(p => {
+        const isTarget = p.getAttribute('data-quiz-doc-target') === key;
+        p.classList.toggle('active', isTarget);
+      });
+    }
+
+    document.querySelectorAll('#quiz-metric-doc-content .metric-doc-pane').forEach(pane => {
+      pane.style.display = pane.id === `doc-pane-quiz-${key}` ? 'block' : 'none';
+    });
+
+    quizMetricDocModal.style.display = 'flex';
+  }
+
+  if (quizMetricDocPills) {
+    quizMetricDocPills.forEach(pill => {
+      pill.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const target = pill.getAttribute('data-quiz-doc-target');
+        openQuizMetricDoc(target);
+      });
+    });
+  }
+
+  if (btnCloseQuizMetricDoc) btnCloseQuizMetricDoc.addEventListener('click', () => quizMetricDocModal.style.display = 'none');
+  if (btnDoneQuizMetricDoc) btnDoneQuizMetricDoc.addEventListener('click', () => quizMetricDocModal.style.display = 'none');
+
+  document.querySelectorAll('.btn-metric-how[data-quiz-metric]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const key = btn.getAttribute('data-quiz-metric') || 'elo';
+      openQuizMetricDoc(key);
+    });
+  });
+
+  document.querySelectorAll('.metric-interactive-box[data-quiz-metric-key]').forEach(box => {
+    box.addEventListener('click', () => {
+      const key = box.getAttribute('data-quiz-metric-key') || 'elo';
+      openQuizMetricDoc(key);
+    });
+  });
+
+  window.openQuizMetricDoc = openQuizMetricDoc;
+
   // Expose on window
+  window.openMetricDoc = openMetricDoc;
   window.renderSkillGapGrid = renderSkillGapGrid;
   window.recordSkillGapMistake = recordSkillGapMistake;
 
@@ -6904,3 +7892,949 @@ Official digital marksheet archived in Nirdesha Competency Cloud.`;
   updateQuizBadges();
 
 });
+
+
+  // --------------------------------------------------------------------------
+  // UNIVERSAL BACKDROP CLICK DISMISS FOR ALL GUIDANCE & PREVIEW MODALS
+  // --------------------------------------------------------------------------
+  const allGuidanceModals = [
+    document.getElementById('skill-gap-why-modal'),
+    document.getElementById('skill-gap-prep-modal'),
+    document.getElementById('marksheet-modal'),
+    document.getElementById('quarterly-dispatch-modal'),
+    document.getElementById('metric-doc-modal'),
+    document.getElementById('quiz-metric-doc-modal'),
+    document.getElementById('export-notes-modal'),
+    document.getElementById('banner-library-modal')
+  ];
+
+  allGuidanceModals.forEach(m => {
+    if (!m) return;
+    m.addEventListener('click', (e) => {
+      // If user clicked the side blank space (the backdrop container itself)
+      if (e.target === m) {
+        m.style.display = 'none';
+      }
+    });
+  });
+
+  // Past Conversations Flyout Drawer Outside-Click Auto-Close
+  document.addEventListener('click', (e) => {
+    const drawer = document.getElementById('mentor-history-drawer');
+    const burger = document.getElementById('btn-mentor-burger-history');
+    if (drawer && drawer.style.display !== 'none') {
+      if (!drawer.contains(e.target) && (!burger || !burger.contains(e.target))) {
+        drawer.style.display = 'none';
+      }
+    }
+  });
+
+  // Global ESC key to close active guidance or popups
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      allGuidanceModals.forEach(m => {
+        if (m && m.style.display !== 'none') m.style.display = 'none';
+      });
+      const drawer = document.getElementById('mentor-history-drawer');
+      if (drawer && drawer.style.display !== 'none') drawer.style.display = 'none';
+      const bannerDropdown = document.getElementById('banner-edit-dropdown');
+      if (bannerDropdown && bannerDropdown.style.display !== 'none') {
+        bannerDropdown.style.display = 'none';
+        const btnBannerEdit = document.getElementById('btn-banner-edit-menu');
+        if (btnBannerEdit) btnBannerEdit.setAttribute('aria-expanded', 'false');
+      }
+    }
+  });
+
+  // --------------------------------------------------------------------------
+  // PROFILE BANNER LIBRARY & CUSTOM UPLOAD CONTROLLER
+  // --------------------------------------------------------------------------
+  const BANNER_PRESETS = [
+    {
+      id: 'default',
+      name: '0. MoSPI Central Cadre',
+      badge: 'Official Cadre',
+      desc: 'Official Navy with microdot matrix and tricolor ribbon',
+      swatchStyle: 'background: linear-gradient(135deg, #002b49 0%, #00172c 55%, #0c3e66 100%);',
+      getHtml: () => '<div class="cover-gradient-overlay"></div>'
+    },
+    {
+      id: '1',
+      name: '1. Cyber Rain',
+      badge: 'Neon Glow',
+      desc: 'Cyan and rainbow neon light streaks with animated hue rotation',
+      swatchStyle: 'background: #030712; background-image: radial-gradient(#00d2ff 1.5px, transparent 1.5px), radial-gradient(#ec4899 1.5px, transparent 1.5px); background-size: 8px 8px;',
+      getHtml: () => '<div class="container"></div>'
+    },
+    {
+      id: '2',
+      name: '2. Geometric Blue Chevrons',
+      badge: 'Animated',
+      desc: 'Sliding angled geometric chevrons in dynamic royal blue',
+      swatchStyle: 'background: #0a192f; background-image: linear-gradient(135deg, transparent 25%, #0284c7 25% 50%, transparent 50%); background-size: 14px 14px;',
+      getHtml: () => '<div class="container"></div>'
+    },
+    {
+      id: '3',
+      name: '3. Carbon Fiber Stripes',
+      badge: 'Dark Modern',
+      desc: 'Deep carbon diagonal stripes with continuous translation',
+      swatchStyle: 'background: #0f172a; background-image: linear-gradient(135deg, #1e293b 25%, transparent 25% 50%, #1e293b 50% 75%, transparent 75%); background-size: 10px 10px;',
+      getHtml: () => '<div class="container"></div>'
+    },
+    {
+      id: '4',
+      name: '4. Golden Sovereign Rings',
+      badge: 'Luxury Cadre',
+      desc: 'Concentric golden radial ring gradients on deep noir',
+      swatchStyle: 'background: #0f172a; background-image: radial-gradient(circle, #f59e0b 25%, transparent 30%); background-size: 16px 16px;',
+      getHtml: () => '<div class="container"></div>'
+    },
+    {
+      id: '5',
+      name: '5. Hexagonal Olive Prism',
+      badge: 'Conic Geometry',
+      desc: 'Precision hexagonal multi-angle conic gradient lattice',
+      swatchStyle: 'background: #1a2e05; background-image: conic-gradient(#65a30d 120deg, #4d7c0f 120deg 240deg, #1a2e05 240deg); background-size: 16px 16px;',
+      getHtml: () => '<div class="container"></div>'
+    },
+    {
+      id: '6',
+      name: '6. Volcanic Cracked Earth',
+      badge: 'Magma & Basalt',
+      desc: 'Glowing molten magma cracks beneath dark volcanic plates',
+      swatchStyle: 'background: #110502; background-image: linear-gradient(135deg, #ea580c 0%, #7f1d1d 100%);',
+      getHtml: () => '<div class="cracked-earth"></div>'
+    },
+    {
+      id: '7',
+      name: '7. Archipelago Ocean Atoll',
+      badge: 'Tropical Azure',
+      desc: 'Topographical island contours with golden sand and azure lagoons',
+      swatchStyle: 'background: #0c4a6e; background-image: radial-gradient(circle at 35% 50%, #65a30d 30%, #38bdf8 65%, transparent 70%);',
+      getHtml: () => '<div class="ocean-backdrop"><div class="island-backdrop"></div></div>'
+    },
+    {
+      id: '8',
+      name: '8. Isometric Gold Lattice',
+      badge: '3D Wireframe',
+      desc: '30°/60°/150° geometric wireframe lattice with golden inner glow',
+      swatchStyle: 'background: #09090b; background-image: linear-gradient(60deg, rgba(234, 179, 8, 0.45) 25%, transparent 25%); background-size: 14px 14px;',
+      getHtml: () => '<div class="container"></div>'
+    },
+    {
+      id: '9',
+      name: '9. Matrix Digital Code Rain',
+      badge: 'Phosphor Rain',
+      desc: '-25° angled digital green phosphor rain stream',
+      swatchStyle: 'background: #020617; background-image: radial-gradient(#22c55e 1.5px, transparent 1.5px); background-size: 8px 8px;',
+      getHtml: () => '<div class="container"><div class="container-inner"></div></div>'
+    },
+    {
+      id: '10',
+      name: '10. Statistical & Quantum Matrix',
+      badge: 'Math Symbols',
+      desc: 'Dynamic matrix of calculus, Greek, and set theory symbols with glowing pulse',
+      swatchStyle: 'background: #030712; background-image: linear-gradient(90deg, rgba(56, 189, 248, 0.3) 1px, transparent 1px); background-size: 10px 10px;',
+      getHtml: () => {
+        const symbols = [
+          '+','−','×','÷','=','≠','≈','∞','√','∑','∏','∫','∂','∆','π','θ','λ','μ','σ','ω',
+          'α','β','γ','δ','ε','ζ','η','ι','κ','ν','ξ','ρ','τ','φ','χ','ψ','∈','∉','∩','∪',
+          '⊂','⊃','⊆','⊇','∧','∨','¬','⇒','⇔','∀','∃','ℕ','ℤ','ℚ','ℝ','ℂ','|','∥','∠','⊥',
+          '≅','∝','∴','∵','⊕','⊗','⊥','⊢','⊨','∇'
+        ];
+        let str = '<div class="jp-matrix">';
+        for (let i = 0; i < 10; i++) {
+          symbols.forEach(s => {
+            str += `<span>${s}</span>`;
+          });
+        }
+        str += '</div>';
+        return str;
+      }
+    },
+    {
+      id: '11',
+      name: '11. Midnight City Patrol',
+      badge: 'City Spotlight',
+      desc: 'Urban skyline with sweeping flashlight beam and glowing eyes',
+      swatchStyle: 'background: #09090b; background-image: linear-gradient(to top, #ca8a04 25%, #18181b 26% 50%, transparent 50%);',
+      getHtml: () => '<div class="container"></div>'
+    }
+  ];
+
+  function renderBannerIntoStage(targetEl, mode, value) {
+    if (!targetEl) return;
+
+    let baseClass = 'profile-banner-stage';
+    if (targetEl.id === 'banner-preview-viewport' || targetEl.classList.contains('banner-preview-viewport')) {
+      baseClass = 'banner-preview-viewport';
+    }
+
+    targetEl.className = baseClass;
+    targetEl.style.backgroundImage = '';
+
+    if (mode === 'custom' && value) {
+      targetEl.classList.add('is-custom-image');
+      targetEl.style.backgroundImage = `url(${value})`;
+      targetEl.innerHTML = '';
+      return;
+    }
+
+    const patternId = String(value || 'default');
+    const preset = BANNER_PRESETS.find(p => p.id === patternId) || BANNER_PRESETS[0];
+    targetEl.classList.add(preset.id === 'default' ? 'banner-pattern-default' : `banner-pattern-${preset.id}`);
+    targetEl.innerHTML = preset.getHtml ? preset.getHtml() : '';
+  }
+
+  function initProfileBannerEngine() {
+    try {
+      const bannerStage = document.getElementById('public-profile-banner-stage');
+      const btnBannerEditMenu = document.getElementById('btn-banner-edit-menu');
+      const bannerEditDropdown = document.getElementById('banner-edit-dropdown');
+      const btnBannerOptUpload = document.getElementById('btn-banner-opt-upload');
+      const btnBannerOptLibrary = document.getElementById('btn-banner-opt-library');
+      const bannerFileInput = document.getElementById('public-banner-file-input');
+
+      const bannerLibraryModal = document.getElementById('banner-library-modal');
+      const bannerLibrarySelect = document.getElementById('banner-library-select');
+      const bannerPreviewViewport = document.getElementById('banner-preview-viewport');
+      const bannerPreviewName = document.getElementById('banner-preview-name');
+      const bannerMenuGrid = document.getElementById('banner-menu-grid') || document.getElementById('banner-cards-grid');
+      const btnCloseBannerLibrary = document.getElementById('btn-close-banner-library');
+      const btnBannerLibraryCancel = document.getElementById('btn-banner-library-cancel');
+      const btnBannerLibraryApply = document.getElementById('btn-banner-library-apply');
+      const btnBannerResetDefault = document.getElementById('btn-banner-reset-default');
+      const btnLibrarySwitchUpload = document.getElementById('btn-library-switch-upload');
+
+      // Load active banner from localStorage
+      let currentBannerMode = localStorage.getItem('nirdesha_profile_banner_mode') || 'pattern';
+      let currentBannerPattern = localStorage.getItem('nirdesha_profile_banner_pattern') || 'default';
+      let currentBannerCustom = localStorage.getItem('nirdesha_profile_banner_custom') || '';
+
+      function applyActiveBannerToProfile() {
+        const stage = document.getElementById('public-profile-banner-stage');
+        if (!stage) return;
+        if (currentBannerMode === 'custom' && currentBannerCustom) {
+          renderBannerIntoStage(stage, 'custom', currentBannerCustom);
+        } else {
+          renderBannerIntoStage(stage, 'pattern', currentBannerPattern);
+        }
+      }
+      applyActiveBannerToProfile();
+
+      // Dropdown menu toggling & dismissal
+      if (btnBannerEditMenu && bannerEditDropdown) {
+        btnBannerEditMenu.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const isCurrentlyOpen = bannerEditDropdown.style.display === 'flex';
+          bannerEditDropdown.style.display = isCurrentlyOpen ? 'none' : 'flex';
+          btnBannerEditMenu.setAttribute('aria-expanded', String(!isCurrentlyOpen));
+        });
+
+        document.addEventListener('click', (e) => {
+          if (bannerEditDropdown.style.display !== 'none') {
+            if (!bannerEditDropdown.contains(e.target) && !btnBannerEditMenu.contains(e.target)) {
+              bannerEditDropdown.style.display = 'none';
+              btnBannerEditMenu.setAttribute('aria-expanded', 'false');
+            }
+          }
+        });
+      }
+
+      // Upload from computer option (< 5MB, GIF & images)
+      function triggerBannerUpload(e) {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        if (bannerEditDropdown) {
+          bannerEditDropdown.style.display = 'none';
+          if (btnBannerEditMenu) btnBannerEditMenu.setAttribute('aria-expanded', 'false');
+        }
+        if (bannerLibraryModal) bannerLibraryModal.style.display = 'none';
+        if (bannerFileInput) bannerFileInput.click();
+      }
+
+      if (btnBannerOptUpload) {
+        btnBannerOptUpload.addEventListener('click', triggerBannerUpload);
+      }
+      if (btnLibrarySwitchUpload) {
+        btnLibrarySwitchUpload.addEventListener('click', triggerBannerUpload);
+      }
+
+      if (bannerFileInput) {
+        bannerFileInput.addEventListener('change', (e) => {
+          const file = e.target.files && e.target.files[0];
+          if (!file) return;
+
+          // Check format: GIF & image
+          const isImage = file.type.startsWith('image/') || /\.(gif|png|jpe?g|webp|svg)$/i.test(file.name);
+          if (!isImage) {
+            alert('Invalid file format. Please upload an image or GIF file.');
+            bannerFileInput.value = '';
+            return;
+          }
+
+          // Check size: < 5MB
+          const MAX_SIZE = 5 * 1024 * 1024;
+          if (file.size > MAX_SIZE) {
+            const sizeMb = (file.size / (1024 * 1024)).toFixed(2);
+            alert(`File size (${sizeMb} MB) exceeds the 5MB limit. Please upload an image or GIF less than 5MB.`);
+            bannerFileInput.value = '';
+            return;
+          }
+
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const dataUrl = event.target.result;
+            currentBannerMode = 'custom';
+            currentBannerCustom = dataUrl;
+            localStorage.setItem('nirdesha_profile_banner_mode', 'custom');
+            localStorage.setItem('nirdesha_profile_banner_custom', dataUrl);
+            applyActiveBannerToProfile();
+            bannerFileInput.value = '';
+
+            const toast = document.getElementById('public-profile-toast');
+            if (toast) {
+              toast.textContent = '✓ Custom Cover Banner Applied Successfully!';
+              toast.style.display = 'block';
+              setTimeout(() => { toast.style.display = 'none'; }, 3500);
+            }
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      // Banner Library Modal handling
+      let previewPatternId = currentBannerPattern;
+
+      function updateLibraryPreview(patternId) {
+        previewPatternId = String(patternId);
+        const preset = BANNER_PRESETS.find(p => p.id === previewPatternId) || BANNER_PRESETS[0];
+        if (bannerPreviewName) bannerPreviewName.textContent = preset.name;
+        if (bannerLibrarySelect) bannerLibrarySelect.value = preset.id;
+        if (bannerPreviewViewport) renderBannerIntoStage(bannerPreviewViewport, 'pattern', preset.id);
+
+        // Highlight active item in menu grid
+        if (bannerMenuGrid) {
+          bannerMenuGrid.querySelectorAll('.banner-menu-item').forEach(item => {
+            if (item.getAttribute('data-pattern-id') === preset.id) {
+              item.classList.add('active');
+            } else {
+              item.classList.remove('active');
+            }
+          });
+        }
+      }
+
+      // Populate visual menu items (clean, contained, zero-glitch)
+      if (bannerMenuGrid) {
+        bannerMenuGrid.innerHTML = '';
+        BANNER_PRESETS.forEach(preset => {
+          const item = document.createElement('button');
+          item.type = 'button';
+          item.className = 'banner-menu-item';
+          item.setAttribute('data-pattern-id', preset.id);
+          item.innerHTML = `
+            <div class="banner-menu-swatch" style="${preset.swatchStyle || ''}"></div>
+            <div class="banner-menu-info">
+              <div class="banner-menu-title">${preset.name}</div>
+              <div class="banner-menu-badge">${preset.badge}</div>
+            </div>
+            <div class="banner-menu-check">✓</div>
+          `;
+          item.addEventListener('click', () => {
+            updateLibraryPreview(preset.id);
+          });
+          item.addEventListener('dblclick', () => {
+            updateLibraryPreview(preset.id);
+            applyBannerSelection();
+          });
+          bannerMenuGrid.appendChild(item);
+        });
+      }
+
+      function openBannerLibraryModal() {
+        if (bannerEditDropdown) bannerEditDropdown.style.display = 'none';
+        if (btnBannerEditMenu) btnBannerEditMenu.setAttribute('aria-expanded', 'false');
+        if (bannerLibraryModal) {
+          bannerLibraryModal.style.display = 'flex';
+          updateLibraryPreview(currentBannerMode === 'pattern' ? currentBannerPattern : 'default');
+        }
+      }
+
+      if (btnBannerOptLibrary) {
+        btnBannerOptLibrary.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          openBannerLibraryModal();
+        });
+      }
+
+      if (bannerLibrarySelect) {
+        bannerLibrarySelect.addEventListener('change', (e) => {
+          updateLibraryPreview(e.target.value);
+        });
+      }
+
+      function applyBannerSelection() {
+        currentBannerMode = 'pattern';
+        currentBannerPattern = previewPatternId;
+        localStorage.setItem('nirdesha_profile_banner_mode', 'pattern');
+        localStorage.setItem('nirdesha_profile_banner_pattern', currentBannerPattern);
+        applyActiveBannerToProfile();
+        if (bannerLibraryModal) bannerLibraryModal.style.display = 'none';
+
+        const toast = document.getElementById('public-profile-toast');
+        if (toast) {
+          toast.textContent = '✓ Profile Cover Banner Updated Successfully!';
+          toast.style.display = 'block';
+          setTimeout(() => { toast.style.display = 'none'; }, 3500);
+        }
+      }
+
+      if (btnBannerLibraryApply) {
+        btnBannerLibraryApply.addEventListener('click', applyBannerSelection);
+      }
+
+      if (btnBannerResetDefault) {
+        btnBannerResetDefault.addEventListener('click', () => {
+          updateLibraryPreview('default');
+        });
+      }
+
+      function closeLibraryModal() {
+        if (bannerLibraryModal) bannerLibraryModal.style.display = 'none';
+      }
+
+      if (btnCloseBannerLibrary) btnCloseBannerLibrary.addEventListener('click', closeLibraryModal);
+      if (btnBannerLibraryCancel) btnBannerLibraryCancel.addEventListener('click', closeLibraryModal);
+
+      if (bannerLibraryModal) {
+        bannerLibraryModal.addEventListener('click', (e) => {
+          if (e.target === bannerLibraryModal) {
+            closeLibraryModal();
+          }
+        });
+      }
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && bannerLibraryModal && bannerLibraryModal.style.display !== 'none') {
+          closeLibraryModal();
+        }
+      });
+    } catch (err) {
+      console.error('Error in initProfileBannerEngine:', err);
+    }
+  }
+  // Initialize Profile Banner Engine
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initProfileBannerEngine);
+  } else {
+    initProfileBannerEngine();
+  }
+
+
+  // ==========================================================================
+  // NIRDESHA FLOATING NOTIFICATION TOAST HELPER
+  // ==========================================================================
+  function showNirdeshaToast(htmlMessage) {
+    let toastEl = document.getElementById('nirdesha-floating-toast');
+    if (!toastEl) {
+      toastEl = document.createElement('div');
+      toastEl.id = 'nirdesha-floating-toast';
+      toastEl.style.cssText = 'position: fixed; bottom: 24px; right: 24px; z-index: 999999; background: #002b49; color: #ffffff; padding: 0.75rem 1.25rem; border-radius: 6px; border-left: 4px solid #ea580c; box-shadow: 0 8px 24px rgba(0,0,0,0.35); font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 0.75rem; animation: tabFadeInUp 0.2s ease forwards;';
+      document.body.appendChild(toastEl);
+    }
+    toastEl.innerHTML = htmlMessage;
+    toastEl.style.display = 'flex';
+    const tabLink = toastEl.querySelector('.toast-tab-link');
+    if (tabLink) {
+      tabLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        switchTab('revision-cards');
+        toastEl.style.display = 'none';
+      });
+    }
+    clearTimeout(toastEl._timer);
+    toastEl._timer = setTimeout(() => {
+      if (toastEl) toastEl.style.display = 'none';
+    }, 5000);
+  }
+
+  // ==========================================================================
+  // INTELLIGENT REVISION FLASHCARD EXTRACTION ALGORITHM
+  // (Extracts ONLY important revision formulas, proofs, definitions & rules)
+  // ==========================================================================
+  function extractRevisionFlashcard(note, notebookName) {
+    const rawText = (note.content || note.text || (note.html ? note.html.replace(/<[^>]+>/g, ' ') : '')).trim();
+    const title = (note.title || 'Study Note').trim();
+
+    // 1. Subject / Topic Detection
+    let topic = (note.tags && note.tags[0]) || '';
+    if (!topic) {
+      if (/sampling|variance|estimator|neyman|horvitz/i.test(title + ' ' + rawText)) topic = 'Sampling Design';
+      else if (/deflator|gva|gdp|paasche|laspeyres|sut/i.test(title + ' ' + rawText)) topic = 'National Accounts';
+      else if (/capi|gps|imputation|field|listing/i.test(title + ' ' + rawText)) topic = 'CAPI Protocol';
+      else if (/dpdp|anonymization|microdata|privacy/i.test(title + ' ' + rawText)) topic = 'Data Governance';
+      else if (/plfs|activity status|labour/i.test(title + ' ' + rawText)) topic = 'Labour Statistics';
+      else topic = notebookName || 'Cadre Revision';
+    }
+
+    // 2. Active Recall Question Formulation (Front of Flashcard)
+    let question = `What are the core principles, formulas, and operational rules governing "${title}"?`;
+    if (/formula|identity|equation|estimator/i.test(title)) {
+      question = `State the mathematical formulation, estimators, and underlying assumptions for ${title}.`;
+    } else if (/rule|protocol|guideline|tolerance|capi/i.test(title)) {
+      question = `What are the mandatory tolerances, verification criteria, and protocols for ${title}?`;
+    } else if (/proof|theorem|variance/i.test(title)) {
+      question = `State the theorem condition, non-negativity parameters, and variance formulation for ${title}.`;
+    }
+
+    // 3. Filter out conversational pleasantries & extract high-yield revision items
+    const lines = rawText.split('\n').map(l => l.trim()).filter(Boolean);
+    const bullets = [];
+    let summary = '';
+
+    lines.forEach(line => {
+      // Strip pleasantries and conversational filler
+      if (/^(certainly|here is|hello|sure|let me|in this note|hope this|as discussed|note that|please note|welcome|in summary)/i.test(line)) return;
+
+      const hasMath = /\\\(|\\\|E\[|V_|P_L|P_P|GVA|GDP|\\frac|\\sum|\\sqrt|\\times|=|\+|-|\\pi|\\hat/i.test(line);
+      const hasTheorem = /theorem:|rule:|unbiasedness:|variance:|identity:|definition:|tolerance:|geo-fencing:|imputation:/i.test(line);
+      const hasThreshold = /\d+(\.\d+)?\s*(meters?|days?|percent|%|round|decile|tolerance|boundary|hours?)/i.test(line);
+      const isBullet = /^[▸•\-\*]|\b\d+\.\s+\*\*/.test(line);
+
+      const cleanLine = line.replace(/^[▸•\-\*#\d\.]+\s*/, '').replace(/\*\*/g, '').trim();
+
+      if (!summary && (hasTheorem || (hasMath && line.includes('=')))) {
+        summary = cleanLine;
+      } else if (hasMath || hasTheorem || hasThreshold || isBullet) {
+        if (cleanLine.length > 8 && cleanLine.length < 240 && !bullets.some(b => b.text === cleanLine)) {
+          let label = 'Core Takeaway';
+          if (/formula|estimator|equation|identity/i.test(cleanLine)) label = 'Formula / Identity';
+          else if (/variance|unbiasedness|proof|theorem/i.test(cleanLine)) label = 'Theorem / Variance';
+          else if (/tolerance|gps|meter|listing|protocol/i.test(cleanLine)) label = 'Field Protocol';
+          else if (/imputation|matching|stratum/i.test(cleanLine)) label = 'Imputation Rule';
+          else if (/bias|substitution/i.test(cleanLine)) label = 'Index Bias';
+          bullets.push({ label, text: cleanLine });
+        }
+      }
+    });
+
+    if (!summary) {
+      if (bullets.length > 0) {
+        summary = bullets.shift().text;
+      } else {
+        summary = rawText.slice(0, 140) + '...';
+      }
+    }
+
+    const finalBullets = bullets.slice(0, 3);
+    if (finalBullets.length === 0) {
+      finalBullets.push({ label: 'Revision Rule', text: summary });
+    }
+
+    return {
+      id: 'fc_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+      sourceNoteId: note.id,
+      sourceNotebookId: note.notebookId,
+      sourceNotebookName: notebookName,
+      sourceNoteTitle: title,
+      topic: topic,
+      title: title,
+      question: question,
+      summary: summary,
+      bullets: finalBullets,
+      sourceLabel: `From Note: ${title.slice(0, 24)}${title.length > 24 ? '...' : ''}`,
+      isCustom: true,
+      isPinned: false, // Can be pinned in revision card area!
+      isFlipped: false,
+      createdAt: Date.now()
+    };
+  }
+
+  // ==========================================================================
+  // REVISION CARDS & FLASHCARDS DECK ENGINE
+  // ==========================================================================
+  const SEED_CADRE_REVISION_CARDS = [
+    {
+      id: 'cadre_rc_1',
+      topic: 'Sampling Design',
+      title: 'Horvitz-Thompson Estimator & Multipliers',
+      question: 'What are the formulation, unbiasedness guarantee, and fixed sample size variance of the Horvitz-Thompson estimator?',
+      summary: 'Y_HT = ∑(y_i / π_i) — Design-unbiased for arbitrary sampling designs.',
+      bullets: [
+        { label: 'Unbiasedness', text: 'E[Y_HT] = Y is guaranteed regardless of sampling structure.' },
+        { label: 'Variance Formulation', text: 'Sen-Yates-Grundy variance formulation applies when sample size is fixed.' },
+        { label: 'Multiplier Rule', text: 'Inverse sampling probabilities ensure design-unbiased estimates in NSS frames.' }
+      ],
+      sourceLabel: 'MoSPI Cadre Standard',
+      isCustom: false,
+      isPinned: false,
+      isFlipped: false,
+      createdAt: 1700000000000
+    },
+    {
+      id: 'cadre_rc_2',
+      topic: 'National Accounts',
+      title: 'Supply and Use Tables (SUT) Balance',
+      question: 'State the benchmark accounting identity and base year structural weights for Supply and Use Tables (SUT).',
+      summary: 'Total Supply at Purchasers\' Prices = Total Use at Purchasers\' Prices.',
+      bullets: [
+        { label: 'Accounting Identity', text: 'Total Supply at Purchasers\' Prices = Total Use at Purchasers\' Prices.' },
+        { label: 'Base Year', text: '2011-12 benchmark tables provide structural weights for GDP deflators.' },
+        { label: 'Deflator Splicing', text: 'Double deflation methodology requires balanced SUT frameworks.' }
+      ],
+      sourceLabel: 'MoSPI Cadre Standard',
+      isCustom: false,
+      isPinned: false,
+      isFlipped: false,
+      createdAt: 1700000001000
+    },
+    {
+      id: 'cadre_rc_3',
+      topic: 'CAPI Protocol',
+      title: 'GPS Verification & Non-Response Imputation',
+      question: 'What are the CAPI geo-fencing tolerances and donor matching rules for household non-response?',
+      summary: 'GPS coordinates must match census enumeration block within 50-meter tolerance.',
+      bullets: [
+        { label: 'Validation', text: 'GPS coordinates must match census enumeration block within 50-meter tolerance.' },
+        { label: 'Imputation', text: 'Hot-deck donor imputation is applied for item non-response.' },
+        { label: 'Matching Cells', text: 'Matches by rural/urban stratum, household size decile, and NCO occupation.' }
+      ],
+      sourceLabel: 'MoSPI Cadre Standard',
+      isCustom: false,
+      isPinned: false,
+      isFlipped: false,
+      createdAt: 1700000002000
+    },
+    {
+      id: 'cadre_rc_4',
+      topic: 'Price Index Numbers',
+      title: 'CPI Basket Splicing & Substitution Bias',
+      question: 'How do Laspeyres and Paasche substitution biases differ, and how does overlapping base year splicing operate?',
+      summary: 'Ratio of indices during overlapping base year links old and rebased series.',
+      bullets: [
+        { label: 'Laspeyres Bias', text: 'Fixed base quantities overestimate inflation due to consumer price substitution.' },
+        { label: 'Splicing Method', text: 'Ratio of indices during overlapping base year links old and rebased series.' },
+        { label: 'Aggregation Rule', text: 'Modified Laspeyres with geometric mean aggregation at elementary levels.' }
+      ],
+      sourceLabel: 'MoSPI Cadre Standard',
+      isCustom: false,
+      isPinned: false,
+      isFlipped: false,
+      createdAt: 1700000003000
+    },
+    {
+      id: 'cadre_rc_5',
+      topic: 'Data Governance',
+      title: 'DPDP Act 2023 Microdata Anonymization',
+      question: 'What are the k-anonymity parameters and cell suppression thresholds mandated for statistical release under DPDP 2023?',
+      summary: 'K-Anonymity (k ≥ 5): Every quasi-identifier combination must share at least 5 respondent records.',
+      bullets: [
+        { label: 'K-Anonymity (k ≥ 5)', text: 'Every quasi-identifier combination must share at least 5 respondent records.' },
+        { label: 'Suppression', text: 'Cell counts < 3 in small district aggregates must be suppressed or perturbed.' },
+        { label: 'Direct Identifiers', text: 'Names, Aadhaar tokens, and telephone numbers must be removed or hashed.' }
+      ],
+      sourceLabel: 'MoSPI Cadre Standard',
+      isCustom: false,
+      isPinned: false,
+      isFlipped: false,
+      createdAt: 1700000004000
+    },
+    {
+      id: 'cadre_rc_6',
+      topic: 'Labour Statistics',
+      title: 'PLFS Usual vs Current Weekly Activity Status',
+      question: 'Define the reference period differences between Usual Status (ps+ss) and Current Weekly Status (CWS) in PLFS.',
+      summary: 'Usual Status reference period is 365 days; CWS reference period is 7 preceding days.',
+      bullets: [
+        { label: 'Usual Status (ps+ss)', text: 'Activity pursued for a relatively long time during reference 365 days.' },
+        { label: 'CWS Status', text: 'Activity status determined with reference period of last 7 preceding days.' },
+        { label: 'Priority Criterion', text: 'Employed precedes Unemployed, which precedes Out of Labour Force.' }
+      ],
+      sourceLabel: 'MoSPI Cadre Standard',
+      isCustom: false,
+      isPinned: false,
+      isFlipped: false,
+      createdAt: 1700000005000
+    }
+  ];
+
+  function initRevisionCardsDeckEngine() {
+    const STORAGE_KEY = 'nirdesha_revision_flashcards';
+
+    function loadRevisionDeck() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            const existingIds = new Set(parsed.map(c => c.id));
+            SEED_CADRE_REVISION_CARDS.forEach(seed => {
+              if (!existingIds.has(seed.id)) {
+                parsed.push({ ...seed });
+              }
+            });
+            return parsed;
+          }
+        }
+      } catch (e) {}
+      return SEED_CADRE_REVISION_CARDS.map(c => ({ ...c }));
+    }
+
+    let revisionDeck = loadRevisionDeck();
+
+    function saveRevisionDeck() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(revisionDeck));
+      } catch (e) {}
+      updateCounts();
+    }
+
+    let activeFilter = 'all';
+    let activeSearch = '';
+    let allFlipped = false;
+
+    function updateCounts() {
+      const elAll = document.getElementById('count-filter-all');
+      const elPinned = document.getElementById('count-filter-pinned');
+      const elNotes = document.getElementById('count-filter-notes');
+      const elCadre = document.getElementById('count-filter-cadre');
+
+      if (elAll) elAll.textContent = revisionDeck.length;
+      if (elPinned) elPinned.textContent = revisionDeck.filter(c => c.isPinned).length;
+      if (elNotes) elNotes.textContent = revisionDeck.filter(c => c.isCustom).length;
+      if (elCadre) elCadre.textContent = revisionDeck.filter(c => !c.isCustom).length;
+    }
+
+    function renderRevisionCardsUI() {
+      const grid = document.getElementById('revision-cards-grid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      updateCounts();
+
+      let filtered = [...revisionDeck];
+
+      if (activeFilter === 'pinned') {
+        filtered = filtered.filter(c => c.isPinned);
+      } else if (activeFilter === 'notes') {
+        filtered = filtered.filter(c => c.isCustom);
+      } else if (activeFilter === 'cadre') {
+        filtered = filtered.filter(c => !c.isCustom);
+      }
+
+      if (activeSearch) {
+        const q = activeSearch.toLowerCase();
+        filtered = filtered.filter(c =>
+          (c.title && c.title.toLowerCase().includes(q)) ||
+          (c.topic && c.topic.toLowerCase().includes(q)) ||
+          (c.question && c.question.toLowerCase().includes(q)) ||
+          (c.summary && c.summary.toLowerCase().includes(q)) ||
+          (c.bullets && c.bullets.some(b => b.text && b.text.toLowerCase().includes(q)))
+        );
+      }
+
+      // PINNED CARDS HIERARCHY: Pinned cards ALWAYS float to the top
+      filtered.sort((a, b) => {
+        if (a.isPinned && !b.isPinned) return -1;
+        if (!a.isPinned && b.isPinned) return 1;
+        return (b.createdAt || 0) - (a.createdAt || 0);
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1.5rem; background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 6px;">
+            <h4 style="margin: 0 0 0.35rem 0; font-weight: 800; color: #002b49;">No Revision Cards Match This Filter</h4>
+            <p style="margin: 0 0 1rem 0; font-size: 0.85rem; color: #64748b;">
+              ${activeFilter === 'pinned' ? 'You have not pinned any cards for exam revision yet. Click the pin icon on any card to prioritize it!' : 'Generate flashcards from your study notes to see them here.'}
+            </p>
+            <button type="button" class="btn-admin-action" id="btn-empty-jump-notes" style="padding: 0.45rem 1rem;">Go to Study Notes →</button>
+          </div>
+        `;
+        const jumpBtn = grid.querySelector('#btn-empty-jump-notes');
+        if (jumpBtn) {
+          jumpBtn.addEventListener('click', () => {
+            switchTab('notes');
+          });
+        }
+        return;
+      }
+
+      filtered.forEach(card => {
+        const cardEl = document.createElement('div');
+        cardEl.className = `notebook-card ${card.isPinned ? 'is-pinned-card' : ''}`;
+        cardEl.setAttribute('data-card-id', card.id);
+
+        const bulletsHtml = (card.bullets || []).map(b => `
+          <div class="notebook-card-bullet">
+            <span>▸</span>
+            <div><strong>${escapeHtml(b.label || 'Takeaway')}:</strong> ${escapeHtml(b.text || '')}</div>
+          </div>
+        `).join('');
+
+        cardEl.innerHTML = `
+          <div>
+            <div class="flashcard-header">
+              <div style="display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;">
+                <span class="notebook-topic">${escapeHtml(card.topic || 'Revision')}</span>
+                <span class="flashcard-source-badge ${card.isCustom ? 'badge-from-note' : ''}">
+                  ${escapeHtml(card.sourceLabel || (card.isCustom ? 'From Notes' : 'Cadre Standard'))}
+                </span>
+                ${card.isPinned ? `
+                  <span class="flashcard-pinned-badge">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path></svg>
+                    PINNED
+                  </span>
+                ` : ''}
+              </div>
+              <div class="flashcard-actions">
+                <button type="button" class="btn-pin-flashcard ${card.isPinned ? 'active' : ''}" title="${card.isPinned ? 'Unpin from priority revision' : 'Pin for urgent exam revision'}" aria-label="${card.isPinned ? 'Unpin from priority revision' : 'Pin for urgent exam revision'}">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="${card.isPinned ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path></svg>
+                </button>
+                ${card.isCustom ? `
+                  <button type="button" class="btn-del-flashcard" title="Delete Flashcard" aria-label="Delete Flashcard">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                  </button>
+                ` : ''}
+              </div>
+            </div>
+
+            <h4 class="notebook-card-title">${escapeHtml(card.title || 'Revision Concept')}</h4>
+
+            <!-- Front / Question Box -->
+            <div class="flashcard-question-box">
+              <span class="flashcard-question-label">Active Recall Challenge:</span>
+              ${escapeHtml(card.question || '')}
+            </div>
+
+            <!-- Back / Key Takeaways & Formulas (toggled on flip) -->
+            <div class="flashcard-back-content" style="${card.isFlipped ? 'display: block;' : 'display: none;'}">
+              <div class="flashcard-key-rule">
+                <span class="flashcard-rule-label">CRITICAL REVISION TAKEAWAY &amp; FORMULA:</span>
+                <div class="flashcard-rule-text">${escapeHtml(card.summary || '')}</div>
+              </div>
+              <div class="flashcard-bullets-wrap">
+                ${bulletsHtml}
+              </div>
+            </div>
+          </div>
+
+          <div class="flashcard-footer">
+            <button type="button" class="btn-flip-flashcard">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              <span>${card.isFlipped ? 'Hide Key' : 'Reveal Revision Key & Formulas'}</span>
+            </button>
+            <span style="font-size: 0.68rem; color: #94a3b8;">
+              ${card.isPinned ? 'Priority Deck' : 'Standard Deck'}
+            </span>
+          </div>
+        `;
+
+        // Pin Handler: ALLOW ANY FLASHCARD TO BE PINNED IN REVISION CARD AREA
+        const btnPin = cardEl.querySelector('.btn-pin-flashcard');
+        if (btnPin) {
+          btnPin.addEventListener('click', (e) => {
+            e.stopPropagation();
+            card.isPinned = !card.isPinned;
+            saveRevisionDeck();
+            renderRevisionCardsUI();
+            showNirdeshaToast(card.isPinned ? `✓ Pinned "${escapeHtml(card.title)}" for exam revision priority!` : `Unpinned "${escapeHtml(card.title)}".`);
+          });
+        }
+
+        // Flip Handler
+        const btnFlip = cardEl.querySelector('.btn-flip-flashcard');
+        if (btnFlip) {
+          btnFlip.addEventListener('click', (e) => {
+            e.stopPropagation();
+            card.isFlipped = !card.isFlipped;
+            const backEl = cardEl.querySelector('.flashcard-back-content');
+            const btnText = btnFlip.querySelector('span');
+            if (backEl) backEl.style.display = card.isFlipped ? 'block' : 'none';
+            if (btnText) btnText.textContent = card.isFlipped ? 'Hide Key' : 'Reveal Revision Key & Formulas';
+          });
+        }
+
+        // Delete Handler
+        const btnDel = cardEl.querySelector('.btn-del-flashcard');
+        if (btnDel) {
+          btnDel.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (confirm(`Remove "${card.title}" from Revision Cards?`)) {
+              revisionDeck = revisionDeck.filter(c => c.id !== card.id);
+              saveRevisionDeck();
+              renderRevisionCardsUI();
+              showNirdeshaToast(`Removed "${escapeHtml(card.title)}" from Revision Cards.`);
+            }
+          });
+        }
+
+        grid.appendChild(cardEl);
+      });
+    }
+
+    // Filter buttons
+    const filterBtns = document.querySelectorAll('.revision-filter-btn[data-filter]');
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeFilter = btn.getAttribute('data-filter');
+        renderRevisionCardsUI();
+      });
+    });
+
+    // Search input
+    const searchInput = document.getElementById('revision-cards-search');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        activeSearch = e.target.value.trim();
+        renderRevisionCardsUI();
+      });
+    }
+
+    // Toggle all cards reveal/hide
+    const btnToggleAll = document.getElementById('btn-revision-toggle-all');
+    const toggleLabel = document.getElementById('btn-revision-toggle-label');
+    if (btnToggleAll) {
+      btnToggleAll.addEventListener('click', () => {
+        allFlipped = !allFlipped;
+        revisionDeck.forEach(c => c.isFlipped = allFlipped);
+        if (toggleLabel) toggleLabel.textContent = allFlipped ? 'Hide All Keys' : 'Reveal All Keys';
+        renderRevisionCardsUI();
+      });
+    }
+
+    // Jump to notes button
+    const btnJumpNotes = document.getElementById('btn-revision-jump-notes');
+    if (btnJumpNotes) {
+      btnJumpNotes.addEventListener('click', () => {
+        switchTab('notes');
+      });
+    }
+
+    // Global APIs
+    window.addFlashcardToRevisionDeck = function(card) {
+      revisionDeck.unshift(card);
+      saveRevisionDeck();
+      renderRevisionCardsUI();
+    };
+
+    window.addFlashcardsBatchToRevisionDeck = function(cards) {
+      cards.forEach(c => revisionDeck.unshift(c));
+      saveRevisionDeck();
+      renderRevisionCardsUI();
+    };
+
+    window.renderRevisionCardsUI = renderRevisionCardsUI;
+
+    // Initial render
+    renderRevisionCardsUI();
+  }
+
+  // Initialize Revision Cards Deck Engine
+  initRevisionCardsDeckEngine();

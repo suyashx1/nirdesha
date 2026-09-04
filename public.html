@@ -186,7 +186,7 @@
                         <div class="trainee-topbar-right">
           <!-- Regional Language Selector Button -->
           <button class="top-lang-btn notranslate" id="lang-toggle-btn" translate="no" aria-haspopup="dialog" aria-expanded="false" title="Select regional language" style="margin-right: 0.35rem;">
-            🌐 <span id="current-lang-label" class="notranslate" translate="no">English</span> ▾
+            <span id="current-lang-label" class="notranslate" translate="no">English</span> ▾
           </button>
 
           <!-- Theme Mode Dropdown (Hover-Activated: Dark / Bright / System) -->
@@ -656,57 +656,53 @@
              VIEW 3: REVISION CARDS
              ====================================================================== -->
         <div class="trainee-view-tab" id="view-revision-cards" style="display: none;">
-          <div style="margin-bottom: 1.5rem;">
-            <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">
-              Revision Cards (Exam & Field Summaries)
-            </h2>
-            <p style="font-size: 0.85rem; color: #64748b; margin: 0;">
-              Distilled core principles for fast memorization and operational field readiness.
-            </p>
+          <div class="revision-cards-header-wrap" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: #ea580c; letter-spacing: 0.05em; margin-bottom: 0.2rem;">Cadre Revision &amp; Active Recall Engine</div>
+              <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">
+                Revision Cards &amp; Flashcard Decks
+              </h2>
+              <p style="font-size: 0.85rem; color: #64748b; margin: 0;">
+                Distilled high-yield formulas, theorems, and field rules. Generate custom flashcards directly from your Study Notes.
+              </p>
+            </div>
+            <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
+              <button type="button" class="btn-admin-outline" id="btn-revision-jump-notes" style="padding: 0.45rem 0.9rem; font-size: 0.8rem; display: flex; align-items: center; gap: 0.4rem;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                <span>Generate from Notes</span>
+              </button>
+              <button type="button" class="btn-admin-action" id="btn-revision-toggle-all" style="padding: 0.45rem 1rem; font-size: 0.8rem; display: flex; align-items: center; gap: 0.4rem;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                <span id="btn-revision-toggle-label">Reveal All Keys</span>
+              </button>
+            </div>
           </div>
 
-          <div class="notebooklm-grid">
-            <div class="notebook-card">
-              <div class="notebook-topic">Sampling Design</div>
-              <h4 class="notebook-card-title">Horvitz-Thompson Estimator & Multipliers</h4>
-              <div class="notebook-card-bullet"><span>▸</span> <strong>Unbiasedness:</strong> E[Y_HT] = Y is guaranteed regardless of sampling structure.</div>
-              <div class="notebook-card-bullet"><span>▸</span> <strong>Variance:</strong> Sen-Yates-Grundy variance formulation applies when sample size is fixed.</div>
+          <!-- Revision Filter & Search Bar -->
+          <div class="revision-cards-toolbar">
+            <div class="revision-filter-group" id="revision-filter-group">
+              <button type="button" class="revision-filter-btn active" data-filter="all">
+                All Cards (<span id="count-filter-all">0</span>)
+              </button>
+              <button type="button" class="revision-filter-btn" data-filter="pinned">
+                Pinned for Exam (<span id="count-filter-pinned">0</span>)
+              </button>
+              <button type="button" class="revision-filter-btn" data-filter="notes">
+                From My Notes (<span id="count-filter-notes">0</span>)
+              </button>
+              <button type="button" class="revision-filter-btn" data-filter="cadre">
+                Cadre Standards (<span id="count-filter-cadre">6</span>)
+              </button>
             </div>
+            <div class="revision-search-wrap">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <input type="text" id="revision-cards-search" placeholder="Search concepts, formulas, theorems...">
+            </div>
+          </div>
 
-            <div class="notebook-card">
-              <div class="notebook-topic">National Accounts</div>
-              <h4 class="notebook-card-title">Supply and Use Tables (SUT) Balance</h4>
-              <div class="notebook-card-bullet"><span>▸</span> <strong>Accounting Identity:</strong> Total Supply at Purchasers' Prices = Total Use at Purchasers' Prices.</div>
-              <div class="notebook-card-bullet"><span>▸</span> <strong>Base Year:</strong> 2011-12 benchmark tables provide structural weights for GDP deflators.</div>
-            </div>
-
-            <div class="notebook-card">
-              <div class="notebook-topic">CAPI Protocol</div>
-              <h4 class="notebook-card-title">GPS Verification & Non-Response Imputation</h4>
-              <div class="notebook-card-bullet"><span>▸</span> <strong>Validation:</strong> GPS coordinates must match census enumeration block within 50-meter tolerance.</div>
-              <div class="notebook-card-bullet"><span>▸</span> <strong>Imputation:</strong> Hot-deck donor imputation is applied for item non-response.</div>
-            </div>
-
-            <div class="notebook-card">
-              <div class="notebook-topic">Price Index Numbers</div>
-              <h4 class="notebook-card-title">CPI Basket Splicing & Substitution Bias</h4>
-              <div class="notebook-card-bullet"><span>▸</span> <strong>Laspeyres Bias:</strong> Fixed base quantities overestimate inflation due to consumer price substitution.</div>
-              <div class="notebook-card-bullet"><span>▸</span> <strong>Splicing Method:</strong> Ratio of indices during overlapping base year links old and rebased series.</div>
-            </div>
-
-            <div class="notebook-card">
-              <div class="notebook-topic">Data Governance</div>
-              <h4 class="notebook-card-title">DPDP Act 2023 Microdata Anonymization</h4>
-              <div class="notebook-card-bullet"><span>▸</span> <strong>K-Anonymity (k ≥ 5):</strong> Every quasi-identifier combination must share at least 5 respondent records.</div>
-              <div class="notebook-card-bullet"><span>▸</span> <strong>Suppression:</strong> Cell counts < 3 in small district aggregates must be suppressed or perturbed.</div>
-            </div>
-
-            <div class="notebook-card">
-              <div class="notebook-topic">Labour Statistics</div>
-              <h4 class="notebook-card-title">PLFS Usual vs Current Weekly Activity Status</h4>
-              <div class="notebook-card-bullet"><span>▸</span> <strong>Usual Status (ps+ss):</strong> Activity pursued for a relatively long time during reference 365 days.</div>
-              <div class="notebook-card-bullet"><span>▸</span> <strong>CWS Status:</strong> Activity status determined with reference period of last 7 preceding days.</div>
-            </div>
+          <!-- Dynamic Revision Cards Grid -->
+          <div class="notebooklm-grid" id="revision-cards-grid">
+            <!-- Dynamically populated flashcards -->
           </div>
         </div>
 
@@ -726,34 +722,43 @@
 
           <!-- Trainee ELO & Competency Rating Banner in AI Quiz Section -->
           <div class="quiz-elo-banner" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
-            <div class="quarterly-metric-box" style="border-left: 3.5px solid #ea580c; background: linear-gradient(135deg, #fff7ed 0%, #ffffff 100%);">
-              <span class="metric-label" style="display: flex; align-items: center; justify-content: space-between;">
-                <span>Current Trainee Elo Rating</span>
-                <span style="font-size: 0.9rem;">⚡</span>
-              </span>
+            <div class="quarterly-metric-box metric-interactive-box" style="border-left: 3.5px solid #ea580c; background: linear-gradient(135deg, #fff7ed 0%, #ffffff 100%);" data-quiz-metric-key="elo">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <span class="metric-label" style="margin: 0;">Current Trainee Elo Rating</span>
+                <button type="button" class="btn-metric-how" data-quiz-metric="elo" title="Learn how Elo Rating works">How it works</button>
+              </div>
               <div style="display: flex; align-items: baseline; gap: 6px; margin-top: 2px;">
                 <span class="metric-val" id="quiz-view-elo-score" style="color: #ea580c; font-size: 1.65rem; font-weight: 900;">1420</span>
                 <span style="font-size: 0.75rem; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 2px 6px; border-radius: 4px;">+18 Today</span>
               </div>
-              <span style="font-size: 0.72rem; color: #64748b; font-weight: 700;">National Cadre Percentile: <strong>88.4th</strong></span>
+              <span style="font-size: 0.72rem; color: #64748b; font-weight: 700;">National Percentile: <strong>88.4th</strong></span>
             </div>
 
-            <div class="quarterly-metric-box" style="border-left: 3.5px solid #002b49; background: #ffffff;">
-              <span class="metric-label">Cadre Competency Tier</span>
-              <span class="metric-val" id="quiz-view-cadre-tier" style="color: #002b49; font-size: 1.15rem;">SSO Cadre Track</span>
-              <span style="font-size: 0.72rem; color: #64748b; font-weight: 700;">Division: <strong>NSSO (FOD) Headquarters</strong></span>
+            <div class="quarterly-metric-box metric-interactive-box" style="border-left: 3.5px solid #002b49; background: #ffffff;" data-quiz-metric-key="tier">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <span class="metric-label" style="margin: 0;">Competency Level & Tier</span>
+                <button type="button" class="btn-metric-how" data-quiz-metric="tier" title="Learn how Competency Tier is determined">How it works</button>
+              </div>
+              <span class="metric-val" id="quiz-view-cadre-tier" style="color: #002b49; font-size: 1.15rem;">Proficient Tier (Advanced)</span>
+              <span style="font-size: 0.72rem; color: #64748b; font-weight: 700;">Evaluation Track: <strong>Standard Assessment</strong></span>
             </div>
 
-            <div class="quarterly-metric-box" style="border-left: 3.5px solid #16a34a; background: #ffffff;">
-              <span class="metric-label">Total Speed Bonus Banked</span>
+            <div class="quarterly-metric-box metric-interactive-box" style="border-left: 3.5px solid #16a34a; background: #ffffff;" data-quiz-metric-key="speed">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <span class="metric-label" style="margin: 0;">Total Speed Bonus Banked</span>
+                <button type="button" class="btn-metric-how" data-quiz-metric="speed" title="Learn how Speed Bonus is calculated">How it works</button>
+              </div>
               <span class="metric-val" id="quiz-view-speed-bonus" style="color: #16a34a; font-size: 1.35rem;">+256 pts</span>
               <span style="font-size: 0.72rem; color: #64748b; font-weight: 700;">Earned via rapid question answers</span>
             </div>
 
-            <div class="quarterly-metric-box" style="border-left: 3.5px solid #0284c7; background: #ffffff;">
-              <span class="metric-label">Proctored Integrity Index</span>
+            <div class="quarterly-metric-box metric-interactive-box" style="border-left: 3.5px solid #0284c7; background: #ffffff;" data-quiz-metric-key="integrity">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <span class="metric-label" style="margin: 0;">Proctored Integrity Index</span>
+                <button type="button" class="btn-metric-how" data-quiz-metric="integrity" title="Learn how Integrity Index works">How it works</button>
+              </div>
               <span class="metric-val" id="quiz-view-integrity-score" style="color: #0284c7; font-size: 1.35rem;">100% (Merit)</span>
-              <span style="font-size: 0.72rem; color: #64748b; font-weight: 700;">Zero tab-switch or ethical violations</span>
+              <span style="font-size: 0.72rem; color: #64748b; font-weight: 700;">Zero tab-switch or focus violations</span>
             </div>
           </div>
 
@@ -789,7 +794,7 @@
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; flex-wrap: wrap; gap: 0.5rem;">
                 <div>
                   <h3 style="font-size: 1.15rem; font-weight: 800; color: #002b49; margin: 0 0 2px 0;">
-                    🎯 Custom Mentor Evaluations
+                    Custom Mentor Evaluations
                   </h3>
                   <p style="font-size: 0.8rem; color: #64748b; margin: 0;">
                     Personalized quizzes built with your AI Study Mentor. Answer faster than question time to earn <strong>Bonus Speed Points</strong>!
@@ -911,27 +916,42 @@
               </p>
             </div>
             <button type="button" class="btn-create-quiz-chip" id="btn-retest-all-trigger" style="background:#fef2f2; border-color:#dc2626; color:#dc2626;">
-              <span>⚡ Practice All Weak Areas</span>
+              <span>Practice All Weak Areas</span>
             </button>
           </div>
 
           <!-- Diagnostic Metrics Banner -->
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
-            <div class="quarterly-metric-box" style="border-left: 3.5px solid #dc2626;">
-              <span class="metric-label">Active Skill Gaps</span>
-              <span class="metric-val" id="sg-active-count" style="color: #dc2626;">2 Topics</span>
+            <div class="quarterly-metric-box metric-interactive-box" style="border-left: 3.5px solid #dc2626;" data-metric-key="active">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <span class="metric-label" style="margin: 0;">Active Skill Gaps</span>
+                <button type="button" class="btn-metric-how" data-metric="active" title="Learn how Active Skill Gaps are tracked">How it works</button>
+              </div>
+              <span class="metric-val" id="sg-active-count" style="color: #dc2626;">3 Topics</span>
             </div>
-            <div class="quarterly-metric-box" style="border-left: 3.5px solid #16a34a;">
-              <span class="metric-label">Remediated & Mastered</span>
-              <span class="metric-val" id="sg-resolved-count" style="color: #16a34a;">4 Topics</span>
+
+            <div class="quarterly-metric-box metric-interactive-box" style="border-left: 3.5px solid #16a34a;" data-metric-key="mastered">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <span class="metric-label" style="margin: 0;">Cleared & Mastered</span>
+                <button type="button" class="btn-metric-how" data-metric="mastered" title="Learn how weak areas are cleared and mastered">How it works</button>
+              </div>
+              <span class="metric-val" id="sg-resolved-count" style="color: #16a34a;">0 Topics</span>
             </div>
-            <div class="quarterly-metric-box" style="border-left: 3.5px solid #0284c7;">
-              <span class="metric-label">Cadre Readiness Index</span>
-              <span class="metric-val" id="sg-readiness-index" style="color: #0284c7;">84% (SSO Track)</span>
+
+            <div class="quarterly-metric-box metric-interactive-box" style="border-left: 3.5px solid #0284c7;" data-metric-key="readiness">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <span class="metric-label" style="margin: 0;">Overall Readiness Index</span>
+                <button type="button" class="btn-metric-how" data-metric="readiness" title="Learn how Readiness Index is calculated">How it works</button>
+              </div>
+              <span class="metric-val" id="sg-readiness-index" style="color: #0284c7;">65%</span>
             </div>
-            <div class="quarterly-metric-box" style="border-left: 3.5px solid #ea580c;">
-              <span class="metric-label">Remediation Elo Bonus</span>
-              <span class="metric-val" id="sg-mastery-bonus" style="color: #ea580c;">+200 pts</span>
+
+            <div class="quarterly-metric-box metric-interactive-box" style="border-left: 3.5px solid #ea580c;" data-metric-key="bonus">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <span class="metric-label" style="margin: 0;">Recovery Bonus (Elo)</span>
+                <button type="button" class="btn-metric-how" data-metric="bonus" title="Learn how Elo recovery bonus points are awarded">How it works</button>
+              </div>
+              <span class="metric-val" id="sg-mastery-bonus" style="color: #ea580c;">+0 pts</span>
             </div>
           </div>
 
@@ -939,7 +959,7 @@
           <div class="notif-filter-pills" id="skill-gap-filter-pills" style="margin-bottom: 1.25rem;">
             <button type="button" class="notif-pill active" data-sg-filter="all">All Identified Topics</button>
             <button type="button" class="notif-pill" data-sg-filter="active">Active Deficits (Needs Attention)</button>
-            <button type="button" class="notif-pill" data-sg-filter="resolved">Mastered & Resolved ✓</button>
+            <button type="button" class="notif-pill" data-sg-filter="resolved">Cleared & Mastered ✓</button>
           </div>
 
           <!-- Skill Gaps List Container -->
@@ -960,7 +980,7 @@
             </div>
             <div>
               <button type="button" class="btn-create-quiz-chip" id="btn-mentor-quiz-chip" title="Build a custom quiz with AI Mentor">
-                <span>🎯 Create Custom Quiz</span>
+                <span>Create Custom Quiz</span>
               </button>
             </div>
           </div>
@@ -983,7 +1003,7 @@
                 <!-- AI Study Mentor Language Selector -->
                 <div class="ai-lang-selector-wrap" id="mentor-lang-wrap">
                   <select id="mentor-lang-select" class="ai-lang-select" title="Choose language to speak and get answers">
-                    <option value="English" selected>🌐 English</option>
+                    <option value="English" selected>English</option>
                     <option value="Hindi">हिंदी (Hindi)</option>
                     <option value="Odia">ଓଡ଼ିଆ (Odia)</option>
                     <option value="Bengali">বাংলা (Bengali)</option>
@@ -1055,7 +1075,7 @@
                   <strong>Past Conversations</strong>
                   <span class="history-count-badge" id="history-convo-count">0/10</span>
                 </div>
-                <button type="button" class="btn-drawer-close" id="btn-close-mentor-history" title="Close drawer" aria-label="Close past conversations">&times;</button>
+                <button type="button" class="btn-drawer-close" id="btn-close-mentor-history" title="Close drawer" aria-label="Close past conversations"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
               </div>
 
               <div class="drawer-actions">
@@ -1066,7 +1086,7 @@
               </div>
 
               <div class="drawer-retention-notice">
-                <span>🕒 Auto-retains last 10 sessions. Oldest chats auto-rotate out.</span>
+                <span>Auto-retains last 10 sessions. Oldest chats auto-rotate out.</span>
               </div>
 
               <div class="history-convos-list" id="history-convos-list">
@@ -1077,7 +1097,7 @@
             <!-- High-Yield Note Saving Reminder Banner (Time-to-time notification) -->
             <div class="mentor-save-reminder-banner" id="mentor-save-reminder-banner" style="display: none;">
               <div class="reminder-text-wrap">
-                <span class="reminder-icon">💡</span>
+                <span class="reminder-icon" style="font-weight: 800; font-size: 0.85rem; color: #ea580c;">NOTE:</span>
                 <span class="reminder-text">
                   <strong>Cadre Study Value Detected:</strong> Valuable formulas in this session. Save to Notes before it rotates out of your 10-chat history!
                 </span>
@@ -1202,6 +1222,17 @@
                     <span>Export Notes</span>
                   </button>
 
+                  <!-- Generate Flashcards from Notebook Button -->
+                  <button type="button" class="btn-notebook-tool btn-gen-flashcards" id="btn-gen-notebook-flashcards" data-tooltip="Generate Revision Flashcards from Notebook" aria-label="Generate Flashcards">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                      <path d="M12 4v16"></path>
+                      <path d="M7 8h1"></path>
+                      <path d="M16 8h1"></path>
+                    </svg>
+                    <span>Flashcards</span>
+                  </button>
+
                   <div class="notes-search-wrap">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                     <input type="text" id="notes-search-input" placeholder="Search snippets in this notebook...">
@@ -1220,7 +1251,7 @@
                   <div>
                     <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: #dc2626; letter-spacing: 0.5px;">Deleted Notes Archive</div>
                     <h3 style="font-size: 1.25rem; font-weight: 800; color: #991b1b; margin: 0 0 0.25rem 0;">
-                      🗑️ Recycled Notes (Last 10 Deleted)
+                      Recycled Notes (Last 10 Deleted)
                     </h3>
                     <p style="font-size: 0.8rem; color: #64748b; margin: 0;">
                       Retains your last 10 deleted snippets or saved chat sessions. Restore back to any notebook anytime.
@@ -1252,7 +1283,7 @@
           <div class="elab-header-banner">
             <div>
               <h2 class="elab-header-title">
-                <span>⚡ eLab Practice Environment</span>
+                <span>eLab Practice Environment</span>
                 <span class="elab-badge-pill">Learn by Building</span>
               </h2>
               <p class="elab-header-desc">
@@ -1345,133 +1376,931 @@
         </div>
 
         <!-- ======================================================================
-             VIEW 6: OFFICER PROFILE (ORIGINAL CLEAN SERVICE DOSSIER)
+             VIEW 6: OFFICER PROFILE (OFFICIAL MOSPI CADRE DOSSIER & EDIT ENGINE)
              ====================================================================== -->
         <div class="trainee-view-tab" id="view-profile" style="display: none;">
-          <div style="margin-bottom: 1.5rem;">
-            <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">
-              User Service Profile
-            </h2>
-            <p style="font-size: 0.85rem; color: #64748b; margin: 0;">
-              Cadre records, employee roll number, and competency governance status.
-            </p>
-          </div>
+          <div class="profile-dossier-wrapper">
 
-          <!-- Document Drop AI Extraction Pipeline (Phase 2) -->
-          <div class="doc-drop-zone" id="public-pdf-drop-zone">
-            <input type="file" id="public-pdf-input" accept="application/pdf" style="display:none;">
-            <div class="doc-drop-icon">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="12" y2="12"></line><line x1="15" y1="15" x2="12" y2="12"></line></svg>
-            </div>
-            <div class="doc-drop-content">
-              <div class="doc-drop-title">⚡ Document Drop AI Extraction Pipeline (PDF Resume / Service Record)</div>
-              <div class="doc-drop-sub">Drag & drop a PDF resume or service record here, or <span class="doc-drop-link" id="public-pdf-browse">browse file</span> to auto-parse Cadre, Division, and Baseline Skills.</div>
-            </div>
-          </div>
-
-          <!-- Shimmering Loading State for AI Extraction -->
-          <div class="shimmer-container" id="public-pdf-shimmer" style="display:none;">
-            <div class="shimmer-title-row">
-              <span class="status-dot-pulse"></span>
-              <span id="public-shimmer-status-text">⚡ Initializing MoSPI AI Document Extraction Engine...</span>
-            </div>
-            <div class="shimmer-block shimmer-bar"></div>
-            <div class="shimmer-block shimmer-bar" style="width: 75%;"></div>
-            <div class="shimmer-block shimmer-bar" style="width: 50%;"></div>
-          </div>
-
-          <div class="profile-overview-card" style="margin-top: 1.25rem;">
-            <div class="profile-avatar-row">
-              <div class="profile-avatar-container">
-                <div class="profile-avatar-large" style="background: #0284c7;" id="public-profile-avatar">SR</div>
-                <button type="button" class="avatar-upload-overlay" id="public-avatar-btn" title="Change Avatar Image">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
-                </button>
-                <input type="file" id="public-avatar-file-input" accept="image/*" style="display:none;">
-              </div>
-
-              <div style="flex:1;">
-                <label class="profile-field-label">User Full Name</label>
-                <input type="text" id="public-profile-name" class="profile-input-field" value="S. K. Raman">
+            <!-- ================================================================
+                 STATE A: OFFICIAL CADRE DOSSIER VIEW MODE (EXACT MATCH TO REFERENCE)
+                 ================================================================ -->
+            <div id="profile-view-mode" class="profile-mode-view">
+              <div class="officer-fb-profile-container" style="margin-bottom: 0;">
                 
-                <label class="profile-field-label" style="margin-top: 0.5rem;">Role / Designation</label>
-                <input type="text" id="public-profile-role" class="profile-input-field" value="Junior Statistical Officer (JSO)">
+                <!-- 1. Cover Photo Banner with Dynamic Stage & Edit Menu -->
+                <div class="profile-cover-wrap" id="public-profile-cover-wrap">
+                  <!-- Dynamic Banner Stage Layer -->
+                  <div class="profile-banner-stage" id="public-profile-banner-stage">
+                    <div class="cover-gradient-overlay"></div>
+                  </div>
+
+                  <!-- Tricolor Accent Top Stripe -->
+                  <div class="cover-tricolor-accent"></div>
+
+                  <!-- Official Watermark -->
+                  <div class="cover-gov-watermark">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="opacity: 0.9;"><path d="M12 1L3 5v2h18V5L12 1zm-7 8v8h2V9H5zm5 0v8h2V9h-2zm5 0v8h2V9h-2zm5 0v8h2V9h-2zM2 19v3h20v-3H2z"/></svg>
+                    <span>Ministry of Statistics & Programme Implementation • Central Cadre Record</span>
+                  </div>
+
+                  <!-- Banner Edit Logo Button & Dropdown -->
+                  <div class="banner-edit-action-wrap">
+                    <button type="button" class="banner-edit-logo-btn" id="btn-banner-edit-menu" title="Change Profile Banner" aria-label="Change Profile Banner" aria-haspopup="true" aria-expanded="false">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events: none;">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                        <circle cx="12" cy="13" r="4"></circle>
+                      </svg>
+                    </button>
+                    <div class="banner-edit-dropdown" id="banner-edit-dropdown" style="display: none;">
+                      <button type="button" class="banner-dropdown-item" id="btn-banner-opt-upload">
+                        <span class="banner-dropdown-icon">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                        </span>
+                        <span class="banner-dropdown-text">
+                          <strong>Upload from computer</strong>
+                          <small>Supports GIF & image &lt; 5MB</small>
+                        </span>
+                      </button>
+                      <button type="button" class="banner-dropdown-item" id="btn-banner-opt-library">
+                        <span class="banner-dropdown-icon">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                        </span>
+                        <span class="banner-dropdown-text">
+                          <strong>Choose from Banner Library</strong>
+                          <small>11 interactive & animated patterns</small>
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Hidden Upload Input for Banner (GIF / Images < 5MB) -->
+                  <input type="file" id="public-banner-file-input" accept="image/gif,image/jpeg,image/png,image/webp" style="display:none;">
+
+                  <!-- SVG Filters for Pattern 6 and Pattern 7 -->
+                  <svg width="0" height="0" style="position: absolute; pointer-events: none;" aria-hidden="true">
+                    <filter id="cracks">
+                      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="5" seed="10" result="noise" />
+                      <feColorMatrix type="luminanceToAlpha" in="noise" result="alphaNoise" />
+                      <feComponentTransfer in="alphaNoise" result="plates">
+                        <feFuncA type="discrete" tableValues="0 1" />
+                      </feComponentTransfer>
+                      <feConvolveMatrix order="3 3" kernelMatrix="-1 -1 -1 -1 8 -1 -1 -1 -1" in="plates" result="edges" />
+                      <feComponentTransfer in="edges" result="invertedEdges">
+                        <feFuncR type="table" tableValues="1 0" />
+                        <feFuncG type="table" tableValues="1 0" />
+                        <feFuncB type="table" tableValues="1 0" />
+                      </feComponentTransfer>
+                      <feFlood floodColor="#000" result="bgColor" />
+                      <feComposite operator="in" in="bgColor" in2="invertedEdges" />
+                    </filter>
+                    <filter id="handDrawnNoise">
+                      <feTurbulence result="noise" numOctaves="5" baseFrequency="0.0065" type="fractalNoise" />
+                      <feDisplacementMap yChannelSelector="G" xChannelSelector="R" scale="900" in2="noise" in="SourceGraphic" />
+                    </filter>
+                  </svg>
+                </div>
+
+                <!-- 2. Profile Identity Bar -->
+                <div class="profile-identity-bar">
+                  <div class="identity-left">
+                    <div class="profile-avatar-overlap" id="public-profile-avatar-box">
+                      <span id="public-profile-avatar-initials">SR</span>
+                      <button type="button" class="avatar-edit-icon-btn" id="public-avatar-quick-btn" title="Change Avatar Photo" aria-label="Change Avatar Photo">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                      </button>
+                      <input type="file" id="public-avatar-file-input" accept="image/*" style="display:none;">
+                    </div>
+                    <div class="identity-info">
+                      <div class="identity-title-row">
+                        <h1 class="officer-name-heading" id="public-dossier-name">S. K. Raman</h1>
+                        <span class="officer-verified-seal" id="public-dossier-seal">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="#16a34a"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                          <span id="public-dossier-seal-text">Verified SSS Cadre</span>
+                        </span>
+                      </div>
+                      <div class="officer-designation-sub" id="public-dossier-role">
+                        Junior Statistical Officer (JSO) • Field Operations Division (NSSO / FOD)
+                      </div>
+                      <p class="officer-status-bio" id="public-dossier-status">
+                        "Supervising NSS 80th Round socio-economic surveys & CAPI data verification in Western Zone • Preparing for Senior Statistical Officer (SSO) 2027 benchmark."
+                      </p>
+                      <!-- Attached Social & Professional Profiles Bar -->
+                      <div class="profile-social-links-bar" id="public-dossier-social-links">
+                        <!-- Populated dynamically via renderPublicOfficerDossier() -->
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="identity-actions" style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                    <span class="badge-status-cert" style="background: #ecfdf5; border-color: #a7f3d0; color: #065f46; font-size: 0.775rem; padding: 0.45rem 0.85rem;">
+                      ✓ Official Records Synced
+                    </span>
+                    <button type="button" class="btn-toggle-edit-profile" id="btn-toggle-edit-profile" title="Edit Service Profile Details">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                      Edit Profile
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 3. Two-Column Dossier -->
+                <div class="profile-fb-grid">
+                  <div class="profile-fb-col-left">
+                    <!-- Service Records Card -->
+                    <div class="fb-card intro-card">
+                      <div class="fb-card-header">
+                        <h3 class="fb-card-title">Service Records (Cadre Registry)</h3>
+                      </div>
+                      <div class="intro-details-list">
+                        <div class="intro-item">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+                          <div>Cadre: <strong id="public-dossier-cadre">Subordinate Statistical Service (SSS)</strong></div>
+                        </div>
+                        <div class="intro-item">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                          <div>Ministry: <strong id="public-dossier-ministry">MoSPI, Government of India</strong></div>
+                        </div>
+                        <div class="intro-item">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                          <div>Station: <strong id="public-dossier-station">FOD Regional Office, Pune / New Delhi</strong></div>
+                        </div>
+                        <div class="intro-item">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                          <div>Tenure: <strong id="public-dossier-tenure">2024 Batch (2 Years Completed)</strong></div>
+                        </div>
+                        <div class="intro-item">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                          <div>Official Email: <strong id="public-dossier-email">raman.sk@mospi.gov.in</strong></div>
+                        </div>
+                        <div class="intro-item">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                          <div>Roll Code: <strong id="public-dossier-roll">SSS-2024-8891</strong></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Connected Social & Professional Profiles Card -->
+                    <div class="fb-card social-links-card">
+                      <div class="fb-card-header">
+                        <h3 class="fb-card-title">Connected Social & Web Links</h3>
+                        <button type="button" class="btn-attach-social-link" id="btn-quick-attach-social" title="Manage Attached Links">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                          <span>Attach / Edit Links</span>
+                        </button>
+                      </div>
+                      <div class="profile-social-list" id="public-profile-social-list">
+                        <!-- Populated dynamically via renderPublicOfficerDossier() -->
+                      </div>
+                    </div>
+
+                    <!-- Verified Competencies Grid -->
+                    <div class="fb-card">
+                      <div class="fb-card-header">
+                        <h3 class="fb-card-title">Verified Competencies</h3>
+                        <span style="font-size: 0.7rem; color: #64748b; font-weight: 600;">Hover for Details</span>
+                      </div>
+                      <div class="competency-grid-equal" id="public-profile-skills-grid">
+                        <!-- Populated dynamically -->
+                      </div>
+                      <div class="competency-stat-row">
+                        <span>Evaluated Baseline:</span>
+                        <strong id="public-dossier-baseline" style="color: #002b49;">1,485 Elo (Level 3 - Proficient)</strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="profile-fb-col-right">
+                    <!-- Current Operational Work & Duties -->
+                    <div class="fb-card">
+                      <div class="fb-card-header">
+                        <h3 class="fb-card-title">Current Operational Work & Duties</h3>
+                        <span class="badge-status-cert">Active Cadre Assignment</span>
+                      </div>
+                      <div class="work-items-list" id="public-profile-current-work-list">
+                        <!-- Populated dynamically -->
+                      </div>
+                    </div>
+
+                    <!-- Future Work & Cadre Transition Targets -->
+                    <div class="fb-card">
+                      <div class="fb-card-header">
+                        <h3 class="fb-card-title">Future Work & Cadre Transition Targets</h3>
+                        <span class="badge-status-cert" style="background: rgba(234, 88, 12, 0.1); color: #ea580c; border-color: #ea580c;">Target 2027</span>
+                      </div>
+                      <div class="work-items-list" id="public-profile-future-work-list">
+                        <!-- Populated dynamically -->
+                      </div>
+                    </div>
+
+                    <!-- 1. Official MoSPI Cadre Accreditations & Certifications (Shifted from bottom) -->
+                    <div class="fb-card profile-certifications-card">
+                      <div class="fb-card-header">
+                        <div>
+                          <h3 class="fb-card-title">Official Cadre Accreditations & Certifications</h3>
+                          <div class="fb-card-subtitle">Verified credentials issued under NSSTA & iGOT</div>
+                        </div>
+                        <span class="badge-status-cert">3 Verified</span>
+                      </div>
+                      <div class="profile-items-stack">
+                        <div class="profile-cert-item cert-border-green">
+                          <div class="profile-cert-top">
+                            <strong class="profile-cert-title">NSSTA Certified Field Auditor</strong>
+                            <span class="cert-status-badge badge-active">ACTIVE</span>
+                          </div>
+                          <p class="profile-cert-desc">Multi-stage listing, CAPI tablet audits, and GPS geo-fencing compliance verification.</p>
+                          <div class="profile-cert-meta">
+                            <span>Issued: Jan 2026 • Valid through Dec 2028</span>
+                            <span class="cert-score-pill">Score: 98%</span>
+                          </div>
+                        </div>
+
+                        <div class="profile-cert-item cert-border-blue">
+                          <div class="profile-cert-top">
+                            <strong class="profile-cert-title">iGOT Karmayogi: DPDP Digital Privacy</strong>
+                            <span class="cert-status-badge badge-distinction">DISTINCTION</span>
+                          </div>
+                          <p class="profile-cert-desc">Section 8 anonymization, k-anonymity protocols, and microdata privacy governance.</p>
+                          <div class="profile-cert-meta">
+                            <span>Cert ID: IGOT-2026-DPDP-891</span>
+                            <span class="cert-score-pill">Score: 94%</span>
+                          </div>
+                        </div>
+
+                        <div class="profile-cert-item cert-border-orange">
+                          <div class="profile-cert-top">
+                            <strong class="profile-cert-title">Senior Statistical Officer (SSO) Track</strong>
+                            <span class="cert-status-badge badge-eligible">88% ELIGIBLE</span>
+                          </div>
+                          <p class="profile-cert-desc">Departmental Promotion Committee (DPC) benchmark: Elo Rating ≥ 1400 and 4 Merit Quizzes.</p>
+                          <div class="profile-cert-meta">
+                            <span class="target-dpc-highlight">Target DPC Date: November 2026</span>
+                            <span class="cert-score-pill" style="color: #ea580c; border-color: rgba(234, 88, 12, 0.3); background: rgba(234, 88, 12, 0.08);">Benchmark Met</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- 2. Completed Courses & Learning Pathways -->
+                    <div class="fb-card profile-courses-card">
+                      <div class="fb-card-header">
+                        <div>
+                          <h3 class="fb-card-title">Completed Courses & Learning Tracks</h3>
+                          <div class="fb-card-subtitle">Official MoSPI & iGOT curriculum progress</div>
+                        </div>
+                        <button type="button" class="btn-card-tab-jump" data-jump-tab="courses" title="View all courses and tracks">
+                          <span>View Courses</span>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </button>
+                      </div>
+                      <div class="profile-items-stack">
+                        <div class="profile-course-item">
+                          <div class="profile-course-top">
+                            <div>
+                              <span class="profile-course-code">iGOT-Gov-2026 • Karmayogi Bharat</span>
+                              <div class="profile-course-name">Official Data Ethics, DPDP Act & Public Trust</div>
+                            </div>
+                            <span class="cert-status-badge badge-active">100% Certified</span>
+                          </div>
+                          <div class="profile-progress-bar-wrap">
+                            <div class="profile-progress-fill" style="width: 100%; background: #16a34a;"></div>
+                          </div>
+                          <div class="profile-course-footer">
+                            <span>Status: Verified Certificate Earned</span>
+                            <span style="color: #16a34a; font-weight: 700;">Complete</span>
+                          </div>
+                        </div>
+
+                        <div class="profile-course-item">
+                          <div class="profile-course-top">
+                            <div>
+                              <span class="profile-course-code">NSSTA-305 • Modern Analytics</span>
+                              <div class="profile-course-name">Public Data Science & Statistical Computing in Python</div>
+                            </div>
+                            <span class="cert-status-badge badge-distinction">91% Done</span>
+                          </div>
+                          <div class="profile-progress-bar-wrap">
+                            <div class="profile-progress-fill" style="width: 91%; background: #0284c7;"></div>
+                          </div>
+                          <div class="profile-course-footer">
+                            <span>Status: Unit 8/9 • Final Assessment Ready</span>
+                            <span style="color: #0284c7; font-weight: 700;">Final Stage</span>
+                          </div>
+                        </div>
+
+                        <div class="profile-course-item">
+                          <div class="profile-course-top">
+                            <div>
+                              <span class="profile-course-code">NSSTA-101 • Core SSS / ISS</span>
+                              <div class="profile-course-name">Advanced Multi-Stage Sampling & Survey Methodology</div>
+                            </div>
+                            <span class="cert-status-badge badge-eligible">85% Done</span>
+                          </div>
+                          <div class="profile-progress-bar-wrap">
+                            <div class="profile-progress-fill" style="width: 85%; background: #ea580c;"></div>
+                          </div>
+                          <div class="profile-course-footer">
+                            <span>Status: Unit 6: Outlier Handling</span>
+                            <span style="color: #ea580c; font-weight: 700;">In Progress</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- 3. Completed eLab Practice Projects -->
+                    <div class="fb-card profile-elab-card">
+                      <div class="fb-card-header">
+                        <div>
+                          <h3 class="fb-card-title">Completed eLab Practice Projects</h3>
+                          <div class="fb-card-subtitle">Hands-on MoSPI statistical & dashboard labs</div>
+                        </div>
+                        <button type="button" class="btn-card-tab-jump" data-jump-tab="elab" title="Launch eLab Practice Environment">
+                          <span>Open eLab</span>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </button>
+                      </div>
+                      <div class="profile-items-stack">
+                        <div class="profile-elab-item">
+                          <div class="profile-elab-top">
+                            <div>
+                              <span class="profile-elab-cat">Web Development & MoSPI Analytics</span>
+                              <div class="profile-elab-title">Government Budget Analytics Dashboard</div>
+                            </div>
+                            <span class="badge-status-cert" style="background: #dcfce7; color: #166534; border-color: #86efac;">100% Complete</span>
+                          </div>
+                          <p class="profile-elab-desc">Executive spending dashboard with departmental allocations, SVG data viz, and high-contrast dark theme.</p>
+                          <div class="profile-elab-meta">
+                            <span>Tasks: <strong>4 / 4 Verified</strong></span>
+                            <span class="elab-verified-badge">
+                              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                              <span>Verified</span>
+                            </span>
+                          </div>
+                        </div>
+
+                        <div class="profile-elab-item">
+                          <div class="profile-elab-top">
+                            <div>
+                              <span class="profile-elab-cat">Web Development</span>
+                              <div class="profile-elab-title">Web Developer Portfolio & Showcase</div>
+                            </div>
+                            <span class="badge-status-cert" style="background: #e0f2fe; color: #0369a1; border-color: #7dd3fc;">40% Complete</span>
+                          </div>
+                          <div class="profile-progress-bar-wrap">
+                            <div class="profile-progress-fill" style="width: 40%; background: #0284c7;"></div>
+                          </div>
+                          <div class="profile-elab-meta">
+                            <span>Tasks: <strong>2 / 5 Completed</strong></span>
+                            <span style="font-size: 0.72rem; color: #64748b; font-weight: 600;">Active Lab</span>
+                          </div>
+                        </div>
+
+                        <div class="profile-elab-item">
+                          <div class="profile-elab-top">
+                            <div>
+                              <span class="profile-elab-cat">Data Analysis</span>
+                              <div class="profile-elab-title">National CPI Data Processing Pipeline</div>
+                            </div>
+                            <span class="badge-status-cert" style="background: #fef3c7; color: #92400e; border-color: #fde68a;">25% Complete</span>
+                          </div>
+                          <div class="profile-progress-bar-wrap">
+                            <div class="profile-progress-fill" style="width: 25%; background: #d97706;"></div>
+                          </div>
+                          <div class="profile-elab-meta">
+                            <span>Tasks: <strong>1 / 4 Completed</strong></span>
+                            <span style="font-size: 0.72rem; color: #64748b; font-weight: 600;">Active Lab</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- 4. Important Assignment Parameters (Skill Gap & AI Quiz) -->
+                    <div class="fb-card profile-quiz-params-card">
+                      <div class="fb-card-header">
+                        <div>
+                          <h3 class="fb-card-title">Assessment Parameters (Skill Gap & AI Quiz)</h3>
+                          <div class="fb-card-subtitle">Diagnostic evaluations & cadre benchmark metrics</div>
+                        </div>
+                        <button type="button" class="btn-card-tab-jump" data-jump-tab="quiz" title="Open AI Quiz & Skill Gap Radar">
+                          <span>AI Quiz Radar</span>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </button>
+                      </div>
+
+                      <div class="profile-metric-grid">
+                        <div class="profile-metric-box metric-border-orange">
+                          <div class="profile-metric-label">Current Trainee Elo</div>
+                          <div class="profile-metric-val" id="profile-param-elo" style="color: #ea580c;">1,485</div>
+                          <div class="profile-metric-sub">Level 3 • Proficient Tier</div>
+                        </div>
+
+                        <div class="profile-metric-box metric-border-navy">
+                          <div class="profile-metric-label">Overall Readiness</div>
+                          <div class="profile-metric-val" id="profile-param-readiness" style="color: #002b49;">88%</div>
+                          <div class="profile-metric-sub">High SSS Exam Readiness</div>
+                        </div>
+
+                        <div class="profile-metric-box metric-border-green">
+                          <div class="profile-metric-label">Cleared Topics</div>
+                          <div class="profile-metric-val" id="profile-param-cleared" style="color: #16a34a;">3 Topics</div>
+                          <div class="profile-metric-sub">Deficits Mastered</div>
+                        </div>
+
+                        <div class="profile-metric-box metric-border-red">
+                          <div class="profile-metric-label">Active Skill Deficit</div>
+                          <div class="profile-metric-val" id="profile-param-deficits" style="color: #dc2626;">1 Topic</div>
+                          <div class="profile-metric-sub">Macro Deflators (17% Gap)</div>
+                        </div>
+
+                        <div class="profile-metric-box metric-border-blue">
+                          <div class="profile-metric-label">Speed & Elo Bonus</div>
+                          <div class="profile-metric-val" id="profile-param-bonus" style="color: #0284c7;">+256 pts</div>
+                          <div class="profile-metric-sub">Earned via Rapid Accuracies</div>
+                        </div>
+
+                        <div class="profile-metric-box metric-border-purple">
+                          <div class="profile-metric-label">Proctored Integrity</div>
+                          <div class="profile-metric-val" id="profile-param-integrity" style="color: #7c3aed;">100% Merit</div>
+                          <div class="profile-metric-sub">Zero Flag Violations</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Document Drop AI Extraction Pipeline (Preserved) -->
+              <div class="doc-drop-zone" id="public-pdf-drop-zone" style="margin-top: 1.25rem;">
+                <input type="file" id="public-pdf-input" accept="application/pdf" style="display:none;">
+                <div class="doc-drop-icon">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="12" y2="12"></line><line x1="15" y1="15" x2="12" y2="12"></line></svg>
+                </div>
+                <div class="doc-drop-content">
+                  <div class="doc-drop-title">Document Drop AI Extraction Pipeline (PDF Resume / Service Record)</div>
+                  <div class="doc-drop-sub">Drag & drop a PDF resume or service record here, or <span class="doc-drop-link" id="public-pdf-browse">browse file</span> to auto-parse Cadre, Division, and Baseline Skills.</div>
+                </div>
+              </div>
+
+              <!-- Shimmering Loading State for AI Extraction -->
+              <div class="shimmer-container" id="public-pdf-shimmer" style="display:none; margin-top: 1rem;">
+                <div class="shimmer-title-row">
+                  <span class="status-dot-pulse"></span>
+                  <span id="public-shimmer-status-text">Initializing MoSPI AI Document Extraction Engine...</span>
+                </div>
+                <div class="shimmer-block shimmer-bar"></div>
+                <div class="shimmer-block shimmer-bar" style="width: 75%;"></div>
+                <div class="shimmer-block shimmer-bar" style="width: 50%;"></div>
+              </div>
+
+
+            </div>
+
+            <!-- ================================================================
+                 STATE B: INTERACTIVE PROFILE EDIT MODE (STRETCHED & EXPANDABLE)
+                 ================================================================ -->
+            <div id="profile-edit-mode" class="profile-mode-edit" style="display: none;">
+              <div class="profile-edit-card">
+                <div class="profile-edit-header">
+                  <div>
+                    <h3 class="profile-edit-title">Edit Cadre & Service Profile Details</h3>
+                    <p style="font-size: 0.8rem; color: #64748b; margin: 0.2rem 0 0 0;">Update your officer identity, service registry records, operational assignments, and targets.</p>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <button type="button" class="btn-admin-outline" id="public-cancel-edit-btn" style="padding: 0.45rem 0.85rem; font-size: 0.8rem;">
+                      Cancel
+                    </button>
+                    <button type="button" class="btn-admin-action" id="public-save-profile-btn" style="padding: 0.45rem 0.95rem; font-size: 0.8rem;">
+                      Save Profile Changes ✓
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Easy Click-to-Popup Option Bar -->
+                <div class="profile-edit-options-row">
+                  <label class="profile-popup-toggle-label" for="toggle-click-to-popup">
+                    <input type="checkbox" id="toggle-click-to-popup" checked style="accent-color: #ea580c; width: 17px; height: 17px; cursor: pointer;">
+                    <span>Click any box to open Full Pop-up Dialog (read entire sentence/paragraph at once & edit comfortably)</span>
+                  </label>
+                  <span style="font-size: 0.75rem; color: #64748b; margin-left: auto;">
+                    Shortcut: Click the <span style="background: #f1f5f9; border: 1px solid #cbd5e1; padding: 2px 6px; border-radius: 3px; font-weight: 700; color: #002b49;">⤢ Expand</span> icon on any field
+                  </span>
+                </div>
+
+                <div class="profile-toast-alert" id="public-profile-toast" style="display:none; margin-bottom: 1rem;">
+                  ✓ Profile & Cadre Dossier Updated Successfully!
+                </div>
+
+                <!-- Section 1: Officer Identity -->
+                <div class="profile-edit-section-title">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                  <span>1. Officer Identity & Designation</span>
+                </div>
+
+                <div class="profile-edit-grid-3">
+                  <div class="profile-form-group">
+                    <label class="profile-field-label" for="public-profile-name">
+                      <span>Officer Full Name</span>
+                    </label>
+                    <div class="profile-field-wrap">
+                      <input type="text" id="public-profile-name" class="profile-input-field expandable-field clickable-popup" data-label="Officer Full Name" value="S. K. Raman">
+                      <button type="button" class="btn-field-expand" data-target="public-profile-name" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+
+                  <div class="profile-form-group">
+                    <label class="profile-field-label" for="public-profile-role">
+                      <span>Role / Designation</span>
+                    </label>
+                    <div class="profile-field-wrap">
+                      <input type="text" id="public-profile-role" class="profile-input-field expandable-field clickable-popup" data-label="Role / Designation" value="Junior Statistical Officer (JSO)">
+                      <button type="button" class="btn-field-expand" data-target="public-profile-role" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+
+                  <div class="profile-form-group">
+                    <label class="profile-field-label" for="public-profile-cadre-seal">
+                      <span>Cadre Verification Badge Text</span>
+                    </label>
+                    <div class="profile-field-wrap">
+                      <input type="text" id="public-profile-cadre-seal" class="profile-input-field expandable-field clickable-popup" data-label="Cadre Verification Badge" value="Verified SSS Cadre">
+                      <button type="button" class="btn-field-expand" data-target="public-profile-cadre-seal" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="profile-edit-grid-2" style="margin-top: 0.5rem;">
+                  <div class="profile-form-group">
+                    <label class="profile-field-label" for="public-profile-division">
+                      <span>Division / Zone Posting</span>
+                    </label>
+                    <div class="profile-field-wrap">
+                      <input type="text" id="public-profile-division" class="profile-input-field expandable-field clickable-popup" data-label="Division / Zone Posting" value="Field Operations Division (NSSO / FOD)">
+                      <button type="button" class="btn-field-expand" data-target="public-profile-division" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+
+                  <div class="profile-form-group">
+                    <label class="profile-field-label" for="public-profile-initials">
+                      <span>Avatar Initials (e.g. SR)</span>
+                    </label>
+                    <div class="profile-field-wrap">
+                      <input type="text" id="public-profile-initials" class="profile-input-field expandable-field clickable-popup" data-label="Avatar Initials" maxlength="4" value="SR">
+                      <button type="button" class="btn-field-expand" data-target="public-profile-initials" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="profile-form-group" style="margin-top: 0.5rem;">
+                  <label class="profile-field-label" for="public-profile-status">
+                    <span>Status Bio & Operational Objective (Full Paragraph)</span>
+                  </label>
+                  <div class="profile-field-wrap">
+                    <textarea id="public-profile-status" class="profile-input-field profile-textarea-field expandable-field clickable-popup" data-label="Status Bio & Operational Objective" rows="3" placeholder="Enter your full operational summary and career milestones...">Supervising NSS 80th Round socio-economic surveys & CAPI data verification in Western Zone • Preparing for Senior Statistical Officer (SSO) 2027 benchmark.</textarea>
+                    <button type="button" class="btn-field-expand" data-target="public-profile-status" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                  </div>
+                </div>
+
+                <!-- Section 2: Service Records -->
+                <div class="profile-edit-section-title" style="margin-top: 1.5rem;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                  <span>2. Cadre Registry & Service Records</span>
+                </div>
+
+                <div class="profile-edit-grid-3">
+                  <div class="profile-form-group">
+                    <label class="profile-field-label" for="public-profile-cadre">
+                      <span>Cadre Allocation</span>
+                    </label>
+                    <div class="profile-field-wrap">
+                      <input type="text" id="public-profile-cadre" class="profile-input-field expandable-field clickable-popup" data-label="Cadre Allocation" value="Subordinate Statistical Service (SSS)">
+                      <button type="button" class="btn-field-expand" data-target="public-profile-cadre" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+
+                  <div class="profile-form-group">
+                    <label class="profile-field-label" for="public-profile-ministry">
+                      <span>Ministry / Department</span>
+                    </label>
+                    <div class="profile-field-wrap">
+                      <input type="text" id="public-profile-ministry" class="profile-input-field expandable-field clickable-popup" data-label="Ministry / Department" value="MoSPI, Government of India">
+                      <button type="button" class="btn-field-expand" data-target="public-profile-ministry" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+
+                  <div class="profile-form-group">
+                    <label class="profile-field-label" for="public-profile-station">
+                      <span>Station / Posting Office</span>
+                    </label>
+                    <div class="profile-field-wrap">
+                      <input type="text" id="public-profile-station" class="profile-input-field expandable-field clickable-popup" data-label="Station / Posting Office" value="FOD Regional Office, Pune / New Delhi">
+                      <button type="button" class="btn-field-expand" data-target="public-profile-station" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="profile-edit-grid-3" style="margin-top: 0.5rem;">
+                  <div class="profile-form-group">
+                    <label class="profile-field-label" for="public-profile-tenure">
+                      <span>Tenure / Batch</span>
+                    </label>
+                    <div class="profile-field-wrap">
+                      <input type="text" id="public-profile-tenure" class="profile-input-field expandable-field clickable-popup" data-label="Tenure / Batch" value="2024 Batch (2 Years Completed)">
+                      <button type="button" class="btn-field-expand" data-target="public-profile-tenure" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+
+                  <div class="profile-form-group">
+                    <label class="profile-field-label" for="public-profile-email">
+                      <span>Official MoSPI Email</span>
+                    </label>
+                    <div class="profile-field-wrap">
+                      <input type="email" id="public-profile-email" class="profile-input-field expandable-field clickable-popup" data-label="Official MoSPI Email" value="raman.sk@mospi.gov.in">
+                      <button type="button" class="btn-field-expand" data-target="public-profile-email" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+
+                  <div class="profile-form-group">
+                    <label class="profile-field-label" for="public-profile-roll">
+                      <span>Employee Roll Code</span>
+                    </label>
+                    <div class="profile-field-wrap">
+                      <input type="text" id="public-profile-roll" class="profile-input-field expandable-field clickable-popup" data-label="Employee Roll Code" value="SSS-2024-8891">
+                      <button type="button" class="btn-field-expand" data-target="public-profile-roll" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Section 3: Connected Social & Professional Profiles (Attach Links) -->
+                <div class="profile-edit-section-title" style="margin-top: 1.5rem;" id="section-edit-social-links">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                  <span>3. Connected Social & Professional Profiles (Attach Links)</span>
+                </div>
+
+                <div class="profile-edit-grid-2">
+                  <div class="profile-form-group">
+                    <label class="profile-field-label" for="public-profile-social-linkedin">
+                      <span style="display: flex; align-items: center; gap: 0.4rem;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#0a66c2"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.45 1.45 0 1 0 0-2.9 1.45 1.45 0 0 0 0 2.9m1.39 9.74v-8.37H5.07v8.37h2.78z"/></svg>
+                        LinkedIn Profile URL
+                      </span>
+                    </label>
+                    <div class="profile-field-wrap">
+                      <input type="url" id="public-profile-social-linkedin" class="profile-input-field expandable-field clickable-popup" data-label="LinkedIn Profile URL" placeholder="https://linkedin.com/in/username" value="https://linkedin.com/in/sk-raman-mospi">
+                      <button type="button" class="btn-field-expand" data-target="public-profile-social-linkedin" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+
+                  <div class="profile-form-group">
+                    <label class="profile-field-label" for="public-profile-social-github">
+                      <span style="display: flex; align-items: center; gap: 0.4rem;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>
+                        GitHub / Code Repository URL
+                      </span>
+                    </label>
+                    <div class="profile-field-wrap">
+                      <input type="url" id="public-profile-social-github" class="profile-input-field expandable-field clickable-popup" data-label="GitHub / Code Repository URL" placeholder="https://github.com/username" value="https://github.com/sk-raman-stat">
+                      <button type="button" class="btn-field-expand" data-target="public-profile-social-github" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="profile-edit-grid-3" style="margin-top: 0.5rem;">
+                  <div class="profile-form-group">
+                    <label class="profile-field-label" for="public-profile-social-twitter">
+                      <span style="display: flex; align-items: center; gap: 0.4rem;">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        Twitter / X Handle or URL
+                      </span>
+                    </label>
+                    <div class="profile-field-wrap">
+                      <input type="text" id="public-profile-social-twitter" class="profile-input-field expandable-field clickable-popup" data-label="Twitter / X Profile" placeholder="https://x.com/username" value="https://x.com/sk_raman_stat">
+                      <button type="button" class="btn-field-expand" data-target="public-profile-social-twitter" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+
+                  <div class="profile-form-group">
+                    <label class="profile-field-label" for="public-profile-social-website">
+                      <span style="display: flex; align-items: center; gap: 0.4rem;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                        Personal Website / Portfolio
+                      </span>
+                    </label>
+                    <div class="profile-field-wrap">
+                      <input type="url" id="public-profile-social-website" class="profile-input-field expandable-field clickable-popup" data-label="Personal Website / Portfolio" placeholder="https://yourportfolio.dev" value="https://raman-statistics.gov.in">
+                      <button type="button" class="btn-field-expand" data-target="public-profile-social-website" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+
+                  <div class="profile-form-group">
+                    <label class="profile-field-label" for="public-profile-social-research">
+                      <span style="display: flex; align-items: center; gap: 0.4rem;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+                        iGOT Karmayogi / Research
+                      </span>
+                    </label>
+                    <div class="profile-field-wrap">
+                      <input type="url" id="public-profile-social-research" class="profile-input-field expandable-field clickable-popup" data-label="iGOT / Research Profile" placeholder="https://igotkarmayogi.gov.in/profile/..." value="https://igotkarmayogi.gov.in/profile/sk-raman-8891">
+                      <button type="button" class="btn-field-expand" data-target="public-profile-social-research" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Section 4: Verified Competencies -->
+                <div class="profile-edit-section-title" style="margin-top: 1.5rem;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                  <span>4. Verified Competencies & Evaluated Baseline</span>
+                </div>
+
+                <div class="profile-edit-grid-2">
+                  <div class="profile-form-group">
+                    <label class="profile-field-label" for="public-profile-skills">
+                      <span>Verified Competencies (Comma-separated)</span>
+                    </label>
+                    <div class="profile-field-wrap">
+                      <textarea id="public-profile-skills" class="profile-input-field profile-textarea-field expandable-field clickable-popup" data-label="Verified Competencies" rows="2" placeholder="List all competencies separated by commas...">Survey Sampling, CAPI Verification, Macro Deflators, Python Computing, DPDP Act 2023, NSS Frame Design</textarea>
+                      <button type="button" class="btn-field-expand" data-target="public-profile-skills" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+
+                  <div class="profile-form-group">
+                    <label class="profile-field-label" for="public-profile-baseline">
+                      <span>Evaluated Baseline Rating & Level</span>
+                    </label>
+                    <div class="profile-field-wrap">
+                      <input type="text" id="public-profile-baseline" class="profile-input-field expandable-field clickable-popup" data-label="Evaluated Baseline" value="1,485 Elo (Level 3 - Proficient)">
+                      <button type="button" class="btn-field-expand" data-target="public-profile-baseline" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Section 5: Current Operational Work & Duties -->
+                <div class="profile-edit-section-title" style="margin-top: 1.5rem;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  <span>5. Current Operational Work & Duties (3 Assignments)</span>
+                </div>
+
+                <!-- Duty 1 Assignment Card -->
+                <div class="profile-assignment-card">
+                  <div class="profile-assignment-header">
+                    <div class="profile-assignment-title">
+                      <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #0284c7;"></span>
+                      <span>Assignment 1</span>
+                    </div>
+                    <span style="font-size: 0.725rem; color: #64748b; font-weight: 600;">Active Field Duty</span>
+                  </div>
+                  <div class="profile-form-group">
+                    <label class="profile-field-label" for="public-edit-work1-title">
+                      <span>Duty 1 Title</span>
+                    </label>
+                    <div class="profile-field-wrap">
+                      <input type="text" id="public-edit-work1-title" class="profile-input-field expandable-field clickable-popup" data-label="Duty 1 Title" value="NSS 80th Round Socio-Economic Survey">
+                      <button type="button" class="btn-field-expand" data-target="public-edit-work1-title" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+                  <div class="profile-form-group" style="margin-bottom: 0;">
+                    <label class="profile-field-label" for="public-edit-work1-desc">
+                      <span>Duty 1 Description (Full Paragraph)</span>
+                    </label>
+                    <div class="profile-field-wrap">
+                      <textarea id="public-edit-work1-desc" class="profile-input-field profile-textarea-field expandable-field clickable-popup" data-label="Duty 1 Description" rows="3" placeholder="Enter complete project duties, supervision zones, and methodologies...">Field supervision across Western Zone sampling units, primary verification of CAPI electronic schedules, and non-response calibration.</textarea>
+                      <button type="button" class="btn-field-expand" data-target="public-edit-work1-desc" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Duty 2 Assignment Card -->
+                <div class="profile-assignment-card">
+                  <div class="profile-assignment-header">
+                    <div class="profile-assignment-title">
+                      <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #0284c7;"></span>
+                      <span>Assignment 2</span>
+                    </div>
+                    <span style="font-size: 0.725rem; color: #64748b; font-weight: 600;">Statutory Survey</span>
+                  </div>
+                  <div class="profile-form-group">
+                    <label class="profile-field-label" for="public-edit-work2-title">
+                      <span>Duty 2 Title</span>
+                    </label>
+                    <div class="profile-field-wrap">
+                      <input type="text" id="public-edit-work2-title" class="profile-input-field expandable-field clickable-popup" data-label="Duty 2 Title" value="Annual Survey of Industries (ASI) 2025-26">
+                      <button type="button" class="btn-field-expand" data-target="public-edit-work2-title" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+                  <div class="profile-form-group" style="margin-bottom: 0;">
+                    <label class="profile-field-label" for="public-edit-work2-desc">
+                      <span>Duty 2 Description (Full Paragraph)</span>
+                    </label>
+                    <div class="profile-field-wrap">
+                      <textarea id="public-edit-work2-desc" class="profile-input-field profile-textarea-field expandable-field clickable-popup" data-label="Duty 2 Description" rows="3" placeholder="Enter factory audit details, data reconciliation steps...">Factory register audits, capital structure reporting verification, and consistency cross-checks against MCA-21 filings.</textarea>
+                      <button type="button" class="btn-field-expand" data-target="public-edit-work2-desc" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Duty 3 Assignment Card -->
+                <div class="profile-assignment-card">
+                  <div class="profile-assignment-header">
+                    <div class="profile-assignment-title">
+                      <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #0284c7;"></span>
+                      <span>Assignment 3</span>
+                    </div>
+                    <span style="font-size: 0.725rem; color: #64748b; font-weight: 600;">Data Validation Pipeline</span>
+                  </div>
+                  <div class="profile-form-group">
+                    <label class="profile-field-label" for="public-edit-work3-title">
+                      <span>Duty 3 Title</span>
+                    </label>
+                    <div class="profile-field-wrap">
+                      <input type="text" id="public-edit-work3-title" class="profile-input-field expandable-field clickable-popup" data-label="Duty 3 Title" value="Periodic Labour Force Survey (PLFS) Validation">
+                      <button type="button" class="btn-field-expand" data-target="public-edit-work3-title" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+                  <div class="profile-form-group" style="margin-bottom: 0;">
+                    <label class="profile-field-label" for="public-edit-work3-desc">
+                      <span>Duty 3 Description (Full Paragraph)</span>
+                    </label>
+                    <div class="profile-field-wrap">
+                      <textarea id="public-edit-work3-desc" class="profile-input-field profile-textarea-field expandable-field clickable-popup" data-label="Duty 3 Description" rows="3" placeholder="Enter household enumeration monitoring and pipeline details...">Quarterly household enumeration monitoring, sampling weight verification, and preliminary data pipeline validation.</textarea>
+                      <button type="button" class="btn-field-expand" data-target="public-edit-work3-desc" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Section 6: Future Transition Targets -->
+                <div class="profile-edit-section-title" style="margin-top: 1.5rem;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                  <span>6. Future Work & Cadre Transition Targets (2 Targets)</span>
+                </div>
+
+                <!-- Target 1 Card -->
+                <div class="profile-assignment-card">
+                  <div class="profile-assignment-header">
+                    <div class="profile-assignment-title">
+                      <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ea580c;"></span>
+                      <span>Target 1</span>
+                    </div>
+                    <span style="font-size: 0.725rem; color: #ea580c; font-weight: 700;">DPC Benchmark 2027</span>
+                  </div>
+                  <div class="profile-form-group">
+                    <label class="profile-field-label" for="public-edit-target1-title">
+                      <span>Target 1 Title</span>
+                    </label>
+                    <div class="profile-field-wrap">
+                      <input type="text" id="public-edit-target1-title" class="profile-input-field expandable-field clickable-popup" data-label="Target 1 Title" value="Senior Statistical Officer (SSO) Cadre Benchmark">
+                      <button type="button" class="btn-field-expand" data-target="public-edit-target1-title" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+                  <div class="profile-form-group" style="margin-bottom: 0;">
+                    <label class="profile-field-label" for="public-edit-target1-desc">
+                      <span>Target 1 Description (Full Paragraph)</span>
+                    </label>
+                    <div class="profile-field-wrap">
+                      <textarea id="public-edit-target1-desc" class="profile-input-field profile-textarea-field expandable-field clickable-popup" data-label="Target 1 Description" rows="3" placeholder="Enter curriculum readiness targets, modules, statutory DPDP protocols...">Achieving 100% curriculum readiness across NSSTA Module 204 (Macro Deflators) and statutory DPDP compliance protocols.</textarea>
+                      <button type="button" class="btn-field-expand" data-target="public-edit-target1-desc" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Target 2 Card -->
+                <div class="profile-assignment-card">
+                  <div class="profile-assignment-header">
+                    <div class="profile-assignment-title">
+                      <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ea580c;"></span>
+                      <span>Target 2</span>
+                    </div>
+                    <span style="font-size: 0.725rem; color: #ea580c; font-weight: 700;">Division Transition</span>
+                  </div>
+                  <div class="profile-form-group">
+                    <label class="profile-field-label" for="public-edit-target2-title">
+                      <span>Target 2 Title</span>
+                    </label>
+                    <div class="profile-field-wrap">
+                      <input type="text" id="public-edit-target2-title" class="profile-input-field expandable-field clickable-popup" data-label="Target 2 Title" value="National Accounts Division (NAD) Transition Desk">
+                      <button type="button" class="btn-field-expand" data-target="public-edit-target2-title" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+                  <div class="profile-form-group" style="margin-bottom: 0;">
+                    <label class="profile-field-label" for="public-edit-target2-desc">
+                      <span>Target 2 Description (Full Paragraph)</span>
+                    </label>
+                    <div class="profile-field-wrap">
+                      <textarea id="public-edit-target2-desc" class="profile-input-field profile-textarea-field expandable-field clickable-popup" data-label="Target 2 Description" rows="3" placeholder="Enter planned deployment goals, balance reconciliation, implicit deflators...">Planned deployment for supply-use table balance reconciliation and implicit price deflator benchmarking.</textarea>
+                      <button type="button" class="btn-field-expand" data-target="public-edit-target2-desc" title="Open in Pop-up Dialog"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Bottom Action Buttons -->
+                <div class="profile-edit-actions-bar">
+                  <button type="button" class="btn-admin-outline" id="public-cancel-edit-btn-bottom" style="padding: 0.5rem 1rem;">
+                    Cancel & View Dossier
+                  </button>
+                  <button type="button" class="btn-admin-action" id="public-save-profile-btn-bottom" style="padding: 0.5rem 1.25rem;">
+                    Save Profile Changes ✓
+                  </button>
+                </div>
               </div>
             </div>
 
-            <div class="settings-group" style="margin-top: 1.25rem;">
-              <div class="profile-grid-fields">
-                <div>
-                  <label class="profile-field-label">Official Government Email</label>
-                  <input type="email" id="public-profile-email" class="profile-input-field" value="sk.raman@mospi.gov.in">
-                </div>
-                <div>
-                  <label class="profile-field-label">Employee Roll Code</label>
-                  <input type="text" id="public-profile-roll" class="profile-input-field" value="SSS-2024-8891">
-                </div>
-                <div>
-                  <label class="profile-field-label">Cadre Allocation</label>
-                  <input type="text" id="public-profile-cadre" class="profile-input-field" value="Subordinate Statistical Service (SSS Cadre)">
-                </div>
-                <div>
-                  <label class="profile-field-label">Division / Posting</label>
-                  <input type="text" id="public-profile-division" class="profile-input-field" value="Field Operations Division (NSSO / FOD)">
-                </div>
-              </div>
-
-              <div style="margin-top: 1rem;">
-                <label class="profile-field-label">Baseline Skills & Competencies</label>
-                <input type="text" id="public-profile-skills" class="profile-input-field" value="Survey Sampling, CAPI Tablets, Python Data Science, DPDP Governance">
-              </div>
-
-              <div style="margin-top: 1.25rem; display: flex; align-items: center; justify-content: space-between;">
-                <button type="button" class="btn-admin-action" id="public-save-profile-btn">
-                  Save Profile Settings ✓
-                </button>
-                <div class="profile-toast-alert" id="public-profile-toast" style="display:none;">
-                  ✓ Profile & Avatar Saved Successfully!
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Cadre Accreditations, Certifications & Promotion Track Dossier -->
-          <div class="profile-overview-card" style="margin-top: 1.25rem;">
-            <h3 style="font-size: 1.15rem; font-weight: 800; color: #002b49; margin: 0 0 0.5rem 0;">
-              🎖️ Official MoSPI Cadre Accreditations & iGOT Certifications
-            </h3>
-            <p style="font-size: 0.8rem; color: #64748b; margin: 0 0 1.25rem 0;">
-              Verified credentials issued under National Statistical Systems Training Academy (NSSTA).
-            </p>
-
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem;">
-              <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 6px; padding: 1rem; border-left: 3.5px solid #16a34a;">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.35rem;">
-                  <strong style="font-size: 0.88rem; color: #002b49;">NSSTA Certified Field Auditor</strong>
-                  <span style="font-size: 0.7rem; font-weight: 800; background: #dcfce7; color: #166534; padding: 2px 6px; border-radius: 4px;">ACTIVE</span>
-                </div>
-                <p style="font-size: 0.78rem; color: #475569; margin: 0 0 0.5rem 0;">Multi-stage listing, CAPI tablet audits, and GPS geo-fencing compliance verification.</p>
-                <div style="font-size: 0.7rem; color: #64748b; font-weight: 700;">Issued: Jan 2026 • Valid through Dec 2028</div>
-              </div>
-
-              <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 6px; padding: 1rem; border-left: 3.5px solid #0284c7;">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.35rem;">
-                  <strong style="font-size: 0.88rem; color: #002b49;">iGOT Karmayogi: DPDP Digital Privacy</strong>
-                  <span style="font-size: 0.7rem; font-weight: 800; background: #e0f2fe; color: #0369a1; padding: 2px 6px; border-radius: 4px;">DISTINCTION</span>
-                </div>
-                <p style="font-size: 0.78rem; color: #475569; margin: 0 0 0.5rem 0;">Section 8 anonymization, k-anonymity protocols, and microdata privacy governance.</p>
-                <div style="font-size: 0.7rem; color: #64748b; font-weight: 700;">Score: 94% • Cert ID: IGOT-2026-DPDP-891</div>
-              </div>
-
-              <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 6px; padding: 1rem; border-left: 3.5px solid #ea580c;">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.35rem;">
-                  <strong style="font-size: 0.88rem; color: #002b49;">Senior Statistical Officer (SSO) Track</strong>
-                  <span style="font-size: 0.7rem; font-weight: 800; background: #ffedd5; color: #9a3412; padding: 2px 6px; border-radius: 4px;">88% ELIGIBLE</span>
-                </div>
-                <p style="font-size: 0.78rem; color: #475569; margin: 0 0 0.5rem 0;">Departmental Promotion Committee (DPC) benchmark: Elo Rating ≥ 1400 and 4 Merit Quizzes.</p>
-                <div style="font-size: 0.7rem; color: #ea580c; font-weight: 800;">Target DPC Date: November 2026</div>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -1492,7 +2321,7 @@
         </div>
         <div style="display: flex; align-items: center; gap: 1rem;">
           <div class="quiz-timer-box" id="quiz-timer">05:00</div>
-          <button type="button" id="quiz-close-btn" style="background:none; border:none; color:#fff; font-size:1.5rem; cursor:pointer;">&times;</button>
+          <button type="button" class="btn-modal-close" id="quiz-close-btn" title="Close quiz" aria-label="Close quiz"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
         </div>
       </div>
 
@@ -1558,10 +2387,7 @@
             <button type="button" class="btn-toggle-milestone-history" id="btn-toggle-milestone-history">
               <span id="history-toggle-label">Show History</span>
             </button>
-            <button type="button" class="btn-milestone-close" id="btn-close-milestone" title="Close Modal">
-              <span>Close</span>
-              <span class="close-icon">✕</span>
-            </button>
+            <button type="button" class="btn-modal-close" id="btn-close-milestone" title="Close Modal" aria-label="Close Modal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
           </div>
         </div>
 
@@ -1720,10 +2546,7 @@
             <h2 class="modal-heading" id="notebook-modal-heading">Create New Notebook</h2>
           </div>
           <div class="modal-header-right">
-            <button type="button" class="btn-milestone-close" id="btn-close-notebook-modal" title="Close Modal">
-              <span>Close</span>
-              <span class="close-icon">✕</span>
-            </button>
+            <button type="button" class="btn-modal-close" id="btn-close-notebook-modal" title="Close Modal" aria-label="Close Modal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
           </div>
         </div>
 
@@ -1743,6 +2566,68 @@
     </div>
 
     <!-- ==========================================================================
+         NOTEBOOK TO FLASHCARDS GENERATION MODAL
+         ========================================================================== -->
+    <div class="milestone-modal-backdrop" id="generate-flashcards-modal" style="display: none;" role="dialog" aria-modal="true">
+      <div class="milestone-modal-glass" style="max-width: 580px;">
+        <div class="milestone-modal-header">
+          <div class="modal-header-left">
+            <span class="modal-eyebrow" id="flashcard-modal-eyebrow">Smart Revision Extraction Engine</span>
+            <h2 class="modal-heading" id="flashcard-modal-heading">Generate Revision Flashcards</h2>
+          </div>
+          <div class="modal-header-right">
+            <button type="button" class="btn-modal-close" id="btn-close-flashcard-modal" title="Close Modal" aria-label="Close Modal">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+          </div>
+        </div>
+
+        <div style="padding: 1.25rem 1.5rem;">
+          <div class="flashcard-modal-scope-box" style="margin-bottom: 1rem; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 6px; padding: 0.85rem;">
+            <div style="font-size: 0.8rem; font-weight: 800; color: #002b49; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;">
+              Choose Flashcard Scope:
+            </div>
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+              <label style="display: flex; align-items: center; gap: 0.45rem; font-size: 0.85rem; font-weight: 700; color: #0f172a; cursor: pointer;">
+                <input type="radio" name="flashcard-scope" value="all" id="scope-all-notes" checked>
+                <span>Entire Notebook (<span id="flashcard-modal-notebook-name">Active Notebook</span>)</span>
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.45rem; font-size: 0.85rem; font-weight: 700; color: #0f172a; cursor: pointer;">
+                <input type="radio" name="flashcard-scope" value="selected" id="scope-selected-notes">
+                <span>Select Specific Notes</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Note Selection Checkbox List -->
+          <div id="flashcard-notes-select-wrap" style="margin-bottom: 1rem; max-height: 180px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.5rem; background: #ffffff;">
+            <div id="flashcard-notes-checklist" style="display: flex; flex-direction: column; gap: 0.4rem;">
+              <!-- Dynamically populated list of notes with checkboxes -->
+            </div>
+          </div>
+
+          <div style="background: #fff7ed; border-left: 3.5px solid #ea580c; padding: 0.75rem 0.9rem; border-radius: 4px;">
+            <div style="font-size: 0.78rem; font-weight: 800; color: #9a3412; margin-bottom: 0.2rem; display: flex; align-items: center; gap: 0.35rem;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+              <span>High-Yield Revision Extraction:</span>
+            </div>
+            <p style="margin: 0; font-size: 0.75rem; color: #7c2d12; line-height: 1.45;">
+              Only critical revision essentials (formulas, mathematical proofs, definitions, regulatory thresholds, and survey tolerances) will be extracted into the cards. Filler text and greetings are automatically removed.
+            </p>
+          </div>
+        </div>
+
+        <div class="milestone-modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-size: 0.78rem; color: #64748b; font-weight: 600;" id="flashcard-modal-selection-count">All Notes Selected</span>
+          <div style="display: flex; gap: 0.5rem;">
+            <button type="button" class="btn-cancel-modal" id="btn-cancel-flashcard-modal">Cancel</button>
+            <button type="button" class="btn-confirm-milestone" id="btn-confirm-generate-flashcards">Generate Flashcards ✓</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
          AI STUDY MENTOR PERSONALIZATION SETTINGS MODAL
          ========================================================================== -->
     <div class="milestone-modal-backdrop" id="ai-persona-modal" style="display: none;">
@@ -1753,10 +2638,7 @@
             <h2 class="modal-heading">Personalize AI Responses</h2>
           </div>
           <div class="modal-header-right">
-            <button type="button" class="btn-milestone-close" id="btn-close-persona-modal" title="Close Modal">
-              <span>Close</span>
-              <span class="close-icon">✕</span>
-            </button>
+            <button type="button" class="btn-modal-close" id="btn-close-persona-modal" title="Close Modal" aria-label="Close Modal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
           </div>
         </div>
 
@@ -1844,10 +2726,7 @@
             <h2 class="modal-heading" id="export-modal-notebook-title">Export Study Notebook</h2>
           </div>
           <div class="modal-header-right">
-            <button type="button" class="btn-milestone-close" id="btn-close-export-modal" title="Close Modal">
-              <span>Close</span>
-              <span class="close-icon">✕</span>
-            </button>
+            <button type="button" class="btn-modal-close" id="btn-close-export-modal" title="Close Modal" aria-label="Close Modal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
           </div>
         </div>
 
@@ -1969,10 +2848,7 @@
             <h2 class="modal-heading">Remind Me Later</h2>
           </div>
           <div class="modal-header-right">
-            <button type="button" class="btn-milestone-close" id="btn-close-remind-modal" title="Close Modal">
-              <span>Close</span>
-              <span class="close-icon">✕</span>
-            </button>
+            <button type="button" class="btn-modal-close" id="btn-close-remind-modal" title="Close Modal" aria-label="Close Modal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
           </div>
         </div>
 
@@ -2058,7 +2934,7 @@
             <span style="font-size: 1.15rem; font-weight: 800;" id="elab-modal-title">Build a Personal Portfolio</span>
             <span class="elab-tag-cat" id="elab-modal-cat">Web Development</span>
           </div>
-          <button type="button" id="elab-modal-close" style="background:none; border:none; color:#ffffff; font-size:1.5rem; cursor:pointer;" title="Close workspace">&times;</button>
+          <button type="button" class="btn-modal-close" id="elab-modal-close" title="Close workspace" aria-label="Close workspace"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
         </div>
         <div class="elab-workspace-body" id="elab-modal-body">
           <!-- Dynamic workspace content rendered via JS -->
@@ -2083,7 +2959,7 @@
           <div class="proctor-header-right">
             <!-- Speed Bonus Points Meter -->
             <div class="proctor-speed-meter" id="proctor-speed-meter" title="Answer before time runs out to earn speed points!">
-              <span class="speed-icon">⚡</span>
+              
               <span>Speed Bonus:</span>
               <strong id="proctor-speed-pts">+0 pts</strong>
             </div>
@@ -2132,7 +3008,7 @@
         <!-- ANTI-CHEATING TERMINATION OVERLAY -->
         <div class="proctor-violation-overlay" id="proctor-violation-overlay" style="display: none;">
           <div class="violation-dialog">
-            <div class="violation-icon">🚨</div>
+            <div class="violation-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
             <h3 class="violation-title">UNETHICAL ACTIVITY DETECTED</h3>
             <p class="violation-msg">
               <strong>Tab switch / window focus loss detected during examination.</strong><br>
@@ -2152,19 +3028,19 @@
       <div class="marksheet-dialog">
         <div class="marksheet-modal-header">
           <div style="display: flex; align-items: center; gap: 0.6rem;">
-            <span style="font-size: 1.25rem;">🎓</span>
+            
             <span style="font-size: 1.15rem; font-weight: 800; color: #ffffff;">MoSPI Official Examination Transcript</span>
           </div>
-          <button type="button" class="btn-modal-close" id="btn-close-marksheet">&times;</button>
+          <button type="button" class="btn-modal-close" id="btn-close-marksheet" title="Close marksheet" aria-label="Close marksheet"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
         </div>
 
         <!-- Format Selector Toolbar -->
         <div class="marksheet-format-bar">
           <span style="font-size: 0.78rem; font-weight: 800; text-transform: uppercase; color: #002b49;">Select Export Format:</span>
           <div class="export-scope-toggle" id="marksheet-format-options">
-            <button type="button" class="export-scope-btn active" data-format="pdf">📄 PDF Document (.pdf)</button>
-            <button type="button" class="export-scope-btn" data-format="png">🖼️ High-Res PNG (.png)</button>
-            <button type="button" class="export-scope-btn" data-format="jpg">📸 JPEG Image (.jpg)</button>
+            <button type="button" class="export-scope-btn active" data-format="pdf">PDF Document (.pdf)</button>
+            <button type="button" class="export-scope-btn" data-format="png">High-Res PNG (.png)</button>
+            <button type="button" class="export-scope-btn" data-format="jpg">JPEG Image (.jpg)</button>
           </div>
         </div>
 
@@ -2257,17 +3133,17 @@
       <div class="marksheet-dialog" style="max-width: 640px;">
         <div class="marksheet-modal-header" style="background: #002b49;">
           <div style="display: flex; align-items: center; gap: 0.6rem;">
-            <span style="font-size: 1.25rem;">📤</span>
+            
             <span style="font-size: 1.15rem; font-weight: 800; color: #ffffff;">Quarterly Cadre Report Dispatch Preview</span>
           </div>
-          <button type="button" class="btn-modal-close" id="btn-close-quarterly-dispatch">&times;</button>
+          <button type="button" class="btn-modal-close" id="btn-close-quarterly-dispatch" title="Close dispatch" aria-label="Close dispatch"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
         </div>
 
         <div style="padding: 1rem 1.25rem;">
           <!-- Preview Mode Toggle -->
           <div class="export-scope-toggle" id="dispatch-preview-toggle" style="margin-bottom: 1rem;">
-            <button type="button" class="export-scope-btn active" data-dispatch-tab="whatsapp">💬 WhatsApp Message Preview</button>
-            <button type="button" class="export-scope-btn" data-dispatch-tab="email">✉️ Official MoSPI Email Preview</button>
+            <button type="button" class="export-scope-btn active" data-dispatch-tab="whatsapp">WhatsApp Message Preview</button>
+            <button type="button" class="export-scope-btn" data-dispatch-tab="email">Official MoSPI Email Preview</button>
           </div>
 
           <!-- WhatsApp Message View -->
@@ -2305,13 +3181,13 @@
       <div class="marksheet-dialog" style="max-width: 740px;">
         <div class="marksheet-modal-header" style="background: #991b1b;">
           <div style="display: flex; align-items: center; gap: 0.6rem;">
-            <span style="font-size: 1.25rem;">❓</span>
+            
             <div>
               <div style="font-size: 0.7rem; text-transform: uppercase; color: #fca5a5; font-weight: 800;">Diagnostic Audit Log</div>
               <span style="font-size: 1.15rem; font-weight: 800; color: #ffffff;" id="why-modal-topic-title">Question Mistake History</span>
             </div>
           </div>
-          <button type="button" class="btn-modal-close" id="btn-close-why-modal">&times;</button>
+          <button type="button" class="btn-modal-close" id="btn-close-why-modal" title="Close audit" aria-label="Close audit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
         </div>
 
         <div style="padding: 1.25rem; max-height: 75vh; overflow-y: auto;">
@@ -2333,7 +3209,7 @@
         <div class="marksheet-modal-footer">
           <button type="button" class="btn-cancel-modal" id="btn-cancel-why-modal">Close Audit</button>
           <button type="button" class="btn-confirm-milestone" id="btn-why-suggest-prep" style="background: #0284c7;">
-            🧠 Suggest Preparation Roadmap
+            Suggest Preparation Roadmap
           </button>
         </div>
       </div>
@@ -2346,13 +3222,13 @@
       <div class="marksheet-dialog" style="max-width: 760px;">
         <div class="marksheet-modal-header" style="background: #0284c7;">
           <div style="display: flex; align-items: center; gap: 0.6rem;">
-            <span style="font-size: 1.25rem;">🧠</span>
+            
             <div>
               <div style="font-size: 0.7rem; text-transform: uppercase; color: #bae6fd; font-weight: 800;">AI Study Preparation Roadmap</div>
               <span style="font-size: 1.15rem; font-weight: 800; color: #ffffff;" id="prep-modal-topic-title">Targeted Remediation Plan</span>
             </div>
           </div>
-          <button type="button" class="btn-modal-close" id="btn-close-prep-modal">&times;</button>
+          <button type="button" class="btn-modal-close" id="btn-close-prep-modal" title="Close roadmap" aria-label="Close roadmap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
         </div>
 
         <div style="padding: 1.25rem; max-height: 75vh; overflow-y: auto;" id="prep-modal-content">
@@ -2362,10 +3238,10 @@
         <div class="marksheet-modal-footer">
           <button type="button" class="btn-cancel-modal" id="btn-cancel-prep-modal">Close</button>
           <button type="button" class="btn-confirm-milestone" id="btn-prep-study-mentor" style="background: #ea580c;">
-            💬 Master This with AI Mentor ▶
+            Master This with AI Mentor ▶
           </button>
           <button type="button" class="btn-confirm-milestone" id="btn-prep-launch-retest" style="background: #002b49;">
-            ⚡ Start Retest Now
+            Start Retest Now
           </button>
         </div>
       </div>
@@ -2378,13 +3254,13 @@
       <div class="marksheet-dialog" style="max-width: 760px;">
         <div class="marksheet-modal-header" style="background: #002b49; border-bottom: 2.5px solid #ea580c;">
           <div style="display: flex; align-items: center; gap: 0.6rem;">
-            <span style="font-size: 1.25rem;">⚡</span>
+            
             <div>
-              <div style="font-size: 0.7rem; text-transform: uppercase; color: #fdba74; font-weight: 800;">Remediation Assessment</div>
+              <div style="font-size: 0.7rem; text-transform: uppercase; color: #fdba74; font-weight: 800;">Practice & Retest</div>
               <span style="font-size: 1.15rem; font-weight: 800; color: #ffffff;" id="retest-modal-topic-title">Targeted Topic Retest</span>
             </div>
           </div>
-          <button type="button" class="btn-modal-close" id="btn-close-retest-modal">&times;</button>
+          <button type="button" class="btn-modal-close" id="btn-close-retest-modal" title="Close retest" aria-label="Close retest"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
         </div>
 
         <div style="padding: 1.25rem; max-height: 75vh; overflow-y: auto;" id="retest-modal-body">
@@ -2395,6 +3271,401 @@
           <button type="button" class="btn-cancel-modal" id="btn-cancel-retest-modal">Abort Retest</button>
           <button type="button" class="btn-confirm-milestone" id="btn-retest-next">Next Question ▶</button>
           <button type="button" class="btn-confirm-milestone" id="btn-retest-submit" style="display: none; background: #ea580c;">Submit Retest ✓</button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ======================================================================
+         AI QUIZ METRIC DOCUMENTATION & HOW IT WORKS MODAL
+         ====================================================================== -->
+    <div class="marksheet-modal" id="quiz-metric-doc-modal" style="display: none;" role="dialog" aria-modal="true">
+      <div class="marksheet-dialog" style="max-width: 680px;">
+        <div class="marksheet-modal-header" style="background: #002b49; border-bottom: 2.5px solid #ea580c;">
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <div>
+              <div style="font-size: 0.7rem; text-transform: uppercase; color: #fdba74; font-weight: 800;">Assessment System Reference</div>
+              <span style="font-size: 1.15rem; font-weight: 800; color: #ffffff;">Quiz Performance Metrics Documentation</span>
+            </div>
+          </div>
+          <button type="button" class="btn-modal-close" id="btn-close-quiz-metric-doc" title="Close documentation" aria-label="Close documentation">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+
+        <div style="padding: 1.25rem; max-height: 75vh; overflow-y: auto;">
+          <!-- Metric Navigation Pills -->
+          <div class="notif-filter-pills" id="quiz-metric-doc-pills" style="margin-bottom: 1rem;">
+            <button type="button" class="notif-pill active" data-quiz-doc-target="elo">Elo Rating System</button>
+            <button type="button" class="notif-pill" data-quiz-doc-target="tier">Competency Tier</button>
+            <button type="button" class="notif-pill" data-quiz-doc-target="speed">Speed Bonus Points</button>
+            <button type="button" class="notif-pill" data-quiz-doc-target="integrity">Proctored Integrity</button>
+          </div>
+
+          <!-- Documentation Sections -->
+          <div id="quiz-metric-doc-content">
+            <!-- 1. Elo Rating Documentation -->
+            <div class="metric-doc-pane" id="doc-pane-quiz-elo" style="display: block;">
+              <div style="padding: 0.85rem 1rem; background: #fff7ed; border: 1.5px solid #fdba74; border-radius: 6px; margin-bottom: 1rem;">
+                <strong style="color: #9a3412; font-size: 0.92rem; display: block; margin-bottom: 3px;">Trainee Elo Rating System</strong>
+                <p style="font-size: 0.82rem; color: #334155; margin: 0; line-height: 1.45;">
+                  A live, mathematical score reflecting your overall knowledge, problem-solving speed, and accuracy across assessments.
+                </p>
+              </div>
+
+              <div class="prep-section-block" style="border-left: 3.5px solid #ea580c; margin-bottom: 0.85rem;">
+                <h5 class="prep-block-title">What Does "Elo" Mean? (Full Form & Origin)</h5>
+                <div style="font-size: 0.82rem; color: #334155; line-height: 1.5;">
+                  <p style="margin: 0 0 0.45rem 0;">
+                    <strong>Origin & Creator:</strong> Named after <strong>Dr. Arpad Elo</strong>, a physicist and mathematician who created the universal standard for measuring skill levels.
+                  </p>
+                  <p style="margin: 0 0 0.45rem 0;">
+                    <strong>Full Form in Learning:</strong> In educational and digital training platforms, Elo stands for <strong>Expected Learning Outcome</strong> (or Relative Competency Rating).
+                  </p>
+                  <p style="margin: 0;">
+                    <strong>How It Works in Practice:</strong> Just like a chess rating or sports league score, your Elo rating starts at 1400. When you perform well on tough assessments, your score climbs. Consistent accuracy and quick responses award additional bonus points.
+                  </p>
+                </div>
+              </div>
+
+              <div class="prep-section-block" style="border-left: 3.5px solid #ea580c;">
+                <h5 class="prep-block-title">National Percentile</h5>
+                <p style="font-size: 0.82rem; color: #334155; line-height: 1.5; margin: 0;">
+                  Your percentile compares your performance against all candidates across the country. An 88.4th percentile means your score is higher than 88.4% of all active test-takers.
+                </p>
+              </div>
+            </div>
+
+            <!-- 2. Competency Tier Documentation -->
+            <div class="metric-doc-pane" id="doc-pane-quiz-tier" style="display: none;">
+              <div style="padding: 0.85rem 1rem; background: #f0f9ff; border: 1.5px solid #7dd3fc; border-radius: 6px; margin-bottom: 1rem;">
+                <strong style="color: #0369a1; font-size: 0.92rem; display: block; margin-bottom: 3px;">Competency Level & Tier</strong>
+                <p style="font-size: 0.82rem; color: #334155; margin: 0; line-height: 1.45;">
+                  The standardized qualification tier assigned to you based on verified assessment milestones.
+                </p>
+              </div>
+
+              <div class="prep-section-block" style="border-left: 3.5px solid #002b49;">
+                <h5 class="prep-block-title">Tier Classifications</h5>
+                <ul style="font-size: 0.82rem; color: #334155; line-height: 1.6; margin: 0.5rem 0 0 1.25rem; padding: 0;">
+                  <li><strong>Tier 1 — Foundational:</strong> Basic conceptual familiarity and introductory coursework.</li>
+                  <li><strong>Tier 2 — Intermediate:</strong> Consistent scores on standard evaluation modules.</li>
+                  <li><strong>Tier 3 — Proficient:</strong> High accuracy across advanced multi-step problem solving.</li>
+                  <li><strong>Tier 4 — Advanced Master:</strong> Top 5% ranking with exceptional speed and zero proctoring violations.</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- 3. Speed Bonus Points Documentation -->
+            <div class="metric-doc-pane" id="doc-pane-quiz-speed" style="display: none;">
+              <div style="padding: 0.85rem 1rem; background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 6px; margin-bottom: 1rem;">
+                <strong style="color: #166534; font-size: 0.92rem; display: block; margin-bottom: 3px;">Total Speed Bonus Banked</strong>
+                <p style="font-size: 0.82rem; color: #334155; margin: 0; line-height: 1.45;">
+                  Extra score points awarded for rapid, decisive, and accurate answers in timed tests.
+                </p>
+              </div>
+
+              <div class="prep-section-block" style="border-left: 3.5px solid #16a34a;">
+                <h5 class="prep-block-title">How Speed Points Are Calculated</h5>
+                <p style="font-size: 0.82rem; color: #334155; line-height: 1.5; margin: 0 0 0.5rem 0;">
+                  Every question in a timed test has a countdown timer (e.g., 45 or 60 seconds). When you select the <strong>correct</strong> answer before the timer expires, each remaining second is converted into 1 Speed Bonus Point!
+                </p>
+                <div class="prep-formula-box" style="margin: 0.5rem 0;">
+                  Speed Points Earned = Remaining Clock Seconds (On Correct Answers Only)
+                </div>
+                <p style="font-size: 0.78rem; color: #64748b; margin: 0.5rem 0 0 0;">
+                  <em>Note: Incorrect answers or expired timers award 0 speed points.</em>
+                </p>
+              </div>
+            </div>
+
+            <!-- 4. Proctored Integrity Index Documentation -->
+            <div class="metric-doc-pane" id="doc-pane-quiz-integrity" style="display: none;">
+              <div style="padding: 0.85rem 1rem; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 6px; margin-bottom: 1rem;">
+                <strong style="color: #1e293b; font-size: 0.92rem; display: block; margin-bottom: 3px;">Proctored Integrity Index</strong>
+                <p style="font-size: 0.82rem; color: #334155; margin: 0; line-height: 1.45;">
+                  Tracks strict adherence to ethical examination standards and anti-cheating regulations.
+                </p>
+              </div>
+
+              <div class="prep-section-block" style="border-left: 3.5px solid #0284c7;">
+                <h5 class="prep-block-title">Anti-Cheating Watchdog Rules</h5>
+                <p style="font-size: 0.82rem; color: #334155; line-height: 1.5; margin: 0 0 0.5rem 0;">
+                  During an active assessment, the automated proctor monitors the browser window:
+                </p>
+                <ul style="font-size: 0.82rem; color: #334155; line-height: 1.6; margin: 0 0 0 1.25rem; padding: 0;">
+                  <li><strong>Tab Switching:</strong> Opening another tab or minimizing the browser triggers an instant violation.</li>
+                  <li><strong>Window Focus:</strong> Clicking outside the assessment screen pauses and flags the session.</li>
+                  <li><strong>Developer Tools:</strong> Pressing F12 or inspection shortcuts immediately terminates the exam with a zero score.</li>
+                </ul>
+                <p style="font-size: 0.78rem; color: #166534; font-weight: 700; margin: 0.5rem 0 0 0;">
+                  A score of 100% (Merit) confirms flawless ethical compliance throughout all examinations.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="marksheet-modal-footer">
+          <button type="button" class="btn-confirm-milestone" id="btn-done-quiz-metric-doc" style="background: #002b49;">
+            Got it, Close Reference
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         SKILL GAP METRIC DOCUMENTATION & HOW IT WORKS MODAL
+         ====================================================================== -->
+    <div class="marksheet-modal" id="metric-doc-modal" style="display: none;" role="dialog" aria-modal="true">
+      <div class="marksheet-dialog" style="max-width: 680px;">
+        <div class="marksheet-modal-header" style="background: #002b49; border-bottom: 2.5px solid #0284c7;">
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <div>
+              <div style="font-size: 0.7rem; text-transform: uppercase; color: #bae6fd; font-weight: 800;">Diagnostic System Reference</div>
+              <span style="font-size: 1.15rem; font-weight: 800; color: #ffffff;">Competency Metrics Documentation</span>
+            </div>
+          </div>
+          <button type="button" class="btn-modal-close" id="btn-close-metric-doc" title="Close documentation" aria-label="Close documentation"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+        </div>
+
+        <div style="padding: 1.25rem; max-height: 75vh; overflow-y: auto;">
+          <!-- Metric Navigation Pills -->
+          <div class="notif-filter-pills" id="metric-doc-pills" style="margin-bottom: 1rem;">
+            <button type="button" class="notif-pill active" data-doc-target="active">Active Skill Gaps</button>
+            <button type="button" class="notif-pill" data-doc-target="mastered">Cleared & Mastered</button>
+            <button type="button" class="notif-pill" data-doc-target="readiness">Overall Readiness Index</button>
+            <button type="button" class="notif-pill" data-doc-target="bonus">Recovery Bonus (Elo)</button>
+          </div>
+
+          <!-- Documentation Sections -->
+          <div id="metric-doc-content">
+            <!-- Active Skill Gaps Documentation -->
+            <div class="metric-doc-pane" id="doc-pane-active" style="display: block;">
+              <div style="padding: 0.85rem 1rem; background: #fef2f2; border: 1.5px solid #fca5a5; border-radius: 6px; margin-bottom: 1rem;">
+                <strong style="color: #991b1b; font-size: 0.92rem; display: block; margin-bottom: 3px;">Active Skill Gaps</strong>
+                <p style="font-size: 0.82rem; color: #334155; margin: 0; line-height: 1.45;">
+                  Tracks specific syllabus topic areas where questions were answered incorrectly or where time expired during evaluations.
+                </p>
+              </div>
+
+              <div class="prep-section-block" style="border-left: 3.5px solid #dc2626;">
+                <h5 class="prep-block-title">How It Works</h5>
+                <p style="font-size: 0.82rem; color: #334155; line-height: 1.5; margin: 0 0 0.5rem 0;">
+                  Whenever an assessment is submitted, the diagnostic engine intercepts missed questions, identifies the underlying core concept, and logs it here as an active deficit requiring study and review.
+                </p>
+                <div style="font-size: 0.78rem; color: #64748b;">
+                  <strong>Action to take:</strong> Click <em>Why?</em> on any card to inspect the exact mistakes, or click <em>Suggest Preparation</em> for an AI study plan.
+                </div>
+              </div>
+            </div>
+
+            <!-- Cleared & Mastered Documentation -->
+            <div class="metric-doc-pane" id="doc-pane-mastered" style="display: none;">
+              <div style="padding: 0.85rem 1rem; background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 6px; margin-bottom: 1rem;">
+                <strong style="color: #166534; font-size: 0.92rem; display: block; margin-bottom: 3px;">Cleared & Mastered Topics</strong>
+                <p style="font-size: 0.82rem; color: #334155; margin: 0; line-height: 1.45;">
+                  Weak areas you have studied, practiced, and successfully solved through a retest.
+                </p>
+              </div>
+
+              <div class="prep-section-block" style="border-left: 3.5px solid #16a34a;">
+                <h5 class="prep-block-title">How It Works</h5>
+                <p style="font-size: 0.82rem; color: #334155; line-height: 1.5; margin: 0 0 0.5rem 0;">
+                  After reviewing the study guide, click <em>Retest Topic</em> on any card. If you score at least 66% (2 out of 3 questions correct), the weak area is marked as <strong>Mastered</strong>, and the card turns green.
+                </p>
+                <div style="font-size: 0.78rem; color: #64748b;">
+                  <strong>Reward:</strong> Each cleared topic immediately credits <strong>+50 bonus Elo points</strong> to your score.
+                </div>
+              </div>
+            </div>
+
+            <!-- Overall Readiness Index Documentation -->
+            <div class="metric-doc-pane" id="doc-pane-readiness" style="display: none;">
+              <div style="padding: 0.85rem 1rem; background: #f0f9ff; border: 1.5px solid #7dd3fc; border-radius: 6px; margin-bottom: 1rem;">
+                <strong style="color: #0369a1; font-size: 0.92rem; display: block; margin-bottom: 3px;">Overall Readiness Index</strong>
+                <p style="font-size: 0.82rem; color: #334155; margin: 0; line-height: 1.45;">
+                  A simple percentage score showing how much of the syllabus you have fully mastered.
+                </p>
+              </div>
+
+              <div class="prep-section-block" style="border-left: 3.5px solid #0284c7;">
+                <h5 class="prep-block-title">Calculation Formula</h5>
+                <div class="prep-formula-box" style="margin: 0.5rem 0;">
+                  Readiness Score = (Cleared Topics / Total Tracked Topics) x 100%
+                </div>
+                <p style="font-size: 0.82rem; color: #334155; line-height: 1.5; margin: 0;">
+                  All trainees start with a baseline of 65%. As you clear each weak area with a retest, this score climbs up to 100%, showing you are fully prepared and exam-ready.
+                </p>
+              </div>
+            </div>
+
+            <!-- Recovery Bonus (Elo) Documentation -->
+            <div class="metric-doc-pane" id="doc-pane-bonus" style="display: none;">
+              <div style="padding: 0.85rem 1rem; background: #fff7ed; border: 1.5px solid #fdba74; border-radius: 6px; margin-bottom: 1rem;">
+                <strong style="color: #9a3412; font-size: 0.92rem; display: block; margin-bottom: 3px;">Recovery Bonus Points (Elo Rating)</strong>
+                <p style="font-size: 0.82rem; color: #334155; margin: 0; line-height: 1.45;">
+                  Bonus points added to your score when you fix your mistakes and pass retests.
+                </p>
+              </div>
+
+              <!-- Full Form & Explanation of Elo -->
+              <div class="prep-section-block" style="border-left: 3.5px solid #ea580c; margin-bottom: 0.85rem;">
+                <h5 class="prep-block-title">What Does "Elo" Mean? (Full Form & Origin)</h5>
+                <div style="font-size: 0.82rem; color: #334155; line-height: 1.5;">
+                  <p style="margin: 0 0 0.45rem 0;">
+                    <strong>Origin / Creator:</strong> The Elo system is named after its inventor, <strong>Dr. Arpad Elo</strong> (a physicist and mathematician who created the world-standard skill measurement method).
+                  </p>
+                  <p style="margin: 0 0 0.45rem 0;">
+                    <strong>Full Form in Learning:</strong> In modern training platforms, it stands for <strong>Expected Learning Outcome</strong> (Relative Competency Rating).
+                  </p>
+                  <p style="margin: 0;">
+                    <strong>Simple Explanation:</strong> Just like a chess rating, your <strong>Elo score</strong> is a single number showing your true skill level. Scoring well on hard tests increases your Elo; clearing weak areas gives you recovery points.
+                  </p>
+                </div>
+              </div>
+
+              <div class="prep-section-block" style="border-left: 3.5px solid #ea580c;">
+                <h5 class="prep-block-title">How the Recovery Bonus Works</h5>
+                <p style="font-size: 0.82rem; color: #334155; line-height: 1.5; margin: 0 0 0.5rem 0;">
+                  This bonus rewards trainees who go back, review their weak areas, and correct their mistakes. Every time you pass a retest for a weak topic, you earn a flat <strong>+50 Elo points</strong>.
+                </p>
+                <div class="prep-formula-box" style="margin: 0.5rem 0;">
+                  Total Recovery Bonus = Cleared Topics x 50 Elo pts
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="marksheet-modal-footer">
+          <button type="button" class="btn-confirm-milestone" id="btn-done-metric-doc" style="background: #002b49;">
+            Got it, Close Reference
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         FULL PARAGRAPH & TEXT EDITOR POP-UP MODAL (EXPANDED VIEW)
+         ====================================================================== -->
+    <div class="profile-text-expand-backdrop" id="profile-text-expand-modal" style="display: none;" role="dialog" aria-modal="true">
+      <div class="profile-text-expand-dialog">
+        <div class="profile-text-expand-header">
+          <div>
+            <div style="font-size: 0.7rem; text-transform: uppercase; color: #fdba74; font-weight: 800; letter-spacing: 0.05em;">Full Text & Paragraph Editor</div>
+            <h3 id="profile-expand-modal-title">Editing: Field Name</h3>
+          </div>
+          <button type="button" class="btn-modal-close" id="profile-expand-close-btn" title="Close editor" aria-label="Close editor">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+
+        <div class="profile-text-expand-body">
+          <p style="font-size: 0.8rem; color: #64748b; margin: 0 0 0.25rem 0;">
+            Read the entire sentence or paragraph at once, make your changes comfortably, and click <strong>Apply Changes</strong>.
+          </p>
+          <textarea id="profile-expand-textarea" class="profile-text-expand-textarea" placeholder="Type or paste your text here..."></textarea>
+          <div class="profile-text-expand-meta">
+            <span id="profile-expand-counts">0 characters • 0 words</span>
+            <span style="font-size: 0.72rem; color: #94a3b8;">Shortcut: Press <kbd style="background: #e2e8f0; padding: 2px 5px; border-radius: 3px; font-family: monospace;">Ctrl</kbd> + <kbd style="background: #e2e8f0; padding: 2px 5px; border-radius: 3px; font-family: monospace;">Enter</kbd> to apply</span>
+          </div>
+        </div>
+
+        <div class="profile-text-expand-footer">
+          <button type="button" class="btn-admin-outline" id="profile-expand-cancel-btn" style="padding: 0.45rem 1rem;">
+            Cancel
+          </button>
+          <button type="button" class="btn-admin-action" id="profile-expand-apply-btn" style="padding: 0.5rem 1.4rem;">
+            Apply Changes ✓
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         BANNER LIBRARY SELECTION MODAL (11 PATTERNS + PREVIEW & DROPDOWN)
+         ====================================================================== -->
+    <div class="marksheet-modal" id="banner-library-modal" style="display: none;" role="dialog" aria-modal="true">
+      <div class="marksheet-dialog banner-library-dialog" style="max-width: 880px;">
+        <div class="marksheet-modal-header" style="background: #002b49; border-bottom: 2.5px solid #ea580c;">
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <div>
+              <div style="font-size: 0.7rem; text-transform: uppercase; color: #fdba74; font-weight: 800; letter-spacing: 0.05em;">Cadre Profile Customization</div>
+              <span style="font-size: 1.15rem; font-weight: 800; color: #ffffff;">Profile Banner Library &amp; Theme Menu</span>
+            </div>
+          </div>
+          <button type="button" class="btn-modal-close" id="btn-close-banner-library" title="Close Banner Library" aria-label="Close Banner Library">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+
+        <div style="padding: 1.25rem; max-height: 75vh; overflow-y: auto;">
+          <!-- Dropdown Menu Selection Bar -->
+          <div class="banner-quick-select-bar">
+            <label for="banner-library-select" class="banner-select-label">
+              <strong>Select Pattern from Menu:</strong> Choose a preset pattern from the dropdown list:
+            </label>
+            <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
+              <select id="banner-library-select" class="banner-library-select">
+                <option value="default">0. MoSPI Central Cadre (Official Navy &amp; Tricolor)</option>
+                <option value="1">1. Cyber Rain (Neon Blue &amp; Rainbow Glow)</option>
+                <option value="2">2. Geometric Blue Chevron Slide</option>
+                <option value="3">3. Carbon Fiber Diagonal Stripes</option>
+                <option value="4">4. Golden Sovereign Rings</option>
+                <option value="5">5. Hexagonal Olive Conic Prism</option>
+                <option value="6">6. Volcanic Cracked Earth (Basalt &amp; Magma)</option>
+                <option value="7">7. Archipelago Ocean Atoll (Tropical Islands)</option>
+                <option value="8">8. Isometric Gold Lattice</option>
+                <option value="9">9. Matrix Digital Code Rain (Angled Phosphor)</option>
+                <option value="10">10. Statistical &amp; Quantum Matrix Symbols</option>
+                <option value="11">11. Midnight City &amp; Flashlight Patrol</option>
+              </select>
+              <button type="button" class="btn-banner-upload-link" id="btn-library-switch-upload">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                <span>Upload Custom Image / GIF (&lt;5MB)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Live Interactive Preview Strip -->
+          <div class="banner-live-preview-box">
+            <div class="banner-preview-label">
+              <span>LIVE BANNER PREVIEW (220px PROPORTION)</span>
+              <strong id="banner-preview-name">MoSPI Central Cadre (Official Navy &amp; Tricolor)</strong>
+            </div>
+            <div class="banner-preview-box-container">
+              <div class="banner-preview-viewport" id="banner-preview-viewport"></div>
+              <div class="cover-tricolor-accent" style="position: absolute; top: 0; left: 0; right: 0; height: 4px; z-index: 5;"></div>
+              <div class="cover-gov-watermark" style="position: absolute; top: 12px; left: 14px; z-index: 5; pointer-events: none;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="opacity: 0.9;"><path d="M12 1L3 5v2h18V5L12 1zm-7 8v8h2V9H5zm5 0v8h2V9h-2zm5 0v8h2V9h-2zm5 0v8h2V9h-2zM2 19v3h20v-3H2z"/></svg>
+                <span style="font-size: 0.7rem;">Ministry of Statistics &amp; Programme Implementation • Live Preview</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Selectable Pattern Menu Grid -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+            <strong style="font-size: 0.8rem; color: #002b49;">Select from Banner Menu List (Click to preview, double-click to apply):</strong>
+            <span style="font-size: 0.72rem; color: #64748b;">11 Animated Patterns Available</span>
+          </div>
+          <div class="banner-menu-grid" id="banner-menu-grid">
+            <!-- Dynamically populated menu items for 12 presets -->
+          </div>
+        </div>
+
+        <div class="marksheet-modal-footer" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+          <button type="button" class="btn-admin-outline" id="btn-banner-reset-default" style="padding: 0.45rem 1rem;">
+            Reset to Official Cadre
+          </button>
+          <div style="display: flex; gap: 0.5rem;">
+            <button type="button" class="btn-admin-outline" id="btn-banner-library-cancel" style="padding: 0.45rem 1rem;">
+              Cancel
+            </button>
+            <button type="button" class="btn-admin-action" id="btn-banner-library-apply" style="padding: 0.55rem 1.6rem; font-weight: 800;">
+              Apply Banner to Profile ✓
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -257,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <td><span class="${badgeClass}">${user.status}</span></td>
         <td>
           <button type="button" class="btn-admin-action btn-inspect-user" data-index="${originalIndex}" style="padding: 0.25rem 0.55rem; font-size: 0.7rem;">
-            Inspect Record 🔍
+            Inspect Record 
           </button>
         </td>
       `;
@@ -522,14 +522,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!pdfShimmer || !shimmerStatusText) return;
 
     pdfShimmer.style.display = 'block';
-    shimmerStatusText.textContent = `⚡ Initializing MoSPI AI Document Extraction Engine for "${file.name}"...`;
+    shimmerStatusText.textContent = ` Initializing MoSPI AI Document Extraction Engine for "${file.name}"...`;
 
     setTimeout(() => {
-      shimmerStatusText.textContent = `📄 Parsing PDF structure & service credentials...`;
+      shimmerStatusText.textContent = ` Parsing PDF structure & service credentials...`;
     }, 600);
 
     setTimeout(() => {
-      shimmerStatusText.textContent = `🤖 Auto-populating Cadre, Division & Baseline Skills...`;
+      shimmerStatusText.textContent = ` Auto-populating Cadre, Division & Baseline Skills...`;
     }, 1200);
 
     setTimeout(() => {
