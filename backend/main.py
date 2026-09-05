@@ -1,17 +1,13 @@
-"""
-Nirdesha FastAPI Application
-====================================
+"""Nirdesha FastAPI application.
 
-Run from the main Nirdesha project folder:
+Run from the Nirdesha project root:
 
-    uvicorn backend.main:app --reload --host 127.0.0.1 --port 8001
+uvicorn backend.main:app --reload --host 127.0.0.1 --port 8001
 """
 
 from __future__ import annotations
 
-from contextlib import (
-    asynccontextmanager,
-)
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
@@ -28,33 +24,33 @@ from .database import (
 from .routers import (
     competency,
     evidence,
-    profiles,
+    materials,
+    profile,
+    resume,
 )
 
 from .seed import (
     seed_database,
 )
 
+# Importing this module registers
+# Phase-2 tables with SQLAlchemy metadata.
+from . import phase2_models  # noqa: F401
 
-# ---------------------------------------------------------------------------
-# STARTUP
-# ---------------------------------------------------------------------------
 
 @asynccontextmanager
 async def lifespan(
     _app: FastAPI,
 ):
 
-    # Create SQLite tables.
+    # Creates missing tables only.
     #
-    # For production, Alembic migrations
-    # should replace automatic create_all.
+    # Existing Phase-1 tables/data are
+    # not dropped or reset.
 
     Base.metadata.create_all(
         bind=engine
     )
-
-    # Populate deterministic demo data.
 
     with SessionLocal() as db:
 
@@ -65,10 +61,6 @@ async def lifespan(
     yield
 
 
-# ---------------------------------------------------------------------------
-# FASTAPI APPLICATION
-# ---------------------------------------------------------------------------
-
 app = FastAPI(
 
     title=(
@@ -77,15 +69,13 @@ app = FastAPI(
     ),
 
     version=(
-        "1.0.0-phase1"
+        "2.0.0-phase2"
     ),
 
     description=(
-
-        "Deterministic competency, "
-        "skill-gap and evidence engine "
-        "for the Nirdesha SIH prototype."
-
+        "Nirdesha competency core plus "
+        "Phase-2 document intelligence "
+        "and source-grounded quiz generation."
     ),
 
     lifespan=lifespan,
@@ -101,14 +91,9 @@ app.add_middleware(
 
     CORSMiddleware,
 
-    # Allows file:// during development.
-
     allow_origins=[
         "null"
     ],
-
-    # Allows localhost / 127.0.0.1
-    # regardless of development port.
 
     allow_origin_regex=(
         r"https?://"
@@ -135,11 +120,11 @@ app.add_middleware(
 
 
 # ---------------------------------------------------------------------------
-# ROUTERS
+# PHASE 1 ROUTERS
 # ---------------------------------------------------------------------------
 
 app.include_router(
-    profiles.router
+    profile.router
 )
 
 app.include_router(
@@ -152,8 +137,17 @@ app.include_router(
 
 
 # ---------------------------------------------------------------------------
-# ROOT
+# PHASE 2 ROUTERS
 # ---------------------------------------------------------------------------
+
+app.include_router(
+    resume.router
+)
+
+app.include_router(
+    materials.router
+)
+
 
 @app.get("/")
 def root():
@@ -164,7 +158,7 @@ def root():
             "Nirdesha Competency Intelligence API",
 
         "phase":
-            1,
+            2,
 
         "status":
             "ready",
@@ -174,10 +168,6 @@ def root():
 
     }
 
-
-# ---------------------------------------------------------------------------
-# HEALTH CHECK
-# ---------------------------------------------------------------------------
 
 @app.get("/api/health")
 def health():
@@ -191,7 +181,7 @@ def health():
             "competency-core",
 
         "phase":
-            1,
+            2,
 
         "database":
             "connected",
