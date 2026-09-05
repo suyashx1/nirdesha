@@ -12,6 +12,7 @@
 
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/public.css">
   <link rel="stylesheet" href="css/ai-companion.css">
   <!-- KaTeX Math Rendering & Nirdesha AI Visual Formatter -->
   <link rel="stylesheet" href="vendor/katex/katex.min.css">
@@ -63,11 +64,12 @@
           <span class="admin-nav-badge" style="background:#0284c7;">Active</span>
         </a>
 
-        <a href="#assessments" class="admin-nav-item" data-tab="assessments">
+        <a href="#messages" class="admin-nav-item" data-tab="messages">
           <span class="admin-nav-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
           </span>
-          <span>Skill Diagnostics</span>
+          <span>Messages</span>
+          <span class="admin-nav-badge" id="admin-messages-unread-badge" style="background:#ea580c; display:none;">0</span>
         </a>
 
         <a href="#officers" class="admin-nav-item" data-tab="officers">
@@ -376,53 +378,151 @@
           </div>
         </div>
 
-        <!-- VIEW 4: SKILL DIAGNOSTICS -->
-        <div class="admin-view-tab" id="view-assessments">
-          <div style="margin-bottom: 1.5rem;">
-            <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">Competency Diagnostics & Baseline Engine</h2>
-            <p style="font-size: 0.85rem; color: #64748b; margin: 0;">Evidence-weighted competency scoring and skill gap identification mapped to GIGW & MoSPI standards.</p>
-          </div>
-          <div class="admin-metrics-grid" style="margin-bottom: 1.5rem;">
-            <div class="admin-metric-card"><div class="metric-label-title">Statistical Theory</div><div class="metric-val-large">88.4%</div><div class="metric-footer-badge">National Average</div></div>
-            <div class="admin-metric-card"><div class="metric-label-title">Field Operations</div><div class="metric-val-large">93.2%</div><div class="metric-footer-badge">National Average</div></div>
-            <div class="admin-metric-card"><div class="metric-label-title">Data Science</div><div class="metric-val-large" style="color: #ea580c;">71.6%</div><div class="metric-footer-badge" style="color: #ea580c;">Priority Focus Area</div></div>
-            <div class="admin-metric-card"><div class="metric-label-title">DPDP Compliance</div><div class="metric-val-large" style="color: #15803d;">98.0%</div><div class="metric-footer-badge">Legally Certified</div></div>
-          </div>
-        </div>
-
-        <!-- VIEW 5: USER DIRECTORY -->
+                <!-- VIEW 4: USER DIRECTORY -->
         <div class="admin-view-tab" id="view-officers">
-          <div style="margin-bottom: 1.5rem;">
-            <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">User Directory</h2>
-            <p style="font-size: 0.85rem; color: #64748b; margin: 0;">Verified roster of central and state statistical personnel registered under Nirdesha.</p>
-          </div>
-          <div class="admin-panel-card">
-            <div class="panel-header">
-              <div class="panel-title">Users Roster (18,520 Total Registered)</div>
-              <div style="font-size: 0.75rem; color: #64748b; font-weight: 700;"> Click headers to sort ascending / descending</div>
+          <div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">User Directory &amp; Officer Profiles</h2>
+              <p style="font-size: 0.85rem; color: #64748b; margin: 0;">Central repository of verified statistical personnel registered on Nirdesha. View officer profiles, inspect credentials, and manage cadre authorizations.</p>
             </div>
+            <div style="display: flex; gap: 0.6rem; align-items: center;">
+              <span class="user-db-count-badge" id="user-directory-total-badge">6 Registered Officers</span>
+            </div>
+          </div>
+
+          <!-- Filter & Sorting Controls Toolbar -->
+          <div class="user-directory-toolbar">
+            <div class="directory-filter-pills" id="directory-filter-pills">
+              <button type="button" class="dir-filter-pill active" data-dir-filter="all">
+                All Officers <span class="pill-count" id="count-all-users">6</span>
+              </button>
+              <button type="button" class="dir-filter-pill is-banned-filter" data-dir-filter="banned">
+                Banned Users <span class="pill-count" id="count-banned-users">0</span>
+              </button>
+            </div>
+
+            <div class="directory-controls-row">
+              <div class="dir-search-wrap">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" id="directory-search-input" class="dir-search-input" placeholder="Search by Roll ID, name, cadre, email...">
+              </div>
+
+              <div class="dir-sort-wrap">
+                <label for="directory-sort-select" style="font-size: 0.78rem; font-weight: 700; color: #475569;">Sort by:</label>
+                <select id="directory-sort-select" class="dir-sort-select">
+                  <option value="date-desc" selected>Creation Date &amp; Time (Newest First)</option>
+                  <option value="date-asc">Creation Date &amp; Time (Oldest First)</option>
+                  <option value="ban-date" style="display:none;" id="opt-sort-ban-date">Ban Date (Latest First)</option>
+                  <option value="roll-asc">Roll ID (A - Z)</option>
+                  <option value="score-desc">Competency Score (High - Low)</option>
+                  <option value="name-asc">Officer Name (A - Z)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Users Table Card -->
+          <div class="admin-panel-card">
             <div class="admin-table-wrap">
               <table class="admin-table" id="admin-users-table">
                 <thead>
                   <tr>
-                    <th class="sortable-header" data-sort="id">Roll ID <span class="sort-icon">↕</span></th>
-                    <th class="sortable-header" data-sort="name">User Name <span class="sort-icon">↕</span></th>
-                    <th class="sortable-header" data-sort="cadre">Cadre <span class="sort-icon">↕</span></th>
-                    <th class="sortable-header" data-sort="department">Posting Department <span class="sort-icon">↕</span></th>
-                    <th class="sortable-header" data-sort="score">Score <span class="sort-icon">↕</span></th>
-                    <th class="sortable-header" data-sort="status">Status <span class="sort-icon">↕</span></th>
-                    <th>Actions (Read-Only Inspection)</th>
+                    <th>Officer Identity</th>
+                    <th>Cadre Designation &amp; Division</th>
+                    <th>Registered Date &amp; Time</th>
+                    <th>Authorization Status</th>
+                    <th style="text-align: right;">Administrative Actions</th>
                   </tr>
                 </thead>
                 <tbody id="admin-user-directory-tbody">
-                  <!-- Populated dynamically by admin.js with sort, search, and read-only inspect controls -->
+                  <!-- Dynamically populated by renderAdminUserDirectory() -->
                 </tbody>
               </table>
             </div>
           </div>
         </div>
 
-        <!-- VIEW 6: USER PROFILE -->
+        <!-- VIEW 5: MESSAGES (TELEGRAM / WHATSAPP STYLE CONSOLE) -->
+        <div class="admin-view-tab" id="view-messages">
+          <div style="margin-bottom: 1rem;">
+            <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">Cadre Communications &amp; Directives Console</h2>
+            <p style="font-size: 0.85rem; color: #64748b; margin: 0;">Direct administrative messaging with officers, unban appeals evaluation, and formal directive dispatch.</p>
+          </div>
+
+          <div class="chat-messenger-shell">
+            <!-- Left Conversations Sidebar -->
+            <div class="chat-messenger-sidebar">
+              <div class="chat-sidebar-header">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem;">
+                  <h3 class="chat-sidebar-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                    <span>Conversations</span>
+                  </h3>
+                  <span class="chat-total-threads-badge" id="chat-threads-count">6</span>
+                </div>
+                <div class="chat-search-box">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                  <input type="text" id="chat-thread-search" placeholder="Search conversations...">
+                </div>
+                <div class="chat-filter-pills">
+                  <button type="button" class="chat-filter-btn active" data-filter="all">All</button>
+                  <button type="button" class="chat-filter-btn" data-filter="appeals">Appeals</button>
+                  <button type="button" class="chat-filter-btn" data-filter="banned">Banned</button>
+                </div>
+              </div>
+
+              <div class="chat-threads-scroll" id="chat-threads-scroll">
+                <!-- Dynamically rendered chat threads -->
+              </div>
+            </div>
+
+            <!-- Right Chat Viewport -->
+            <div class="chat-messenger-main" id="chat-messenger-main">
+              <!-- Active Chat Header -->
+              <div class="chat-main-header">
+                <div class="chat-header-user-info" id="chat-header-user-clickable" title="Click to Inspect Full Profile">
+                  <div class="chat-header-avatar" id="chat-header-avatar">SR</div>
+                  <div>
+                    <div class="chat-header-name-row">
+                      <span class="chat-header-name" id="chat-header-name">S. K. Raman</span>
+                      <span class="chat-header-badge" id="chat-header-status-badge">Active</span>
+                    </div>
+                    <div class="chat-header-cadre" id="chat-header-cadre">Junior Statistical Officer • NSSO FOD Western Zone</div>
+                  </div>
+                </div>
+
+                <div class="chat-header-actions">
+                  <button type="button" class="btn-chat-action-header" id="btn-chat-inspect-profile" title="Inspect Officer's Full Profile">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <span>Inspect Profile</span>
+                  </button>
+                  <button type="button" class="btn-chat-action-header btn-chat-ban-toggle" id="btn-chat-ban-toggle" title="Suspend or Unban this officer">
+                    <span id="chat-ban-btn-label">Ban Officer</span>
+                  </button>
+                  <button type="button" class="btn-chat-action-header btn-chat-delete-user" id="btn-chat-delete-user" title="Permanently Delete User from Chats">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    <span>Truncate User</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Messages Body (WhatsApp / Telegram Wallpaper) -->
+              <div class="chat-messages-viewport" id="chat-messages-viewport">
+                <!-- Dynamically rendered messages with single tick -->
+              </div>
+
+              <!-- Text-Only Input Footer (Strict Zero Media) -->
+              <div class="chat-input-footer">
+                <input type="text" class="chat-text-input" id="chat-text-input" placeholder="Type a message or administrative directive..." autocomplete="off">
+                <button type="button" class="btn-chat-send" id="btn-chat-send" title="Send Message (Enter)">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+<!-- VIEW 6: USER PROFILE -->
         <div class="admin-view-tab" id="view-profile">
           <div style="margin-bottom: 1.5rem;">
             <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">Administrator User Profile</h2>
@@ -452,33 +552,109 @@
             <div class="shimmer-block shimmer-bar" style="width: 50%;"></div>
           </div>
 
-          <div class="profile-overview-card" style="margin-top: 1.25rem;">
-            <div class="profile-avatar-row">
-              <div class="profile-avatar-container">
-                <div class="profile-avatar-large" id="admin-profile-avatar">AD</div>
-                <button type="button" class="avatar-upload-overlay" id="admin-avatar-btn" title="Change Avatar Image">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
-                </button>
-                <input type="file" id="admin-avatar-file-input" accept="image/*" style="display:none;">
+          <!-- Administrator Modern Profile Cover Banner & Identity Header -->
+          <div class="officer-fb-profile-container" style="margin-top: 1.25rem; margin-bottom: 1.5rem;">
+            <!-- 1. Cover Photo Banner with Dynamic Stage & Edit Menu -->
+            <div class="profile-cover-wrap" id="admin-profile-cover-wrap">
+              <!-- Dynamic Banner Stage Layer -->
+              <div class="profile-banner-stage" id="admin-profile-banner-stage">
+                <div class="cover-gradient-overlay"></div>
               </div>
 
-              <div style="flex:1;">
-                <label class="profile-field-label">User Full Name</label>
-                <input type="text" id="admin-profile-name" class="profile-input-field" value="Dr. A. K. Verma">
-                
-                <label class="profile-field-label" style="margin-top: 0.5rem;">Role / Designation</label>
-                <input type="text" id="admin-profile-role" class="profile-input-field" value="Director (Cadre Capacity & Training Governance)">
+              <!-- Tricolor Accent Top Stripe -->
+              <div class="cover-tricolor-accent"></div>
+
+              <!-- Official Watermark -->
+              <div class="cover-gov-watermark">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="opacity: 0.9;"><path d="M12 1L3 5v2h18V5L12 1zm-7 8v8h2V9H5zm5 0v8h2V9h-2zm5 0v8h2V9h-2zm5 0v8h2V9h-2zM2 19v3h20v-3H2z"/></svg>
+                <span>Ministry of Statistics &amp; Programme Implementation • Apex Admin Governance</span>
               </div>
+
+              <!-- Banner Edit Logo Button & Dropdown -->
+              <div class="banner-edit-action-wrap">
+                <button type="button" class="banner-edit-logo-btn" id="btn-admin-banner-edit-menu" title="Change Administrator Banner" aria-label="Change Administrator Banner" aria-haspopup="true" aria-expanded="false">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events: none;">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                    <circle cx="12" cy="13" r="4"></circle>
+                  </svg>
+                </button>
+                <div class="banner-edit-dropdown" id="admin-banner-edit-dropdown" style="display: none;">
+                  <button type="button" class="banner-dropdown-item" id="btn-admin-banner-opt-upload">
+                    <span class="banner-dropdown-icon">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    </span>
+                    <span class="banner-dropdown-text">
+                      <strong>Upload from computer</strong>
+                      <small>Supports GIF &amp; image &lt; 5MB</small>
+                    </span>
+                  </button>
+                  <button type="button" class="banner-dropdown-item" id="btn-admin-banner-opt-library">
+                    <span class="banner-dropdown-icon">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    </span>
+                    <span class="banner-dropdown-text">
+                      <strong>Choose from Banner Library</strong>
+                      <small>11 interactive &amp; animated patterns</small>
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Hidden Upload Input for Banner (GIF / Images < 5MB) -->
+              <input type="file" id="admin-banner-file-input" accept="image/gif,image/jpeg,image/png,image/webp" style="display:none;">
             </div>
 
-            <div class="settings-group" style="margin-top: 1.25rem;">
+            <!-- 2. Profile Identity Bar -->
+            <div class="profile-identity-bar">
+              <div class="identity-left">
+                <div class="profile-avatar-overlap" id="admin-profile-avatar-box">
+                  <img id="admin-profile-avatar-img" src="" alt="Admin Profile Picture" style="display:none; width:100%; height:100%; object-fit:cover; position:absolute; inset:0; z-index:1; border-radius:0;">
+                  <span id="admin-profile-avatar-initials">AV</span>
+                  <button type="button" class="avatar-edit-icon-btn" id="admin-avatar-quick-btn" title="Change Admin Photo" aria-label="Change Admin Photo">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                  </button>
+                  <input type="file" id="admin-avatar-file-input" accept="image/*" style="display:none;">
+                </div>
+                <div class="identity-info">
+                  <div class="identity-title-row">
+                    <h1 class="officer-name-title" id="admin-display-name">Dr. A. K. Verma</h1>
+                    <span class="gov-official-badge" style="background:#eff6ff; color:#1d4ed8; border-color:#bfdbfe;">Apex Administrator</span>
+                  </div>
+                  <div class="officer-meta-row">
+                    <span id="admin-display-role">Director (Cadre Capacity &amp; Training Governance)</span>
+                    <span class="meta-sep">•</span>
+                    <span id="admin-display-cadre">Indian Statistical Service (ISS)</span>
+                    <span class="meta-sep">•</span>
+                    <span id="admin-display-empcode">Roll: MoSPI-DIR-2016-0042</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Essential Admin Profile Edit Form (Simplified for Administrative Needs) -->
+          <div class="profile-overview-card">
+            <h3 style="font-size: 1.15rem; font-weight: 800; color: #002b49; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              Essential Administrative Identity &amp; Authorization Fields
+            </h3>
+
+            <div class="settings-group">
               <div class="profile-grid-fields">
+                <div>
+                  <label class="profile-field-label">Administrator Full Name</label>
+                  <input type="text" id="admin-profile-name" class="profile-input-field" value="Dr. A. K. Verma">
+                </div>
+                <div>
+                  <label class="profile-field-label">Administrative Role / Designation</label>
+                  <input type="text" id="admin-profile-role" class="profile-input-field" value="Director (Cadre Capacity &amp; Training Governance)">
+                </div>
                 <div>
                   <label class="profile-field-label">Official Government Email</label>
                   <input type="email" id="admin-profile-email" class="profile-input-field" value="ak.verma@mospi.gov.in">
                 </div>
                 <div>
-                  <label class="profile-field-label">Employee Roll Code</label>
+                  <label class="profile-field-label">Employee Roll Code / Identity</label>
                   <input type="text" id="admin-profile-roll" class="profile-input-field" value="MoSPI-DIR-2016-0042">
                 </div>
                 <div>
@@ -486,22 +662,39 @@
                   <input type="text" id="admin-profile-cadre" class="profile-input-field" value="Indian Statistical Service (ISS)">
                 </div>
                 <div>
-                  <label class="profile-field-label">Division / Posting</label>
-                  <input type="text" id="admin-profile-division" class="profile-input-field" value="Training & Capacity Building Wing, New Delhi">
+                  <label class="profile-field-label">Division / Ministry Wing</label>
+                  <input type="text" id="admin-profile-division" class="profile-input-field" value="Training &amp; Capacity Building Wing, New Delhi">
+                </div>
+                <div>
+                  <label class="profile-field-label">Security Authorization Level</label>
+                  <select id="admin-profile-security" class="profile-input-field" style="height: 38px;">
+                    <option value="level4" selected>Level 4: Apex Administrator (Root Access)</option>
+                    <option value="level3">Level 3: Senior Cadre Auditor</option>
+                    <option value="level2">Level 2: Evaluation Supervisor</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="profile-field-label">Official Phone / Intercom Extension</label>
+                  <input type="text" id="admin-profile-phone" class="profile-input-field" value="+91-11-2338-8921">
                 </div>
               </div>
 
               <div style="margin-top: 1rem;">
-                <label class="profile-field-label">Baseline Skills & Competencies</label>
-                <input type="text" id="admin-profile-skills" class="profile-input-field" value="Survey Sampling, National Accounts, AI Governance, DPDP Act 2023">
+                <label class="profile-field-label">Governance Competencies &amp; Oversight Responsibilities</label>
+                <input type="text" id="admin-profile-skills" class="profile-input-field" value="Cadre Capacity Governance, DPDP Act 2023 Enforcement, National Statistical Systems Auditing, iGOT Curriculum Alignment">
               </div>
 
-              <div style="margin-top: 1.25rem; display: flex; align-items: center; justify-content: space-between;">
-                <button type="button" class="btn-admin-action" id="admin-save-profile-btn">
-                  Save Profile Settings ✓
-                </button>
+              <div style="margin-top: 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
+                <div style="display: flex; gap: 0.6rem;">
+                  <button type="button" class="btn-admin-action" id="admin-save-profile-btn" style="padding: 0.55rem 1.4rem;">
+                    Save Administrator Profile ✓
+                  </button>
+                  <button type="button" class="btn-admin-outline" id="admin-reset-avatar-btn" style="padding: 0.55rem 1rem;">
+                    Remove Custom Photo
+                  </button>
+                </div>
                 <div class="profile-toast-alert" id="admin-profile-toast" style="display:none;">
-                  ✓ Profile & Avatar Saved Successfully!
+                  ✓ Administrator Profile &amp; Banner Updated Successfully!
                 </div>
               </div>
             </div>
@@ -537,7 +730,230 @@
     </div>
   </div>
 
-  <!-- ADMIN INSPECT MODAL (READ-ONLY INSPECTION) -->
+    <!-- ==========================================================================
+       FULL READ-ONLY USER PROFILE INSPECTION MODAL (Actual User Profile Parity)
+       ========================================================================== -->
+  <div class="admin-modal-backdrop" id="admin-inspect-profile-modal" role="dialog" aria-modal="true" style="display:none;">
+    <div class="admin-profile-inspect-dialog">
+      <!-- Modal Header -->
+      <div class="admin-modal-header" style="padding: 0.85rem 1.25rem;">
+        <div style="display: flex; align-items: center; gap: 0.6rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <div>
+            <div style="font-size: 0.68rem; text-transform: uppercase; color: #fdba74; font-weight: 800;">Executive Record Inspection (Read-Only)</div>
+            <div style="font-size: 1.05rem; font-weight: 800;" id="inspect-modal-header-name">Officer Profile</div>
+          </div>
+        </div>
+        <button type="button" id="btn-close-inspect-profile" class="btn-drawer-close" aria-label="Close Inspection">&times;</button>
+        <button type="button" class="btn-modal-close btn-drawer-close" id="btn-close-inspect-profile" aria-label="Close Inspection" title="Close Inspection"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="admin-profile-inspect-body" style="max-height: calc(85vh - 120px); overflow-y: auto; padding: 1.25rem;">
+        <!-- Banner Stage (Matches user's selected banner pattern) -->
+        <div class="profile-cover-wrap" style="height: 150px; border-radius: 4px; overflow: hidden; position: relative; margin-bottom: 2.75rem;">
+          <div class="profile-banner-stage" id="inspect-profile-banner-stage" style="width: 100%; height: 100%;"></div>
+          <div class="cover-tricolor-accent" style="position: absolute; top: 0; left: 0; right: 0; height: 4px; z-index: 5;"></div>
+          
+          <!-- Avatar Overlap -->
+          <div class="profile-avatar-overlap" id="inspect-profile-avatar-box" style="bottom: -28px; left: 24px; width: 76px; height: 76px; border: 3px solid #ffffff; box-shadow: 0 4px 14px rgba(0,0,0,0.18);">
+            <img id="inspect-profile-avatar-img" src="" alt="Officer Avatar" style="display:none; width:100%; height:100%; object-fit:cover;">
+            <span id="inspect-profile-avatar-initials" style="font-size: 1.4rem; font-weight: 800; color: #ffffff;">SR</span>
+          </div>
+        </div>
+
+        <!-- Identity Header -->
+        <div style="padding: 0 0.5rem 1rem 0.5rem; border-bottom: 1px solid #e2e8f0; margin-bottom: 1.25rem;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem;">
+            <div>
+              <h2 id="inspect-full-name" style="font-size: 1.35rem; font-weight: 800; color: #002b49; margin: 0 0 0.25rem 0;">S. K. Raman</h2>
+              <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                <span id="inspect-cadre-title" style="font-size: 0.85rem; font-weight: 700; color: #475569;">Junior Statistical Officer (JSO)</span>
+                <span style="color: #94a3b8;">•</span>
+                <span id="inspect-roll-code" style="font-size: 0.8rem; font-weight: 800; color: #ea580c;">Roll: SSS-2024-8891</span>
+                <span style="color: #94a3b8;">•</span>
+                <span id="inspect-account-status-badge" class="badge-status-cert">Active • Good Standing</span>
+              </div>
+            </div>
+            <div style="text-align: right;">
+              <span style="font-size: 0.72rem; color: #64748b; display: block;">Registered On</span>
+              <strong id="inspect-created-at" style="font-size: 0.8rem; color: #002b49;">15 Aug 2026, 09:30 AM</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Officer Bio & Service Summary -->
+        <div style="margin-bottom: 1.25rem;">
+          <h4 style="font-size: 0.88rem; font-weight: 800; color: #002b49; margin: 0 0 0.4rem 0;">Service Summary &amp; Cadre Profile</h4>
+          <p id="inspect-bio" style="font-size: 0.82rem; color: #334155; line-height: 1.55; margin: 0; background: #f8fafc; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 4px;">
+            Officer serving under NSSO Field Operations Division (Western Zone). Specialized in stratified multi-stage household survey schedules, CAPI field tablet audits, and DPDP Act compliance.
+          </p>
+        </div>
+
+        <!-- Metric Cards Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem;">
+          <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; padding: 0.75rem; border-radius: 4px;">
+            <span style="font-size: 0.7rem; color: #64748b; font-weight: 700; display: block;">Competency Elo Rating</span>
+            <strong id="inspect-elo" style="font-size: 1.15rem; color: #002b49; font-weight: 800;">1,485 Elo</strong>
+          </div>
+          <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; padding: 0.75rem; border-radius: 4px;">
+            <span style="font-size: 0.7rem; color: #64748b; font-weight: 700; display: block;">Active Learning Streak</span>
+            <strong id="inspect-streak" style="font-size: 1.15rem; color: #ea580c; font-weight: 800;">14 Days</strong>
+          </div>
+          <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; padding: 0.75rem; border-radius: 4px;">
+            <span style="font-size: 0.7rem; color: #64748b; font-weight: 700; display: block;">Overall Assessment Score</span>
+            <strong id="inspect-score" style="font-size: 1.15rem; color: #16a34a; font-weight: 800;">94% Certified</strong>
+          </div>
+          <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; padding: 0.75rem; border-radius: 4px;">
+            <span style="font-size: 0.7rem; color: #64748b; font-weight: 700; display: block;">Division / Posting</span>
+            <strong id="inspect-division" style="font-size: 0.82rem; color: #002b49; font-weight: 800; display: block; margin-top: 2px;">NSSO FOD, Western Zone</strong>
+          </div>
+        </div>
+
+        <!-- Competencies -->
+        <div style="margin-bottom: 1.25rem;">
+          <h4 style="font-size: 0.88rem; font-weight: 800; color: #002b49; margin: 0 0 0.45rem 0;">Validated Cadre Competencies</h4>
+          <div id="inspect-skills-container" style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+            <!-- Rendered badges -->
+          </div>
+        </div>
+
+        <!-- Latest 3 Enrolled / Running Courses -->
+        <div style="margin-bottom: 1.25rem;">
+          <h4 style="font-size: 0.88rem; font-weight: 800; color: #002b49; margin: 0 0 0.45rem 0;">Latest Enrolled &amp; Certified Courses (Max 3)</h4>
+          <div id="inspect-courses-stack" style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <!-- Rendered 3 courses -->
+          </div>
+        </div>
+
+        <!-- Contact & Official Information -->
+        <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 4px; padding: 0.85rem 1rem;">
+          <h4 style="font-size: 0.85rem; font-weight: 800; color: #002b49; margin: 0 0 0.5rem 0;">Contact &amp; Administrative Credentials</h4>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; font-size: 0.8rem;">
+            <div><span style="color: #64748b; font-weight: 700;">Gov Email:</span> <span id="inspect-email" style="font-weight: 700; color: #002b49;">s.raman@mospi.gov.in</span></div>
+            <div><span style="color: #64748b; font-weight: 700;">Contact Phone:</span> <span id="inspect-phone" style="font-weight: 700; color: #002b49;">+91-98765-43210</span></div>
+            <div><span style="color: #64748b; font-weight: 700;">Ministry Wing:</span> <span id="inspect-wing" style="font-weight: 700; color: #002b49;">Subordinate Statistical Service (SSS)</span></div>
+            <div><span style="color: #64748b; font-weight: 700;">Clearance Level:</span> <span id="inspect-security" style="font-weight: 700; color: #002b49;">Tier 2 Verified Cadre</span></div>
+          </div>
+        </div>
+
+        <!-- Ban Information Banner (Shown only if user is currently banned) -->
+        <div id="inspect-ban-details-box" style="display:none; margin-top: 1rem; background: #fef2f2; border: 1.5px solid #ef4444; border-radius: 4px; padding: 0.85rem 1rem;">
+          <strong style="color: #b91c1c; font-size: 0.85rem; display: flex; align-items: center; gap: 4px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            Active Administrative Suspension
+          </strong>
+          <p id="inspect-ban-reason-text" style="font-size: 0.8rem; color: #7f1d1d; margin: 0.35rem 0 0.25rem 0; line-height: 1.45;"></p>
+          <span id="inspect-ban-timestamp" style="font-size: 0.72rem; color: #991b1b;"></span>
+        </div>
+      </div>
+
+      <!-- Modal Footer with Ban and Message Actions -->
+      <div class="admin-modal-footer" style="padding: 0.85rem 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; border-top: 1px solid #e2e8f0;">
+        <div style="display: flex; gap: 0.6rem;">
+          <button type="button" class="btn-admin-danger" id="btn-inspect-ban-action" style="padding: 0.5rem 1.15rem; font-weight: 800;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
+            <span>Ban Officer</span>
+          </button>
+          <button type="button" class="btn-admin-action" id="btn-inspect-message-action" style="padding: 0.5rem 1.15rem; font-weight: 800; background: #0284c7;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <span>Message Officer</span>
+          </button>
+        </div>
+        <button type="button" class="btn-admin-outline" id="btn-close-inspect-profile-footer" style="padding: 0.5rem 1.25rem;">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       ADMIN BAN WARNING & REASON MODAL
+       ========================================================================== -->
+  <div class="admin-modal-backdrop" id="admin-ban-warning-modal" role="dialog" aria-modal="true" style="display:none; z-index: 999999;">
+    <div class="admin-modal-dialog" style="max-width: 520px;">
+      <div class="admin-modal-header" style="background: #991b1b; color: #ffffff;">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          <div style="font-size: 1.05rem; font-weight: 800;">Confirm Administrative Suspension</div>
+        </div>
+        <button type="button" id="btn-close-ban-modal" style="background:none; border:none; color:#fff; font-size:1.5rem; cursor:pointer;">&times;</button>
+        <button type="button" class="btn-modal-close" id="btn-close-ban-modal" title="Close ban confirmation" aria-label="Close ban confirmation"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+      </div>
+
+      <div class="admin-modal-body" style="padding: 1.25rem;">
+        <div style="background: #fef2f2; border: 1.5px solid #f87171; border-radius: 4px; padding: 0.85rem 1rem; margin-bottom: 1rem;">
+          <strong style="font-size: 0.82rem; color: #991b1b; display: block; margin-bottom: 0.25rem;">CRITICAL WARNING FOR ADMINISTRATOR:</strong>
+          <p style="font-size: 0.78rem; color: #7f1d1d; margin: 0; line-height: 1.45;">
+            Banning this officer will <strong>immediately revoke their active access</strong> to the Nirdesha portal. The officer will not be able to browse courses, take assessments, access eLab projects, or use study notebooks. Upon logging in, a blocking screen will appear displaying your ban message.
+          </p>
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+          <span style="font-size: 0.78rem; color: #475569; font-weight: 700;">Target Officer:</span>
+          <div style="font-size: 0.9rem; font-weight: 800; color: #002b49; margin-top: 2px;" id="ban-modal-target-officer">
+            S. K. Raman (Roll: SSS-2024-8891)
+          </div>
+        </div>
+
+        <div>
+          <label for="admin-ban-reason-input" class="profile-field-label" style="font-weight: 800; color: #002b49;">
+            Enter Ban Message or Administrative Reason (Mandatory):
+          </label>
+          <textarea id="admin-ban-reason-input" class="profile-input-field" rows="4" style="height: auto; padding: 0.65rem; font-family: inherit; font-size: 0.825rem;" placeholder="e.g. Access suspended due to violation of statistical data integrity protocol (Rule 14-B). Clarification required regarding anomalous CAPI survey listing uploads."></textarea>
+          <span style="font-size: 0.7rem; color: #64748b; margin-top: 4px; display: block;">
+            This explanation will be displayed verbatim to the officer with instructions to appeal.
+          </span>
+        </div>
+      </div>
+
+      <div class="admin-modal-footer" style="padding: 0.85rem 1.25rem; display: flex; justify-content: flex-end; gap: 0.6rem;">
+        <button type="button" class="btn-admin-outline" id="btn-cancel-ban-action">Cancel</button>
+        <button type="button" class="btn-admin-danger" id="btn-confirm-ban-action" style="padding: 0.5rem 1.4rem; font-weight: 800; background: #dc2626; color: #fff;">
+          Confirm &amp; Apply Ban ✕
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       ADMIN DIRECT MESSAGE / DIRECTIVE MODAL
+       ========================================================================== -->
+  <div class="admin-modal-backdrop" id="admin-direct-message-modal" role="dialog" aria-modal="true" style="display:none; z-index: 999998;">
+    <div class="admin-modal-dialog" style="max-width: 500px;">
+      <div class="admin-modal-header" style="background: #002b49; color: #ffffff;">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          <div style="font-size: 1.05rem; font-weight: 800;">Send Official Directive / Message</div>
+        </div>
+        <button type="button" id="btn-close-direct-msg" style="background:none; border:none; color:#fff; font-size:1.5rem; cursor:pointer;">&times;</button>
+        <button type="button" class="btn-modal-close" id="btn-close-direct-msg" title="Close directive dialog" aria-label="Close directive dialog"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+      </div>
+
+      <div class="admin-modal-body" style="padding: 1.25rem;">
+        <div style="margin-bottom: 0.85rem;">
+          <span style="font-size: 0.75rem; color: #64748b; font-weight: 700;">Recipient:</span>
+          <strong id="direct-msg-recipient" style="font-size: 0.9rem; color: #002b49; display: block;">S. K. Raman (SSS-2024-8891)</strong>
+        </div>
+
+        <div style="margin-bottom: 0.85rem;">
+          <label for="direct-msg-text" class="profile-field-label">Official Directive Message:</label>
+          <textarea id="direct-msg-text" class="profile-input-field" rows="4" style="height: auto; padding: 0.65rem; font-size: 0.825rem;" placeholder="Type official administrative message..."></textarea>
+        </div>
+
+        <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; font-weight: 700; color: #002b49; cursor: pointer;">
+          <input type="checkbox" id="direct-msg-important" checked>
+          <span>Mark as High-Priority Directive (Alerts Officer in Notifications Center)</span>
+        </label>
+      </div>
+
+      <div class="admin-modal-footer" style="padding: 0.85rem 1.25rem; display: flex; justify-content: flex-end; gap: 0.6rem;">
+        <button type="button" class="btn-admin-outline" id="btn-cancel-direct-msg">Cancel</button>
+        <button type="button" class="btn-admin-action" id="btn-send-direct-msg" style="padding: 0.5rem 1.35rem; font-weight: 800;">Send Directive ✓</button>
+      </div>
+    </div>
+  </div>
+
   <div class="admin-modal-backdrop" id="admin-inspect-modal" role="dialog" aria-modal="true" style="display:none;">
     <div class="admin-modal-dialog">
       <div class="admin-modal-header">
@@ -546,6 +962,7 @@
           <div style="font-size: 1.1rem; font-weight: 800;" id="inspect-modal-title">Inspect User Record</div>
         </div>
         <button type="button" id="admin-inspect-close" style="background:none; border:none; color:#fff; font-size:1.5rem; cursor:pointer;">&times;</button>
+        <button type="button" class="btn-modal-close" id="admin-inspect-close" title="Close inspection" aria-label="Close inspection"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
       </div>
 
       <div class="admin-modal-body">
@@ -731,6 +1148,119 @@
       </div>
     </div>
   </div>
+
+  <!-- ======================================================================
+       ADMINISTRATOR BANNER LIBRARY & PATTERNS MODAL
+       ====================================================================== -->
+  <div class="marksheet-modal-backdrop" id="admin-banner-library-modal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="admin-banner-lib-title">
+    <div class="marksheet-modal-dialog banner-library-dialog" style="max-width: 860px;">
+      <div class="marksheet-modal-header" style="background: linear-gradient(135deg, #002b49 0%, #034b75 100%); color: #ffffff;">
+        <div style="display: flex; align-items: center; gap: 0.65rem;">
+          <div style="width: 32px; height: 32px; background: rgba(234, 88, 12, 0.2); border: 1.5px solid #ea580c; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #fdba74;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+          </div>
+          <div>
+            <div style="font-size: 0.7rem; text-transform: uppercase; color: #fdba74; font-weight: 800; letter-spacing: 0.05em;">Administrator Customization</div>
+            <span id="admin-banner-lib-title" style="font-size: 1.15rem; font-weight: 800; color: #ffffff;">Administrator Banner Library &amp; Theme Menu</span>
+          </div>
+        </div>
+        <button type="button" class="btn-modal-close" id="btn-admin-close-banner-library" title="Close Banner Library" aria-label="Close Banner Library">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div style="padding: 1.25rem; max-height: 75vh; overflow-y: auto;">
+        <!-- Dropdown Menu Selection Bar -->
+        <div class="banner-quick-select-bar">
+          <label for="admin-banner-library-select" class="banner-select-label">
+            <strong>Select Pattern from Menu:</strong> Choose an official pattern preset:
+          </label>
+          <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
+            <select id="admin-banner-library-select" class="banner-library-select">
+              <option value="default">0. MoSPI Central Cadre (Official Navy &amp; Tricolor)</option>
+              <option value="1">1. Cyber Rain (Neon Blue &amp; Rainbow Glow)</option>
+              <option value="2">2. Geometric Blue Chevron Slide</option>
+              <option value="3">3. Carbon Fiber Diagonal Stripes</option>
+              <option value="4">4. Golden Sovereign Rings</option>
+              <option value="5">5. Hexagonal Olive Conic Prism</option>
+              <option value="6">6. Volcanic Cracked Earth (Basalt &amp; Magma)</option>
+              <option value="7">7. Archipelago Ocean Atoll (Tropical Islands)</option>
+              <option value="8">8. Isometric Gold Lattice</option>
+              <option value="9">9. Matrix Digital Code Rain (Angled Phosphor)</option>
+              <option value="10">10. Statistical &amp; Quantum Matrix Symbols</option>
+              <option value="11">11. Midnight City &amp; Flashlight Patrol</option>
+            </select>
+            <button type="button" class="btn-banner-upload-link" id="btn-admin-library-switch-upload">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+              <span>Upload Custom Image / GIF (&lt;5MB)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Live Interactive Preview Strip -->
+        <div class="banner-live-preview-box">
+          <div class="banner-preview-label">
+            <span>LIVE BANNER PREVIEW (220px PROPORTION)</span>
+            <strong id="admin-banner-preview-name">MoSPI Central Cadre (Official Navy &amp; Tricolor)</strong>
+          </div>
+          <div class="banner-preview-box-container">
+            <div class="banner-preview-viewport" id="admin-banner-preview-viewport"></div>
+            <div class="cover-tricolor-accent" style="position: absolute; top: 0; left: 0; right: 0; height: 4px; z-index: 5;"></div>
+            <div class="cover-gov-watermark" style="position: absolute; top: 12px; left: 14px; z-index: 5; pointer-events: none;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="opacity: 0.9;"><path d="M12 1L3 5v2h18V5L12 1zm-7 8v8h2V9H5zm5 0v8h2V9h-2zm5 0v8h2V9h-2zm5 0v8h2V9h-2zM2 19v3h20v-3H2z"/></svg>
+              <span style="font-size: 0.7rem;">Ministry of Statistics &amp; Programme Implementation • Live Preview</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Selectable Pattern Menu Grid -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+          <strong style="font-size: 0.8rem; color: #002b49;">Select from Banner Menu List (Click to preview, double-click to apply):</strong>
+          <span style="font-size: 0.72rem; color: #64748b;">11 Animated Patterns Available</span>
+        </div>
+        <div class="banner-menu-grid" id="admin-banner-menu-grid">
+          <!-- Dynamically populated menu items for 12 presets -->
+        </div>
+      </div>
+
+      <div class="marksheet-modal-footer" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+        <button type="button" class="btn-admin-outline" id="btn-admin-banner-reset-default" style="padding: 0.45rem 1rem;">
+          Reset to Official Cadre
+        </button>
+        <div style="display: flex; gap: 0.5rem;">
+          <button type="button" class="btn-admin-outline" id="btn-admin-banner-library-cancel" style="padding: 0.45rem 1rem;">
+            Cancel
+          </button>
+          <button type="button" class="btn-admin-action" id="btn-admin-banner-library-apply" style="padding: 0.55rem 1.6rem; font-weight: 800;">
+            Apply Banner to Admin Profile ✓
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SVG Filters for Pattern 6 and Pattern 7 -->
+  <svg width="0" height="0" style="position: absolute; pointer-events: none;" aria-hidden="true">
+    <filter id="adminCracks">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="5" seed="10" result="noise" />
+      <feColorMatrix type="luminanceToAlpha" in="noise" result="alphaNoise" />
+      <feComponentTransfer in="alphaNoise" result="plates">
+        <feFuncA type="discrete" tableValues="0 1" />
+      </feComponentTransfer>
+      <feConvolveMatrix order="3 3" kernelMatrix="-1 -1 -1 -1 8 -1 -1 -1 -1" in="plates" result="edges" />
+      <feComponentTransfer in="edges" result="invertedEdges">
+        <feFuncR type="table" tableValues="1 0" />
+        <feFuncG type="table" tableValues="1 0" />
+        <feFuncB type="table" tableValues="1 0" />
+      </feComponentTransfer>
+      <feFlood floodColor="#000" result="bgColor" />
+      <feComposite operator="in" in="bgColor" in2="invertedEdges" />
+    </filter>
+    <filter id="adminHandDrawnNoise">
+      <feTurbulence result="noise" numOctaves="5" baseFrequency="0.0065" type="fractalNoise" />
+      <feDisplacementMap yChannelSelector="G" xChannelSelector="R" scale="900" in2="noise" in="SourceGraphic" />
+    </filter>
+  </svg>
 
 </body>
 </html>

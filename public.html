@@ -142,6 +142,31 @@
 
       <!-- Bottom: Settings, Sign Out & User Card -->
       <div class="trainee-sidebar-bottom">
+                <!-- Help & Support Menu (Pinned above Sign Out) -->
+        <div class="trainee-help-wrapper" id="trainee-help-wrapper">
+          <button type="button" class="trainee-nav-item trainee-help-trigger-btn" id="trainee-help-menu-btn" title="Help & Support Desk">
+            <span class="admin-nav-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            </span>
+            <span>Help</span>
+            <svg class="help-arrow-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="trainee-help-flyout-menu" id="trainee-help-flyout-menu" style="display: none;">
+            <a href="mailto:support.nirdesha@mospi.gov.in?subject=Nirdesha%20Portal%20Inquiry%20-%20Officer%20Assistance" class="help-flyout-item" id="help-item-email">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+              <span>Contact Us (Through email)</span>
+            </a>
+            <button type="button" class="help-flyout-item" id="help-item-contact-admin">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+              <span>Contact Administrator</span>
+            </button>
+            <button type="button" class="help-flyout-item" id="help-item-faqs">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+              <span>Common FAQs</span>
+            </button>
+          </div>
+        </div>
+
         <a href="login.html" class="admin-nav-item nav-signout" id="trainee-signout-btn" title="Sign out of learning session">
           <span class="admin-nav-icon">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
@@ -470,7 +495,7 @@
 
               <!-- Recommendation Callout -->
               <div class="skill-radar-recom-card">
-                <div class="recom-badge gov-term-explain" data-term="ai-guidance-recommendation">AI Guidance Recommendation</div>
+                <div class="recom-badge gov-term-explain" data-term="ai-guidance-recommendation">Nirdesha Saarthi Recommendation (निर्देश सारथी)</div>
                 <h4 class="recom-title"><span class="gov-term-explain" data-term="focus-track">Focus Track</span>: NSSTA Module 204</h4>
                 <p class="recom-text">
                   Your survey methodology (94%) and DPDP compliance (98%) exceed the threshold for promotion to Senior Statistical Officer. Closing your 17% gap in Macroeconomic Deflators will achieve 100% promotion readiness.
@@ -580,77 +605,102 @@
              VIEW 2: COURSES & IGOT TRACKS
              ====================================================================== -->
         <div class="trainee-view-tab" id="view-courses" style="display: none;">
-          <div style="margin-bottom: 1.5rem;">
-            <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin-bottom: 0.25rem;">
-              Enrolled Learning Pathways & iGOT Karmayogi Tracks
-            </h2>
-            <p style="font-size: 0.85rem; color: #64748b; margin: 0;">
-              Official training programmes assigned to your SSS officer profile.
-            </p>
+          <!-- Header Banner -->
+          <div class="courses-header-card" style="margin-bottom: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+              <div>
+                <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: #ea580c; letter-spacing: 0.5px;">Official Training Portals &amp; Academies</div>
+                <h2 style="font-size: 1.5rem; font-weight: 800; color: #002b49; margin: 0 0 0.25rem 0;">
+                  My Courses &amp; Affiliated Learning Tracks
+                </h2>
+                <p style="font-size: 0.85rem; color: #64748b; margin: 0;">
+                  Official MoSPI training curriculum linked with iGOT Karmayogi Bharat, NSSTA Academy, and Cadre Portals.
+                </p>
+              </div>
+              <!-- Header Quick Stats Pills -->
+              <div class="courses-stats-pills">
+                <div class="stat-pill-box">
+                  <span class="stat-pill-label">Enrolled</span>
+                  <strong class="stat-pill-val" id="courses-enrolled-count">2 Active</strong>
+                </div>
+                <div class="stat-pill-box">
+                  <span class="stat-pill-label">Completed</span>
+                  <strong class="stat-pill-val" id="courses-completed-count" style="color: #16a34a;">1 Certified</strong>
+                </div>
+                <div class="stat-pill-box">
+                  <span class="stat-pill-label">Saved Later</span>
+                  <strong class="stat-pill-val" id="courses-saved-count" style="color: #ea580c;">0 Saved</strong>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div class="courses-catalog-grid">
-            <div class="course-card-gov">
-              <div>
-                <div class="course-badge-code">NSSTA-101 • Core SSS / ISS</div>
-                <h3 class="course-card-title">Advanced Multi-Stage Sampling & Survey Methodology</h3>
-                <p class="course-card-desc">Stratified sampling, cluster designs, variance estimation, and non-sampling error minimization in large-scale socio-economic surveys.</p>
-                <div style="margin-block: 0.75rem;">
-                  <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 700; color: #002b49; margin-bottom: 0.35rem;">
-                    <span>Syllabus Completed</span>
-                    <span>85%</span>
-                  </div>
-                  <div class="course-progress-bar" style="width: 100%; height: 8px;">
-                    <div class="course-progress-fill" style="width: 85%;"></div>
-                  </div>
-                </div>
+          <!-- Section 1: Front Active Section - My Enrolled Pathways -->
+          <div class="enrolled-courses-section" style="margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; flex-wrap: wrap; gap: 0.5rem;">
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <h3 style="font-size: 1.2rem; font-weight: 800; color: #002b49; margin: 0;">
+                  Active Enrolled Pathways
+                </h3>
+                <span class="badge-active-count" id="active-enrolled-badge">3</span>
               </div>
-              <div class="course-card-footer">
-                <span style="font-size: 0.75rem; color: #475569; font-weight: 600;">Unit 6: Outlier Handling</span>
-                <button class="btn-admin-action" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;">Resume Lesson ▶</button>
-              </div>
+              <span style="font-size: 0.78rem; color: #64748b;">Live progress synchronized with SSS Cadre Dossier</span>
             </div>
 
-            <div class="course-card-gov">
-              <div>
-                <div class="course-badge-code">NSSTA-305 • Modern Analytics</div>
-                <h3 class="course-card-title">Public Data Science & Statistical Computing in Python</h3>
-                <p class="course-card-desc">Pandas, NumPy, automated data validation pipelines, statistical imputation methods, and DPDP-compliant data masking.</p>
-                <div style="margin-block: 0.75rem;">
-                  <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 700; color: #002b49; margin-bottom: 0.35rem;">
-                    <span>Syllabus Completed</span>
-                    <span>91%</span>
-                  </div>
-                  <div class="course-progress-bar" style="width: 100%; height: 8px;">
-                    <div class="course-progress-fill" style="width: 91%;"></div>
-                  </div>
-                </div>
+            <div class="courses-catalog-grid" id="enrolled-courses-grid">
+              <!-- Dynamically populated enrolled courses with progress bar, resume button, and 100% Give Test button -->
+            </div>
+          </div>
+
+          <!-- Platform Navigation Bar & Sorting Bar -->
+          <div class="courses-filter-controls-wrap" style="margin-bottom: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+              <!-- Platform Selection Tabs -->
+              <div class="notif-filter-pills" id="courses-platform-pills">
+                <button type="button" class="notif-pill active" data-platform="all">
+                  All Portals
+                </button>
+                <button type="button" class="notif-pill" data-platform="igot">
+                  iGOT Karmayogi
+                </button>
+                <button type="button" class="notif-pill" data-platform="nssta">
+                  NSSTA (MoSPI)
+                </button>
+                <button type="button" class="notif-pill" data-platform="cadre">
+                  MoSPI SSS Cadre Portal
+                </button>
+                <button type="button" class="notif-pill" data-platform="saved" id="pill-courses-saved">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align: -1px; margin-right: 3px;"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                  Saved Later (<span id="pill-saved-counter">0</span>)
+                </button>
               </div>
-              <div class="course-card-footer">
-                <span style="font-size: 0.75rem; color: #475569; font-weight: 600;">Final Assessment Ready</span>
-                <button class="btn-admin-action" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;">Take Final Test</button>
+
+              <!-- Sorting & Filter Controls -->
+              <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                <label for="courses-sort-select" style="font-size: 0.78rem; font-weight: 700; color: #475569;">Sort By:</label>
+                <select id="courses-sort-select" class="courses-sort-dropdown" style="padding: 0.35rem 0.65rem; font-size: 0.8rem; border: 1.5px solid #cbd5e1; border-radius: 6px; background: #ffffff; color: #002b49; font-weight: 600;">
+                  <option value="default">Default Order</option>
+                  <option value="hardness-asc">Hardness (Beginner → Advanced)</option>
+                  <option value="hardness-desc">Hardness (Advanced → Beginner)</option>
+                  <option value="duration-asc">Duration (Shortest First)</option>
+                  <option value="duration-desc">Duration (Longest First)</option>
+                  <option value="title">Course Name (A - Z)</option>
+                </select>
               </div>
             </div>
+          </div>
 
-            <div class="course-card-gov">
-              <div>
-                <div class="course-badge-code">iGOT-Gov-2026 • Karmayogi Bharat</div>
-                <h3 class="course-card-title">Official Data Ethics, DPDP Act & Public Trust</h3>
-                <p class="course-card-desc">Ethical principles in public statistics, secure data custodianship, and grievance escalation under the Data Protection Board.</p>
-                <div style="margin-block: 0.75rem;">
-                  <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 700; color: #002b49; margin-bottom: 0.35rem;">
-                    <span>Syllabus Completed</span>
-                    <span>100% (Certified)</span>
-                  </div>
-                  <div class="course-progress-bar" style="width: 100%; height: 8px;">
-                    <div class="course-progress-fill" style="width: 100%; background: #16a34a;"></div>
-                  </div>
-                </div>
-              </div>
-              <div class="course-card-footer">
-                <span class="badge-status-cert">Certificate Earned</span>
-                <button class="btn-admin-action" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;">View Certificate</button>
-              </div>
+          <!-- Section 2: Affiliated Platform Course Catalog -->
+          <div class="platform-catalog-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
+              <h3 style="font-size: 1.15rem; font-weight: 800; color: #002b49; margin: 0;" id="catalog-section-title">
+                All Affiliated MoSPI &amp; iGOT Courses
+              </h3>
+              <span style="font-size: 0.78rem; color: #64748b;" id="catalog-courses-counter">Available in Catalog</span>
+            </div>
+
+            <div class="courses-catalog-grid" id="platform-courses-grid">
+              <!-- Dynamically populated platform courses -->
             </div>
           </div>
         </div>
@@ -1145,6 +1195,7 @@
               <div class="reminder-actions">
                 <button type="button" class="btn-reminder-save" id="btn-reminder-save-notes">Save to Notes</button>
                 <button type="button" class="btn-reminder-dismiss" id="btn-reminder-dismiss" title="Dismiss notice">&times;</button>
+                <button type="button" class="btn-modal-close btn-reminder-dismiss" id="btn-reminder-dismiss" title="Dismiss notice" aria-label="Dismiss notice"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
               </div>
             </div>
 
@@ -1680,19 +1731,19 @@
                       </div>
                     </div>
 
-                    <!-- 2. Completed Courses & Learning Pathways -->
+                    <!-- 2. Completed & Active Courses -->
                     <div class="fb-card profile-courses-card">
                       <div class="fb-card-header">
                         <div>
-                          <h3 class="fb-card-title">Completed Courses & Learning Tracks</h3>
-                          <div class="fb-card-subtitle">Official MoSPI & iGOT curriculum progress</div>
+                          <h3 class="fb-card-title">My Courses & Learning Tracks</h3>
+                          <div class="fb-card-subtitle">Latest 3 enrolled & certified MoSPI / iGOT tracks</div>
                         </div>
                         <button type="button" class="btn-card-tab-jump" data-jump-tab="courses" title="View all courses and tracks">
                           <span>View Courses</span>
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
                         </button>
                       </div>
-                      <div class="profile-items-stack">
+                      <div class="profile-items-stack" id="profile-courses-stack">
                         <div class="profile-course-item">
                           <div class="profile-course-top">
                             <div>
@@ -3027,6 +3078,7 @@
             </div>
 
             <button type="button" class="btn-proctor-abort" id="btn-proctor-abort" title="Quit assessment">&times;</button>
+            <button type="button" class="btn-modal-close btn-proctor-abort" id="btn-proctor-abort" title="Quit assessment" aria-label="Quit assessment"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
           </div>
         </div>
 
@@ -3726,7 +3778,364 @@
       </div>
     </div>
 
-    <script src="js/public.js" defer></script>
+    <!-- ======================================================================
+         UDEMY-STYLE COURSE DETAILS POP-UP MODAL
+         ====================================================================== -->
+    <div class="course-modal-backdrop" id="course-details-modal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modal-course-title">
+      <div class="course-modal-dialog">
+        <!-- Header -->
+        <div class="course-modal-header">
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem; flex-wrap: wrap;">
+              <span class="course-platform-badge" id="modal-course-platform-badge">iGOT Karmayogi Bharat</span>
+              <span class="course-badge-code" id="modal-course-code" style="color: #fdba74; font-weight: 800; font-size: 0.72rem;">iGOT-DPDP-2026</span>
+              <span class="course-hardness-badge hardness-beginner" id="modal-course-hardness">Beginner</span>
+            </div>
+            <h2 id="modal-course-title" style="font-size: 1.35rem; font-weight: 800; color: #ffffff; margin: 0 0 0.25rem 0; line-height: 1.3;">
+              Official Data Ethics, DPDP Act &amp; Public Trust
+            </h2>
+            <p id="modal-course-subtitle" style="font-size: 0.82rem; color: #cbd5e1; margin: 0; line-height: 1.4;">
+              Comprehensive curriculum on statutory data protection protocols and public trust in official statistics.
+            </p>
+          </div>
+          <button type="button" class="btn-modal-close" id="btn-close-course-modal" title="Close Course Details" aria-label="Close Course Details" style="margin-left: 1rem;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+
+        <!-- Body -->
+        <div class="course-modal-body">
+          <!-- Key Metrics Grid -->
+          <div class="course-detail-metrics-grid">
+            <div class="detail-metric-card">
+              <span class="metric-lbl">Duration</span>
+              <span class="metric-val" id="modal-course-duration">4 Weeks (16 Hours)</span>
+            </div>
+            <div class="detail-metric-card">
+              <span class="metric-lbl">Curriculum</span>
+              <span class="metric-val" id="modal-course-modules">4 Modules • 18 Units</span>
+            </div>
+            <div class="detail-metric-card">
+              <span class="metric-lbl">Language</span>
+              <span class="metric-val" id="modal-course-lang">Bilingual (English &amp; Hindi)</span>
+            </div>
+            <div class="detail-metric-card">
+              <span class="metric-lbl">Accreditation</span>
+              <span class="metric-val" id="modal-course-accred">DoPT / MoSPI Verified</span>
+            </div>
+          </div>
+
+          <!-- Faculty / Instructor Details -->
+          <div class="course-faculty-box">
+            <div class="faculty-avatar-circle" id="modal-faculty-avatar">MK</div>
+            <div>
+              <div style="font-size: 0.68rem; text-transform: uppercase; font-weight: 700; color: #0284c7; letter-spacing: 0.5px;">Instructional Lead &amp; Faculty</div>
+              <strong id="modal-faculty-name" style="font-size: 0.95rem; color: #002b49; display: block;">Dr. Manoj Kumar, ISS</strong>
+              <span id="modal-faculty-title" style="font-size: 0.78rem; color: #475569;">Additional Director General, MoSPI Training Division</span>
+            </div>
+          </div>
+
+          <!-- Description & Competency Objectives -->
+          <div>
+            <h4 style="font-size: 0.92rem; font-weight: 800; color: #002b49; margin: 0 0 0.4rem 0;">Course Overview &amp; Competencies</h4>
+            <p id="modal-course-full-desc" style="font-size: 0.84rem; color: #475569; line-height: 1.55; margin: 0;">
+              This certified capacity-building programme prepares Group A &amp; B statistical officers to handle modern survey workflows adhering strictly to the Digital Personal Data Protection (DPDP) Act 2023.
+            </p>
+          </div>
+
+          <!-- Prerequisites / Previous Knowledge -->
+          <div class="course-prereq-box">
+            <strong style="font-size: 0.82rem; color: #9a3412; display: flex; align-items: center; gap: 4px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              Prerequisites &amp; Prior Knowledge
+            </strong>
+            <ul id="modal-course-prereqs">
+              <li>Basic familiarity with NSS socio-economic survey schedules and CAPI data collection.</li>
+              <li>Understanding of general civil service conduct rules and data confidentiality.</li>
+            </ul>
+          </div>
+
+          <!-- Detailed Syllabus & Contents -->
+          <div>
+            <h4 style="font-size: 0.92rem; font-weight: 800; color: #002b49; margin: 0 0 0.5rem 0;">Curriculum &amp; Syllabus Breakdown</h4>
+            <div class="syllabus-modules-list" id="modal-course-syllabus-list">
+              <!-- Dynamically populated syllabus units -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="course-modal-footer">
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <button type="button" class="btn-course-save-later" id="btn-modal-save-later" title="Save for Later" style="width: auto; padding: 0.45rem 0.85rem; height: auto;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="vertical-align: -1px; margin-right: 4px;"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+              <span id="modal-save-later-text">Save for Later</span>
+            </button>
+            <span id="modal-enrollment-status" style="font-size: 0.78rem; font-weight: 700; color: #16a34a;"></span>
+          </div>
+
+          <div style="display: flex; gap: 0.5rem;">
+            <button type="button" class="btn-admin-outline" id="btn-modal-close-action" style="padding: 0.45rem 1rem;">
+              Close
+            </button>
+            <button type="button" class="btn-admin-action" id="btn-modal-enroll-action" style="padding: 0.55rem 1.5rem; font-weight: 800;">
+              Enroll in Course ▶
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <!-- ==========================================================================
+       BANNED USER SUSPENSION BLOCKING OVERLAY MODAL (EXECUTIVE GOV ORDER)
+       ========================================================================== -->
+  <div class="banned-user-backdrop" id="banned-user-modal" role="alertdialog" aria-modal="true" style="display: none;">
+    <div class="banned-modal-card">
+      <div class="banned-modal-tricolor-accent"></div>
+      
+      <!-- Executive Header -->
+      <div class="banned-modal-header">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <div class="banned-emblem-badge">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          </div>
+          <div>
+            <div class="banned-header-eyebrow">GOVERNMENT OF INDIA • MINISTRY OF STATISTICS &amp; PROGRAMME IMPLEMENTATION</div>
+            <div class="banned-header-title">Official Notice of Cadre Account Suspension</div>
+          </div>
+        </div>
+        <span class="banned-statutory-stamp">RULE 14-B ORDER</span>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="banned-modal-body">
+        <!-- Target Officer Profile Preview -->
+        <div class="banned-officer-strip">
+          <div class="banned-officer-avatar" id="banned-officer-avatar">SR</div>
+          <div class="banned-officer-details">
+            <div class="banned-officer-name" id="banned-officer-name">S. K. Raman</div>
+            <div class="banned-officer-sub">
+              <span>Junior Statistical Officer (JSO)</span> • 
+              <span>Roll: SSS-2024-8891</span> • 
+              <span class="banned-tag-pill">PORTAL ACCESS RESTRICTED</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="banned-alert-notice">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          <span>You are banned by the administrator due to the following official reason:</span>
+        </div>
+
+        <!-- Distinct Prominent Reason Box -->
+        <div class="banned-reason-box" id="banned-modal-reason-box">
+          <div class="banned-reason-heading">MANDATORY ADMINISTRATIVE REASON / BAN MESSAGE:</div>
+          <p id="banned-modal-reason-text" class="banned-modal-reason-text">
+            Administrative suspension enacted by MoSPI Chief Administrator.
+          </p>
+          <div class="banned-reason-meta">
+            <span id="banned-modal-timestamp">Enacted on: --</span>
+            <span class="banned-meta-auth">Authorized by: Chief Administrative Officer</span>
+          </div>
+        </div>
+
+        <div class="banned-instructions-card">
+          <div style="font-weight: 800; color: #002b49; font-size: 0.84rem; margin-bottom: 0.25rem;">Immediate Administrative Remediation:</div>
+          <p style="font-size: 0.78rem; color: #475569; margin: 0; line-height: 1.5;">
+            While suspended, access to courses, study notes, assessments, and eLab projects is restricted. If you believe this order was issued in error or wish to provide required clarification, <a href="#" id="banned-user-contact-link" class="banned-contact-hyperlink">Contact us for more info</a> or submit an unban appeal directly to the Administrator below.
+          </p>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="banned-modal-footer">
+        <a href="login.html" class="btn-banned-signout" id="btn-banned-signout">
+          Sign Out of Portal
+        </a>
+        <button type="button" class="btn-banned-appeal-primary" id="banned-user-appeal-btn">
+          Submit Appeal / Request Unban &rarr;
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       BANNED USER APPEAL & INQUIRY DIALOG
+       ========================================================================== -->
+  <div class="banned-appeal-backdrop" id="banned-user-appeal-dialog" role="dialog" aria-modal="true" style="display: none;">
+    <div class="banned-appeal-card">
+      <div class="admin-modal-header" style="background: #002b49; color: #ffffff;">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          <div style="font-size: 1.05rem; font-weight: 800;">Submit Administrative Appeal &amp; Inquiry</div>
+        </div>
+        <button type="button" id="btn-close-appeal-dialog" style="background:none; border:none; color:#fff; font-size:1.5rem; cursor:pointer;">&times;</button>
+        <button type="button" class="btn-modal-close" id="btn-close-appeal-dialog" title="Close appeal dialog" aria-label="Close appeal dialog"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+      </div>
+
+      <div style="padding: 1.25rem;">
+        <div style="background: #f0f7ff; border: 1.5px solid #bae6fd; padding: 0.75rem 1rem; border-radius: 4px; margin-bottom: 1rem;">
+          <div style="font-size: 0.8rem; color: #0369a1; font-weight: 700;">Direct Channel to MoSPI Administration:</div>
+          <div style="font-size: 0.75rem; color: #0c4a6e; margin-top: 2px;">
+            Explain the circumstances regarding your suspension or submit your request for an unban review. The administrator will inspect your appeal in the Messages console.
+          </div>
+        </div>
+
+        <!-- Recent Conversation History with Admin (if any replies exist) -->
+        <div id="banned-appeal-thread-history" style="max-height: 180px; overflow-y: auto; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 0.75rem; margin-bottom: 1rem; display: none;">
+          <!-- Loaded dynamically -->
+        </div>
+
+        <div style="margin-bottom: 0.75rem;">
+          <label for="banned-appeal-input" class="profile-field-label" style="font-weight: 800; color: #002b49;">
+            Your Query / Clarification / Request for Unban:
+          </label>
+          <textarea id="banned-appeal-input" class="profile-input-field" rows="4" style="height: auto; padding: 0.65rem; font-size: 0.825rem;" placeholder="State your explanation clearly (e.g., 'Respected Sir, regarding Rule 14-B compliance, the uploaded CAPI dataset was delayed due to rural connectivity issues in Western Zone...')"></textarea>
+        </div>
+
+        <div id="banned-appeal-status-msg" style="display:none; font-size: 0.78rem; font-weight: 700; padding: 0.5rem 0.75rem; border-radius: 4px; margin-top: 0.5rem;"></div>
+      </div>
+
+      <div class="admin-modal-footer" style="padding: 0.85rem 1.25rem; display: flex; justify-content: flex-end; gap: 0.6rem;">
+        <button type="button" class="btn-admin-outline" id="btn-cancel-appeal-dialog">Back to Notice</button>
+        <button type="button" class="btn-admin-action" id="btn-submit-appeal" style="padding: 0.5rem 1.4rem; font-weight: 800;">
+          Send Appeal to Admin &#10003;
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       CONTACT ADMINISTRATOR INQUIRY MODAL (FROM HELP MENU)
+       ========================================================================== -->
+  <div class="admin-modal-backdrop" id="trainee-contact-admin-modal" role="dialog" aria-modal="true" style="display: none;">
+    <div class="admin-modal-dialog" style="max-width: 520px;">
+      <div class="admin-modal-header" style="background: #002b49; color: #ffffff;">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          <div style="font-size: 1.05rem; font-weight: 800;">Contact Administrator</div>
+        </div>
+        <button type="button" id="btn-close-trainee-contact-admin" style="background:none; border:none; color:#fff; font-size:1.5rem; cursor:pointer;">&times;</button>
+        <button type="button" class="btn-modal-close" id="btn-close-trainee-contact-admin" title="Close inquiry dialog" aria-label="Close inquiry dialog"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+      </div>
+
+      <div class="admin-modal-body" style="padding: 1.25rem;">
+        <p style="font-size: 0.8rem; color: #64748b; margin: 0 0 1rem 0;">
+          Send an official query or support request directly to the MoSPI Portal Administration.
+        </p>
+
+        <div style="margin-bottom: 0.85rem;">
+          <label for="trainee-inquiry-subject" class="profile-field-label">Subject / Query Topic:</label>
+          <input type="text" id="trainee-inquiry-subject" class="profile-input-field" placeholder="e.g. Question on Assessment Splicing Methods or Course Enrollment">
+        </div>
+
+        <div style="margin-bottom: 0.85rem;">
+          <label for="trainee-inquiry-text" class="profile-field-label">Message / Details:</label>
+          <textarea id="trainee-inquiry-text" class="profile-input-field" rows="4" style="height: auto; padding: 0.65rem; font-size: 0.825rem;" placeholder="Type your inquiry for the administrator..."></textarea>
+        </div>
+
+        <div id="trainee-inquiry-status" style="display:none; font-size: 0.78rem; font-weight: 700; padding: 0.5rem 0.75rem; border-radius: 4px;"></div>
+      </div>
+
+      <div class="admin-modal-footer" style="padding: 0.85rem 1.25rem; display: flex; justify-content: flex-end; gap: 0.6rem;">
+        <button type="button" class="btn-admin-outline" id="btn-cancel-trainee-contact-admin">Cancel</button>
+        <button type="button" class="btn-admin-action" id="btn-send-trainee-inquiry" style="padding: 0.5rem 1.4rem; font-weight: 800;">
+          Send to Administrator &#10003;
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       COMMON FAQS MODAL (FROM HELP MENU)
+       ========================================================================== -->
+  <div class="admin-modal-backdrop" id="trainee-faqs-modal" role="dialog" aria-modal="true" style="display: none;">
+    <div class="admin-modal-dialog" style="max-width: 680px;">
+      <div class="admin-modal-header" style="background: #002b49; color: #ffffff;">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          <div style="font-size: 1.05rem; font-weight: 800;">Frequently Asked Questions (Common FAQs)</div>
+        </div>
+        <button type="button" id="btn-close-faqs-modal" style="background:none; border:none; color:#fff; font-size:1.5rem; cursor:pointer;">&times;</button>
+        <button type="button" class="btn-modal-close" id="btn-close-faqs-modal" title="Close FAQs modal" aria-label="Close FAQs modal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+      </div>
+
+      <div class="admin-modal-body" style="padding: 1.25rem; max-height: calc(80vh - 120px); overflow-y: auto;">
+        <div style="margin-bottom: 1rem; position: relative;">
+          <input type="text" id="faq-search-input" class="profile-input-field" placeholder="Search FAQs (e.g. courses, quiz, ban, elab)..." style="padding-left: 2rem;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #94a3b8;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </div>
+
+        <div class="faq-accordion-list" id="faq-accordion-list">
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>How do I browse and enroll in courses from affiliated platforms like iGOT Karmayogi?</span>
+              <span class="faq-toggle-icon">+</span>
+            </div>
+            <div class="faq-answer">
+              Navigate to "My Courses &amp; Tracks" in the left sidebar. Use the platform filter pills (All Courses, iGOT Karmayogi Bharat, NSSTA MoSPI, MoSPI SSS Cadre Portal, etc.) to view courses linked with Nirdesha. Click "Inspect Course" on any card to view instructor details, estimated duration, prerequisites, and syllabus. Click "Enroll" to add it to your active enrolled list.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>How does "Save for Later" work on courses?</span>
+              <span class="faq-toggle-icon">+</span>
+            </div>
+            <div class="faq-answer">
+              Every course card features a bookmark icon labeled "Save for Later". Clicking this saves the course to your dedicated "Saved Later" filter view. You can review all saved courses at any time and enroll directly when you are ready.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>How are revision flashcards generated from my notes?</span>
+              <span class="faq-toggle-icon">+</span>
+            </div>
+            <div class="faq-answer">
+              Open the "Notes" section. In any notebook or selected note, click the "Generate Flashcards" button. Nirdesha's AI automatically extracts critical concepts requiring revision and generates flashcards in the "Revision Cards" tab. You can pin important flashcards or move deprecated ones to the 10-day Recycle Bin.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>What should I do if my account is suspended or banned by the administrator?</span>
+              <span class="faq-toggle-icon">+</span>
+            </div>
+            <div class="faq-answer">
+              If an administrative suspension is enacted, a blocking notice will appear displaying the exact administrative reason. Click the "Contact us for more info / Appeal Suspension" link to submit an appeal. The administrator will review your explanation in the Messages console and can revoke the suspension.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>How does the AI Study Mentor and Nirdesha Saarthi assist my learning?</span>
+              <span class="faq-toggle-icon">+</span>
+            </div>
+            <div class="faq-answer">
+              The AI Study Mentor provides 24/7 cadre assistance with LaTeX mathematical notation and historical chat drawer preservation. Nirdesha Saarthi docks smoothly on the right screen edge without disrupting your workspace layout.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>How do I contact technical support or the portal administrator directly?</span>
+              <span class="faq-toggle-icon">+</span>
+            </div>
+            <div class="faq-answer">
+              Click the "Help" menu pinned at the bottom-left of the sidebar (above Sign Out). Select "Contact Us (Through email)" to email official MoSPI support, or "Contact Administrator" to send an inquiry directly to the administration console.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-modal-footer" style="padding: 0.85rem 1.25rem; display: flex; justify-content: flex-end;">
+        <button type="button" class="btn-admin-outline" id="btn-close-faqs-footer">Close FAQs</button>
+      </div>
+    </div>
+  </div>
+
+<script src="js/public.js" defer></script>
   <script src="js/ai-companion.js" defer></script>
   <script src="js/translation.js" defer></script>
 
