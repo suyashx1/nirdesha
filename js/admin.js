@@ -193,6 +193,50 @@ document.addEventListener('DOMContentLoaded', () => {
     { id: "DES-MH-204", name: "Vikram Patil", cadre: "State DES Cadre", department: "Directorate of Economics & Statistics", jurisdiction: "Maharashtra", score: 71, status: "Under Review" }
   ];
 
+// update the real backend-backed employee row
+// while keeping other users as demo data.
+//
+// Matching is done by employee ID OR name.
+window.NirdeshaAdminUpsertUser = function (user) {
+
+    if (!user || !user.id || !user.name) {
+      return;
+    }
+
+
+    const index =
+      USER_ROSTER.findIndex(
+        existing =>
+
+          existing.id === user.id ||
+
+          String(existing.name)
+            .toLowerCase()
+            ===
+          String(user.name)
+            .toLowerCase()
+      );
+
+
+    if (index >= 0) {
+
+      USER_ROSTER[index] = {
+        ...USER_ROSTER[index],
+        ...user
+      };
+
+    } else {
+
+      USER_ROSTER.unshift(
+        user
+      );
+    }
+
+
+    renderUserDirectory();
+  };
+
+
   let currentSortKey = 'name';
   let sortAscending = true;
   let currentSearchQuery = '';
