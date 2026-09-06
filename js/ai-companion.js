@@ -13,10 +13,10 @@
     'heatmap': "The 52-Week Learning Heatmap tracks continuous daily study consistency, timed quiz evaluations, and CAPI task completions across 364 days to build sustained statistical acumen.",
     'elo': "The Competitive Skill Rating is a deterministic Elo algorithm in Nirdesha. It evaluates test accuracy, latency, and question difficulty to assign ratings from Tier 1 (Novice) to Tier 4 (Expert >1,600 Elo).",
     'streak': "The Active Learning Streak counts consecutive days of official training engagement. Reaching the Cadre Milestone target qualifies officers for accelerated career progression recognition.",
-    'default': "Namaste! I am your Nirdesha AI Guidance Companion. You can ask me about MoSPI survey guidelines, statistical formulas, SSS cadre promotion requirements, or navigating this platform."
+    'default': "Namaste! I am your Nirdesha Saarthi (निर्देश सारथी). You can ask me about MoSPI survey guidelines, statistical formulas, SSS cadre promotion requirements, or navigating this platform."
   };
 
-  const DEFAULT_GREETING = "Namaste! I am your <strong>Nirdesha Website Guidance Assistant</strong>. I help you navigate the portal, set milestones, track learning on the heatmap, arrange courses, and configure settings. How can I guide you with the website today?";
+  const DEFAULT_GREETING = "Namaste! I am your <strong>Nirdesha Saarthi (निर्देश सारथी)</strong>. I help you navigate the portal, set milestones, track learning on the heatmap, explore platform courses, and configure settings. How can I guide you with the website today?";
 
   // Conversation history array
   const companionHistory = [];
@@ -33,14 +33,14 @@
 
       <!-- 1. Floating Launcher (Bottom Right) -->
       <div class="nirdesha-companion-launcher" id="companion-launcher">
-        <div class="companion-prompt-bubble" id="companion-prompt-bubble" title="Click to chat with AI Companion">
+        <div class="companion-prompt-bubble" id="companion-prompt-bubble" title="Click to chat with Nirdesha Saarthi">
           <span class="companion-spark-icon">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
           </span>
           <span class="companion-prompt-text">Do you need any help?</span>
         </div>
 
-        <button type="button" class="companion-avatar-btn" id="companion-avatar-btn" title="Open AI Guidance Companion" aria-label="Open AI Guidance Assistant">
+        <button type="button" class="companion-avatar-btn" id="companion-avatar-btn" title="Open Nirdesha Saarthi (निर्देश सारथी)" aria-label="Open Nirdesha Saarthi Assistant">
 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
           <span class="companion-online-dot"></span>
         </button>
@@ -54,7 +54,7 @@
           <div class="companion-header-brand">
             <div class="companion-header-avatar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></div>
             <div class="companion-header-titles">
-              <h3 class="companion-title">Nirdesha AI Guidance</h3>
+              <h3 class="companion-title">Nirdesha Saarthi (निर्देश सारथी)</h3>
             </div>
           </div>
 
@@ -428,10 +428,12 @@
         }, 50);
       }
     };
+    window.askNirdeshaSaarthi = window.askNirdeshaGuidance;
   }
 
   // ==========================================================================
-  // UNIVERSAL TEXT SELECTION & DOUBLE-TAP "ASK AI GUIDANCE" ENGINE
+  // UNIVERSAL TEXT SELECTION & CONTEXT "ASK AI" ENGINE
+  // (Detects Notes selection -> Ask AI Mentor; Web selection -> Ask Nirdesha Saarthi)
   // ==========================================================================
   function initTextSelectionEngine() {
     let selectionPopup = document.getElementById('nirdesha-text-select-popup');
@@ -440,12 +442,12 @@
       selectionPopup.id = 'nirdesha-text-select-popup';
       selectionPopup.className = 'selection-ask-ai-popup';
       selectionPopup.innerHTML = `
-        <button type="button" class="btn-selection-ask-ai" id="btn-selection-ask-ai" title="Ask Nirdesha AI Guidance about this text">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <button type="button" class="btn-selection-ask-ai" id="btn-selection-ask-ai" title="Ask Nirdesha Saarthi about this text">
+          <svg class="selection-icon-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"/>
             <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
           </svg>
-          <span>Ask AI Guidance</span>
+          <span class="selection-btn-text">Ask Nirdesha Saarthi</span>
         </button>
       `;
       document.body.appendChild(selectionPopup);
@@ -453,6 +455,7 @@
 
     const btnAsk = document.getElementById('btn-selection-ask-ai');
     let currentSelectedText = '';
+    let isNotesContext = false;
 
     function checkAndShowPopup() {
       setTimeout(() => {
@@ -474,7 +477,39 @@
           return;
         }
 
+        // Check if selection is within the Notes tab
+        isNotesContext = false;
+        try {
+          if (selection.anchorNode) {
+            const anchorEl = selection.anchorNode.nodeType === Node.ELEMENT_NODE ? selection.anchorNode : selection.anchorNode.parentElement;
+            if (anchorEl && anchorEl.closest('#view-notes')) {
+              isNotesContext = true;
+            }
+          }
+        } catch (err) {
+          isNotesContext = false;
+        }
+
         currentSelectedText = rawText;
+
+        // Dynamically customize button label & icon based on context
+        const btnTextEl = btnAsk.querySelector('.selection-btn-text');
+        const iconSvg = btnAsk.querySelector('.selection-icon-svg');
+        if (isNotesContext) {
+          btnAsk.classList.add('is-notes-mentor');
+          btnAsk.title = 'Ask AI Study Mentor about this note selection';
+          if (btnTextEl) btnTextEl.textContent = 'Ask AI Mentor';
+          if (iconSvg) {
+            iconSvg.innerHTML = '<path d="M12 2a10 10 0 1 0 10 10H12V2z"></path>';
+          }
+        } else {
+          btnAsk.classList.remove('is-notes-mentor');
+          btnAsk.title = 'Ask Nirdesha Saarthi (मार्गदर्शक) about this text';
+          if (btnTextEl) btnTextEl.textContent = 'Ask Nirdesha Saarthi';
+          if (iconSvg) {
+            iconSvg.innerHTML = '<circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>';
+          }
+        }
 
         try {
           const range = selection.getRangeAt(0);
@@ -484,7 +519,7 @@
             return;
           }
 
-          const btnWidth = 145;
+          const btnWidth = isNotesContext ? 135 : 165;
           const btnHeight = 34;
           let top = rect.top - btnHeight - 8;
           let left = rect.left + (rect.width / 2) - (btnWidth / 2);
@@ -553,9 +588,32 @@
 
       hidePopup();
 
-      if (textToQuery && typeof window.askNirdeshaGuidance === 'function') {
-        const cleanSnippet = textToQuery.length > 120 ? textToQuery.slice(0, 117) + '...' : textToQuery;
-        window.askNirdeshaGuidance(`Explain this Nirdesha website feature and its context: "${cleanSnippet}"`);
+      if (!textToQuery) return;
+      const cleanSnippet = textToQuery.length > 160 ? textToQuery.slice(0, 157) + '...' : textToQuery;
+
+      if (isNotesContext || btnAsk.classList.contains('is-notes-mentor')) {
+        // Route to AI Study Mentor
+        if (typeof window.switchTab === 'function') {
+          window.switchTab('ai-mentor');
+        } else {
+          const mentorTabLink = document.querySelector('[data-tab="ai-mentor"]');
+          if (mentorTabLink) mentorTabLink.click();
+        }
+
+        setTimeout(() => {
+          const mentorInput = document.getElementById('trainee-chat-input');
+          const mentorSend = document.getElementById('trainee-chat-send');
+          if (mentorInput) {
+            mentorInput.value = `Explain and mentor me on this note: "${cleanSnippet}"`;
+            mentorInput.focus();
+            if (mentorSend) mentorSend.click();
+          }
+        }, 180);
+      } else {
+        // Route to Nirdesha Saarthi (AI Guidance Companion)
+        if (typeof window.askNirdeshaGuidance === 'function') {
+          window.askNirdeshaGuidance(`Explain this Nirdesha feature and its context: "${cleanSnippet}"`);
+        }
       }
     }
 

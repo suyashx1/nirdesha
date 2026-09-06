@@ -4,18 +4,20 @@
  * Interactive Profile Persistence, Avatar Upload, and Document Drop AI Extraction.
  */
 
+// Global HTML escaping utility for safe DOM injection
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+window.escapeHtml = escapeHtml;
+
 document.addEventListener('DOMContentLoaded', () => {
-  // Global HTML escaping utility for safe DOM injection
-  function escapeHtml(str) {
-    if (str === null || str === undefined) return '';
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
-  }
-  window.escapeHtml = escapeHtml;
+
 
   // ==========================================================================
   // THEME SYNCHRONIZATION & SELECTION (SYSTEM / BRIGHT / DARK)
@@ -136,6 +138,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function switchTab(tabId) {
+    if (document.body.classList.contains('user-is-banned')) {
+      const bModal = document.getElementById('banned-user-modal');
+      if (bModal) bModal.style.display = 'flex';
+      return;
+    }
     navItems.forEach(item => {
       if (item.getAttribute('data-tab') === tabId) {
         item.classList.add('active');
@@ -174,8 +181,17 @@ document.addEventListener('DOMContentLoaded', () => {
       window.renderSkillGapGrid();
     }
 
-    if (tabId === 'profile' && typeof window.renderPublicOfficerDossier === 'function') {
-      window.renderPublicOfficerDossier();
+    if (tabId === 'profile') {
+      if (typeof window.renderPublicOfficerDossier === 'function') {
+        window.renderPublicOfficerDossier();
+      }
+      if (typeof window.renderProfileCoursesStack === 'function') {
+        window.renderProfileCoursesStack();
+      }
+    }
+
+    if (tabId === 'courses' && typeof window.renderCoursesSection === 'function') {
+      window.renderCoursesSection();
     }
 
     if (tabId === 'revision-cards' && typeof window.renderRevisionCardsUI === 'function') {
@@ -475,28 +491,58 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function setAvatarVisuals(src, initials) {
     const textInitials = initials || currentOfficerProfile.avatarInitials || 'SR';
+    const avatarImgEl = document.getElementById('public-profile-avatar-img');
+    const sidebarAvatarImg = document.getElementById('public-sidebar-avatar-img');
+    const sidebarAvatarText = document.getElementById('public-sidebar-avatar-text');
+
     if (src) {
       if (dossierAvatarBox) {
-        dossierAvatarBox.style.backgroundImage = `url(${src})`;
-        dossierAvatarBox.style.backgroundSize = 'cover';
-        dossierAvatarBox.style.backgroundPosition = 'center';
+        dossierAvatarBox.classList.add('has-custom-avatar');
+        dossierAvatarBox.style.setProperty('background-image', `url("${src}")`, 'important');
+        dossierAvatarBox.style.setProperty('background-size', 'cover', 'important');
+        dossierAvatarBox.style.setProperty('background-position', 'center', 'important');
       }
-      if (dossierInitials) dossierInitials.style.display = 'none';
-      if (sidebarAvatar) {
-        sidebarAvatar.style.backgroundImage = `url(${src})`;
+      if (avatarImgEl) {
+        avatarImgEl.src = src;
+        avatarImgEl.style.display = 'block';
+      }
+      if (dossierInitials) {
+        dossierInitials.style.display = 'none';
+      }
+      if (sidebarAvatarImg) {
+        sidebarAvatarImg.src = src;
+        sidebarAvatarImg.style.display = 'block';
+      }
+      if (sidebarAvatarText) {
+        sidebarAvatarText.style.display = 'none';
+      }
+      if (sidebarAvatar && !sidebarAvatarImg) {
+        sidebarAvatar.style.backgroundImage = `url("${src}")`;
         sidebarAvatar.style.backgroundSize = 'cover';
-        sidebarAvatar.style.backgroundPosition = 'center';
         sidebarAvatar.textContent = '';
       }
     } else {
       if (dossierAvatarBox) {
-        dossierAvatarBox.style.backgroundImage = 'none';
+        dossierAvatarBox.classList.remove('has-custom-avatar');
+        dossierAvatarBox.style.removeProperty('background-image');
+      }
+      if (avatarImgEl) {
+        avatarImgEl.style.display = 'none';
+        avatarImgEl.src = '';
       }
       if (dossierInitials) {
         dossierInitials.style.display = 'block';
         dossierInitials.textContent = textInitials;
       }
-      if (sidebarAvatar) {
+      if (sidebarAvatarImg) {
+        sidebarAvatarImg.style.display = 'none';
+        sidebarAvatarImg.src = '';
+      }
+      if (sidebarAvatarText) {
+        sidebarAvatarText.style.display = 'inline';
+        sidebarAvatarText.textContent = textInitials;
+      }
+      if (sidebarAvatar && !sidebarAvatarImg) {
         sidebarAvatar.style.backgroundImage = 'none';
         sidebarAvatar.textContent = textInitials;
       }
@@ -961,13 +1007,47 @@ if (
   if (btnSaveProfile) btnSaveProfile.addEventListener('click', saveOfficerProfileData);
   if (btnSaveProfileBottom) btnSaveProfileBottom.addEventListener('click', saveOfficerProfileData);
 
-  // Quick Avatar upload
+  // Quick Avatar upload & Edit Mode Photo Handlers
+  const btnEditModeUploadPhoto = document.getElementById('btn-edit-mode-upload-photo');
+  const btnEditModeRemovePhoto = document.getElementById('btn-edit-mode-remove-photo');
+
   if (avatarQuickBtn && avatarFileInput) {
     avatarQuickBtn.addEventListener('click', () => avatarFileInput.click());
+  }
+  if (btnEditModeUploadPhoto && avatarFileInput) {
+    btnEditModeUploadPhoto.addEventListener('click', () => avatarFileInput.click());
+  }
+  if (btnEditModeRemovePhoto) {
+    btnEditModeRemovePhoto.addEventListener('click', () => {
+      currentOfficerProfile.avatarImg = '';
+      try {
+        localStorage.removeItem('nirdesha_public_avatar');
+        localStorage.setItem('nirdesha_officer_profile', JSON.stringify(currentOfficerProfile));
+        localStorage.setItem('nirdesha_public_profile', JSON.stringify(currentOfficerProfile));
+      } catch (err) {}
+      setAvatarVisuals('', currentOfficerProfile.avatarInitials);
+      showNirdeshaToast('Officer profile photo removed. Initials restored.');
+    });
+  }
 
+  if (avatarFileInput) {
     avatarFileInput.addEventListener('change', (e) => {
-      const file = e.target.files[0];
+      const file = e.target.files && e.target.files[0];
       if (!file) return;
+
+      // Validate image format
+      if (!file.type.startsWith('image/')) {
+        alert('Please upload a valid image file (PNG, JPG, WebP, GIF).');
+        avatarFileInput.value = '';
+        return;
+      }
+
+      // 5MB limit
+      if (file.size > 5 * 1024 * 1024) {
+        alert('File size exceeds 5MB limit. Please upload an image under 5MB.');
+        avatarFileInput.value = '';
+        return;
+      }
 
       const reader = new FileReader();
       reader.onload = (event) => {
@@ -981,6 +1061,7 @@ if (
         } catch (err) {
           console.warn('Could not persist avatar to localStorage:', err);
         }
+        showNirdeshaToast('✓ Officer profile picture updated successfully!');
       };
       reader.readAsDataURL(file);
     });
@@ -2787,9 +2868,9 @@ if (
       answer: "A Focus Track is a personalized, high-priority learning pathway prescribed by Nirdesha's analytical engine. By detecting an officer's greatest competency gap (e.g., Macroeconomic Deflators), the Focus Track recommends specific NSSTA modules to close the gap rapidly and achieve 100% promotion readiness."
     },
     'ai-guidance-recommendation': {
-      title: 'AI Guidance Recommendation',
-      question: 'How does the AI Guidance Recommendation engine analyze my performance?',
-      answer: "The AI Guidance Recommendation engine analyzes diagnostic test results, timed quiz latencies, and daily practice consistency. It cross-references your current scores with cadre promotion requirements to generate actionable, targeted study recommendations."
+      title: 'Nirdesha Saarthi Recommendation (निर्देश सारथी)',
+      question: 'How does the Nirdesha Saarthi (Margdarshak) engine analyze my performance?',
+      answer: "The Nirdesha Saarthi (निर्देश सारथी) engine analyzes diagnostic test results, timed quiz latencies, and daily practice consistency. It cross-references your current scores with cadre promotion requirements to generate actionable, targeted study recommendations."
     },
     'cadre-capability-architecture': {
       title: 'Cadre Capability Architecture',
@@ -4976,6 +5057,7 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
     if (btnHistoryToggle && drawer) {
       btnHistoryToggle.addEventListener('click', (e) => {
         e.preventDefault();
+        e.stopPropagation();
         const isOpen = drawer.style.display === 'flex';
         drawer.style.display = isOpen ? 'none' : 'flex';
         if (!isOpen) {
@@ -4984,15 +5066,37 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
       });
     }
 
+    if (drawer) {
+      drawer.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+    }
+
     if (btnCloseDrawer && drawer) {
-      btnCloseDrawer.addEventListener('click', () => {
+      btnCloseDrawer.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         drawer.style.display = 'none';
       });
     }
 
+    // Exported global control functions for AI mentor history drawer
+    window.toggleMentorHistoryDrawer = function(forceState) {
+      const d = document.getElementById('mentor-history-drawer');
+      if (!d) return;
+      const willOpen = forceState !== undefined ? forceState : (d.style.display !== 'flex');
+      d.style.display = willOpen ? 'flex' : 'none';
+      if (willOpen && typeof renderHistoryList === 'function') {
+        renderHistoryList();
+      }
+    };
+    window.openMentorHistoryDrawer = () => window.toggleMentorHistoryDrawer(true);
+    window.closeMentorHistoryDrawer = () => window.toggleMentorHistoryDrawer(false);
+
     if (btnNewConvo) {
       btnNewConvo.addEventListener('click', (e) => {
         e.preventDefault();
+        e.stopPropagation();
         startNewConvo();
       });
     }
@@ -8056,7 +8160,7 @@ Official digital marksheet archived in Nirdesha Competency Cloud.`;
   // Past Conversations Flyout Drawer Outside-Click Auto-Close
   document.addEventListener('click', (e) => {
     const drawer = document.getElementById('mentor-history-drawer');
-    const burger = document.getElementById('btn-mentor-burger-history');
+    const burger = document.getElementById('btn-mentor-history-toggle');
     if (drawer && drawer.style.display !== 'none') {
       if (!drawer.contains(e.target) && (!burger || !burger.contains(e.target))) {
         drawer.style.display = 'none';
@@ -8701,6 +8805,7 @@ Official digital marksheet archived in Nirdesha Competency Cloud.`;
 
   function initRevisionCardsDeckEngine() {
     const STORAGE_KEY = 'nirdesha_revision_flashcards';
+    const RECYCLE_STORAGE_KEY = 'nirdesha_recycled_flashcards';
 
     function loadRevisionDeck() {
       try {
@@ -8730,6 +8835,193 @@ Official digital marksheet archived in Nirdesha Competency Cloud.`;
       updateCounts();
     }
 
+    // ------------------------------------------------------------------------
+    // FLASHCARD RECYCLE BIN (10-DAY RECOVERY SYSTEM - SAME AS NOTES CONCEPT)
+    // ------------------------------------------------------------------------
+    function getRecycledFlashcards() {
+      try {
+        const raw = localStorage.getItem(RECYCLE_STORAGE_KEY);
+        if (raw) {
+          let list = JSON.parse(raw);
+          if (Array.isArray(list)) {
+            // Auto-purge items older than 10 days (10 days * 24h * 3600s * 1000ms)
+            const TEN_DAYS_MS = 10 * 24 * 60 * 60 * 1000;
+            const now = Date.now();
+            list = list.filter(item => (now - (item.deletedAt || now)) <= TEN_DAYS_MS);
+            if (list.length > 10) list = list.slice(0, 10);
+            return list;
+          }
+        }
+      } catch (e) {}
+      return [];
+    }
+
+    function saveRecycledFlashcards(list) {
+      if (list.length > 10) list = list.slice(0, 10);
+      try {
+        localStorage.setItem(RECYCLE_STORAGE_KEY, JSON.stringify(list));
+      } catch (e) {}
+      updateRecycleCount();
+    }
+
+    function updateRecycleCount() {
+      const countBadge = document.getElementById('recycle-flashcards-count');
+      if (countBadge) {
+        const list = getRecycledFlashcards();
+        countBadge.textContent = list.length;
+      }
+    }
+
+    function moveToRecycleFlashcards(card) {
+      const list = getRecycledFlashcards();
+      const recycledItem = {
+        ...card,
+        deletedAt: Date.now()
+      };
+      list.unshift(recycledItem);
+      saveRecycledFlashcards(list);
+    }
+
+    const btnViewRecycle = document.getElementById('btn-view-recycle-flashcards');
+    const recycleView = document.getElementById('flashcard-recycle-bin-view');
+    const cardsGrid = document.getElementById('revision-cards-grid');
+    const cardsToolbar = document.querySelector('.revision-cards-toolbar');
+    const btnCloseRecycle = document.getElementById('btn-close-flashcard-recycle');
+    const btnEmptyRecycle = document.getElementById('btn-empty-flashcard-recycle');
+    const recycleGridEl = document.getElementById('recycle-flashcards-grid');
+
+    function showFlashcardRecycleBin() {
+      if (cardsGrid) cardsGrid.style.display = 'none';
+      if (cardsToolbar) cardsToolbar.style.display = 'none';
+      if (recycleView) recycleView.style.display = 'block';
+      renderRecycleFlashcardsGrid();
+    }
+
+    function hideFlashcardRecycleBin() {
+      if (recycleView) recycleView.style.display = 'none';
+      if (cardsToolbar) cardsToolbar.style.display = 'flex';
+      if (cardsGrid) cardsGrid.style.display = 'grid';
+      renderRevisionCardsUI();
+    }
+
+    function renderRecycleFlashcardsGrid() {
+      if (!recycleGridEl) return;
+      recycleGridEl.innerHTML = '';
+      updateRecycleCount();
+
+      const list = getRecycledFlashcards();
+      if (list.length === 0) {
+        recycleGridEl.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1.5rem; background: #fffafa; border: 1.5px dashed #fca5a5; border-radius: 6px;">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem; color: #991b1b;"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#991b1b" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></div>
+            <h4 style="margin: 0 0 0.35rem 0; font-weight: 800; color: #991b1b;">Flashcard Recycle Bin is Empty</h4>
+            <p style="margin: 0; font-size: 0.82rem; color: #64748b;">
+              Deleted flashcards are kept here for 10 days before automatic purge. Any deleted card can be restored with one click.
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      const TEN_DAYS_MS = 10 * 24 * 60 * 60 * 1000;
+      const now = Date.now();
+
+      list.forEach(card => {
+        const cardEl = document.createElement('div');
+        cardEl.className = 'notebook-card';
+        cardEl.style.borderLeft = '5px solid #dc2626';
+
+        const deletedDate = new Date(card.deletedAt || now).toLocaleDateString(undefined, {
+          month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+        });
+
+        // 10-day recovery calculation
+        const msLeft = Math.max(0, TEN_DAYS_MS - (now - (card.deletedAt || now)));
+        const daysLeft = Math.max(1, Math.ceil(msLeft / (24 * 60 * 60 * 1000)));
+
+        cardEl.innerHTML = `
+          <div>
+            <div class="flashcard-header">
+              <div style="display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;">
+                <span class="notebook-topic" style="color: #dc2626;">${escapeHtml(card.topic || 'Revision')}</span>
+                <span class="recycle-flashcard-countdown">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  <span>${daysLeft} day${daysLeft > 1 ? 's' : ''} recovery left</span>
+                </span>
+              </div>
+              <div style="font-size: 0.7rem; color: #64748b;">Deleted: ${deletedDate}</div>
+            </div>
+
+            <h4 class="notebook-card-title">${escapeHtml(card.title || 'Revision Concept')}</h4>
+
+            <div class="flashcard-question-box" style="margin-bottom: 0.65rem;">
+              <span class="flashcard-question-label">Recall Prompt:</span>
+              ${escapeHtml(card.question || '')}
+            </div>
+
+            <div class="flashcard-key-rule" style="margin-bottom: 0.65rem;">
+              <span class="flashcard-rule-label">KEY TAKEAWAY:</span>
+              <div class="flashcard-rule-text">${escapeHtml(card.summary || '')}</div>
+            </div>
+          </div>
+
+          <div class="flashcard-footer" style="margin-top: auto; padding-top: 0.65rem; border-top: 1px dashed #fca5a5; display: flex; justify-content: space-between; align-items: center;">
+            <button type="button" class="btn-restore-flashcard" title="Restore this flashcard to your revision deck">
+              <span>↺ Restore to Deck</span>
+            </button>
+            <button type="button" class="btn-purge-flashcard" title="Permanently delete this flashcard">
+              <span>✕ Delete Forever</span>
+            </button>
+          </div>
+        `;
+
+        // Restore Handler
+        cardEl.querySelector('.btn-restore-flashcard').addEventListener('click', () => {
+          const restoredCard = { ...card };
+          delete restoredCard.deletedAt;
+
+          revisionDeck.unshift(restoredCard);
+          saveRevisionDeck();
+
+          const updatedList = getRecycledFlashcards().filter(c => c.id !== card.id);
+          saveRecycledFlashcards(updatedList);
+
+          renderRecycleFlashcardsGrid();
+          showNirdeshaToast(`✓ Restored "${escapeHtml(card.title)}" back to your active Revision Cards!`);
+        });
+
+        // Purge Handler
+        cardEl.querySelector('.btn-purge-flashcard').addEventListener('click', () => {
+          if (confirm(`Permanently purge "${card.title}"? This cannot be undone.`)) {
+            const updatedList = getRecycledFlashcards().filter(c => c.id !== card.id);
+            saveRecycledFlashcards(updatedList);
+            renderRecycleFlashcardsGrid();
+            showNirdeshaToast(`Permanently deleted "${escapeHtml(card.title)}".`);
+          }
+        });
+
+        recycleGridEl.appendChild(cardEl);
+      });
+    }
+
+    if (btnViewRecycle) {
+      btnViewRecycle.addEventListener('click', showFlashcardRecycleBin);
+    }
+    if (btnCloseRecycle) {
+      btnCloseRecycle.addEventListener('click', hideFlashcardRecycleBin);
+    }
+    if (btnEmptyRecycle) {
+      btnEmptyRecycle.addEventListener('click', () => {
+        const list = getRecycledFlashcards();
+        if (list.length === 0) return;
+        if (confirm('Permanently purge all deleted flashcards in the Recycle Bin?')) {
+          saveRecycledFlashcards([]);
+          renderRecycleFlashcardsGrid();
+          showNirdeshaToast('Flashcard Recycle Bin emptied.');
+        }
+      });
+    }
+
     let activeFilter = 'all';
     let activeSearch = '';
     let allFlipped = false;
@@ -8744,6 +9036,8 @@ Official digital marksheet archived in Nirdesha Competency Cloud.`;
       if (elPinned) elPinned.textContent = revisionDeck.filter(c => c.isPinned).length;
       if (elNotes) elNotes.textContent = revisionDeck.filter(c => c.isCustom).length;
       if (elCadre) elCadre.textContent = revisionDeck.filter(c => !c.isCustom).length;
+
+      updateRecycleCount();
     }
 
     function renderRevisionCardsUI() {
@@ -8811,6 +9105,7 @@ Official digital marksheet archived in Nirdesha Competency Cloud.`;
           </div>
         `).join('');
 
+        // ALL FLASHCARDS HAVE PIN BUTTON AND DELETE ICON BUTTON
         cardEl.innerHTML = `
           <div>
             <div class="flashcard-header">
@@ -8830,11 +9125,9 @@ Official digital marksheet archived in Nirdesha Competency Cloud.`;
                 <button type="button" class="btn-pin-flashcard ${card.isPinned ? 'active' : ''}" title="${card.isPinned ? 'Unpin from priority revision' : 'Pin for urgent exam revision'}" aria-label="${card.isPinned ? 'Unpin from priority revision' : 'Pin for urgent exam revision'}">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="${card.isPinned ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path></svg>
                 </button>
-                ${card.isCustom ? `
-                  <button type="button" class="btn-del-flashcard" title="Delete Flashcard" aria-label="Delete Flashcard">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                  </button>
-                ` : ''}
+                <button type="button" class="btn-del-flashcard" title="Move to Recycle Bin (10 days recovery)" aria-label="Delete Flashcard">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                </button>
               </div>
             </div>
 
@@ -8894,16 +9187,34 @@ Official digital marksheet archived in Nirdesha Competency Cloud.`;
           });
         }
 
-        // Delete Handler
+        // Delete Handler: Moves to Recycle Bin with 10 days recovery
         const btnDel = cardEl.querySelector('.btn-del-flashcard');
         if (btnDel) {
           btnDel.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (confirm(`Remove "${card.title}" from Revision Cards?`)) {
-              revisionDeck = revisionDeck.filter(c => c.id !== card.id);
-              saveRevisionDeck();
-              renderRevisionCardsUI();
-              showNirdeshaToast(`Removed "${escapeHtml(card.title)}" from Revision Cards.`);
+            moveToRecycleFlashcards(card);
+            revisionDeck = revisionDeck.filter(c => c.id !== card.id);
+            saveRevisionDeck();
+            renderRevisionCardsUI();
+
+            showNirdeshaToast(`✓ "${escapeHtml(card.title)}" moved to Flashcard Recycle Bin (10 days recovery)! <a href="#" class="toast-undo-flashcard" style="color:#fdba74;text-decoration:underline;font-weight:700;margin-left:6px;">Undo / Restore</a>`);
+
+            const undoBtn = document.querySelector('.toast-undo-flashcard');
+            if (undoBtn) {
+              undoBtn.addEventListener('click', (ev) => {
+                ev.preventDefault();
+                const recList = getRecycledFlashcards();
+                const restored = recList.find(c => c.id === card.id);
+                if (restored) {
+                  delete restored.deletedAt;
+                  revisionDeck.unshift(restored);
+                  saveRevisionDeck();
+                  const remaining = recList.filter(c => c.id !== card.id);
+                  saveRecycledFlashcards(remaining);
+                  renderRevisionCardsUI();
+                  showNirdeshaToast(`✓ Restored "${escapeHtml(card.title)}" back to Revision Cards!`);
+                }
+              });
             }
           });
         }
@@ -8972,4 +9283,1754 @@ Official digital marksheet archived in Nirdesha Competency Cloud.`;
   }
 
   // Initialize Revision Cards Deck Engine
+
+  // ==========================================================================
+  // MULTI-PLATFORM COURSES & TRACKS ENGINE
+  // Platforms: iGOT Karmayogi Bharat, NSSTA (MoSPI), MoSPI SSS Cadre Portal
+  // ==========================================================================
+  const COURSES_CATALOG = [
+    // 1. iGOT Karmayogi Bharat Courses
+    {
+      id: 'iGOT-DPDP-2026',
+      platform: 'iGOT Karmayogi Bharat',
+      platformKey: 'igot',
+      code: 'iGOT-DPDP-2026',
+      title: 'Official Data Ethics, DPDP Act & Public Trust',
+      desc: 'Ethical principles in public statistics, secure data custodianship, and grievance escalation under the Data Protection Board.',
+      fullDesc: 'Comprehensive certified curriculum designed by DoPT and MoSPI for statistical personnel. Master statutory data protection frameworks, encryption pipelines, de-identification mandates, and ethical standards required by the Digital Personal Data Protection Act 2023.',
+      instructor: {
+        name: 'Dr. Manoj Kumar, ISS',
+        title: 'Additional Director General, MoSPI Training Division',
+        wing: 'Mission Karmayogi Bharat',
+        avatar: 'MK'
+      },
+      duration: '4 Weeks (16 Hours)',
+      durationHours: 16,
+      modulesCount: 4,
+      unitsCount: 18,
+      difficulty: 'Beginner',
+      difficultyRank: 1,
+      prerequisites: [
+        'Basic familiarity with socio-economic survey collection schedules.',
+        'Understanding of civil service conduct rules and official data confidentiality.'
+      ],
+      syllabus: [
+        { unit: 'Module 1: Foundations', topics: 'Constitutional Rights & Data Privacy Principles in Governance' },
+        { unit: 'Module 2: DPDP Act 2023', topics: 'Section 8 Anonymization Mandates & Data Fiduciary Obligations' },
+        { unit: 'Module 3: CAPI Encryption', topics: 'Hardware-Level Key Management & Tamper-Evident Logs' },
+        { unit: 'Module 4: Grievance & Audit', topics: 'Data Protection Board Compliance & Cadre Breach Protocols' }
+      ],
+      accreditation: 'DoPT / MoSPI Karmayogi Verified'
+    },
+    {
+      id: 'iGOT-MIS-201',
+      platform: 'iGOT Karmayogi Bharat',
+      platformKey: 'igot',
+      code: 'iGOT-MIS-201',
+      title: 'Mission Karmayogi: Competency Framework & Leadership',
+      desc: 'Core civil service behavioral competencies, evidence-based policy formulation, and citizen-centric governance.',
+      fullDesc: 'Foundational leadership track under the National Programme for Civil Services Capacity Building (NPCSCB). Focuses on transitioning from rule-based to role-based administration, collaborative problem solving, and public statistical stewardship.',
+      instructor: {
+        name: 'Smt. Priya Sundaram, IAS',
+        title: 'Joint Secretary (Capacity Building Commission)',
+        wing: 'DoPT, Govt. of India',
+        avatar: 'PS'
+      },
+      duration: '3 Weeks (12 Hours)',
+      durationHours: 12,
+      modulesCount: 3,
+      unitsCount: 12,
+      difficulty: 'Beginner',
+      difficultyRank: 1,
+      prerequisites: [
+        'Completed Induction Training for SSS/ISS Officers.',
+        'Familiarity with Government e-Office and MoSPI departmental hierarchy.'
+      ],
+      syllabus: [
+        { unit: 'Module 1: Role-Based Transition', topics: 'From Compliance Administration to Citizen-Centric Outcomes' },
+        { unit: 'Module 2: Evidence-Based Decisions', topics: 'Synthesizing Field Microdata into Actionable Cabinet Briefs' },
+        { unit: 'Module 3: Institutional Synergy', topics: 'Inter-Ministerial Statistical Coordination & Accountability' }
+      ],
+      accreditation: 'Capacity Building Commission (CBC) Certified'
+    },
+    {
+      id: 'iGOT-GEM-304',
+      platform: 'iGOT Karmayogi Bharat',
+      platformKey: 'igot',
+      code: 'iGOT-GEM-304',
+      title: 'Public Procurement & GeM Governance in Statistics',
+      desc: 'General Financial Rules (GFR 2017), GeM portal vendor selection, contract management, and field survey hardware tenders.',
+      fullDesc: 'Operational guide for Statistical Officers and Sub-Divisional heads managing procurement of CAPI tablets, survey equipment, and cloud telemetry infrastructure strictly abiding by GFR 2017 and GeM protocols.',
+      instructor: {
+        name: 'Shri R. Venkatraman',
+        title: 'Director (Financial Management & Public Procurement)',
+        wing: 'Department of Expenditure / GeM',
+        avatar: 'RV'
+      },
+      duration: '4 Weeks (18 Hours)',
+      durationHours: 18,
+      modulesCount: 4,
+      unitsCount: 16,
+      difficulty: 'Intermediate',
+      difficultyRank: 2,
+      prerequisites: [
+        'Overview of General Financial Rules (GFR 2017).',
+        'Experience with departmental asset registers and inventory management.'
+      ],
+      syllabus: [
+        { unit: 'Module 1: GFR 2017 Compliance', topics: 'Statutory Limits, Financial Powers, and Tendering Thresholds' },
+        { unit: 'Module 2: GeM 4.0 Architecture', topics: 'Direct Purchase, L-1 Bidding, and Reverse Auction Procedures' },
+        { unit: 'Module 3: CAPI Hardware Tenders', topics: 'Drafting Hardware Specifications, MDM Locks, and SLA Audits' },
+        { unit: 'Module 4: Disbursal & Audit', topics: 'PFMS Integration, Non-Payment Redressal, and CAG Compliance' }
+      ],
+      accreditation: 'Ministry of Finance & GeM Verified'
+    },
+    {
+      id: 'iGOT-RTI-102',
+      platform: 'iGOT Karmayogi Bharat',
+      platformKey: 'igot',
+      code: 'iGOT-RTI-102',
+      title: 'Right to Information (RTI) Act & Statutory Transparency',
+      desc: 'Proactive disclosure, handling statistical appeal queries, Section 8 exemptions, and Central Information Commission guidelines.',
+      fullDesc: 'Practical training for Central Public Information Officers (CPIOs) and statistical custodians on complying with statutory disclosure timelines, protecting confidential survey identities, and managing online RTI portals.',
+      instructor: {
+        name: 'Dr. Suresh Chandra, ISS',
+        title: 'Legal & Transparency Advisor',
+        wing: 'Central Information Commission',
+        avatar: 'SC'
+      },
+      duration: '2 Weeks (8 Hours)',
+      durationHours: 8,
+      modulesCount: 2,
+      unitsCount: 10,
+      difficulty: 'Beginner',
+      difficultyRank: 1,
+      prerequisites: [
+        'Understanding of public records administration.',
+        'Basic knowledge of the Constitution of India and administrative hierarchy.'
+      ],
+      syllabus: [
+        { unit: 'Module 1: Statutory Mandates', topics: 'Section 4 Proactive Disclosure & CPIO Response Workflows' },
+        { unit: 'Module 2: Exemptions & Appeals', topics: 'Section 8 Exemptions, First Appeals, and CIC Case Precedents' }
+      ],
+      accreditation: 'DoPT Transparency Division Certified'
+    },
+
+    // 2. NSSTA (National Statistical Systems Training Academy - MoSPI) Courses
+    {
+      id: 'NSSTA-SAM-101',
+      platform: 'NSSTA (MoSPI)',
+      platformKey: 'nssta',
+      code: 'NSSTA-SAM-101',
+      title: 'Advanced Multi-Stage Sampling & Survey Methodology',
+      desc: 'Stratified sampling, cluster designs, variance estimation, and non-sampling error minimization in large-scale socio-economic surveys.',
+      fullDesc: 'Flagship masterclass delivered by the National Statistical Systems Training Academy (NSSTA). Covers the complete mathematics of Horvitz-Thompson unbiased estimation, multi-stage stratified designs, auxiliary information ratio estimators, and survey weight calibrations.',
+      instructor: {
+        name: 'Dr. R. K. Mukherjee, ISS',
+        title: 'Deputy Director General (Survey Design & Research)',
+        wing: 'NSSTA, Greater Noida',
+        avatar: 'RM'
+      },
+      duration: '8 Weeks (32 Hours)',
+      durationHours: 32,
+      modulesCount: 6,
+      unitsCount: 24,
+      difficulty: 'Advanced',
+      difficultyRank: 3,
+      prerequisites: [
+        'Proficiency in probability theory, random variables, and sampling distributions.',
+        'Field exposure to NSS listing schedules and village/urban frame maps.'
+      ],
+      syllabus: [
+        { unit: 'Module 1: Design Foundations', topics: 'Probability Proportional to Size (PPS) & Systematic Selection' },
+        { unit: 'Module 2: Estimator Theory', topics: 'Horvitz-Thompson Estimators & Design-Unbiasedness Proofs' },
+        { unit: 'Module 3: Stratified Clusters', topics: 'Census Village FSUs & SSU Household Sub-sampling Strategies' },
+        { unit: 'Module 4: Variance Estimation', topics: 'Linearization, Jackknife Resampling, and Bootstrap Formulations' },
+        { unit: 'Module 5: Calibration & Weights', topics: 'Non-Response Adjustments, Raking Ratios, and Post-Stratification' },
+        { unit: 'Module 6: Outlier Handling', topics: 'Winsorization, Influential Observation Detection, and Truncation' }
+      ],
+      accreditation: 'NSSTA Premier Cadre Certification'
+    },
+    {
+      id: 'NSSTA-PY-305',
+      platform: 'NSSTA (MoSPI)',
+      platformKey: 'nssta',
+      code: 'NSSTA-PY-305',
+      title: 'Public Data Science & Statistical Computing in Python',
+      desc: 'Pandas, NumPy, automated data validation pipelines, statistical imputation methods, and DPDP-compliant data masking.',
+      fullDesc: 'Modern analytical programming curriculum tailored for civil statistical personnel. Learn automated CAPI data ingestion, missing value imputation (hot-deck, mean, regression), outlier winsorization, and reproducible statistical report generation.',
+      instructor: {
+        name: 'Prof. Ananya Sen, Ph.D.',
+        title: 'Senior Professor of Statistical Computing',
+        wing: 'National Statistical Academy & ISI',
+        avatar: 'AS'
+      },
+      duration: '6 Weeks (24 Hours)',
+      durationHours: 24,
+      modulesCount: 5,
+      unitsCount: 20,
+      difficulty: 'Intermediate',
+      difficultyRank: 2,
+      prerequisites: [
+        'Basic programming intuition or statistical software experience.',
+        'Understanding of tabular datasets, CSV structures, and microdata matrices.'
+      ],
+      syllabus: [
+        { unit: 'Module 1: Ingestion Pipelines', topics: 'Parsing CAPI JSON, CSV, and Multi-Record Hierarchical Schemas' },
+        { unit: 'Module 2: Vectorized Analysis', topics: 'NumPy Broadcasting, Matrix Multiplications, and Weighted Stats' },
+        { unit: 'Module 3: Imputation Systems', topics: 'Hot-Deck Matching, KNN Regression, and Missingness Mechanics' },
+        { unit: 'Module 4: Automated Scrutiny', topics: 'Logical Cross-Check Engines & Outlier IQR Anomaly Filters' },
+        { unit: 'Module 5: Governance Output', topics: 'Automated Tabulation Reports, Charts, and DPDP Masking' }
+      ],
+      accreditation: 'NSSTA Computational Analytics Badge'
+    },
+    {
+      id: 'NSSTA-NAS-401',
+      platform: 'NSSTA (MoSPI)',
+      platformKey: 'nssta',
+      code: 'NSSTA-NAS-401',
+      title: 'National Accounts Statistics (NAS) & GDP Compilation',
+      desc: 'Production approach, expenditure approach, Gross Value Added (GVA), base-year revision, and Supply-Use Tables (SUT).',
+      fullDesc: 'In-depth macro-economic accounting framework based on System of National Accounts (SNA 2008). Dive into institutional sector classifications, FISIM calculations, double deflation methodologies, and quarterly GDP growth telemetry.',
+      instructor: {
+        name: 'Dr. D. K. Sharma, ISS',
+        title: 'Director General (National Accounts Division)',
+        wing: 'MoSPI Central Statistical Office',
+        avatar: 'DS'
+      },
+      duration: '8 Weeks (36 Hours)',
+      durationHours: 36,
+      modulesCount: 6,
+      unitsCount: 28,
+      difficulty: 'Advanced',
+      difficultyRank: 3,
+      prerequisites: [
+        'Advanced macroeconomics and national income accounting fundamentals.',
+        'Familiarity with MCA-21 company filings and ASI summary tables.'
+      ],
+      syllabus: [
+        { unit: 'Module 1: Accounting Framework', topics: 'SNA 2008 Concepts, Production Boundary, and Institutional Sectors' },
+        { unit: 'Module 2: GVA Estimation', topics: 'Sectoral GVA Compilation (Agriculture, Manufacturing, Services)' },
+        { unit: 'Module 3: Financial Intermediation', topics: 'FISIM Allocation Across Borrowers, Depositors, and Industries' },
+        { unit: 'Module 4: Price Deflators', topics: 'Double Deflation, Implicit Price Deflators, and WPI/CPI Mapping' },
+        { unit: 'Module 5: Supply-Use Tables', topics: 'Reconciling Product Supply & Uses in 140x140 Commodity Matrices' },
+        { unit: 'Module 6: Base Year Revisions', topics: 'Structural Shifts, Chained Volume Measures, and Historical Series' }
+      ],
+      accreditation: 'MoSPI National Accounts Directorate'
+    },
+    {
+      id: 'NSSTA-CPI-202',
+      platform: 'NSSTA (MoSPI)',
+      platformKey: 'nssta',
+      code: 'NSSTA-CPI-202',
+      title: 'Consumer Price Index (CPI) & Inflation Telemetry',
+      desc: 'Rural, Urban, Combined CPI index calculations, modified Laspeyres formula, item weights, and web-based price data collection.',
+      fullDesc: 'Comprehensive operational manual and statistical foundation for inflation measurement in India. Learn price quotation validation, substitution bias handling, housing index imputation, and core inflation calculation pipelines.',
+      instructor: {
+        name: 'Shri Arunabha Ghosh, ISS',
+        title: 'Deputy Director (Price Statistics Division)',
+        wing: 'MoSPI, New Delhi',
+        avatar: 'AG'
+      },
+      duration: '5 Weeks (20 Hours)',
+      durationHours: 20,
+      modulesCount: 4,
+      unitsCount: 16,
+      difficulty: 'Intermediate',
+      difficultyRank: 2,
+      prerequisites: [
+        'Index number theory (Laspeyres, Paasche, Fisher ideals).',
+        'Familiarity with NSS Consumer Expenditure Survey basket weights.'
+      ],
+      syllabus: [
+        { unit: 'Module 1: Index Number Theory', topics: 'Axiomatic & Economic Approaches, Modified Laspeyres Formulation' },
+        { unit: 'Module 2: Basket Weighting', topics: 'Household Consumption Survey Baskets & Commodity Classification' },
+        { unit: 'Module 3: Price Collection', topics: 'Weekly Market Canvassing, Rent Imputations, and Outlet Tracking' },
+        { unit: 'Module 4: National Telemetry', topics: 'Aggregation to State & Combined Indices, Core Inflation Stripping' }
+      ],
+      accreditation: 'Price Statistics Directorate, MoSPI'
+    },
+
+    // 3. MoSPI SSS Cadre Training Portal Courses
+    {
+      id: 'MOSPI-FOD-105',
+      platform: 'MoSPI SSS Cadre Portal',
+      platformKey: 'cadre',
+      code: 'MOSPI-FOD-105',
+      title: 'Field Operations Division (FOD) CAPI Microdata Verification',
+      desc: 'Field tablet protocols, GPS geo-tagging validation, household boundary listing, and real-time scrutiny checks.',
+      fullDesc: 'Standard operating procedure for Junior and Senior Statistical Officers conducting primary field surveys. Master validation scripts, re-interview procedures, non-response reduction strategies, and automated scrutiny rules.',
+      instructor: {
+        name: 'Shri K. S. Pillai, ISS',
+        title: 'Regional Director (Field Operations Division)',
+        wing: 'FOD MoSPI Zonal Directorate',
+        avatar: 'KP'
+      },
+      duration: '4 Weeks (16 Hours)',
+      durationHours: 16,
+      modulesCount: 4,
+      unitsCount: 16,
+      difficulty: 'Intermediate',
+      difficultyRank: 2,
+      prerequisites: [
+        'Field experience in NSS / PLFS survey interviewing.',
+        'Handling of Android-based CAPI inspection tablets.'
+      ],
+      syllabus: [
+        { unit: 'Module 1: Pre-Survey Mapping', topics: 'Urban Frame Demarcation & Census Village Boundary Verification' },
+        { unit: 'Module 2: Listing & Selection', topics: 'Schedule 0.0 Household Listing and 22-Cell Stratification' },
+        { unit: 'Module 3: CAPI Scrutiny Rules', topics: 'Consistency Diagnostics, Automated Range Checks, and Warnings' },
+        { unit: 'Module 4: Re-Interview Audits', topics: 'Sample Re-Interviews, Discrepancy Reconciliation, and FOD Logs' }
+      ],
+      accreditation: 'FOD Cadre Operational Excellence Seal'
+    },
+    {
+      id: 'MOSPI-ASI-203',
+      platform: 'MoSPI SSS Cadre Portal',
+      platformKey: 'cadre',
+      code: 'MOSPI-ASI-203',
+      title: 'Annual Survey of Industries (ASI) Factory Schedule Auditing',
+      desc: 'Auditing manufacturing accounts, fixed capital, working capital, gross output, and input schedule validation.',
+      fullDesc: 'Rigorous accounting and verification protocol for manufacturing units registered under Sections 2m(i) and 2m(ii) of the Factories Act 1948. Covers balance-sheet reconciliation and physical asset verification.',
+      instructor: {
+        name: 'Dr. Sunita Banerjee, ISS',
+        title: 'Director (Industrial Statistics Wing, Kolkata)',
+        wing: 'MoSPI IS Wing',
+        avatar: 'SB'
+      },
+      duration: '5 Weeks (22 Hours)',
+      durationHours: 22,
+      modulesCount: 5,
+      unitsCount: 18,
+      difficulty: 'Intermediate',
+      difficultyRank: 2,
+      prerequisites: [
+        'Basic financial accounting and balance sheet terminology.',
+        'Knowledge of the Factories Act 1948 provisions.'
+      ],
+      syllabus: [
+        { unit: 'Module 1: Frame Construction', topics: 'Chief Inspector of Factories (CIF) List Maintenance & Deduplication' },
+        { unit: 'Module 2: Capital Schedules', topics: 'Block C Fixed Assets, Depreciations, and Addition-to-Capital Audits' },
+        { unit: 'Module 3: Working Capital', topics: 'Raw Materials, Inventories, Outstanding Liabilities, and Cash Flow' },
+        { unit: 'Module 4: Output & Fuel', topics: 'Ex-Factory Value, Electricity Accounts, and Intermediate Inputs' },
+        { unit: 'Module 5: Scrutiny Reconciliation', topics: 'Cross-Verification Against Audited Corporate Accounts (MCA-21)' }
+      ],
+      accreditation: 'Industrial Statistics Wing Certification'
+    },
+    {
+      id: 'MOSPI-PLFS-302',
+      platform: 'MoSPI SSS Cadre Portal',
+      platformKey: 'cadre',
+      code: 'MOSPI-PLFS-302',
+      title: 'Periodic Labour Force Survey (PLFS) Activity Status Coding',
+      desc: 'Usual Principal Status (UPS), Usual Subsidiary Status (UPSS), Current Weekly Status (CWS), and labour market indicators.',
+      fullDesc: 'Technical masterclass on employment and unemployment classification in India. Master the complex multi-activity coding trees, NIC-2008 industrial codes, NCO-2004 occupational classifications, and quarterly urban panel rotations.',
+      instructor: {
+        name: 'Dr. Vivek Mehra, ISS',
+        title: 'Joint Director (SDRD & Labour Statistics)',
+        wing: 'MoSPI Headquarters',
+        avatar: 'VM'
+      },
+      duration: '6 Weeks (28 Hours)',
+      durationHours: 28,
+      modulesCount: 5,
+      unitsCount: 22,
+      difficulty: 'Advanced',
+      difficultyRank: 3,
+      prerequisites: [
+        'Labour economics concepts (LFPR, WPR, UR).',
+        'Familiarity with PLFS quarterly rotation sampling designs.'
+      ],
+      syllabus: [
+        { unit: 'Module 1: Activity Classification', topics: 'Major Time Criterion, Usual Status vs Current Weekly Status' },
+        { unit: 'Module 2: Industrial Coding', topics: 'National Industrial Classification (NIC-2008) 5-Digit Tagging' },
+        { unit: 'Module 3: Occupational Codes', topics: 'National Classification of Occupations (NCO-2004) Mapping' },
+        { unit: 'Module 4: Quarterly Rotations', topics: 'Managing Panel Revisits (Rotations 1-4) in Urban Sectors' },
+        { unit: 'Module 5: Indicator Computation', topics: 'LFPR, WPR, Unemployment Rates by Gender and Rural/Urban Strata' }
+      ],
+      accreditation: 'National Statistical Systems Technical Wing'
+    },
+    {
+      id: 'MOSPI-DIS-101',
+      platform: 'MoSPI SSS Cadre Portal',
+      platformKey: 'cadre',
+      code: 'MOSPI-DIS-101',
+      title: 'District Statistical Cadre Operational Manual & Village Frames',
+      desc: 'Urban Frame Survey (UFS) block updates, Village Directory maintenance, District Statistical Handbooks, and local planning.',
+      fullDesc: 'Grassroots administration manual for SSS officers stationed at District Economics and Statistics Offices (DESO). Learn block boundary demarcation, auxiliary administrative registers, and multi-department coordination.',
+      instructor: {
+        name: 'Shri Rameshwar Dayal, SSO',
+        title: 'Lead Cadre Field Inspector',
+        wing: 'MoSPI Field Wing',
+        avatar: 'RD'
+      },
+      duration: '3 Weeks (14 Hours)',
+      durationHours: 14,
+      modulesCount: 3,
+      unitsCount: 12,
+      difficulty: 'Beginner',
+      difficultyRank: 1,
+      prerequisites: [
+        'Induction into Subordinate Statistical Service (SSS).',
+        'Familiarity with district administrative topography.'
+      ],
+      syllabus: [
+        { unit: 'Module 1: Urban Frame Demarcation', topics: 'Physical Boundary Identification & UFS Block Map Updating' },
+        { unit: 'Module 2: Village Registers', topics: 'Panchayat Infrastructure Amenities & Census Cross-Validation' },
+        { unit: 'Module 3: District Handbook', topics: 'Collating Sectoral Telemetry from Agriculture, Health & Education' }
+      ],
+      accreditation: 'MoSPI Cadre Administration Board'
+    }
+  ];
+
+  // --------------------------------------------------------------------------
+  // USER COURSE STATE MANAGEMENT (localStorage)
+  // --------------------------------------------------------------------------
+  const DEFAULT_USER_COURSES = {
+    'NSSTA-SAM-101': {
+      status: 'enrolled',
+      progress: 85,
+      currentUnit: 'Unit 6: Outlier Handling',
+      enrolledDate: Date.now() - 86400000 * 20
+    },
+    'NSSTA-PY-305': {
+      status: 'enrolled',
+      progress: 91,
+      currentUnit: 'Unit 8/9: Final Assessment Ready',
+      enrolledDate: Date.now() - 86400000 * 15
+    },
+    'iGOT-DPDP-2026': {
+      status: 'completed',
+      progress: 100,
+      currentUnit: 'Verified Certificate Earned',
+      completedDate: Date.now() - 86400000 * 5,
+      certified: true
+    }
+  };
+
+  function getUserCourses() {
+    try {
+      const stored = localStorage.getItem('nirdesha_user_courses');
+      if (stored) {
+        return JSON.parse(stored);
+      }
+    } catch (e) {}
+    localStorage.setItem('nirdesha_user_courses', JSON.stringify(DEFAULT_USER_COURSES));
+    return JSON.parse(JSON.stringify(DEFAULT_USER_COURSES));
+  }
+
+  function saveUserCourses(courses) {
+    try {
+      localStorage.setItem('nirdesha_user_courses', JSON.stringify(courses));
+    } catch (e) {}
+    renderProfileCoursesStack();
+  }
+
+  function getSavedCourses() {
+    try {
+      const stored = localStorage.getItem('nirdesha_saved_courses');
+      if (stored) {
+        return JSON.parse(stored);
+      }
+    } catch (e) {}
+    return [];
+  }
+
+  function saveSavedCourses(savedList) {
+    try {
+      localStorage.setItem('nirdesha_saved_courses', JSON.stringify(savedList));
+    } catch (e) {}
+  }
+
+  let activePlatformFilter = 'all';
+  let activeSortCriteria = 'default';
+
+  // --------------------------------------------------------------------------
+  // PROFILE COURSES RULE: STRICTLY LATEST 3 COURSES
+  // Priority: Enrolled (running) first, backfilled with latest completed!
+  // --------------------------------------------------------------------------
+  function renderProfileCoursesStack() {
+    const container = document.getElementById('profile-courses-stack');
+    if (!container) return;
+
+    const userCourses = getUserCourses();
+    const allCourses = COURSES_CATALOG;
+
+    const enriched = allCourses.map(c => {
+      const uc = userCourses[c.id];
+      return {
+        ...c,
+        status: uc ? uc.status : 'catalog',
+        progress: uc ? uc.progress : 0,
+        currentUnit: uc ? uc.currentUnit : '',
+        enrolledDate: uc ? (uc.enrolledDate || 0) : 0,
+        completedDate: uc ? (uc.completedDate || 0) : 0
+      };
+    });
+
+    const enrolled = enriched.filter(c => c.status === 'enrolled' && c.progress < 100);
+    const completed = enriched.filter(c => c.status === 'completed' || c.progress === 100);
+
+    // Sort enrolled by newest enrollment date
+    enrolled.sort((a, b) => b.enrolledDate - a.enrolledDate);
+    // Sort completed by newest completion date
+    completed.sort((a, b) => b.completedDate - a.completedDate);
+
+    // Strict Rule: latest 3 courses total
+    const latest3 = [];
+    // Prioritize enrolled
+    for (let i = 0; i < enrolled.length && latest3.length < 3; i++) {
+      latest3.push(enrolled[i]);
+    }
+    // Backfill with completed
+    for (let i = 0; i < completed.length && latest3.length < 3; i++) {
+      latest3.push(completed[i]);
+    }
+    // Fallback if fewer than 3
+    if (latest3.length < 3) {
+      for (let i = 0; i < enriched.length && latest3.length < 3; i++) {
+        if (!latest3.find(c => c.id === enriched[i].id)) {
+          latest3.push(enriched[i]);
+        }
+      }
+    }
+
+    container.innerHTML = '';
+    latest3.forEach(course => {
+      const isDone = course.status === 'completed' || course.progress === 100;
+      const badgeClass = isDone ? 'badge-active' : (course.progress >= 90 ? 'badge-distinction' : 'badge-eligible');
+      const badgeText = isDone ? '100% Certified' : `${course.progress}% Done`;
+      const fillColor = isDone ? '#16a34a' : (course.progress >= 90 ? '#0284c7' : '#ea580c');
+      const statusText = isDone
+        ? 'Status: Verified Certificate Earned'
+        : (course.currentUnit || `Status: Syllabus Progress ${course.progress}%`);
+      const statusHighlight = isDone ? 'Complete' : (course.progress >= 90 ? 'Final Stage' : 'In Progress');
+
+      const item = document.createElement('div');
+      item.className = 'profile-course-item';
+      item.innerHTML = `
+        <div class="profile-course-top">
+          <div>
+            <span class="profile-course-code">${escapeHtml(course.code)} • ${escapeHtml(course.platform)}</span>
+            <div class="profile-course-name">${escapeHtml(course.title)}</div>
+          </div>
+          <span class="cert-status-badge ${badgeClass}">${badgeText}</span>
+        </div>
+        <div class="profile-progress-bar-wrap">
+          <div class="profile-progress-fill" style="width: ${course.progress}%; background: ${fillColor};"></div>
+        </div>
+        <div class="profile-course-footer">
+          <span>${escapeHtml(statusText)}</span>
+          <span style="color: ${fillColor}; font-weight: 700;">${statusHighlight}</span>
+        </div>
+      `;
+      container.appendChild(item);
+    });
+  }
+  window.renderProfileCoursesStack = renderProfileCoursesStack;
+
+  // --------------------------------------------------------------------------
+  // RENDER COURSES & TRACKS SECTION
+  // --------------------------------------------------------------------------
+  function renderCoursesSection() {
+    const userCourses = getUserCourses();
+    const savedCourses = getSavedCourses();
+
+    // Enriched course catalog with user status
+    const enriched = COURSES_CATALOG.map(c => {
+      const uc = userCourses[c.id];
+      const isSaved = savedCourses.includes(c.id);
+      return {
+        ...c,
+        status: uc ? uc.status : 'catalog',
+        progress: uc ? uc.progress : 0,
+        currentUnit: uc ? uc.currentUnit : '',
+        isSaved: isSaved,
+        enrolledDate: uc ? (uc.enrolledDate || 0) : 0,
+        completedDate: uc ? (uc.completedDate || 0) : 0
+      };
+    });
+
+    const enrolledList = enriched.filter(c => c.status === 'enrolled' || c.status === 'completed' || c.progress > 0);
+    const completedList = enriched.filter(c => c.status === 'completed' || c.progress === 100);
+
+    // Update Header Stats
+    const elEnrolledCount = document.getElementById('courses-enrolled-count');
+    const elCompletedCount = document.getElementById('courses-completed-count');
+    const elSavedCount = document.getElementById('courses-saved-count');
+    const elPillSavedCounter = document.getElementById('pill-saved-counter');
+    const elActiveBadge = document.getElementById('active-enrolled-badge');
+
+    if (elEnrolledCount) elEnrolledCount.textContent = `${enrolledList.length} Active`;
+    if (elCompletedCount) elCompletedCount.textContent = `${completedList.length} Certified`;
+    if (elSavedCount) elSavedCount.textContent = `${savedCourses.length} Saved`;
+    if (elPillSavedCounter) elPillSavedCounter.textContent = savedCourses.length;
+    if (elActiveBadge) elActiveBadge.textContent = enrolledList.length;
+
+    // 1. RENDER FRONT ACTIVE SECTION: ENROLLED COURSES
+    const enrolledGrid = document.getElementById('enrolled-courses-grid');
+    if (enrolledGrid) {
+      enrolledGrid.innerHTML = '';
+      if (enrolledList.length === 0) {
+        enrolledGrid.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 2.5rem 1rem; background: #ffffff; border: 1.5px dashed #cbd5e1;">
+            <strong style="color: #002b49;">No Enrolled Learning Pathways</strong>
+            <p style="font-size: 0.82rem; color: #64748b; margin: 4px 0 0.85rem 0;">Browse our affiliated official training portals below to enroll in accredited courses.</p>
+          </div>
+        `;
+      } else {
+        enrolledList.forEach(course => {
+          const isDone = course.status === 'completed' || course.progress === 100;
+          const card = document.createElement('div');
+          card.className = `course-card-gov ${isDone ? 'is-completed' : 'is-enrolled'}`;
+
+          const platformBadgeClass = course.platformKey === 'igot' 
+            ? 'badge-platform-igot' 
+            : (course.platformKey === 'nssta' ? 'badge-platform-nssta' : 'badge-platform-cadre');
+
+          const hardnessClass = course.difficulty === 'Beginner'
+            ? 'hardness-beginner'
+            : (course.difficulty === 'Intermediate' ? 'hardness-intermediate' : 'hardness-advanced');
+
+          const progressBg = isDone ? '#16a34a' : (course.progress >= 90 ? '#0284c7' : '#ea580c');
+          const progressLabel = isDone ? '100% (Certified)' : `${course.progress}%`;
+          const unitText = course.currentUnit || (isDone ? 'Certificate Earned' : `Unit 1: Introduction`);
+
+          // Action Button: If 100% -> "Give Test / Take Exam", Else -> "Resume Lesson"
+          let actionBtnHtml = '';
+          if (isDone) {
+            actionBtnHtml = `
+              <button type="button" class="btn-admin-action btn-give-course-exam" data-course-id="${course.id}" title="Take official competency test generated by AI Mentor">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                <span>Give Test / Exam ▶</span>
+              </button>
+            `;
+          } else {
+            actionBtnHtml = `
+              <button type="button" class="btn-admin-action btn-resume-course" data-course-id="${course.id}" style="padding: 0.35rem 0.85rem; font-size: 0.75rem;">
+                Resume Lesson ▶
+              </button>
+            `;
+          }
+
+          card.innerHTML = `
+            <div>
+              <div class="course-card-top-row">
+                <div class="course-badges-wrap">
+                  <span class="course-platform-badge ${platformBadgeClass}">${escapeHtml(course.platform)}</span>
+                  <span class="course-hardness-badge ${hardnessClass}">${escapeHtml(course.difficulty)}</span>
+                </div>
+                <button type="button" class="btn-course-save-later ${course.isSaved ? 'is-saved' : ''}" data-course-id="${course.id}" aria-label="Save for later">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                  <span class="save-tooltip">${course.isSaved ? 'Remove from Saved' : 'Save for Later'}</span>
+                </button>
+              </div>
+
+              <div class="course-badge-code">${escapeHtml(course.code)} • ${escapeHtml(course.instructor.wing)}</div>
+              <h3 class="course-card-title clickable-course-title" data-course-id="${course.id}" style="cursor: pointer;">${escapeHtml(course.title)}</h3>
+              <p class="course-card-desc">${escapeHtml(course.desc)}</p>
+
+              <div class="course-meta-pills">
+                <span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  ${escapeHtml(course.duration)}
+                </span>
+                <span>•</span>
+                <span>${course.modulesCount} Modules (${course.unitsCount} Units)</span>
+              </div>
+
+              <div style="margin-block: 0.75rem;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 700; color: #002b49; margin-bottom: 0.35rem;">
+                  <span>Syllabus Completed</span>
+                  <span style="color: ${progressBg};">${progressLabel}</span>
+                </div>
+                <div class="course-progress-bar" style="width: 100%; height: 8px;">
+                  <div class="course-progress-fill" style="width: ${course.progress}%; background: ${progressBg};"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="course-card-footer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+              <button type="button" class="btn-course-info" data-course-id="${course.id}">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                <span>Course Info</span>
+              </button>
+              ${actionBtnHtml}
+            </div>
+          `;
+
+          enrolledGrid.appendChild(card);
+        });
+      }
+    }
+
+    // 2. RENDER PLATFORM CATALOG SECTION
+    let catalogList = [...enriched];
+
+    // Filter by platform
+    if (activePlatformFilter === 'saved') {
+      catalogList = catalogList.filter(c => c.isSaved);
+    } else if (activePlatformFilter !== 'all') {
+      catalogList = catalogList.filter(c => c.platformKey === activePlatformFilter);
+    }
+
+    // Sort catalog
+    if (activeSortCriteria === 'hardness-asc') {
+      catalogList.sort((a, b) => a.difficultyRank - b.difficultyRank);
+    } else if (activeSortCriteria === 'hardness-desc') {
+      catalogList.sort((a, b) => b.difficultyRank - a.difficultyRank);
+    } else if (activeSortCriteria === 'duration-asc') {
+      catalogList.sort((a, b) => a.durationHours - b.durationHours);
+    } else if (activeSortCriteria === 'duration-desc') {
+      catalogList.sort((a, b) => b.durationHours - a.durationHours);
+    } else if (activeSortCriteria === 'title') {
+      catalogList.sort((a, b) => a.title.localeCompare(b.title));
+    }
+
+    // Update catalog section title
+    const elCatalogTitle = document.getElementById('catalog-section-title');
+    const elCatalogCounter = document.getElementById('catalog-courses-counter');
+    if (elCatalogTitle) {
+      if (activePlatformFilter === 'igot') elCatalogTitle.textContent = 'iGOT Karmayogi Bharat Official Pathways';
+      else if (activePlatformFilter === 'nssta') elCatalogTitle.textContent = 'National Statistical Systems Training Academy (NSSTA)';
+      else if (activePlatformFilter === 'cadre') elCatalogTitle.textContent = 'MoSPI SSS Cadre Training Portal Modules';
+      else if (activePlatformFilter === 'saved') elCatalogTitle.textContent = 'My Saved for Later Courses';
+      else elCatalogTitle.textContent = 'All Affiliated MoSPI & iGOT Courses';
+    }
+    if (elCatalogCounter) {
+      elCatalogCounter.textContent = `Showing ${catalogList.length} Courses`;
+    }
+
+    const platformGrid = document.getElementById('platform-courses-grid');
+    if (platformGrid) {
+      platformGrid.innerHTML = '';
+      if (catalogList.length === 0) {
+        platformGrid.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem; background: #ffffff; border: 1.5px dashed #cbd5e1;">
+            <strong style="color: #002b49;">No Courses Found in this Category</strong>
+            <p style="font-size: 0.82rem; color: #64748b; margin: 4px 0 0.85rem 0;">Try selecting a different platform or switch to "All Portals".</p>
+          </div>
+        `;
+      } else {
+        catalogList.forEach(course => {
+          const isEnrolled = course.status === 'enrolled' || course.status === 'completed' || course.progress > 0;
+          const isDone = course.status === 'completed' || course.progress === 100;
+          const card = document.createElement('div');
+          card.className = `course-card-gov ${isEnrolled ? 'is-enrolled' : ''}`;
+
+          const platformBadgeClass = course.platformKey === 'igot' 
+            ? 'badge-platform-igot' 
+            : (course.platformKey === 'nssta' ? 'badge-platform-nssta' : 'badge-platform-cadre');
+
+          const hardnessClass = course.difficulty === 'Beginner'
+            ? 'hardness-beginner'
+            : (course.difficulty === 'Intermediate' ? 'hardness-intermediate' : 'hardness-advanced');
+
+          let bottomEnrollBtnHtml = '';
+          if (isDone) {
+            bottomEnrollBtnHtml = `
+              <button type="button" class="btn-admin-action btn-give-course-exam" data-course-id="${course.id}" title="Take official competency test">
+                Give Test ▶
+              </button>
+            `;
+          } else if (isEnrolled) {
+            bottomEnrollBtnHtml = `
+              <span style="font-size: 0.72rem; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 3px 8px; border-radius: 3px;">
+                Enrolled (${course.progress}%)
+              </span>
+            `;
+          } else {
+            bottomEnrollBtnHtml = `
+              <button type="button" class="btn-admin-action btn-enroll-action" data-course-id="${course.id}" style="padding: 0.35rem 0.85rem; font-size: 0.75rem;">
+                Enroll Course +
+              </button>
+            `;
+          }
+
+          card.innerHTML = `
+            <div>
+              <div class="course-card-top-row">
+                <div class="course-badges-wrap">
+                  <span class="course-platform-badge ${platformBadgeClass}">${escapeHtml(course.platform)}</span>
+                  <span class="course-hardness-badge ${hardnessClass}">${escapeHtml(course.difficulty)}</span>
+                </div>
+                <button type="button" class="btn-course-save-later ${course.isSaved ? 'is-saved' : ''}" data-course-id="${course.id}" aria-label="Save for later">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                  <span class="save-tooltip">${course.isSaved ? 'Remove from Saved' : 'Save for Later'}</span>
+                </button>
+              </div>
+
+              <div class="course-badge-code">${escapeHtml(course.code)} • ${escapeHtml(course.instructor.wing)}</div>
+              <h3 class="course-card-title clickable-course-title" data-course-id="${course.id}" style="cursor: pointer;">${escapeHtml(course.title)}</h3>
+              <p class="course-card-desc">${escapeHtml(course.desc)}</p>
+
+              <div class="course-meta-pills">
+                <span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  ${escapeHtml(course.duration)}
+                </span>
+                <span>•</span>
+                <span>${course.modulesCount} Modules (${course.unitsCount} Units)</span>
+              </div>
+            </div>
+
+            <div class="course-card-footer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.75rem;">
+              <button type="button" class="btn-course-info" data-course-id="${course.id}">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                <span>Details</span>
+              </button>
+              ${bottomEnrollBtnHtml}
+            </div>
+          `;
+
+          platformGrid.appendChild(card);
+        });
+      }
+    }
+
+    // Attach Event Handlers
+    attachCoursesInteractiveHandlers();
+  }
+  window.renderCoursesSection = renderCoursesSection;
+
+  // --------------------------------------------------------------------------
+  // INTERACTIVE HANDLERS (ENROLL, SAVE LATER, DETAILS MODAL, GIVE TEST)
+  // --------------------------------------------------------------------------
+  function attachCoursesInteractiveHandlers() {
+    // 1. Save for Later Buttons
+    document.querySelectorAll('.btn-course-save-later').forEach(btn => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        const courseId = btn.getAttribute('data-course-id');
+        toggleSaveCourse(courseId);
+      };
+    });
+
+    // 2. Enroll Action Buttons
+    document.querySelectorAll('.btn-enroll-action').forEach(btn => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        const courseId = btn.getAttribute('data-course-id');
+        enrollInCourse(courseId);
+      };
+    });
+
+    // 3. Resume Lesson Buttons
+    document.querySelectorAll('.btn-resume-course').forEach(btn => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        const courseId = btn.getAttribute('data-course-id');
+        openCourseDetailsModal(courseId);
+      };
+    });
+
+    // 4. Give Test / Take Competency Exam Buttons
+    document.querySelectorAll('.btn-give-course-exam').forEach(btn => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        const courseId = btn.getAttribute('data-course-id');
+        triggerCourseCompetencyExam(courseId);
+      };
+    });
+
+    // 5. Course Info / Title Clicks -> Open Udemy Modal
+    document.querySelectorAll('.btn-course-info, .clickable-course-title').forEach(el => {
+      el.onclick = (e) => {
+        e.stopPropagation();
+        const courseId = el.getAttribute('data-course-id');
+        openCourseDetailsModal(courseId);
+      };
+    });
+  }
+
+  function toggleSaveCourse(courseId) {
+    const saved = getSavedCourses();
+    const idx = saved.indexOf(courseId);
+    if (idx >= 0) {
+      saved.splice(idx, 1);
+    } else {
+      saved.push(courseId);
+    }
+    saveSavedCourses(saved);
+    renderCoursesSection();
+  }
+
+  function enrollInCourse(courseId) {
+    const userCourses = getUserCourses();
+    if (!userCourses[courseId]) {
+      userCourses[courseId] = {
+        status: 'enrolled',
+        progress: 15,
+        currentUnit: 'Unit 1: Module Foundations',
+        enrolledDate: Date.now()
+      };
+    } else if (userCourses[courseId].status !== 'completed') {
+      userCourses[courseId].status = 'enrolled';
+    }
+    saveUserCourses(userCourses);
+    renderCoursesSection();
+    renderProfileCoursesStack();
+  }
+
+  // --------------------------------------------------------------------------
+  // UDEMY-STYLE COURSE DETAILS POPUP MODAL CONTROLLER
+  // --------------------------------------------------------------------------
+  const courseModal = document.getElementById('course-details-modal');
+  let currentModalCourseId = null;
+
+  function openCourseDetailsModal(courseId) {
+    const course = COURSES_CATALOG.find(c => c.id === courseId);
+    if (!course || !courseModal) return;
+
+    currentModalCourseId = courseId;
+    const userCourses = getUserCourses();
+    const savedCourses = getSavedCourses();
+    const uc = userCourses[courseId];
+    const isEnrolled = uc && (uc.status === 'enrolled' || uc.status === 'completed' || uc.progress > 0);
+    const isDone = uc && (uc.status === 'completed' || uc.progress === 100);
+    const isSaved = savedCourses.includes(courseId);
+
+    // Platform Badge
+    const elPlatform = document.getElementById('modal-course-platform-badge');
+    if (elPlatform) {
+      elPlatform.textContent = course.platform;
+      elPlatform.className = 'course-platform-badge ' + (
+        course.platformKey === 'igot' ? 'badge-platform-igot' : 
+        (course.platformKey === 'nssta' ? 'badge-platform-nssta' : 'badge-platform-cadre')
+      );
+    }
+
+    // Code & Hardness
+    const elCode = document.getElementById('modal-course-code');
+    if (elCode) elCode.textContent = course.code;
+
+    const elHardness = document.getElementById('modal-course-hardness');
+    if (elHardness) {
+      elHardness.textContent = course.difficulty;
+      elHardness.className = 'course-hardness-badge ' + (
+        course.difficulty === 'Beginner' ? 'hardness-beginner' :
+        (course.difficulty === 'Intermediate' ? 'hardness-intermediate' : 'hardness-advanced')
+      );
+    }
+
+    // Titles
+    const elTitle = document.getElementById('modal-course-title');
+    if (elTitle) elTitle.textContent = course.title;
+
+    const elSub = document.getElementById('modal-course-subtitle');
+    if (elSub) elSub.textContent = course.desc;
+
+    // Metrics
+    const elDur = document.getElementById('modal-course-duration');
+    if (elDur) elDur.textContent = course.duration;
+
+    const elMod = document.getElementById('modal-course-modules');
+    if (elMod) elMod.textContent = `${course.modulesCount} Modules • ${course.unitsCount} Units`;
+
+    const elAccred = document.getElementById('modal-course-accred');
+    if (elAccred) elAccred.textContent = course.accreditation;
+
+    // Faculty
+    const elAvatar = document.getElementById('modal-faculty-avatar');
+    if (elAvatar) elAvatar.textContent = course.instructor.avatar;
+
+    const elFacName = document.getElementById('modal-faculty-name');
+    if (elFacName) elFacName.textContent = course.instructor.name;
+
+    const elFacTitle = document.getElementById('modal-faculty-title');
+    if (elFacTitle) elFacTitle.textContent = `${course.instructor.title} • ${course.instructor.wing}`;
+
+    // Full Description
+    const elDesc = document.getElementById('modal-course-full-desc');
+    if (elDesc) elDesc.textContent = course.fullDesc;
+
+    // Prerequisites
+    const elPrereqs = document.getElementById('modal-course-prereqs');
+    if (elPrereqs) {
+      elPrereqs.innerHTML = course.prerequisites.map(p => `<li>${escapeHtml(p)}</li>`).join('');
+    }
+
+    // Syllabus
+    const elSyllabus = document.getElementById('modal-course-syllabus-list');
+    if (elSyllabus) {
+      elSyllabus.innerHTML = course.syllabus.map(s => `
+        <div class="syllabus-module-item">
+          <div>
+            <div class="syllabus-module-title">${escapeHtml(s.unit)}</div>
+            <div class="syllabus-module-topics">${escapeHtml(s.topics)}</div>
+          </div>
+          <span style="font-size: 0.72rem; color: #16a34a; font-weight: 700;">Verified Units</span>
+        </div>
+      `).join('');
+    }
+
+    // Save for Later Button in Modal
+    const btnModalSave = document.getElementById('btn-modal-save-later');
+    const txtModalSave = document.getElementById('modal-save-later-text');
+    if (btnModalSave) {
+      btnModalSave.className = `btn-course-save-later ${isSaved ? 'is-saved' : ''}`;
+      if (txtModalSave) txtModalSave.textContent = isSaved ? 'Saved in List' : 'Save for Later';
+      btnModalSave.onclick = () => {
+        toggleSaveCourse(courseId);
+        openCourseDetailsModal(courseId);
+      };
+    }
+
+    // Enrollment Status Indicator
+    const elStatus = document.getElementById('modal-enrollment-status');
+    if (elStatus) {
+      if (isDone) elStatus.textContent = '✓ Certified Complete';
+      else if (isEnrolled) elStatus.textContent = `Enrolled (${uc.progress}% Complete)`;
+      else elStatus.textContent = '';
+    }
+
+    // Action Button
+    const btnAction = document.getElementById('btn-modal-enroll-action');
+    if (btnAction) {
+      if (isDone) {
+        btnAction.textContent = 'Take Competency Exam ▶';
+        btnAction.className = 'btn-admin-action btn-give-course-exam';
+        btnAction.onclick = () => {
+          closeCourseModal();
+          triggerCourseCompetencyExam(courseId);
+        };
+      } else if (isEnrolled) {
+        btnAction.textContent = 'Resume Lesson ▶';
+        btnAction.className = 'btn-admin-action';
+        btnAction.onclick = () => {
+          closeCourseModal();
+          if (typeof switchTab === 'function') switchTab('courses');
+        };
+      } else {
+        btnAction.textContent = 'Enroll in Course ▶';
+        btnAction.className = 'btn-admin-action';
+        btnAction.onclick = () => {
+          enrollInCourse(courseId);
+          openCourseDetailsModal(courseId);
+        };
+      }
+    }
+
+    courseModal.style.display = 'flex';
+  }
+
+  function closeCourseModal() {
+    if (courseModal) courseModal.style.display = 'none';
+    currentModalCourseId = null;
+  }
+
+  const btnCloseModal = document.getElementById('btn-close-course-modal');
+  const btnCloseModalAction = document.getElementById('btn-modal-close-action');
+  if (btnCloseModal) btnCloseModal.onclick = closeCourseModal;
+  if (btnCloseModalAction) btnCloseModalAction.onclick = closeCourseModal;
+
+  if (courseModal) {
+    courseModal.onclick = (e) => {
+      if (e.target === courseModal) closeCourseModal();
+    };
+  }
+
+  // --------------------------------------------------------------------------
+  // COURSE COMPLETION EXAM GENERATOR -> AI QUIZ & SKILL GAP INTEGRATION
+  // --------------------------------------------------------------------------
+  function triggerCourseCompetencyExam(courseId) {
+    const course = COURSES_CATALOG.find(c => c.id === courseId) || COURSES_CATALOG[0];
+
+    // Seed 5 rigorous assessment questions specific to this course
+    let questions = [];
+    if (course.id === 'iGOT-DPDP-2026') {
+      questions = [
+        {
+          prompt: 'Under Section 8 of the Digital Personal Data Protection (DPDP) Act 2023, what is the mandatory requirement before publishing microdata collected during socio-economic surveys?',
+          options: [
+            'Anonymization & de-identification of personal identifiers',
+            'Publishing raw telephone numbers for transparency',
+            'Discarding primary sampling unit weights',
+            'Exemption from all data audit trails'
+          ],
+          correct: 0,
+          explanation: 'Section 8 requires strict de-identification and data masking before any public release of survey records.'
+        },
+        {
+          prompt: 'What is the designated statutory authority established to adjudicate complaints and impose penalties under the DPDP Act 2023?',
+          options: [
+            'Data Protection Board of India',
+            'National Statistical Commission',
+            'Directorate General of Commercial Intelligence',
+            'Telecom Regulatory Authority of India'
+          ],
+          correct: 0,
+          explanation: 'The Data Protection Board of India functions as the civil adjudicatory authority for data compliance.'
+        },
+        {
+          prompt: 'In survey data custodianship, what does "purpose limitation" mandate for statistical officers?',
+          options: [
+            'Data collected for official survey purposes cannot be repurposed for unauthorized commercial tracking',
+            'Data must only be collected on weekends',
+            'Survey schedules cannot exceed 10 questions',
+            'Only paper schedules may be stored'
+          ],
+          correct: 0,
+          explanation: 'Purpose limitation dictates that personal data may only be processed for the specific legal purpose for which consent/statutory mandate was obtained.'
+        },
+        {
+          prompt: 'Which protocol ensures cryptographic tamper-evidence in CAPI survey data transmissions to the central server?',
+          options: [
+            'End-to-end TLS 1.3 encryption with SHA-256 integrity checksums',
+            'Plain text HTTP transmission over public Wi-Fi',
+            'Unencrypted email attachments without access logs',
+            'Uncompressed CSV exports without digital signatures'
+          ],
+          correct: 0,
+          explanation: 'MoSPI CAPI protocols mandate TLS encryption and hash-based integrity verification.'
+        },
+        {
+          prompt: 'What is the fundamental ethical principle of public trust in official statistics?',
+          options: [
+            'Strict confidentiality of individual respondents and impartial dissemination',
+            'Sharing household respondent names with private market vendors',
+            'Altering preliminary survey estimates to match political targets',
+            'Selective publication of favorable survey tables only'
+          ],
+          correct: 0,
+          explanation: 'UN Fundamental Principles of Official Statistics mandate confidentiality and professional independence.'
+        }
+      ];
+    } else if (course.id === 'NSSTA-SAM-101') {
+      questions = [
+        {
+          prompt: 'In Stratified Multi-Stage Sampling, what is the primary theoretical property that makes the Horvitz-Thompson estimator desirable?',
+          options: [
+            'It is strictly design-unbiased regardless of the selection probabilities',
+            'It guarantees zero variance across all strata',
+            'It eliminates the need for auxiliary village frame data',
+            'It converts cluster sampling into simple random sampling'
+          ],
+          correct: 0,
+          explanation: 'The Horvitz-Thompson estimator is design-unbiased for any probability sampling design where inclusion probabilities are strictly positive.'
+        },
+        {
+          prompt: 'When applying the Ratio Estimator under Simple Random Sampling without Replacement (SRSWOR), the estimator is unbiased when:',
+          options: [
+            'The relationship between Y and auxiliary X is a straight line through the origin with variance proportional to X',
+            'Sample size n is strictly less than 10',
+            'The auxiliary variable has negative covariance with Y',
+            'The sampling fraction is exactly 50%'
+          ],
+          correct: 0,
+          explanation: 'Ratio estimators achieve minimum variance and approximate unbiasedness when regression passes through the origin.'
+        },
+        {
+          prompt: 'In large-scale NSS surveys, what is the primary justification for using Probability Proportional to Size (PPS) selection of First Stage Units (FSUs)?',
+          options: [
+            'To stabilize the overall sampling workload across unequal village populations',
+            'To avoid computing sampling weights during tabulation',
+            'To ensure that small villages have higher selection chances than large villages',
+            'To eliminate all non-sampling errors in household schedules'
+          ],
+          correct: 0,
+          explanation: 'PPS selection ensures self-weighting or near-equal interviewer workloads across heterogeneous PSUs.'
+        },
+        {
+          prompt: 'In outlier calibration, what is the effect of Winsorization on sample estimates?',
+          options: [
+            'It replaces extreme values with predetermined percentile thresholds, reducing estimator variance at the cost of slight bias',
+            'It completely discards households from the survey frame',
+            'It inflates the variance of survey estimators to infinity',
+            'It eliminates the need for sampling weights'
+          ],
+          correct: 0,
+          explanation: 'Winsorization curbs extreme leverage points, drastically lowering Mean Squared Error.'
+        },
+        {
+          prompt: 'What is the Design Effect (Deff) of a complex cluster survey?',
+          options: [
+            'The ratio of the variance under the complex design to the variance under simple random sampling of the same size',
+            'The ratio of survey budget to sample size',
+            'The percentage of non-response households in urban blocks',
+            'The ratio of standard deviation to sample mean'
+          ],
+          correct: 0,
+          explanation: 'Deff measures the efficiency loss or gain of clustering relative to SRS.'
+        }
+      ];
+    } else {
+      // General official competency assessment for other courses
+      questions = [
+        {
+          prompt: `In evaluating competencies for "${course.title}", what constitutes the core operational standard?`,
+          options: [
+            'Strict compliance with MoSPI statistical directives, statutory standards, and data integrity protocols',
+            'Informal approximations without methodology documentation',
+            'Bypassing automated verification rules to accelerate survey completion',
+            'Discarding auxiliary verification records'
+          ],
+          correct: 0,
+          explanation: 'Official statistical administration requires rigorous adherence to MoSPI protocols.'
+        },
+        {
+          prompt: `Under ${course.code}, how should anomalous records detected during data processing be handled?`,
+          options: [
+            'Flagged for field audit scrutiny and documented in validation logs',
+            'Silently deleted from the database',
+            'Replaced with random synthetic integers',
+            'Ignored without review'
+          ],
+          correct: 0,
+          explanation: 'Audit trails and scrutiny documentation are required by official quality standards.'
+        },
+        {
+          prompt: `What is the primary statutory objective of ${course.platform} certification?`,
+          options: [
+            'Verifying cadre proficiency in public administration and technical execution',
+            'Issuing commercial consulting permits',
+            'Exempting personnel from annual performance reviews',
+            'Permitting unauthorized external data exports'
+          ],
+          correct: 0,
+          explanation: 'Official certifications validate administrative competency and technical capability.'
+        },
+        {
+          prompt: `Which audit principle governs official records management under ${course.code}?`,
+          options: [
+            'Immutable audit logging, cryptographic verification, and supervisory sign-off',
+            'Manual paper overrides without digital logs',
+            'Unrestricted access by external non-governmental parties',
+            'Immediate deletion of intermediate calculation scripts'
+          ],
+          correct: 0,
+          explanation: 'Immutable logging ensures transparency and reproducibility of public statistics.'
+        },
+        {
+          prompt: `How does mastering "${course.title}" advance the Subordinate Statistical Service (SSS) mission?`,
+          options: [
+            'It strengthens evidence-based national policy, public trust, and socio-economic planning accuracy',
+            'It reduces the requirement for official censuses',
+            'It replaces field enumerators with unvalidated web scrapers',
+            'It removes departmental accountability frameworks'
+          ],
+          correct: 0,
+          explanation: 'High statistical capability directly enhances the quality of national macroeconomic indices.'
+        }
+      ];
+    }
+
+    // Build Quiz Object
+    const quizId = 'quiz_course_' + course.id + '_' + Date.now();
+    const newQuiz = {
+      id: quizId,
+      title: `${course.title} — Official Competency Evaluation`,
+      topic: course.title,
+      courseId: course.id,
+      courseCode: course.code,
+      difficulty: course.difficulty,
+      timerMode: 'per_question',
+      questionTime: 60,
+      totalExamMinutes: 5,
+      isNew: true,
+      questions: questions
+    };
+
+    // Save into custom quizzes
+    try {
+      const stored = localStorage.getItem('nirdesha_custom_quizzes');
+      let customQuizzes = stored ? JSON.parse(stored) : [];
+      // Remove older quiz of same course if present
+      customQuizzes = customQuizzes.filter(q => q.courseId !== course.id);
+      customQuizzes.unshift(newQuiz);
+      localStorage.setItem('nirdesha_custom_quizzes', JSON.stringify(customQuizzes));
+    } catch (e) {}
+
+    // Switch to AI Quiz tab
+    if (typeof switchTab === 'function') {
+      switchTab('quiz');
+    } else {
+      const quizTabNav = document.querySelector('[data-tab="quiz"]');
+      if (quizTabNav) quizTabNav.click();
+    }
+
+    // Refresh custom quizzes list and trigger quiz launch!
+    setTimeout(() => {
+      if (typeof window.renderCustomQuizzesGrid === 'function') {
+        window.renderCustomQuizzesGrid();
+      }
+      if (typeof window.launchProctoredQuiz === 'function') {
+        window.launchProctoredQuiz(newQuiz);
+      }
+    }, 250);
+  }
+  window.triggerCourseCompetencyExam = triggerCourseCompetencyExam;
+
+  // --------------------------------------------------------------------------
+  // PLATFORM TABS & SORTING CONTROLS
+  // --------------------------------------------------------------------------
+  const platformPills = document.querySelectorAll('#courses-platform-pills .notif-pill');
+  platformPills.forEach(pill => {
+    pill.onclick = () => {
+      platformPills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      activePlatformFilter = pill.getAttribute('data-platform') || 'all';
+      renderCoursesSection();
+    };
+  });
+
+  const sortSelect = document.getElementById('courses-sort-select');
+  if (sortSelect) {
+    sortSelect.onchange = (e) => {
+      activeSortCriteria = e.target.value;
+      renderCoursesSection();
+    };
+  }
+
+  // Initial call on startup
+  renderCoursesSection();
+  renderProfileCoursesStack();
+
+
   initRevisionCardsDeckEngine();
+
+
+// ==========================================================================
+// BANNED USER ACCESS CONTROL & APPEAL / INQUIRY ENGINE (IRONCLAD REAL-TIME)
+// ==========================================================================
+(function initBannedUserAndSupportEngine() {
+  const CURRENT_USER_ROLL = "SSS-2024-8891"; // S. K. Raman
+  const bannedModal = document.getElementById('banned-user-modal');
+  const bannedReasonText = document.getElementById('banned-modal-reason-text');
+  const bannedTimestampEl = document.getElementById('banned-modal-timestamp');
+  const bannedOfficerName = document.getElementById('banned-officer-name');
+  const bannedOfficerAvatar = document.getElementById('banned-officer-avatar');
+  const bannedContactLink = document.getElementById('banned-user-contact-link');
+  const bannedAppealBtn = document.getElementById('banned-user-appeal-btn');
+  const appealDialog = document.getElementById('banned-user-appeal-dialog');
+  const btnCloseAppealDialog = document.getElementById('btn-close-appeal-dialog');
+  const btnCancelAppealDialog = document.getElementById('btn-cancel-appeal-dialog');
+  const btnSubmitAppeal = document.getElementById('btn-submit-appeal');
+  const appealInput = document.getElementById('banned-appeal-input');
+  const appealStatusMsg = document.getElementById('banned-appeal-status-msg');
+  const appealThreadHistory = document.getElementById('banned-appeal-thread-history');
+
+  function checkTraineeBanStatus() {
+    let isBanned = false;
+    let banReason = '';
+    let bannedAt = null;
+
+    // Check atomic keys first for instant cross-tab sync
+    if (localStorage.getItem('nirdesha_banned_' + CURRENT_USER_ROLL) === 'true') {
+      isBanned = true;
+      banReason = localStorage.getItem('nirdesha_ban_reason_' + CURRENT_USER_ROLL) || '';
+      bannedAt = localStorage.getItem('nirdesha_banned_at_' + CURRENT_USER_ROLL);
+    } else {
+      // Check in user directory
+      try {
+        const rawDir = localStorage.getItem('nirdesha_user_directory');
+        if (rawDir) {
+          const users = JSON.parse(rawDir);
+          if (Array.isArray(users)) {
+            const user = users.find(u => u.id === CURRENT_USER_ROLL);
+            if (user && user.isBanned === true) {
+              isBanned = true;
+              banReason = user.banReason || '';
+              bannedAt = user.bannedAt;
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('Error checking user directory for ban:', e);
+      }
+    }
+
+    if (isBanned) {
+      // 1. Lock down entire public workspace
+      document.body.classList.add('user-is-banned');
+
+      // 2. Populate and display blocking executive suspension modal
+      if (bannedModal) {
+        bannedModal.style.display = 'flex';
+        if (bannedReasonText) {
+          bannedReasonText.textContent = banReason || 'Administrative suspension enacted under MoSPI Governance Rule 14-B.';
+        }
+        if (bannedTimestampEl) {
+          if (bannedAt) {
+            const d = new Date(bannedAt);
+            bannedTimestampEl.textContent = `Enacted on: ${d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })} at ${d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}`;
+          } else {
+            bannedTimestampEl.textContent = 'Enacted by Apex Administrator';
+          }
+        }
+
+        // Live Raman name / avatar in suspension badge
+        try {
+          const rawPubProfile = localStorage.getItem('nirdesha_officer_profile') || localStorage.getItem('nirdesha_public_profile');
+          if (rawPubProfile && bannedOfficerName) {
+            const p = JSON.parse(rawPubProfile);
+            if (p.fullName) bannedOfficerName.textContent = p.fullName;
+            if (p.avatarInitials && bannedOfficerAvatar) bannedOfficerAvatar.textContent = p.avatarInitials;
+          }
+        } catch (e) {}
+      }
+    } else {
+      // Lift ban lockdown
+      document.body.classList.remove('user-is-banned');
+      if (bannedModal) bannedModal.style.display = 'none';
+      if (appealDialog) appealDialog.style.display = 'none';
+    }
+  }
+
+  // 400ms heartbeat poll for real-time ban/unban synchronization without requiring page reload
+  setInterval(checkTraineeBanStatus, 400);
+
+  // Capturing click blocker: When banned, block all interactions outside the ban dialog
+  document.addEventListener('click', (e) => {
+    if (document.body.classList.contains('user-is-banned')) {
+      const isAllowed = e.target.closest('#banned-user-modal') || e.target.closest('#banned-user-appeal-dialog');
+      if (!isAllowed) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (bannedModal) bannedModal.style.display = 'flex';
+      }
+    }
+  }, true);
+
+  function renderAppealThreadHistory() {
+    if (!appealThreadHistory) return;
+    try {
+      const rawMsgs = localStorage.getItem('nirdesha_admin_messages');
+      if (!rawMsgs) {
+        appealThreadHistory.style.display = 'none';
+        return;
+      }
+      const convos = JSON.parse(rawMsgs);
+      const thread = convos.find(c => c.userId === CURRENT_USER_ROLL);
+      if (!thread || !thread.messages || thread.messages.length === 0) {
+        appealThreadHistory.style.display = 'none';
+        return;
+      }
+
+      appealThreadHistory.innerHTML = '<div style="font-size: 0.72rem; font-weight: 800; color: #64748b; margin-bottom: 0.4rem; text-transform: uppercase;">Official Communications Record:</div>';
+      appealThreadHistory.style.display = 'block';
+
+      thread.messages.forEach(m => {
+        const row = document.createElement('div');
+        row.style.marginBottom = '8px';
+        row.style.fontSize = '0.78rem';
+        row.style.lineHeight = '1.45';
+        row.style.padding = '6px 10px';
+        row.style.borderRadius = '4px';
+
+        const isOutgoing = m.sender === 'user';
+        if (isOutgoing) {
+          row.style.background = '#eff6ff';
+          row.style.borderLeft = '3px solid #0284c7';
+        } else {
+          row.style.background = '#f0fdf4';
+          row.style.borderLeft = '3px solid #16a34a';
+        }
+
+        const senderLabel = isOutgoing
+          ? '<strong style="color:#0369a1;">[You / Appeal]:</strong> '
+          : '<strong style="color:#15803d;">[Administrator Directive]:</strong> ';
+
+        const safeText = (typeof window.escapeHtml === 'function') ? window.escapeHtml(m.text) : m.text;
+        row.innerHTML = `${senderLabel}<span>${safeText}</span>`;
+        appealThreadHistory.appendChild(row);
+      });
+      appealThreadHistory.scrollTop = appealThreadHistory.scrollHeight;
+    } catch (e) {
+      console.warn('Error rendering appeal thread history:', e);
+    }
+  }
+
+  function openAppealDialog(e) {
+    if (e) e.preventDefault();
+    if (appealDialog) {
+      appealDialog.style.display = 'flex';
+      renderAppealThreadHistory();
+      if (appealInput) {
+        appealInput.value = '';
+        appealInput.focus();
+      }
+      if (appealStatusMsg) appealStatusMsg.style.display = 'none';
+    }
+  }
+
+  function closeAppealDialog() {
+    if (appealDialog) appealDialog.style.display = 'none';
+  }
+
+  if (bannedContactLink) bannedContactLink.addEventListener('click', openAppealDialog);
+  if (bannedAppealBtn) bannedAppealBtn.addEventListener('click', openAppealDialog);
+  if (btnCloseAppealDialog) btnCloseAppealDialog.addEventListener('click', closeAppealDialog);
+  if (btnCancelAppealDialog) btnCancelAppealDialog.addEventListener('click', closeAppealDialog);
+
+  if (btnSubmitAppeal) {
+    btnSubmitAppeal.addEventListener('click', () => {
+      const text = appealInput ? appealInput.value.trim() : '';
+      if (!text) {
+        alert('Please write your appeal query or explanation before sending.');
+        return;
+      }
+
+      try {
+        let rawMsgs = localStorage.getItem('nirdesha_admin_messages');
+        let convos = [];
+        if (rawMsgs) {
+          try { convos = JSON.parse(rawMsgs); } catch (err) { convos = []; }
+        }
+        let thread = convos.find(c => c.userId === CURRENT_USER_ROLL);
+        if (!thread) {
+          thread = {
+            userId: CURRENT_USER_ROLL,
+            userName: "S. K. Raman",
+            userCadre: "Junior Statistical Officer (JSO)",
+            userRoll: CURRENT_USER_ROLL,
+            department: "NSSO Field Operations Division",
+            division: "Western Zone",
+            avatar: "",
+            initials: "SR",
+            isBanned: true,
+            unreadCount: 0,
+            lastMessage: text,
+            lastTimestamp: Date.now(),
+            messages: []
+          };
+          convos.unshift(thread);
+        }
+
+        const newMsg = {
+          id: 'msg_appeal_' + Date.now(),
+          sender: 'user',
+          text: text,
+          timestamp: Date.now(),
+          isAppeal: true
+        };
+
+        thread.messages.push(newMsg);
+        thread.lastMessage = `[APPEAL]: ${text}`;
+        thread.lastTimestamp = Date.now();
+        thread.unreadCount = (thread.unreadCount || 0) + 1;
+        thread.isBanned = true;
+
+        localStorage.setItem('nirdesha_admin_messages', JSON.stringify(convos));
+        window.dispatchEvent(new Event('nirdesha_admin_messages_updated'));
+
+        if (appealStatusMsg) {
+          appealStatusMsg.style.display = 'block';
+          appealStatusMsg.style.background = '#dcfce7';
+          appealStatusMsg.style.color = '#15803d';
+          appealStatusMsg.textContent = '✓ Official appeal dispatched to the Administrator\'s console. Response will be recorded below.';
+        }
+        if (appealInput) appealInput.value = '';
+        renderAppealThreadHistory();
+      } catch (e) {
+        console.error('Error sending unban appeal:', e);
+      }
+    });
+  }
+
+  // Cross-tab synchronization
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'nirdesha_user_directory' || e.key.startsWith('nirdesha_banned_')) {
+      checkTraineeBanStatus();
+    }
+    if (e.key === 'nirdesha_admin_messages') {
+      renderAppealThreadHistory();
+    }
+  });
+
+  window.addEventListener('nirdesha_user_directory_updated', checkTraineeBanStatus);
+  window.addEventListener('nirdesha_admin_messages_updated', renderAppealThreadHistory);
+
+  // Initial check
+  checkTraineeBanStatus();
+
+  // ==========================================================================
+  // TRAINEE HELP & SUPPORT MENU (PINNED ABOVE SIGN OUT)
+  // ==========================================================================
+  const helpWrapper = document.getElementById('trainee-help-wrapper');
+  const helpMenuBtn = document.getElementById('trainee-help-menu-btn');
+  const helpFlyoutMenu = document.getElementById('trainee-help-flyout-menu');
+  const helpContactAdminBtn = document.getElementById('help-item-contact-admin');
+  const helpFaqsBtn = document.getElementById('help-item-faqs');
+
+  // Modals
+  const contactAdminModal = document.getElementById('trainee-contact-admin-modal');
+  const btnCloseContactAdmin = document.getElementById('btn-close-trainee-contact-admin');
+  const btnCancelContactAdmin = document.getElementById('btn-cancel-trainee-contact-admin');
+  const btnSendContactAdmin = document.getElementById('btn-send-trainee-inquiry');
+  const inquirySubjectInput = document.getElementById('trainee-inquiry-subject');
+  const inquiryTextInput = document.getElementById('trainee-inquiry-text');
+  const inquiryStatusEl = document.getElementById('trainee-inquiry-status');
+
+  const faqsModal = document.getElementById('trainee-faqs-modal');
+  const btnCloseFaqs = document.getElementById('btn-close-faqs-modal');
+  const btnCloseFaqsFooter = document.getElementById('btn-close-faqs-footer');
+  const faqSearchInput = document.getElementById('faq-search-input');
+  const faqItems = document.querySelectorAll('.faq-item');
+
+  if (helpMenuBtn && helpFlyoutMenu) {
+    helpMenuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = helpFlyoutMenu.style.display === 'block';
+      helpFlyoutMenu.style.display = isOpen ? 'none' : 'block';
+      helpMenuBtn.classList.toggle('active', !isOpen);
+    });
+
+    document.addEventListener('click', (e) => {
+      if (helpWrapper && !helpWrapper.contains(e.target)) {
+        helpFlyoutMenu.style.display = 'none';
+        helpMenuBtn.classList.remove('active');
+      }
+    });
+  }
+
+  // 1. Contact Administrator
+  if (helpContactAdminBtn && contactAdminModal) {
+    helpContactAdminBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (helpFlyoutMenu) helpFlyoutMenu.style.display = 'none';
+      if (helpMenuBtn) helpMenuBtn.classList.remove('active');
+      contactAdminModal.style.display = 'flex';
+      if (inquirySubjectInput) inquirySubjectInput.value = '';
+      if (inquiryTextInput) inquiryTextInput.value = '';
+      if (inquiryStatusEl) inquiryStatusEl.style.display = 'none';
+    });
+  }
+
+  function closeContactAdminModal() {
+    if (contactAdminModal) contactAdminModal.style.display = 'none';
+  }
+
+  if (btnCloseContactAdmin) btnCloseContactAdmin.addEventListener('click', closeContactAdminModal);
+  if (btnCancelContactAdmin) btnCancelContactAdmin.addEventListener('click', closeContactAdminModal);
+  if (contactAdminModal) {
+    contactAdminModal.addEventListener('click', (e) => {
+      if (e.target === contactAdminModal) closeContactAdminModal();
+    });
+  }
+
+  if (btnSendContactAdmin) {
+    btnSendContactAdmin.addEventListener('click', () => {
+      const subject = inquirySubjectInput ? inquirySubjectInput.value.trim() : '';
+      const text = inquiryTextInput ? inquiryTextInput.value.trim() : '';
+      if (!text) {
+        alert('Please enter your message for the administrator.');
+        return;
+      }
+
+      const fullMsg = subject ? `[${subject}]: ${text}` : text;
+
+      try {
+        let rawMsgs = localStorage.getItem('nirdesha_admin_messages');
+        let convos = [];
+        if (rawMsgs) {
+          try { convos = JSON.parse(rawMsgs); } catch (err) { convos = []; }
+        }
+        let thread = convos.find(c => c.userId === CURRENT_USER_ROLL);
+        if (!thread) {
+          thread = {
+            userId: CURRENT_USER_ROLL,
+            userName: "S. K. Raman",
+            userCadre: "Junior Statistical Officer (JSO)",
+            userRoll: CURRENT_USER_ROLL,
+            department: "NSSO Field Operations Division",
+            division: "Western Zone",
+            avatar: "",
+            initials: "SR",
+            isBanned: false,
+            unreadCount: 0,
+            lastMessage: fullMsg,
+            lastTimestamp: Date.now(),
+            messages: []
+          };
+          convos.unshift(thread);
+        }
+
+        thread.messages.push({
+          id: 'msg_inquiry_' + Date.now(),
+          sender: 'user',
+          text: fullMsg,
+          timestamp: Date.now()
+        });
+        thread.lastMessage = fullMsg;
+        thread.lastTimestamp = Date.now();
+        thread.unreadCount = (thread.unreadCount || 0) + 1;
+
+        localStorage.setItem('nirdesha_admin_messages', JSON.stringify(convos));
+        window.dispatchEvent(new Event('nirdesha_admin_messages_updated'));
+
+        if (inquiryStatusEl) {
+          inquiryStatusEl.style.display = 'block';
+          inquiryStatusEl.style.background = '#dcfce7';
+          inquiryStatusEl.style.color = '#15803d';
+          inquiryStatusEl.textContent = 'Your query has been delivered directly to the Administrator\'s console.';
+        }
+
+        setTimeout(() => {
+          closeContactAdminModal();
+        }, 1500);
+      } catch (err) {
+        console.error('Error delivering inquiry to admin:', err);
+      }
+    });
+  }
+
+  // 2. Common FAQs
+  if (helpFaqsBtn && faqsModal) {
+    helpFaqsBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (helpFlyoutMenu) helpFlyoutMenu.style.display = 'none';
+      if (helpMenuBtn) helpMenuBtn.classList.remove('active');
+      faqsModal.style.display = 'flex';
+    });
+  }
+
+  function closeFaqsModal() {
+    if (faqsModal) faqsModal.style.display = 'none';
+  }
+
+  if (btnCloseFaqs) btnCloseFaqs.addEventListener('click', closeFaqsModal);
+  if (btnCloseFaqsFooter) btnCloseFaqsFooter.addEventListener('click', closeFaqsModal);
+  if (faqsModal) {
+    faqsModal.addEventListener('click', (e) => {
+      if (e.target === faqsModal) closeFaqsModal();
+    });
+  }
+
+  // Accordion Toggle
+  faqItems.forEach(item => {
+    const q = item.querySelector('.faq-question');
+    if (q) {
+      q.addEventListener('click', () => {
+        item.classList.toggle('active');
+      });
+    }
+  });
+
+  // Search filter
+  if (faqSearchInput) {
+    faqSearchInput.addEventListener('input', (e) => {
+      const q = e.target.value.trim().toLowerCase();
+      faqItems.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        if (!q || text.includes(q)) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    });
+  }
+
+  // Global ESC key handler for Help desk
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (contactAdminModal && contactAdminModal.style.display !== 'none') closeContactAdminModal();
+      if (faqsModal && faqsModal.style.display !== 'none') closeFaqsModal();
+      if (helpFlyoutMenu && helpFlyoutMenu.style.display !== 'none') {
+        helpFlyoutMenu.style.display = 'none';
+        if (helpMenuBtn) helpMenuBtn.classList.remove('active');
+      }
+    }
+  });
+})();
