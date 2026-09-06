@@ -1091,196 +1091,394 @@
     return result;
   }
 
+  /**
+ * Calculate the employee's continuous overall competency score.
+ *
+ * This is different from target-role readiness.
+ *
+ * Each competency's evidence-based confidence score is weighted by
+ * its criticality in the employee's evaluated target role.
+ *
+ * Example:
+ * Python confidence = 72%
+ * Criticality = 4
+ *
+ * More important role competencies therefore contribute more strongly
+ * to the overall competency score.
+ */
+
+function calculateAdminCompetencyScore(competency) {
+
+  const skills = Array.isArray(
+    competency?.skills
+  )
+    ? competency.skills
+    : [];
+
+
+  if (!skills.length) {
+
+    return Number(
+      competency?.readiness_pct || 0
+    );
+  }
+
+
+  let weightedTotal = 0;
+  let totalWeight = 0;
+
+
+  skills.forEach(skill => {
+
+    const confidence = Math.max(
+      0,
+      Math.min(
+        100,
+        Number(
+          skill.confidence_score
+        ) || 0
+      )
+    );
+
+
+    const weight = Math.max(
+      1,
+      Number(
+        skill.criticality
+      ) || 1
+    );
+
+
+    weightedTotal +=
+      confidence * weight;
+
+
+    totalWeight +=
+      weight;
+
+  });
+
+
+  if (!totalWeight) {
+
+    return 0;
+  }
+
+
+  return (
+    weightedTotal /
+    totalWeight
+  );
+}
 
   // =========================================================================
   // ADMIN DASHBOARD — UPDATE LIVE DIAGNOSTIC ROW
   // =========================================================================
 
-  function updateAdminRecentRow(
-    profile,
-    competency
-  ) {
+  /**
+ * Update S. K. Raman's live row on the Admin Dashboard.
+ *
+ * Score displayed:
+ *      Continuous Competency Score
+ *
+ * Secondary information:
+ *      Target Role Readiness
+ */
+function updateAdminRecentRow(
+  profile,
+  competency
+) {
 
-    const dashboard =
-      document.getElementById(
-        'view-dashboard'
-      );
-
-
-    if (!dashboard) return;
-
-
-    dashboard
-      .querySelectorAll(
-        'table tbody tr'
-      )
-      .forEach(row => {
-
-        const text =
-          row.textContent || '';
+  const dashboard =
+    document.getElementById(
+      'view-dashboard'
+    );
 
 
-        if (
-          !text.includes(
-            profile.name
-          ) &&
-          !text.includes(
-            profile.employee_code
-          )
-        ) {
-          return;
-        }
-
-
-        const cells =
-          row.querySelectorAll(
-            'td'
-          );
-
-
-        if (
-          cells.length < 5
-        ) {
-          return;
-        }
-
-
-        cells[3].innerHTML =
-          `<strong>${Math.round(
-            competency.readiness_pct
-          )} / 100</strong>`;
-
-
-        const status =
-          competency.high_priority_gaps === 0
-
-            ? 'Requirements Met'
-
-            : (
-                competency.high_priority_gaps
-                <= 2
-
-                  ? 'In Progress'
-
-                  : 'Needs Attention'
-              );
-
-
-        cells[4].innerHTML =
-          `<span class="${
-            competency.high_priority_gaps === 0
-              ? 'badge-status-cert'
-              : 'badge-status-prog'
-          }">${status}</span>`;
-      });
+  if (!dashboard) {
+    return;
   }
+
+
+  const competencyScore =
+    calculateAdminCompetencyScore(
+      competency
+    );
+
+
+  const readiness =
+    Number(
+      competency.readiness_pct || 0
+    );
+
+
+  dashboard
+    .querySelectorAll(
+      'table tbody tr'
+    )
+    .forEach(row => {
+
+      const text =
+        row.textContent || '';
+
+
+      if (
+        !text.includes(
+          profile.name
+        ) &&
+        !text.includes(
+          profile.employee_code
+        )
+      ) {
+
+        return;
+      }
+
+
+      const cells =
+        row.querySelectorAll(
+          'td'
+        );
+
+
+      if (
+        cells.length < 5
+      ) {
+
+        return;
+      }
+
+
+      // ------------------------------------------------------------
+      // LIVE COMPETENCY SCORE
+      // ------------------------------------------------------------
+
+      cells[3].innerHTML = `
+
+        <strong>
+          ${competencyScore.toFixed(2)} / 100
+        </strong>
+
+        <div
+          style="
+            margin-top:2px;
+            font-size:10px;
+            font-weight:600;
+            color:#64748b;
+          "
+        >
+
+          Role Readiness:
+          ${readiness.toFixed(1)}%
+
+        </div>
+
+      `;
+
+
+      // ------------------------------------------------------------
+      // STATUS
+      // ------------------------------------------------------------
+
+      const status =
+
+        competency.high_priority_gaps === 0
+
+          ? 'Requirements Met'
+
+          : (
+              competency.high_priority_gaps <= 2
+
+                ? 'In Progress'
+
+                : 'Needs Attention'
+            );
+
+
+      const badgeClass =
+
+        competency.high_priority_gaps === 0
+
+          ? 'badge-status-cert'
+
+          : 'badge-status-prog';
+
+
+      cells[4].innerHTML = `
+
+        <span class="${badgeClass}">
+
+          ${status}
+
+        </span>
+
+      `;
+
+    });
+}
 
 
   // =========================================================================
   // ADMIN DASHBOARD REFRESH
   // =========================================================================
 
-  async function refreshAdmin() {
+  /**
+ * Refresh the Admin Dashboard from the same competency database
+ * used by the employee portal.
+ */
+async function refreshAdmin() {
 
-    const [
-      profile,
+  const [
+    profile,
+    competency
+  ] = await Promise.all([
+
+    api(
+      `/api/profile/${EMPLOYEE_ID}`
+    ),
+
+    api(
+      `/api/competency/${EMPLOYEE_ID}`
+    )
+
+  ]);
+
+
+  state.profile =
+    profile;
+
+
+  state.competency =
+    competency;
+
+
+  // --------------------------------------------------------------
+  // CONTINUOUS COMPETENCY SCORE
+  // --------------------------------------------------------------
+
+  const competencyScore =
+    calculateAdminCompetencyScore(
       competency
-    ] = await Promise.all([
-
-      api(
-        `/api/profile/${EMPLOYEE_ID}`
-      ),
-
-      api(
-        `/api/competency/${EMPLOYEE_ID}`
-      )
-    ]);
-
-
-    state.profile =
-      profile;
-
-    state.competency =
-      competency;
-
-
-    // Admin dossier already reads
-    // nirdesha_officer_profile.
-    localStorage.setItem(
-      'nirdesha_officer_profile',
-      JSON.stringify(
-        buildLegacyProfile(
-          profile,
-          competency
-        )
-      )
     );
 
 
-    if (
-      typeof
+  // --------------------------------------------------------------
+  // ROLE READINESS
+  // --------------------------------------------------------------
+
+  const readiness =
+    Number(
+      competency.readiness_pct || 0
+    );
+
+
+  // Keep officer dossier synchronized.
+
+  localStorage.setItem(
+
+    'nirdesha_officer_profile',
+
+    JSON.stringify(
+
+      buildLegacyProfile(
+        profile,
+        competency
+      )
+
+    )
+
+  );
+
+
+  // --------------------------------------------------------------
+  // USER DIRECTORY
+  // --------------------------------------------------------------
+
+  if (
+    typeof
       window.NirdeshaAdminUpsertUser
       === 'function'
-    ) {
+  ) {
 
-      window
-        .NirdeshaAdminUpsertUser({
+    window
+      .NirdeshaAdminUpsertUser({
 
-          id:
-            profile.employee_code,
+        id:
+          profile.employee_code,
 
-          name:
-            profile.name,
+        name:
+          profile.name,
 
-          cadre:
-            profile.cadre ||
-            profile.current_role?.name ||
-            'Statistical Service',
+        cadre:
+          profile.cadre
+          ||
+          profile.current_role?.name
+          ||
+          'Statistical Service',
 
-          department:
-            profile.division ||
-            profile.department?.name ||
-            '',
+        department:
+          profile.division
+          ||
+          profile.department?.name
+          ||
+          '',
 
-          jurisdiction:
-            profile.station || '',
-
-          score:
-            Math.round(
-              competency.readiness_pct || 0
-            ),
-
-          status:
-            competency.high_priority_gaps
-            === 0
-
-              ? 'Requirements Met'
-
-              : (
-                  competency
-                    .high_priority_gaps
-                  <= 2
-
-                    ? 'In Progress'
-
-                    : 'Needs Attention'
-                )
-        });
-    }
+        jurisdiction:
+          profile.station
+          ||
+          '',
 
 
-    updateAdminRecentRow(
-      profile,
-      competency
-    );
+        /*
+         * IMPORTANT:
+         *
+         * This is now the evidence-based
+         * continuous COMPETENCY SCORE.
+         *
+         * It is intentionally NOT
+         * readiness_pct.
+         */
+
+        score:
+          Number(
+            competencyScore.toFixed(
+              2
+            )
+          ),
 
 
-    return {
-      profile,
-      competency
-    };
+        status:
+
+          competency.high_priority_gaps
+          === 0
+
+            ? 'Requirements Met'
+
+            : (
+                competency
+                  .high_priority_gaps
+                <= 2
+
+                  ? 'In Progress'
+
+                  : 'Needs Attention'
+              )
+
+      });
+
   }
 
+
+  // Update live dashboard diagnostic row.
+
+  updateAdminRecentRow(
+    profile,
+    competency
+  );
+
+
+  return {profile, competency, competencyScore, readiness};
+}
 
   // =========================================================================
   // MAKE FUNCTIONS AVAILABLE TO PUBLIC.JS AND ADMIN.JS
