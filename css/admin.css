@@ -1650,18 +1650,6 @@ ADMIN OFFICER PROFILE INSPECTION MODAL (READ-ONLY)
   line-height: 1.45;
 }
 
-.btn-modal-close-icon {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 0px !important;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  cursor: pointer;
-  transition: all 0.15s ease;
 .btn-modal-close,
 .btn-modal-close-icon,
 .btn-drawer-close {
@@ -1688,9 +1676,6 @@ ADMIN OFFICER PROFILE INSPECTION MODAL (READ-ONLY)
   flex-shrink: 0 !important;
 }
 
-.btn-modal-close-icon:hover {
-  background: #ea580c;
-  border-color: #ea580c;
 .btn-modal-close svg,
 .btn-modal-close-icon svg,
 .btn-drawer-close svg {
@@ -2171,8 +2156,6 @@ body.sidebar-collapsed .admin-nav-icon {
   gap: 0.3rem;
   font-size: 0.72rem;
   font-weight: 800;
-  padding: 2px 8px;
-  border-radius: 3px;
   padding: 3px 8px;
   border-radius: 6px;
 }
@@ -2193,26 +2176,20 @@ body.sidebar-collapsed .admin-nav-icon {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 0.4rem;
   gap: 0.45rem;
   flex-wrap: wrap;
 }
 
 .btn-dir-action {
-  padding: 0.35rem 0.65rem;
-  font-size: 0.74rem;
   padding: 0.38rem 0.72rem;
   font-size: 0.75rem;
   font-weight: 700;
   font-family: inherit;
-  border: 1px solid #cbd5e1;
   border: 1.5px solid #cbd5e1;
   background: #ffffff;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  transition: all 0.15s ease;
   justify-content: center;
   gap: 0.35rem;
   border-radius: 6px;
@@ -2224,8 +2201,6 @@ body.sidebar-collapsed .admin-nav-icon {
 }
 
 .btn-dir-action:hover {
-  background: #f1f5f9;
-  border-color: #94a3b8;
   transform: translateY(-1px);
 }
 
@@ -2234,25 +2209,19 @@ body.sidebar-collapsed .admin-nav-icon {
 }
 
 .btn-dir-action.btn-dir-inspect {
-  color: #002b49;
   background: #f0f7ff;
   color: #0284c7;
   border-color: #bae6fd;
   font-weight: 800;
 }
 
-.btn-dir-action.btn-dir-unban {
-  background: #16a34a;
 .btn-dir-action.btn-dir-inspect:hover {
   background: #0284c7;
   color: #ffffff;
-  border-color: #15803d;
   border-color: #0284c7;
   box-shadow: 0 3px 8px rgba(2, 132, 199, 0.28);
 }
 
-.btn-dir-action.btn-dir-unban:hover {
-  background: #15803d;
 .btn-dir-action.btn-dir-msg {
   background: #f0fdf4;
   color: #16a34a;
@@ -2270,13 +2239,11 @@ body.sidebar-collapsed .admin-nav-icon {
 .btn-dir-action.btn-dir-ban {
   background: #fef2f2;
   color: #dc2626;
-  border-color: #fca5a5;
   border-color: #fecaca;
   font-weight: 800;
 }
 
 .btn-dir-action.btn-dir-ban:hover {
-  background: #fef2f2;
   background: #dc2626;
   color: #ffffff;
   border-color: #dc2626;
@@ -2605,41 +2572,84 @@ body.sidebar-collapsed .admin-nav-icon {
 .btn-chat-action-header {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.38rem 0.75rem;
-  font-size: 0.74rem;
+  gap: 0.38rem;
+  padding: 0.42rem 0.8rem;
+  font-size: 0.76rem;
   font-weight: 700;
   font-family: inherit;
-  border: 1px solid #cbd5e1;
+  border: 1.5px solid #cbd5e1;
   background: #ffffff;
+  color: #002b49;
   cursor: pointer;
-  border-radius: 4px;
-  transition: all 0.15s;
+  border-radius: 6px;
+  line-height: 1;
+  user-select: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 0.16s ease;
 }
 
 .btn-chat-action-header:hover {
   background: #f8fafc;
+  border-color: #94a3b8;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.btn-chat-action-header:active {
+  transform: translateY(0px) scale(0.97);
+}
+
+#btn-chat-inspect-profile {
+  color: #0284c7;
+  border-color: #bae6fd;
+  background: #f0f7ff;
+}
+
+#btn-chat-inspect-profile:hover {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
+  box-shadow: 0 3px 8px rgba(2, 132, 199, 0.25);
 }
 
 .btn-chat-ban-toggle {
   color: #dc2626;
-  border-color: #fca5a5;
+  border-color: #fecaca;
+  background: #fef2f2;
   font-weight: 800;
+}
+
+.btn-chat-ban-toggle:hover {
+  background: #dc2626;
+  color: #ffffff;
+  border-color: #dc2626;
+  box-shadow: 0 3px 8px rgba(220, 38, 38, 0.25);
 }
 
 .btn-chat-ban-toggle.is-banned {
   color: #16a34a;
-  border-color: #86efac;
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+}
+
+.btn-chat-ban-toggle.is-banned:hover {
+  background: #16a34a;
+  color: #ffffff;
+  border-color: #16a34a;
+  box-shadow: 0 3px 8px rgba(22, 163, 74, 0.25);
 }
 
 .btn-chat-delete-user {
   color: #64748b;
+  border-color: #e2e8f0;
+  background: #ffffff;
 }
 
 .btn-chat-delete-user:hover {
   color: #b91c1c;
   border-color: #fca5a5;
   background: #fef2f2;
+  box-shadow: 0 2px 6px rgba(185, 28, 28, 0.15);
 }
 
 /* Chat Messages Viewport (WhatsApp / Telegram Wallpaper) */
@@ -2777,10 +2787,10 @@ body.sidebar-collapsed .admin-nav-icon {
 }
 
 .btn-chat-send {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #002b49;
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #002b49 0%, #0284c7 100%);
   color: #ffffff;
   border: none;
   display: flex;
@@ -2788,12 +2798,18 @@ body.sidebar-collapsed .admin-nav-icon {
   justify-content: center;
   cursor: pointer;
   flex-shrink: 0;
-  transition: background 0.15s ease, transform 0.1s ease;
+  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.3);
+  transition: all 0.18s ease;
 }
 
 .btn-chat-send:hover {
-  background: #001827;
-  transform: scale(1.04);
+  background: linear-gradient(135deg, #001f35 0%, #0369a1 100%);
+  transform: translateY(-1px) scale(1.04);
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.45);
+}
+
+.btn-chat-send:active {
+  transform: translateY(0px) scale(0.96);
 }
 
 /* ==========================================================================

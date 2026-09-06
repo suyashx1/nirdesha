@@ -30,7 +30,7 @@
          ========================================================================== -->
     <aside class="trainee-sidebar" id="trainee-sidebar" aria-label="User Learning Navigation">
       <!-- Header -->
-      <div class="trainee-sidebar-header">
+      <div class="trainee-sidebar-header" id="trainee-brand-header" style="cursor: pointer;" title="Refresh Nirdesha Portal">
         <svg class="trainee-emblem-icon" viewBox="0 0 100 120" fill="currentColor" aria-hidden="true">
           <path d="M50,5 C42,5 38,12 38,18 C38,24 42,28 40,32 C38,36 34,38 34,44 C34,50 38,54 42,56 C44,57 46,62 46,68 L44,76 L35,78 L35,82 L65,82 L65,78 L56,76 L54,68 C54,62 56,57 58,56 C62,54 66,50 66,44 C66,38 62,36 60,32 C58,28 62,24 62,18 C62,12 58,5 50,5 Z" opacity="0.85"/>
           <circle cx="50" cy="92" r="8" fill="none" stroke="currentColor" stroke-width="2"/>
@@ -174,7 +174,7 @@
           <span>Sign Out</span>
         </a>
 
-        <div class="trainee-user-card">
+        <div class="trainee-user-card" id="sidebar-user-card" style="cursor: pointer;" title="View My Officer Profile">
           <div class="trainee-avatar" id="public-sidebar-avatar">
             <img id="public-sidebar-avatar-img" src="" alt="Avatar" style="display:none; width:100%; height:100%; object-fit:cover; border-radius:0;">
             <span id="public-sidebar-avatar-text">SR</span>
@@ -1381,9 +1381,15 @@
                 Practice MoSPI statistical modeling, web dashboard components, and data automation through real-world hands-on projects with step-by-step guidance.
               </p>
             </div>
-            <div>
-              <div style="font-size: 0.8rem; opacity: 0.9;">Total Projects Completed</div>
-              <div style="font-size: 1.75rem; font-weight: 800; color: #fb923c;" id="elab-stats-completed">1 / 4</div>
+            <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+              <div>
+                <div style="font-size: 0.8rem; opacity: 0.9;">Total Projects Completed</div>
+                <div style="font-size: 1.75rem; font-weight: 800; color: #fb923c;" id="elab-stats-completed">1 / 4</div>
+              </div>
+              <button type="button" class="btn-create-elab-trigger" id="btn-create-elab-project" title="Create a custom practical project via Study Mentor based on completed courses">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <span>+ Create Custom Project via Study Mentor</span>
+              </button>
             </div>
           </div>
 
@@ -1587,6 +1593,16 @@
                     <span class="badge-status-cert" style="background: #ecfdf5; border-color: #a7f3d0; color: #065f46; font-size: 0.775rem; padding: 0.45rem 0.85rem;">
                       ✓ Official Records Synced
                     </span>
+                    <button type="button" class="btn-attach-resume-header" id="btn-attach-resume-modal" title="Attach your resume and extract information" aria-label="Attach your resume and extract information">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="12" y1="18" x2="12" y2="12"></line>
+                        <line x1="9" y1="15" x2="12" y2="12"></line>
+                        <line x1="15" y1="15" x2="12" y2="12"></line>
+                      </svg>
+                      <span>Attach Resume</span>
+                    </button>
                     <button type="button" class="btn-toggle-edit-profile" id="btn-toggle-edit-profile" title="Edit Service Profile Details">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                       Edit Profile
@@ -1809,58 +1825,8 @@
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
                         </button>
                       </div>
-                      <div class="profile-items-stack">
-                        <div class="profile-elab-item">
-                          <div class="profile-elab-top">
-                            <div>
-                              <span class="profile-elab-cat">Web Development & MoSPI Analytics</span>
-                              <div class="profile-elab-title">Government Budget Analytics Dashboard</div>
-                            </div>
-                            <span class="badge-status-cert" style="background: #dcfce7; color: #166534; border-color: #86efac;">100% Complete</span>
-                          </div>
-                          <p class="profile-elab-desc">Executive spending dashboard with departmental allocations, SVG data viz, and high-contrast dark theme.</p>
-                          <div class="profile-elab-meta">
-                            <span>Tasks: <strong>4 / 4 Verified</strong></span>
-                            <span class="elab-verified-badge">
-                              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                              <span>Verified</span>
-                            </span>
-                          </div>
-                        </div>
-
-                        <div class="profile-elab-item">
-                          <div class="profile-elab-top">
-                            <div>
-                              <span class="profile-elab-cat">Web Development</span>
-                              <div class="profile-elab-title">Web Developer Portfolio & Showcase</div>
-                            </div>
-                            <span class="badge-status-cert" style="background: #e0f2fe; color: #0369a1; border-color: #7dd3fc;">40% Complete</span>
-                          </div>
-                          <div class="profile-progress-bar-wrap">
-                            <div class="profile-progress-fill" style="width: 40%; background: #0284c7;"></div>
-                          </div>
-                          <div class="profile-elab-meta">
-                            <span>Tasks: <strong>2 / 5 Completed</strong></span>
-                            <span style="font-size: 0.72rem; color: #64748b; font-weight: 600;">Active Lab</span>
-                          </div>
-                        </div>
-
-                        <div class="profile-elab-item">
-                          <div class="profile-elab-top">
-                            <div>
-                              <span class="profile-elab-cat">Data Analysis</span>
-                              <div class="profile-elab-title">National CPI Data Processing Pipeline</div>
-                            </div>
-                            <span class="badge-status-cert" style="background: #fef3c7; color: #92400e; border-color: #fde68a;">25% Complete</span>
-                          </div>
-                          <div class="profile-progress-bar-wrap">
-                            <div class="profile-progress-fill" style="width: 25%; background: #d97706;"></div>
-                          </div>
-                          <div class="profile-elab-meta">
-                            <span>Tasks: <strong>1 / 4 Completed</strong></span>
-                            <span style="font-size: 0.72rem; color: #64748b; font-weight: 600;">Active Lab</span>
-                          </div>
-                        </div>
+                      <div class="profile-items-stack" id="profile-featured-projects-list">
+                        <!-- Populated dynamically via renderProfileFeaturedProjects() -->
                       </div>
                     </div>
 
@@ -1919,31 +1885,6 @@
                 </div>
 
               </div>
-
-              <!-- Document Drop AI Extraction Pipeline (Preserved) -->
-              <div class="doc-drop-zone" id="public-pdf-drop-zone" style="margin-top: 1.25rem;">
-                <input type="file" id="public-pdf-input" accept="application/pdf" style="display:none;">
-                <div class="doc-drop-icon">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="12" y2="12"></line><line x1="15" y1="15" x2="12" y2="12"></line></svg>
-                </div>
-                <div class="doc-drop-content">
-                  <div class="doc-drop-title">Document Drop AI Extraction Pipeline (PDF Resume / Service Record)</div>
-                  <div class="doc-drop-sub">Drag & drop a PDF resume or service record here, or <span class="doc-drop-link" id="public-pdf-browse">browse file</span> to auto-parse Cadre, Division, and Baseline Skills.</div>
-                </div>
-              </div>
-
-              <!-- Shimmering Loading State for AI Extraction -->
-              <div class="shimmer-container" id="public-pdf-shimmer" style="display:none; margin-top: 1rem;">
-                <div class="shimmer-title-row">
-                  <span class="status-dot-pulse"></span>
-                  <span id="public-shimmer-status-text">Initializing MoSPI AI Document Extraction Engine...</span>
-                </div>
-                <div class="shimmer-block shimmer-bar"></div>
-                <div class="shimmer-block shimmer-bar" style="width: 75%;"></div>
-                <div class="shimmer-block shimmer-bar" style="width: 50%;"></div>
-              </div>
-
-
             </div>
 
             <!-- ================================================================
@@ -3950,10 +3891,12 @@
       <!-- Modal Footer -->
       <div class="banned-modal-footer">
         <a href="login.html" class="btn-banned-signout" id="btn-banned-signout">
-          Sign Out of Portal
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+          <span>Sign Out of Portal</span>
         </a>
         <button type="button" class="btn-banned-appeal-primary" id="banned-user-appeal-btn">
-          Submit Appeal / Request Unban &rarr;
+          <span>Submit Appeal / Request Unban</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
         </button>
       </div>
     </div>
@@ -3969,7 +3912,6 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
           <div style="font-size: 1.05rem; font-weight: 800;">Submit Administrative Appeal &amp; Inquiry</div>
         </div>
-        <button type="button" id="btn-close-appeal-dialog" style="background:none; border:none; color:#fff; font-size:1.5rem; cursor:pointer;">&times;</button>
         <button type="button" class="btn-modal-close" id="btn-close-appeal-dialog" title="Close appeal dialog" aria-label="Close appeal dialog"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
       </div>
 
@@ -3998,8 +3940,9 @@
 
       <div class="admin-modal-footer" style="padding: 0.85rem 1.25rem; display: flex; justify-content: flex-end; gap: 0.6rem;">
         <button type="button" class="btn-admin-outline" id="btn-cancel-appeal-dialog">Back to Notice</button>
-        <button type="button" class="btn-admin-action" id="btn-submit-appeal" style="padding: 0.5rem 1.4rem; font-weight: 800;">
-          Send Appeal to Admin &#10003;
+        <button type="button" class="btn-admin-action" id="btn-submit-appeal">
+          <span>Send Appeal to Admin</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </button>
       </div>
     </div>
@@ -4015,7 +3958,6 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
           <div style="font-size: 1.05rem; font-weight: 800;">Contact Administrator</div>
         </div>
-        <button type="button" id="btn-close-trainee-contact-admin" style="background:none; border:none; color:#fff; font-size:1.5rem; cursor:pointer;">&times;</button>
         <button type="button" class="btn-modal-close" id="btn-close-trainee-contact-admin" title="Close inquiry dialog" aria-label="Close inquiry dialog"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
       </div>
 
@@ -4039,7 +3981,7 @@
 
       <div class="admin-modal-footer" style="padding: 0.85rem 1.25rem; display: flex; justify-content: flex-end; gap: 0.6rem;">
         <button type="button" class="btn-admin-outline" id="btn-cancel-trainee-contact-admin">Cancel</button>
-        <button type="button" class="btn-admin-action" id="btn-send-trainee-inquiry" style="padding: 0.5rem 1.4rem; font-weight: 800;">
+        <button type="button" class="btn-admin-action" id="btn-send-trainee-inquiry">
           Send to Administrator &#10003;
         </button>
       </div>
@@ -4053,10 +3995,9 @@
     <div class="admin-modal-dialog" style="max-width: 680px;">
       <div class="admin-modal-header" style="background: #002b49; color: #ffffff;">
         <div style="display: flex; align-items: center; gap: 0.5rem;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
           <div style="font-size: 1.05rem; font-weight: 800;">Frequently Asked Questions (Common FAQs)</div>
         </div>
-        <button type="button" id="btn-close-faqs-modal" style="background:none; border:none; color:#fff; font-size:1.5rem; cursor:pointer;">&times;</button>
         <button type="button" class="btn-modal-close" id="btn-close-faqs-modal" title="Close FAQs modal" aria-label="Close FAQs modal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
       </div>
 
@@ -4131,6 +4072,227 @@
 
       <div class="admin-modal-footer" style="padding: 0.85rem 1.25rem; display: flex; justify-content: flex-end;">
         <button type="button" class="btn-admin-outline" id="btn-close-faqs-footer">Close FAQs</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       RESUME & DOCUMENT EXTRACTION MODAL (REORGANIZED)
+       ========================================================================== -->
+  <div class="admin-modal-backdrop" id="resume-extraction-modal" role="dialog" aria-modal="true" style="display: none;">
+    <div class="admin-modal-dialog" style="max-width: 580px;">
+      <div class="admin-modal-header" style="background: #002b49; color: #ffffff;">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="12" y2="12"></line><line x1="15" y1="15" x2="12" y2="12"></line></svg>
+          <div style="font-size: 1.05rem; font-weight: 800;">Attach Resume &amp; AI Document Extraction</div>
+        </div>
+        <button type="button" class="btn-modal-close" id="btn-close-resume-modal" title="Close modal" aria-label="Close modal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+      </div>
+
+      <div class="admin-modal-body" style="padding: 1.5rem;">
+        <p style="font-size: 0.825rem; color: #64748b; margin: 0 0 1.25rem 0;">
+          Upload your PDF resume or official MoSPI service records. The AI extraction pipeline will automatically parse and sync your Cadre, Division, and baseline competencies into your Officer Dossier.
+        </p>
+
+        <!-- Document Drop Zone -->
+        <div class="doc-drop-zone" id="public-pdf-drop-zone" style="cursor: pointer; padding: 2.25rem 1.5rem; text-align: center; border: 2px dashed #0284c7; background: #f0f9ff; border-radius: 8px; transition: all 0.2s ease;">
+          <input type="file" id="public-pdf-input" accept="application/pdf" style="display:none;">
+          <div class="doc-drop-icon" style="margin-bottom: 0.75rem;">
+            <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="12" y2="12"></line><line x1="15" y1="15" x2="12" y2="12"></line></svg>
+          </div>
+          <div class="doc-drop-content">
+            <div class="doc-drop-title" style="font-size: 1rem; font-weight: 800; color: #002b49; margin-bottom: 0.35rem;">Drag &amp; Drop PDF Resume / Service Record</div>
+            <div class="doc-drop-sub" style="font-size: 0.825rem; color: #64748b;">or <span class="doc-drop-link" id="public-pdf-browse" style="color: #0284c7; font-weight: 700; text-decoration: underline;">browse file from your computer</span></div>
+            <div style="font-size: 0.725rem; color: #94a3b8; margin-top: 0.5rem;">Accepts PDF documents up to 10MB</div>
+          </div>
+        </div>
+
+        <!-- Shimmering Loading State for AI Extraction -->
+        <div class="shimmer-container" id="public-pdf-shimmer" style="display:none; margin-top: 1.25rem; padding: 1rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px;">
+          <div class="shimmer-title-row" style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+            <span class="status-dot-pulse"></span>
+            <span id="public-shimmer-status-text" style="font-size: 0.825rem; font-weight: 700; color: #002b49;">Initializing MoSPI AI Document Extraction Engine...</span>
+          </div>
+          <div class="shimmer-block shimmer-bar" style="height: 12px; background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%); margin-bottom: 6px; border-radius: 3px;"></div>
+          <div class="shimmer-block shimmer-bar" style="height: 12px; width: 75%; background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%); margin-bottom: 6px; border-radius: 3px;"></div>
+          <div class="shimmer-block shimmer-bar" style="height: 12px; width: 50%; background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%); border-radius: 3px;"></div>
+        </div>
+      </div>
+
+      <div class="admin-modal-footer" style="padding: 0.85rem 1.25rem; display: flex; justify-content: flex-end;">
+        <button type="button" class="btn-admin-outline" id="btn-cancel-resume-modal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       CUSTOM QUIZ ARCHITECT MODAL (AI QUIZ & STUDY MENTOR)
+       ========================================================================== -->
+  <div class="admin-modal-backdrop" id="custom-quiz-architect-modal" role="dialog" aria-modal="true" style="display: none;">
+    <div class="admin-modal-dialog" style="max-width: 620px;">
+      <div class="admin-modal-header" style="background: #002b49; color: #ffffff;">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z"/><line x1="9" y1="21" x2="15" y2="21"/></svg>
+          <div style="font-size: 1.05rem; font-weight: 800;">Create Custom Quiz via AI Study Mentor</div>
+        </div>
+        <button type="button" class="btn-modal-close" id="btn-close-quiz-architect-modal" title="Close modal" aria-label="Close modal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+      </div>
+
+      <div class="admin-modal-body" style="padding: 1.25rem 1.5rem; max-height: calc(85vh - 130px); overflow-y: auto;">
+        <p style="font-size: 0.825rem; color: #64748b; margin: 0 0 1rem 0;">
+          Configure your customized evaluation. Once created, the quiz will be pushed directly into your <strong>AI Quiz</strong> list with a <strong>NEW</strong> badge!
+        </p>
+
+        <!-- 1. Objective -->
+        <div style="margin-bottom: 1rem;">
+          <label class="profile-field-label" style="font-weight: 800; color: #002b49; margin-bottom: 0.35rem; display: block;">1. Assessment Objective</label>
+          <div class="wizard-pill-grid" id="modal-wiz-goal-grid">
+            <button type="button" class="wizard-pill-opt selected" data-val="Exam Prep (SSO/JSO Cadre)">Exam Prep (SSO/JSO)</button>
+            <button type="button" class="wizard-pill-opt" data-val="Interview Prep">Interview Drill</button>
+            <button type="button" class="wizard-pill-opt" data-val="Practical Evaluation">Practical Evaluation</button>
+            <button type="button" class="wizard-pill-opt" data-val="Random Fast Drill">Random Fast Drill</button>
+          </div>
+        </div>
+
+        <!-- 2. Course / Topic Module -->
+        <div style="margin-bottom: 1rem;">
+          <label class="profile-field-label" style="font-weight: 800; color: #002b49; margin-bottom: 0.35rem; display: block;">2. Course Module / Completed Track</label>
+          <select class="wizard-select-input" id="modal-wiz-course-select" style="margin-bottom: 6px; width: 100%;">
+            <option value="iGOT-DPDP-2026: DPDP Act 2023 & Microdata Anonymization Protocols" selected>✓ Completed: DPDP Act 2023 &amp; Field Anonymization (iGOT)</option>
+            <option value="NSSTA-SAM-101: Survey Sampling Theory & Multi-Stage Estimation">Active: Survey Sampling Theory &amp; Estimation (NSSTA)</option>
+            <option value="NSSTA-PY-305: Python for Official Statistics & Automation">Active: Python for Official Statistics (NSSTA)</option>
+            <option value="Price Index Numbers (CPI / WPI Methodology)">Price Index Numbers &amp; Base Year Splicing (MoSPI)</option>
+            <option value="National Accounts & Macroeconomic Deflators">National Accounts &amp; Macroeconomic Deflators (MoSPI)</option>
+            <option value="CAPI Tablet Field Automation & Offline Sync">CAPI Tablet Field Automation &amp; Offline Sync</option>
+          </select>
+          <input type="text" class="profile-input-field" id="modal-wiz-custom-topic" placeholder="Or enter specific topic (e.g., Horvitz-Thompson variance, Paasche bias)..." style="width: 100%;">
+        </div>
+
+        <!-- 3. Question Format -->
+        <div style="margin-bottom: 1rem;">
+          <label class="profile-field-label" style="font-weight: 800; color: #002b49; margin-bottom: 0.35rem; display: block;">3. Question Format</label>
+          <div class="wizard-pill-grid" id="modal-wiz-format-grid">
+            <button type="button" class="wizard-pill-opt selected" data-val="Multiple Choice (MCQ)">Multiple Choice (MCQ)</button>
+            <button type="button" class="wizard-pill-opt" data-val="Numerical / One Word">Numerical / Calculation</button>
+            <button type="button" class="wizard-pill-opt" data-val="Data-Based Tabular">Data-Based (Tabular)</button>
+            <button type="button" class="wizard-pill-opt" data-val="Mixed Format">Mixed Format</button>
+          </div>
+        </div>
+
+        <!-- 4. Focus & Difficulty -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-bottom: 1rem;">
+          <div>
+            <label class="profile-field-label" style="font-weight: 800; color: #002b49; margin-bottom: 0.35rem; display: block;">4. Question Focus</label>
+            <div class="wizard-pill-grid" id="modal-wiz-focus-grid">
+              <button type="button" class="wizard-pill-opt" data-val="Pure Theory">Theory</button>
+              <button type="button" class="wizard-pill-opt" data-val="Numerical Calculation">Calculations</button>
+              <button type="button" class="wizard-pill-opt selected" data-val="Balanced">Balanced</button>
+            </div>
+          </div>
+          <div>
+            <label class="profile-field-label" style="font-weight: 800; color: #002b49; margin-bottom: 0.35rem; display: block;">5. Difficulty Level</label>
+            <div class="wizard-pill-grid" id="modal-wiz-diff-grid">
+              <button type="button" class="wizard-pill-opt" data-val="Beginner">Beginner</button>
+              <button type="button" class="wizard-pill-opt selected" data-val="Intermediate">Intermediate</button>
+              <button type="button" class="wizard-pill-opt" data-val="Advanced">Advanced</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Question Count & Timer -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem;">
+          <div>
+            <label class="profile-field-label" style="font-weight: 800; color: #002b49; margin-bottom: 0.35rem; display: block;">6. Number of Questions</label>
+            <div class="wizard-pill-grid" id="modal-wiz-count-grid">
+              <button type="button" class="wizard-pill-opt selected" data-val="5">5 Questions</button>
+              <button type="button" class="wizard-pill-opt" data-val="10">10 Questions</button>
+              <button type="button" class="wizard-pill-opt" data-val="15">15 Questions</button>
+            </div>
+          </div>
+          <div>
+            <label class="profile-field-label" style="font-weight: 800; color: #002b49; margin-bottom: 0.35rem; display: block;">7. Question Timer</label>
+            <select class="wizard-select-input" id="modal-wiz-timer-select" style="width: 100%;">
+              <option value="per_45" selected>45 seconds / question (Standard)</option>
+              <option value="per_60">60 seconds / question (Relaxed)</option>
+              <option value="per_90">90 seconds / question (Deep Math)</option>
+              <option value="total_10">Total 10 minutes (Entire Quiz)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-modal-footer" style="padding: 0.85rem 1.25rem; display: flex; justify-content: flex-end; gap: 0.6rem;">
+        <button type="button" class="btn-admin-outline" id="btn-cancel-quiz-architect">Cancel</button>
+        <button type="button" class="btn-admin-action" id="btn-modal-generate-quiz">
+          <span>Generate &amp; Push Quiz to AI Quiz</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       CREATE CUSTOM eLab PROJECT VIA STUDY MENTOR MODAL
+       ========================================================================== -->
+  <div class="admin-modal-backdrop" id="elab-custom-project-modal" role="dialog" aria-modal="true" style="display: none;">
+    <div class="admin-modal-dialog" style="max-width: 640px;">
+      <div class="admin-modal-header" style="background: #002b49; color: #ffffff;">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          <div style="font-size: 1.05rem; font-weight: 800;">Create Custom eLab Project via Study Mentor</div>
+        </div>
+        <button type="button" class="btn-modal-close" id="btn-close-elab-custom-modal" title="Close modal" aria-label="Close modal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+      </div>
+
+      <div class="admin-modal-body" style="padding: 1.25rem 1.5rem; max-height: calc(85vh - 130px); overflow-y: auto;">
+        <p style="font-size: 0.825rem; color: #64748b; margin: 0 0 1rem 0;">
+          Select one or multiple completed courses. Your AI Study Mentor will architect an interactive, hands-on eLab project tagged with an official <strong>AI MENTOR CUSTOM PROJECT</strong> badge.
+        </p>
+
+        <!-- 1. Completed Courses Selection (Multi-select) -->
+        <div style="margin-bottom: 1.25rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+            <label class="profile-field-label" style="font-weight: 800; color: #002b49; margin: 0;">1. Select Completed / Certified Courses (One or Multiple)</label>
+            <span style="font-size: 0.725rem; color: #ea580c; font-weight: 700;">Multi-Select Enabled</span>
+          </div>
+          <div class="elab-course-multiselect-box" id="elab-custom-courses-list" style="max-height: 180px; overflow-y: auto; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 6px; padding: 0.6rem;">
+            <!-- Populated dynamically from getUserCourses() -->
+          </div>
+        </div>
+
+        <!-- 2. Project Domain Category -->
+        <div style="margin-bottom: 1rem;">
+          <label class="profile-field-label" style="font-weight: 800; color: #002b49; margin-bottom: 0.35rem; display: block;">2. Project Domain &amp; Architecture</label>
+          <div class="wizard-pill-grid" id="elab-modal-cat-grid">
+            <button type="button" class="wizard-pill-opt selected" data-val="MoSPI Statistics">MoSPI Statistics</button>
+            <button type="button" class="wizard-pill-opt" data-val="Data Analysis">Data Analysis (Python)</button>
+            <button type="button" class="wizard-pill-opt" data-val="Web Development">Web Dashboard</button>
+            <button type="button" class="wizard-pill-opt" data-val="Microdata Governance">Microdata Governance</button>
+          </div>
+        </div>
+
+        <!-- 3. Difficulty Level -->
+        <div style="margin-bottom: 1rem;">
+          <label class="profile-field-label" style="font-weight: 800; color: #002b49; margin-bottom: 0.35rem; display: block;">3. Project Difficulty Level</label>
+          <div class="wizard-pill-grid" id="elab-modal-diff-grid">
+            <button type="button" class="wizard-pill-opt" data-val="Beginner">Beginner (1-2 Hours)</button>
+            <button type="button" class="wizard-pill-opt selected" data-val="Intermediate">Intermediate (3-4 Hours)</button>
+            <button type="button" class="wizard-pill-opt" data-val="Advanced">Advanced (5-6 Hours)</button>
+          </div>
+        </div>
+
+        <!-- 4. Optional Custom Focus / Title -->
+        <div>
+          <label class="profile-field-label" style="font-weight: 800; color: #002b49; margin-bottom: 0.35rem; display: block;">4. Specific Focus or Custom Project Title (Optional)</label>
+          <input type="text" class="profile-input-field" id="elab-modal-custom-title" placeholder="e.g. Automated SSS Cadre Audit Pipeline, CAPI Geo-fencing Dashboard..." style="width: 100%;">
+        </div>
+      </div>
+
+      <div class="admin-modal-footer" style="padding: 0.85rem 1.25rem; display: flex; justify-content: flex-end; gap: 0.6rem;">
+        <button type="button" class="btn-admin-outline" id="btn-cancel-elab-custom">Cancel</button>
+        <button type="button" class="btn-admin-action" id="btn-modal-generate-elab">
+          <span>+ Generate Custom Project via AI Mentor</span>
+        </button>
       </div>
     </div>
   </div>

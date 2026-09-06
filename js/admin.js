@@ -844,7 +844,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
               <span>Inspect Profile</span>
             </button>
-            <button type="button" class="btn-dir-action btn-dir-msg" data-action="message" data-user-id="${user.id}" title="Send direct official message" style="color: #0284c7;">
+            <button type="button" class="btn-dir-action btn-dir-msg" data-action="message" data-user-id="${user.id}" title="Send direct official message">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
               <span>Message</span>
             </button>
@@ -1132,15 +1132,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Footer Ban Action Button Toggle
     if (btnInspectBanAction) {
       if (effectiveUser.isBanned) {
-        btnInspectBanAction.className = 'btn-admin-action';
-        btnInspectBanAction.style.background = '#16a34a';
+        btnInspectBanAction.className = 'btn-admin-success';
+        btnInspectBanAction.style.background = '';
         btnInspectBanAction.innerHTML = `
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
           <span>Unban Officer</span>
         `;
       } else {
         btnInspectBanAction.className = 'btn-admin-danger';
-        btnInspectBanAction.style.background = '#dc2626';
+        btnInspectBanAction.style.background = '';
         btnInspectBanAction.innerHTML = `
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
           <span>Ban Officer</span>
@@ -1758,12 +1758,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Ban Toggle Button
     if (btnChatBanToggle && chatBanBtnLabel) {
+      const chatBanBtnIcon = document.getElementById('chat-ban-btn-icon');
       if (convo.isBanned) {
         btnChatBanToggle.className = 'btn-chat-action-header btn-chat-ban-toggle is-banned';
         chatBanBtnLabel.textContent = 'Unban Officer';
+        if (chatBanBtnIcon) {
+          chatBanBtnIcon.innerHTML = '<polyline points="20 6 9 17 4 12"></polyline>';
+          chatBanBtnIcon.setAttribute('stroke-width', '2.5');
+        }
       } else {
         btnChatBanToggle.className = 'btn-chat-action-header btn-chat-ban-toggle';
         chatBanBtnLabel.textContent = 'Ban Officer';
+        if (chatBanBtnIcon) {
+          chatBanBtnIcon.innerHTML = '<circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>';
+          chatBanBtnIcon.setAttribute('stroke-width', '2.2');
+        }
       }
     }
 

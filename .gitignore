@@ -1,24 +1,21 @@
-# Environment & Secrets (NEVER COMMIT)
-.env
-.env.local
-*.env
+# Runtime data and database
+data/
+*.db
+*.sqlite3
 
-# Python Virtual Environment
-venv/
-env/
-ENV/
-.venv/
-
-# Python cache & bytecode
+# Python
 __pycache__/
 *.py[cod]
-*$py.class
-*.pyc
+*.class
+.venv/
+venv/
+ENV/
 
-# Editor & Scratch files
+# OS / Editor
+.DS_Store
+Thumbs.db
 .vscode/
 .idea/
-tempCodeRunnerFile.*
-rgv.py
-main_backup_working.py
 *.log
+.env
+.env.*

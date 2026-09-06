@@ -188,6 +188,13 @@ document.addEventListener('DOMContentLoaded', () => {
       if (typeof window.renderProfileCoursesStack === 'function') {
         window.renderProfileCoursesStack();
       }
+      if (typeof window.renderProfileFeaturedProjects === 'function') {
+        window.renderProfileFeaturedProjects();
+      }
+    }
+
+    if (tabId === 'elab' && typeof window.renderElabProjects === 'function') {
+      window.renderElabProjects();
     }
 
     if (tabId === 'courses' && typeof window.renderCoursesSection === 'function') {
@@ -223,6 +230,22 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
+
+  // Brand header logo reload & bottom user card jump to profile
+  const brandHeader = document.getElementById('trainee-brand-header');
+  if (brandHeader) {
+    brandHeader.addEventListener('click', () => {
+      window.location.reload();
+    });
+  }
+
+  const sidebarUserCard = document.getElementById('sidebar-user-card');
+  if (sidebarUserCard) {
+    sidebarUserCard.addEventListener('click', () => {
+      switchTab('profile');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
 
   if (window.location.hash) {
     const hashTab = window.location.hash.replace('#', '');
@@ -1171,13 +1194,43 @@ document.addEventListener('DOMContentLoaded', () => {
   initProfileExpandTriggers();
 
   // ==========================================================================
-  // 5. DOCUMENT DROP AI EXTRACTION PIPELINE (PHASE 2 PARSER)
+  // 5. DOCUMENT DROP AI EXTRACTION PIPELINE (REORGANIZED POP-UP MODAL)
   // ==========================================================================
+  const resumeModal = document.getElementById('resume-extraction-modal');
+  const btnAttachResumeModal = document.getElementById('btn-attach-resume-modal');
+  const btnCloseResumeModal = document.getElementById('btn-close-resume-modal');
+  const btnCancelResumeModal = document.getElementById('btn-cancel-resume-modal');
   const pdfDropZone = document.getElementById('public-pdf-drop-zone');
   const pdfInput = document.getElementById('public-pdf-input');
   const pdfBrowseLink = document.getElementById('public-pdf-browse');
   const pdfShimmer = document.getElementById('public-pdf-shimmer');
   const shimmerStatusText = document.getElementById('public-shimmer-status-text');
+
+  if (btnAttachResumeModal && resumeModal) {
+    btnAttachResumeModal.addEventListener('click', () => {
+      resumeModal.style.display = 'flex';
+    });
+  }
+
+  if (btnCloseResumeModal && resumeModal) {
+    btnCloseResumeModal.addEventListener('click', () => {
+      resumeModal.style.display = 'none';
+    });
+  }
+
+  if (btnCancelResumeModal && resumeModal) {
+    btnCancelResumeModal.addEventListener('click', () => {
+      resumeModal.style.display = 'none';
+    });
+  }
+
+  if (resumeModal) {
+    resumeModal.addEventListener('click', (e) => {
+      if (e.target === resumeModal) {
+        resumeModal.style.display = 'none';
+      }
+    });
+  }
 
   if (pdfDropZone) {
     pdfDropZone.addEventListener('dragover', (e) => {
@@ -1239,6 +1292,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       renderPublicOfficerDossier(currentOfficerProfile);
       populateEditForm(currentOfficerProfile);
+
+      if (resumeModal) {
+        resumeModal.style.display = 'none';
+      }
 
       if (profileToast) {
         profileToast.textContent = `✓ AI Extracted Profile Data from "${file.name}" — Service Dossier Updated!`;
@@ -2967,6 +3024,9 @@ document.addEventListener('DOMContentLoaded', () => {
       category: 'Web Development',
       difficulty: 'Beginner',
       estimatedTime: '2 Hours',
+      isCustom: false,
+      workLink: '',
+      featuredOnProfile: true,
       description: 'Create a clean, responsive personal portfolio website showcasing your government project contributions, statistics skills, and certificates.',
       objectives: [
         'Master semantic HTML5 page layout structure',
@@ -2995,6 +3055,9 @@ document.addEventListener('DOMContentLoaded', () => {
       category: 'Data Analysis',
       difficulty: 'Intermediate',
       estimatedTime: '4 Hours',
+      isCustom: false,
+      workLink: '',
+      featuredOnProfile: true,
       description: 'Build a Python statistics script to clean, validate, and compute Consumer Price Index (CPI) weights from raw state survey samples.',
       objectives: [
         'Clean noisy survey microdata using pandas',
@@ -3022,6 +3085,9 @@ document.addEventListener('DOMContentLoaded', () => {
       category: 'MoSPI Statistics',
       difficulty: 'Beginner',
       estimatedTime: '3 Hours',
+      isCustom: false,
+      workLink: '',
+      featuredOnProfile: false,
       description: 'Develop an interactive sampling error and sample size calculator based on NSS survey stratification guidelines.',
       objectives: [
         'Calculate simple random sampling error bounds',
@@ -3047,6 +3113,9 @@ document.addEventListener('DOMContentLoaded', () => {
       category: 'Web Development',
       difficulty: 'Advanced',
       estimatedTime: '6 Hours',
+      isCustom: false,
+      workLink: 'https://github.com/mospi-trainee/union-budget-analytics',
+      featuredOnProfile: true,
       description: 'Design and render an executive spending dashboard with interactive charts, departmental allocations, and breakdown filters.',
       objectives: [
         'Build dynamic gauge and bar charts',
@@ -3073,7 +3142,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const saved = localStorage.getItem('nirdesha_elab_projects');
     if (!saved) return DEFAULT_ELAB_PROJECTS;
     try {
-      return JSON.parse(saved);
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed.map(p => ({
+          ...p,
+          isCustom: p.isCustom || false,
+          workLink: p.workLink || '',
+          featuredOnProfile: typeof p.featuredOnProfile === 'boolean' ? p.featuredOnProfile : false
+        }));
+      }
+      return DEFAULT_ELAB_PROJECTS;
     } catch(e) {
       return DEFAULT_ELAB_PROJECTS;
     }
@@ -3134,31 +3212,44 @@ document.addEventListener('DOMContentLoaded', () => {
       card.className = 'elab-project-card';
       card.innerHTML = `
         <div>
+          ${project.isCustom ? '<div class="badge-mentor-custom-project">★ AI MENTOR CUSTOM PROJECT</div>' : ''}
           <div class="elab-card-tags">
-            <span class="elab-tag-cat">${project.category}</span>
-            <span class="elab-tag-diff elab-diff-${diffClass}">${project.difficulty}</span>
+            <span class="elab-tag-cat">${escapeHtml(project.category)}</span>
+            <span class="elab-tag-diff elab-diff-${diffClass}">${escapeHtml(project.difficulty)}</span>
           </div>
-          <h3 class="elab-project-title">${project.title}</h3>
-          <p class="elab-project-desc">${project.description}</p>
+          <h3 class="elab-project-title">${escapeHtml(project.title)}</h3>
+          <p class="elab-project-desc">${escapeHtml(project.description)}</p>
         </div>
 
         <div>
           <div class="elab-progress-wrapper">
             <div class="elab-progress-label">
               <span>Progress: ${progress}%</span>
-              <span>${project.estimatedTime}</span>
+              <span>${escapeHtml(project.estimatedTime)}</span>
             </div>
             <div class="elab-progress-bar">
               <div class="elab-progress-fill" style="width: ${progress}%;"></div>
             </div>
           </div>
 
-          <div class="elab-card-actions">
-            <button class="btn-elab-action btn-elab-primary" data-open-workspace="${project.id}">
-              ${progress === 100 ? 'Review Project' : (progress > 0 ? 'Continue Project' : 'Start Project')}
-            </button>
-            <button class="btn-elab-action btn-elab-secondary" data-open-workspace="${project.id}">
-              View Instructions
+          <!-- Project Work Link Input & Save -->
+          <div class="elab-work-link-row">
+            <input type="url" class="elab-work-link-input" data-work-input="${project.id}" placeholder="Work link (GitHub / Colab / Live Demo)..." value="${escapeHtml(project.workLink || '')}">
+            <button type="button" class="btn-elab-save-work-link" data-save-work="${project.id}">Save</button>
+            ${project.workLink ? `<a href="${escapeHtml(project.workLink)}" target="_blank" rel="noopener" class="btn-view-work-link" title="Open external work link">Open ↗</a>` : ''}
+          </div>
+
+          <div class="elab-card-actions" style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+            <div style="display: flex; gap: 0.4rem;">
+              <button class="btn-elab-action btn-elab-primary" data-open-workspace="${project.id}">
+                ${progress === 100 ? 'Review Project' : (progress > 0 ? 'Continue Project' : 'Start Project')}
+              </button>
+              <button class="btn-elab-action btn-elab-secondary" data-open-workspace="${project.id}">
+                Instructions
+              </button>
+            </div>
+            <button type="button" class="btn-elab-feature-toggle ${project.featuredOnProfile ? 'is-featured' : ''}" data-feature-proj="${project.id}" title="${project.featuredOnProfile ? 'Remove from Profile Showcase' : 'Feature in User Profile (Max 3)'}">
+              <span>${project.featuredOnProfile ? '★ Featured on Profile' : '☆ Feature on Profile'}</span>
             </button>
           </div>
         </div>
@@ -3173,13 +3264,76 @@ document.addEventListener('DOMContentLoaded', () => {
         openElabWorkspace(projId);
       });
     });
+
+    // Save work link handler
+    elabGrid.querySelectorAll('[data-save-work]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const projId = btn.getAttribute('data-save-work');
+        const input = elabGrid.querySelector(`.elab-work-link-input[data-work-input="${projId}"]`);
+        if (!input) return;
+        const project = elabProjects.find(p => p.id === projId);
+        if (project) {
+          project.workLink = input.value.trim();
+          saveElabProjects(elabProjects);
+          renderElabProjects();
+          renderProfileFeaturedProjects();
+
+          const toast = document.getElementById('public-profile-toast');
+          if (toast) {
+            toast.textContent = `✓ Work Link Saved for "${project.title}"!`;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+          }
+        }
+      });
+    });
+
+    // Feature on profile handler (Max 3)
+    elabGrid.querySelectorAll('[data-feature-proj]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const projId = btn.getAttribute('data-feature-proj');
+        const project = elabProjects.find(p => p.id === projId);
+        if (!project) return;
+
+        if (!project.featuredOnProfile) {
+          const currentFeatured = elabProjects.filter(p => p.featuredOnProfile).length;
+          if (currentFeatured >= 3) {
+            alert('You can feature up to 3 best projects on your profile. Please unfeature an existing project first.');
+            return;
+          }
+          project.featuredOnProfile = true;
+        } else {
+          project.featuredOnProfile = false;
+        }
+
+        saveElabProjects(elabProjects);
+        renderElabProjects();
+        renderProfileFeaturedProjects();
+
+        const toast = document.getElementById('public-profile-toast');
+        if (toast) {
+          toast.textContent = project.featuredOnProfile
+            ? `✓ "${project.title}" is now Featured on your Profile (Best 3)!`
+            : `✓ "${project.title}" removed from Profile Showcase.`;
+          toast.style.display = 'block';
+          setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
+      });
+    });
   }
 
   function openElabWorkspace(projId) {
     const project = elabProjects.find(p => p.id === projId);
     if (!project || !elabModal) return;
 
-    if (elabModalTitle) elabModalTitle.textContent = project.title;
+    if (elabModalTitle) {
+      elabModalTitle.innerHTML = `
+        ${project.isCustom ? '<span class="badge-mentor-custom-project" style="display:inline-flex; margin-right:8px; vertical-align:middle;">★ AI MENTOR CUSTOM</span>' : ''}
+        <span>${escapeHtml(project.title)}</span>
+      `;
+    }
     if (elabModalCat) elabModalCat.textContent = `${project.category} • ${project.difficulty}`;
 
     const progress = calculateProjectProgress(project);
@@ -3187,36 +3341,52 @@ document.addEventListener('DOMContentLoaded', () => {
     if (elabModalBody) {
       elabModalBody.innerHTML = `
         <div style="background: rgba(0,43,73,0.04); padding: 1rem 1.25rem; border-left: 4px solid var(--trainee-saffron);">
-          <p style="margin:0 0 0.5rem 0; font-size:0.9rem; line-height:1.5; color:#334155;">${project.description}</p>
+          <p style="margin:0 0 0.5rem 0; font-size:0.9rem; line-height:1.5; color:#334155;">${escapeHtml(project.description)}</p>
           <div style="display:flex; justify-content:space-between; gap: 1rem; font-size: 0.8rem; font-weight: 700; color: #64748b;">
-            <span>Estimated Duration: ${project.estimatedTime}</span>
+            <span>Estimated Duration: ${escapeHtml(project.estimatedTime)}</span>
             <span>Overall Progress: ${progress}%</span>
+          </div>
+        </div>
+
+        <!-- Project Work Link & Profile Showcase in Workspace -->
+        <div style="padding: 0.85rem 1rem; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 6px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; flex-wrap: wrap; gap: 0.5rem;">
+            <strong style="font-size:0.875rem; color:#002b49;">Project Work Link &amp; Profile Showcase</strong>
+            <button type="button" class="btn-elab-feature-toggle ${project.featuredOnProfile ? 'is-featured' : ''}" id="modal-btn-feature-toggle" title="${project.featuredOnProfile ? 'Remove from Profile Showcase' : 'Feature in User Profile (Max 3)'}">
+              <span>${project.featuredOnProfile ? '★ Featured on Profile' : '☆ Feature on Profile (Best 3)'}</span>
+            </button>
+          </div>
+          <p style="font-size: 0.775rem; color: #64748b; margin: 0 0 0.5rem 0;">Provide your GitHub repository, Google Colab notebook, or live demo URL to showcase on your officer profile.</p>
+          <div class="elab-work-link-row" style="margin: 0; background: #ffffff;">
+            <input type="url" class="elab-work-link-input" id="modal-work-link-input" placeholder="e.g. https://github.com/username/project-repo..." value="${escapeHtml(project.workLink || '')}">
+            <button type="button" class="btn-elab-save-work-link" id="modal-btn-save-work-link">Save Link</button>
+            ${project.workLink ? `<a href="${escapeHtml(project.workLink)}" target="_blank" rel="noopener" class="btn-view-work-link" title="Open saved work link">Open ↗</a>` : ''}
           </div>
         </div>
 
         <div>
           <h4 style="font-size:0.95rem; font-weight:800; color:#002b49; margin:0 0 0.5rem 0;">Learning Objectives</h4>
           <ul style="margin:0; padding-left:1.25rem; font-size:0.85rem; color:#475569; line-height:1.6;">
-            ${project.objectives.map(obj => `<li>${obj}</li>`).join('')}
+            ${(project.objectives || []).map(obj => `<li>${escapeHtml(obj)}</li>`).join('')}
           </ul>
         </div>
 
         <div>
-          <h4 style="font-size:0.95rem; font-weight:800; color:#002b49; margin:0 0 0.5rem 0;">Prerequisites & Requirements</h4>
+          <h4 style="font-size:0.95rem; font-weight:800; color:#002b49; margin:0 0 0.5rem 0;">Prerequisites &amp; Requirements</h4>
           <ul style="margin:0; padding-left:1.25rem; font-size:0.85rem; color:#475569; line-height:1.6;">
-            ${project.requirements.map(req => `<li>${req}</li>`).join('')}
+            ${(project.requirements || []).map(req => `<li>${escapeHtml(req)}</li>`).join('')}
           </ul>
         </div>
 
         <div>
           <h4 style="font-size:0.95rem; font-weight:800; color:#002b49; margin:0 0 0.75rem 0;">Step-by-Step Checkpoints</h4>
           <div style="display:flex; flex-direction:column; gap:0.5rem;">
-            ${project.tasks.map((task, idx) => `
+            ${(project.tasks || []).map((task, idx) => `
               <label class="elab-task-item">
                 <input type="checkbox" data-task-id="${task.id}" ${task.done ? 'checked' : ''}>
                 <div>
                   <span style="font-size:0.85rem; font-weight:700; color:#0f172a; ${task.done ? 'text-decoration: line-through; opacity: 0.7;' : ''}">
-                    Step ${idx + 1}: ${task.text}
+                    Step ${idx + 1}: ${escapeHtml(task.text)}
                   </span>
                 </div>
               </label>
@@ -3225,13 +3395,14 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
 
         <div>
-          <h4 style="font-size:0.95rem; font-weight:800; color:#002b49; margin:0 0 0.5rem 0;">Resources & Help</h4>
+          <h4 style="font-size:0.95rem; font-weight:800; color:#002b49; margin:0 0 0.5rem 0;">Resources &amp; Help</h4>
           <ul style="margin:0; padding-left:1.25rem; font-size:0.85rem; color:#0284c7; line-height:1.6;">
-            ${project.resources.map(res => `<li><a href="#" style="color:#0284c7; font-weight:600;">${res}</a></li>`).join('')}
+            ${(project.resources || []).map(res => `<li><a href="#" style="color:#0284c7; font-weight:600;">${escapeHtml(res)}</a></li>`).join('')}
           </ul>
         </div>
       `;
 
+      // Checkpoint toggling
       elabModalBody.querySelectorAll('input[type="checkbox"]').forEach(chk => {
         chk.addEventListener('change', () => {
           const taskId = chk.getAttribute('data-task-id');
@@ -3240,13 +3411,312 @@ document.addEventListener('DOMContentLoaded', () => {
             task.done = chk.checked;
             saveElabProjects(elabProjects);
             renderElabProjects();
+            renderProfileFeaturedProjects();
             openElabWorkspace(project.id);
           }
         });
       });
+
+      // Save work link in workspace modal
+      const modalWorkInput = elabModalBody.querySelector('#modal-work-link-input');
+      const modalSaveBtn = elabModalBody.querySelector('#modal-btn-save-work-link');
+      if (modalSaveBtn && modalWorkInput) {
+        modalSaveBtn.addEventListener('click', () => {
+          project.workLink = modalWorkInput.value.trim();
+          saveElabProjects(elabProjects);
+          renderElabProjects();
+          renderProfileFeaturedProjects();
+          openElabWorkspace(project.id);
+          const toast = document.getElementById('public-profile-toast');
+          if (toast) {
+            toast.textContent = `✓ Work Link Saved for "${project.title}"!`;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+          }
+        });
+      }
+
+      // Feature on profile toggle in workspace modal
+      const modalFeatureBtn = elabModalBody.querySelector('#modal-btn-feature-toggle');
+      if (modalFeatureBtn) {
+        modalFeatureBtn.addEventListener('click', () => {
+          if (!project.featuredOnProfile) {
+            const currentFeatured = elabProjects.filter(p => p.featuredOnProfile).length;
+            if (currentFeatured >= 3) {
+              alert('You can feature up to 3 best projects on your profile. Please unfeature an existing project first.');
+              return;
+            }
+            project.featuredOnProfile = true;
+          } else {
+            project.featuredOnProfile = false;
+          }
+          saveElabProjects(elabProjects);
+          renderElabProjects();
+          renderProfileFeaturedProjects();
+          openElabWorkspace(project.id);
+          const toast = document.getElementById('public-profile-toast');
+          if (toast) {
+            toast.textContent = project.featuredOnProfile
+              ? `✓ "${project.title}" is now Featured on your Profile (Best 3)!`
+              : `✓ "${project.title}" removed from Profile Showcase.`;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+          }
+        });
+      }
     }
 
     elabModal.classList.add('is-open');
+  }
+
+  // --------------------------------------------------------------------------
+  // PROFILE FEATURED PROJECTS SHOWCASE (TOP 3)
+  // --------------------------------------------------------------------------
+  function renderProfileFeaturedProjects() {
+    const container = document.getElementById('profile-featured-projects-list');
+    if (!container) return;
+
+    const allProjects = loadElabProjects();
+    // Get explicitly featured projects first (capped at 3)
+    let list = allProjects.filter(p => p.featuredOnProfile).slice(0, 3);
+
+    // If fewer than 3 featured, backfill with completed or highest progress projects
+    if (list.length < 3) {
+      const remaining = allProjects
+        .filter(p => !list.find(item => item.id === p.id))
+        .sort((a, b) => calculateProjectProgress(b) - calculateProjectProgress(a));
+
+      for (let i = 0; i < remaining.length && list.length < 3; i++) {
+        list.push(remaining[i]);
+      }
+    }
+    list = list.slice(0, 3);
+
+    container.innerHTML = '';
+
+    if (list.length === 0) {
+      container.innerHTML = `
+        <div style="text-align: center; padding: 2rem 1rem; color: #64748b; font-size: 0.85rem;">
+          No projects completed or featured yet. Launch the eLab environment to start building!
+        </div>
+      `;
+      return;
+    }
+
+    list.forEach(project => {
+      const progress = calculateProjectProgress(project);
+      const isDone = progress === 100;
+      const completedTasks = (project.tasks || []).filter(t => t.done).length;
+      const totalTasks = (project.tasks || []).length;
+      const statusBg = isDone ? '#dcfce7' : (progress >= 40 ? '#e0f2fe' : '#fef3c7');
+      const statusColor = isDone ? '#166534' : (progress >= 40 ? '#0369a1' : '#92400e');
+      const statusBorder = isDone ? '#86efac' : (progress >= 40 ? '#7dd3fc' : '#fde68a');
+      const progressFill = isDone ? '#16a34a' : (progress >= 40 ? '#0284c7' : '#d97706');
+
+      const item = document.createElement('div');
+      item.className = 'profile-elab-item';
+      item.innerHTML = `
+        <div class="profile-elab-top">
+          <div>
+            ${project.isCustom ? '<span class="badge-mentor-custom-project" style="font-size: 0.62rem; margin-bottom: 2px;">★ AI MENTOR CUSTOM PROJECT</span>' : ''}
+            <span class="profile-elab-cat">${escapeHtml(project.category)} • ${escapeHtml(project.difficulty)}</span>
+            <div class="profile-elab-title">${escapeHtml(project.title)}</div>
+          </div>
+          <span class="badge-status-cert" style="background: ${statusBg}; color: ${statusColor}; border-color: ${statusBorder};">${progress}% Complete</span>
+        </div>
+        <p class="profile-elab-desc">${escapeHtml(project.description)}</p>
+        <div class="profile-progress-bar-wrap" style="margin-bottom: 0.5rem;">
+          <div class="profile-progress-fill" style="width: ${progress}%; background: ${progressFill};"></div>
+        </div>
+        <div class="profile-elab-meta" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+          <span>Tasks: <strong>${completedTasks} / ${totalTasks} ${isDone ? 'Verified' : 'Completed'}</strong></span>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            ${project.workLink ? `
+              <a href="${escapeHtml(project.workLink)}" target="_blank" rel="noopener" class="btn-view-work-link" title="Open project work repository or live demo">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                <span>Work Link ↗</span>
+              </a>
+            ` : ''}
+            <span class="elab-verified-badge" style="color: ${isDone ? '#16a34a' : '#64748b'};">
+              ${isDone ? `
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Verified</span>
+              ` : '<span>Active Lab</span>'}
+            </span>
+          </div>
+        </div>
+      `;
+      container.appendChild(item);
+    });
+  }
+  window.renderProfileFeaturedProjects = renderProfileFeaturedProjects;
+
+  // --------------------------------------------------------------------------
+  // CREATE CUSTOM eLab PROJECT VIA STUDY MENTOR MODAL CONTROLLER
+  // --------------------------------------------------------------------------
+  function initElabCustomProjectModal() {
+    const modal = document.getElementById('elab-custom-project-modal');
+    const btnTrigger = document.getElementById('btn-create-elab-project');
+    const btnClose = document.getElementById('btn-close-elab-custom-modal');
+    const btnCancel = document.getElementById('btn-cancel-elab-custom');
+    const btnGenerate = document.getElementById('btn-modal-generate-elab');
+    const coursesList = document.getElementById('elab-custom-courses-list');
+
+    if (!modal) return;
+
+    function populateCourses() {
+      if (!coursesList) return;
+      const userCourses = (typeof getUserCourses === 'function') ? getUserCourses() : {};
+      const allCourses = (typeof COURSES_CATALOG !== 'undefined') ? COURSES_CATALOG : [];
+
+      coursesList.innerHTML = '';
+
+      if (allCourses.length === 0) {
+        coursesList.innerHTML = `
+          <label class="elab-course-check-item">
+            <input type="checkbox" class="chk-custom-course" value="iGOT-DPDP-2026" data-course-title="DPDP Act 2023 & Microdata Anonymization Protocols" checked>
+            <div class="elab-course-check-info">
+              <div class="elab-course-check-title">iGOT-DPDP-2026: DPDP Act 2023 &amp; Field Anonymization</div>
+              <div class="elab-course-check-meta"><strong style="color: #16a34a;">✓ Certified (100%)</strong></div>
+            </div>
+          </label>
+        `;
+        return;
+      }
+
+      allCourses.forEach(c => {
+        const uc = userCourses[c.id];
+        const isDone = uc && (uc.status === 'completed' || uc.progress === 100);
+        const isEnrolled = uc && (uc.status === 'enrolled' || uc.progress > 0);
+
+        const item = document.createElement('label');
+        item.className = 'elab-course-check-item';
+        item.innerHTML = `
+          <input type="checkbox" class="chk-custom-course" value="${escapeHtml(c.id)}" data-course-title="${escapeHtml(c.title)}" ${isDone ? 'checked' : ''}>
+          <div class="elab-course-check-info">
+            <div class="elab-course-check-title">
+              ${escapeHtml(c.code)}: ${escapeHtml(c.title)}
+            </div>
+            <div class="elab-course-check-meta">
+              <span>${escapeHtml(c.platform)} • </span>
+              ${isDone ? '<strong style="color: #16a34a;">✓ Certified (100%)</strong>' : (isEnrolled ? `<strong style="color: #0284c7;">In Progress (${uc.progress}%)</strong>` : '<span style="color: #64748b;">Accredited Track</span>')}
+            </div>
+          </div>
+        `;
+        coursesList.appendChild(item);
+      });
+    }
+
+    function openModal() {
+      populateCourses();
+      modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+      modal.style.display = 'none';
+    }
+
+    if (btnTrigger) {
+      btnTrigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal();
+      });
+    }
+
+    if (btnClose) btnClose.addEventListener('click', closeModal);
+    if (btnCancel) btnCancel.addEventListener('click', closeModal);
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    // Setup category and difficulty pills
+    ['elab-modal-cat-grid', 'elab-modal-diff-grid'].forEach(gridId => {
+      const grid = document.getElementById(gridId);
+      if (!grid) return;
+      grid.querySelectorAll('.wizard-pill-opt').forEach(btn => {
+        btn.addEventListener('click', () => {
+          grid.querySelectorAll('.wizard-pill-opt').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+        });
+      });
+    });
+
+    if (btnGenerate) {
+      btnGenerate.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        // Gather checked courses
+        const checkedInputs = modal.querySelectorAll('.chk-custom-course:checked');
+        if (checkedInputs.length === 0) {
+          alert('Please select at least one completed or enrolled course to base your custom project on.');
+          return;
+        }
+
+        const selectedTitles = Array.from(checkedInputs).map(chk => chk.getAttribute('data-course-title') || chk.value);
+        const catSel = modal.querySelector('#elab-modal-cat-grid .wizard-pill-opt.selected');
+        const diffSel = modal.querySelector('#elab-modal-diff-grid .wizard-pill-opt.selected');
+        const category = catSel ? catSel.getAttribute('data-val') : 'MoSPI Statistics';
+        const difficulty = diffSel ? diffSel.getAttribute('data-val') : 'Intermediate';
+        const customTitleInput = document.getElementById('elab-modal-custom-title');
+        const customTitle = customTitleInput ? customTitleInput.value.trim() : '';
+
+        const primaryCourse = selectedTitles[0];
+        const displayTitle = customTitle || `${primaryCourse.split(':')[0]} Applied Analysis Lab`;
+
+        const newProjectId = 'proj-custom-' + Date.now();
+        const estTime = difficulty === 'Beginner' ? '2 Hours' : (difficulty === 'Intermediate' ? '4 Hours' : '6 Hours');
+
+        const newProject = {
+          id: newProjectId,
+          title: displayTitle,
+          category: category,
+          difficulty: difficulty,
+          estimatedTime: estTime,
+          isCustom: true,
+          workLink: '',
+          featuredOnProfile: elabProjects.filter(p => p.featuredOnProfile).length < 3,
+          description: `Custom practical laboratory engineered by AI Study Mentor based on completed coursework in ${selectedTitles.join(', ')}.`,
+          objectives: [
+            `Integrate core statistical methodologies from ${selectedTitles.slice(0, 2).join(' & ')}`,
+            'Develop automated data processing or visualization pipelines compliant with MoSPI standards',
+            'Validate analytical outputs and package results for cadre documentation'
+          ],
+          requirements: [
+            'Basic scripting or spreadsheet analytics environment',
+            'MoSPI Reference Documentation for selected course modules'
+          ],
+          resources: [
+            'Nirdesha Applied Computing Guide',
+            'Official MoSPI Statistical Guidelines (2026 Edition)'
+          ],
+          tasks: [
+            { id: 't1', text: `Incorporate raw sample parameters for ${primaryCourse}`, done: false },
+            { id: 't2', text: 'Execute data cleansing and statistical estimator routines', done: false },
+            { id: 't3', text: 'Generate diagnostic tables and visualize distribution metrics', done: false },
+            { id: 't4', text: 'Perform verification audits against official benchmarks', done: false }
+          ]
+        };
+
+        elabProjects.unshift(newProject);
+        saveElabProjects(elabProjects);
+        closeModal();
+
+        renderElabProjects();
+        renderProfileFeaturedProjects();
+
+        const toast = document.getElementById('public-profile-toast');
+        if (toast) {
+          toast.textContent = `✓ Custom Project "${newProject.title}" Created via AI Mentor!`;
+          toast.style.display = 'block';
+          setTimeout(() => { toast.style.display = 'none'; }, 4000);
+        }
+
+        setTimeout(() => {
+          openElabWorkspace(newProject.id);
+        }, 200);
+      });
+    }
   }
 
   if (elabModalClose && elabModal) {
@@ -3280,6 +3750,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   renderElabProjects();
+  initElabCustomProjectModal();
+  renderProfileFeaturedProjects();
 
   initAskAiHoverEngine();
 
@@ -6140,17 +6612,9 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
     });
   }
 
-  // Hook trigger button in AI Quiz view
-  const btnTriggerMentorQuiz = document.getElementById('btn-trigger-mentor-quiz');
-  if (btnTriggerMentorQuiz) {
-    btnTriggerMentorQuiz.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (typeof switchTab === 'function') {
-        switchTab('ai-mentor');
-        setTimeout(() => renderClaudeQuizWizardInChat(), 200);
-      }
-    });
-  }
+  // --------------------------------------------------------------------------
+  // CUSTOM QUIZ ARCHITECT VIA MENTOR TRIGGER
+  // --------------------------------------------------------------------------
 
   // Question generation utility
   function generateCustomQuizObject(id, topic, goal, format, focus, diff, count, timerMode) {
@@ -6245,6 +6709,130 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
       questions: finalQuestions
     };
   }
+
+  // --------------------------------------------------------------------------
+  // CUSTOM QUIZ ARCHITECT MODAL CONTROLLER (DIRECT IN-PLACE QUIZ GENERATOR)
+  // --------------------------------------------------------------------------
+  function initCustomQuizArchitectModal() {
+    const modal = document.getElementById('custom-quiz-architect-modal');
+    const btnTrigger = document.getElementById('btn-trigger-mentor-quiz');
+    const btnClose = document.getElementById('btn-close-quiz-architect-modal');
+    const btnCancel = document.getElementById('btn-cancel-quiz-architect');
+    const btnGenerate = document.getElementById('btn-modal-generate-quiz');
+
+    if (!modal) return;
+
+    function openModal() {
+      // Dynamically highlight completed courses in course dropdown
+      const courseSelect = document.getElementById('modal-wiz-course-select');
+      if (courseSelect && typeof getUserCourses === 'function') {
+        const userCourses = getUserCourses();
+        const completedIds = Object.keys(userCourses).filter(id => userCourses[id].status === 'completed' || userCourses[id].progress === 100);
+        Array.from(courseSelect.options).forEach(opt => {
+          if (completedIds.some(cid => opt.value.includes(cid))) {
+            if (!opt.text.startsWith('✓')) {
+              opt.text = '✓ Certified: ' + opt.text.replace(/^[✓\sActive Completed:]+/, '').trim();
+            }
+          }
+        });
+      }
+      modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+      modal.style.display = 'none';
+    }
+
+    if (btnTrigger) {
+      btnTrigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal();
+      });
+    }
+
+    if (btnMentorQuizChip) {
+      btnMentorQuizChip.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal();
+      });
+    }
+
+    if (btnClose) btnClose.addEventListener('click', closeModal);
+    if (btnCancel) btnCancel.addEventListener('click', closeModal);
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    // Pill group toggle handlers
+    ['modal-wiz-goal-grid', 'modal-wiz-format-grid', 'modal-wiz-focus-grid', 'modal-wiz-diff-grid', 'modal-wiz-count-grid'].forEach(gridId => {
+      const grid = document.getElementById(gridId);
+      if (!grid) return;
+      grid.querySelectorAll('.wizard-pill-opt').forEach(btn => {
+        btn.addEventListener('click', () => {
+          grid.querySelectorAll('.wizard-pill-opt').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+        });
+      });
+    });
+
+    if (btnGenerate) {
+      btnGenerate.addEventListener('click', (e) => {
+        e.preventDefault();
+        try {
+          const getVal = (gridId) => {
+            const sel = modal.querySelector('#' + gridId + ' .wizard-pill-opt.selected');
+            return sel ? sel.getAttribute('data-val') : '';
+          };
+
+          const goal = getVal('modal-wiz-goal-grid') || 'Exam Prep (SSO/JSO Cadre)';
+          const format = getVal('modal-wiz-format-grid') || 'Multiple Choice (MCQ)';
+          const focus = getVal('modal-wiz-focus-grid') || 'Balanced';
+          const diff = getVal('modal-wiz-diff-grid') || 'Intermediate';
+          const qCount = parseInt(getVal('modal-wiz-count-grid') || '5', 10);
+          const timerSelect = document.getElementById('modal-wiz-timer-select');
+          const timerMode = timerSelect ? timerSelect.value : 'per_45';
+
+          const customTopicInput = document.getElementById('modal-wiz-custom-topic');
+          const courseSelect = document.getElementById('modal-wiz-course-select');
+          const topicName = (customTopicInput && customTopicInput.value.trim())
+            ? customTopicInput.value.trim()
+            : (courseSelect ? courseSelect.value.replace(/^[✓\sActive Completed Certified:]+/, '').trim() : 'Survey Sampling & Estimation');
+
+          const quizId = 'custom_quiz_' + Date.now();
+          const newQuiz = generateCustomQuizObject(quizId, topicName, goal, format, focus, diff, qCount, timerMode);
+          newQuiz.isNew = true;
+
+          const allQuizzes = getCustomQuizzes();
+          allQuizzes.unshift(newQuiz);
+          saveCustomQuizzes(allQuizzes);
+
+          closeModal();
+
+          if (typeof renderCustomQuizzesGrid === 'function') {
+            renderCustomQuizzesGrid();
+          }
+
+          const toast = document.getElementById('public-profile-toast');
+          if (toast) {
+            toast.textContent = `✓ Custom Quiz "${newQuiz.title}" Generated & Added to AI Quiz!`;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 4000);
+          }
+
+          const customListEl = document.getElementById('custom-quizzes-list');
+          if (customListEl) {
+            customListEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        } catch (err) {
+          console.error('Error generating custom quiz from modal:', err);
+          alert('Could not generate quiz: ' + err.message);
+        }
+      });
+    }
+  }
+
+  initCustomQuizArchitectModal();
 
   // --------------------------------------------------------------------------
   // 2. AI QUIZ SECTION: SUB-NAV TABS & CUSTOM QUIZZES RENDERING
@@ -7903,7 +8491,7 @@ Official digital marksheet archived in Nirdesha Competency Cloud.`;
   if (btnCloseMetricDoc) btnCloseMetricDoc.addEventListener('click', () => metricDocModal.style.display = 'none');
   if (btnDoneMetricDoc) btnDoneMetricDoc.addEventListener('click', () => metricDocModal.style.display = 'none');
 
-  document.querySelectorAll('.btn-metric-how').forEach(btn => {
+  document.querySelectorAll('.btn-metric-how[data-metric]').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const key = btn.getAttribute('data-metric') || 'active';
@@ -7911,7 +8499,7 @@ Official digital marksheet archived in Nirdesha Competency Cloud.`;
     });
   });
 
-  document.querySelectorAll('.metric-interactive-box').forEach(box => {
+  document.querySelectorAll('.metric-interactive-box[data-metric-key]').forEach(box => {
     box.addEventListener('click', () => {
       const key = box.getAttribute('data-metric-key') || 'active';
       openMetricDoc(key);
