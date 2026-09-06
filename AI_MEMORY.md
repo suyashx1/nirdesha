@@ -37,6 +37,9 @@ Phase 0 — Repository scaffolding (docs + memory system). No application code w
 - [ ] Set up PostgreSQL schema migrations from docs/DATABASE_SCHEMA.md
 - [ ] Implement auth (JWT) + RBAC middleware
 
+### Maintenance
+- [x] Resolve merge conflicts in PR branch against default branch
+
 ### Phase 2 — Core Competency Engine (in progress)
 - [ ] Implement Skill/Role/RoleSkillRequirement CRUD
 - [ ] Implement skill-gap calculation
@@ -156,6 +159,7 @@ Phase 0 — Repository scaffolding (docs + memory system). No application code w
 - [2026-09-04 05:40 UTC] [DONE] Implemented Profile Banner Library & Custom 5MB Upload Engine: (1) Added Banner Edit Logo Button (#btn-banner-edit-menu) on the cover banner opening a dual-option dropdown menu (#banner-edit-dropdown) for 'Upload from computer' and 'Choose from Banner Library'; (2) Built Custom Upload Engine enforcing < 5MB file size limit and image/GIF validation with FileReader dataURL persistence in localStorage; (3) Added Profile Banner Library Modal (#banner-library-modal) with quick Selection Dropdown (#banner-library-select), live animated preview stage (#banner-preview-viewport), and interactive thumbnail cards grid (#banner-cards-grid); (4) Converted and integrated all 11 user-specified animated patterns (Cyber Rain, Blue Chevron Slide, Carbon Fiber Stripes, Golden Sovereign Rings, Hexagonal Olive Conic Prism, Volcanic Cracked Earth, Archipelago Ocean Atoll, Isometric Gold Lattice, Matrix Digital Code Rain, Statistical & Quantum Matrix Symbols, Midnight City & Flashlight Patrol) + Default MoSPI Cadre into pure CSS, SVG filters, and HTML; (5) Implemented dark theme support and backdrop click auto-dismiss; (6) Verified with 66 unit tests, AST HTML stack depth 3 (0 delta), and zero graphic emojis. — by Antigravity
 - [2026-09-04 05:50 UTC] [DONE] Resolved Banner Edit Button Not Working: (1) Diagnosed root cause: initProfileBannerEngine() was inadvertently inserted inside the window.addEventListener('keydown') event listener because the closing '});' of the keydown block was at the very end of js/public.js, preventing click listeners on #btn-banner-edit-menu from attaching on page load; (2) Properly closed the keydown block before the banner controller and invoked initProfileBannerEngine() at top-level on DOM load/readiness; (3) Hardened CSS pointer-events (pointer-events: none on .profile-banner-stage and SVG icon; pointer-events: auto on .banner-edit-action-wrap, button, and dropdown) and boosted stacking z-indexes (wrap z-index: 70, button z-index: 71, dropdown z-index: 100); (4) Added Escape key auto-dismissal for the dropdown; (5) Verified with 24 interaction simulation tests, 66 banner library unit tests, AST nesting depth 3 (0 delta), and zero graphic emojis. — by Antigravity
 - [2026-09-04 06:10 UTC] [DONE] Re-engineered Banner Sizing (220px Height) & Menu Pop-up Library: (1) Diagnosed and fixed renderBannerIntoStage base-class wipeout bug: dynamically preserves target element's class (profile-banner-stage, banner-preview-viewport, or banner-card-thumb) instead of replacing targetEl.className, preventing collapse of live preview and card thumbnails; (2) Edited all 11 pattern CSS definitions to fit the 220px banner size seamlessly: Cyber Rain (250x220px with crisp neon filter), Blue Chevrons (55px x 4 = 220px), Carbon Fiber (44px x 5 = 220px), Golden Sovereign Rings (--s: 110px x 2 = 220px), Hexagonal Olive Prism (--s: 73.33px x 3 = 220px), Volcanic Cracked Earth (molten lava basalt plates with animated magma glow), Archipelago Ocean Atoll (proportional island contours and azure lagoons), Isometric Gold Lattice (63px x 110px x 2 = 220px), Matrix Digital Rain (rotated phosphor stream across 220px), Statistical & Quantum Matrix (400 symbols in 27px dense grid filling all screen widths), and Midnight City Patrol (320px x 220px urban skyline with sweeping beam and rooftop eyes); (3) Built dedicated Menu Pop-up Library modal with selection dropdown, 220px-proportional live preview box, pattern cards with 1-click select & double-click apply, direct 5MB GIF/image upload, and immediate localStorage sync with feedback toast; (4) Verified with 31 banner application unit tests, 24 interaction tests, 66 banner library tests, AST nesting depth 3 (0 delta), and zero graphic emojis. — by Antigravity
+- [2026-09-06 07:05 UTC] [DONE] Merged default branch (Final-Project) into Shubh_commits and resolved conflicts in js/admin.js, public.html, and requirements.txt to unblock PR mergeability. — by Copilot
 
 ## Open Questions / Decisions Needed
 - Final call on 3D vs 2D as the DEFAULT skill graph view for the SIH demo (2D is the
@@ -163,6 +167,5 @@ Phase 0 — Repository scaffolding (docs + memory system). No application code w
 - Leaderboard visibility default (public / department-only / opt-in) — needs a product
   decision before Phase 3 implementation.
 - Which LLM API to use — needs credentials/provider decision before Phase 4.
-
 
 
