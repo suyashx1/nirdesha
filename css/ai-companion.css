@@ -3,6 +3,38 @@
    Consistent across all portal pages (main, public, admin, login)
    ========================================================================== */
 
+/* Root Host for AI Saarthi - Always out of document flow to prevent flex distortion */
+#nirdesha-ai-companion-root {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  overflow: visible !important;
+  pointer-events: none !important;
+  z-index: 999990 !important;
+}
+
+#nirdesha-ai-companion-root > * {
+  pointer-events: auto;
+}
+
+/* Fullscreen Backdrop when expanded */
+.companion-fullscreen-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
+  z-index: 999992;
+}
+
 /* Floating Launcher Container at Bottom Right */
 .nirdesha-companion-launcher {
   position: fixed;
@@ -728,4 +760,22 @@
   background: #0284c7;
   border-color: #38bdf8;
 }
+
+.btn-selection-ask-ai.is-notes-mentor {
+  background: linear-gradient(135deg, #002b49 0%, #0369a1 100%);
+  border-color: #ea580c;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4), 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.btn-selection-ask-ai.is-notes-mentor:hover {
+  background: #ea580c;
+  border-color: #fdba74;
+  box-shadow: 0 6px 18px rgba(234, 88, 12, 0.5);
+}
+
+[data-theme="dark"] .btn-selection-ask-ai.is-notes-mentor {
+  background: linear-gradient(135deg, #0f172a 0%, #0369a1 100%);
+  border-color: #f97316;
+}
+
 

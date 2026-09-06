@@ -3491,6 +3491,7 @@ body.sidebar-collapsed .admin-nav-icon {
 }
 
 #view-ai-mentor .ai-chat-container {
+  position: relative !important;
   width: 100% !important;
   max-width: 100% !important;
   height: calc(100vh - 195px) !important;
@@ -5203,17 +5204,17 @@ body.mentor-fullscreen-active #view-ai-mentor .ai-chat-input-row,
 
 .mentor-history-drawer {
   position: absolute;
-  top: 50px;
+  top: 0;
   left: 0;
   bottom: 0;
   width: 320px;
   max-width: 86%;
   background: #ffffff;
   border-right: 2px solid #002b49;
-  z-index: 100;
+  z-index: 150;
   display: flex;
   flex-direction: column;
-  box-shadow: 4px 0 16px rgba(0, 0, 0, 0.18);
+  box-shadow: 6px 0 24px rgba(0, 0, 0, 0.22);
   animation: slideDrawerIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
@@ -7447,6 +7448,11 @@ body.mentor-fullscreen-active #view-ai-mentor .ai-chat-input-row,
 .btn-modal-close-icon,
 .btn-milestone-close,
 .btn-drawer-close,
+.btn-reminder-dismiss,
+.btn-proctor-abort,
+#btn-close-trainee-contact-admin,
+#btn-close-faqs-modal,
+#btn-close-appeal-dialog,
 #quiz-close-btn,
 #elab-modal-close {
   display: inline-flex !important;
@@ -7465,6 +7471,8 @@ body.mentor-fullscreen-active #view-ai-mentor .ai-chat-input-row,
   border-radius: 6px !important;
   border: 1px solid rgba(255, 255, 255, 0.22) !important;
   background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  background: rgba(255, 255, 255, 0.12) !important;
   color: #ffffff !important;
   font-size: 1.35rem !important;
   font-weight: 300 !important;
@@ -7482,6 +7490,11 @@ body.mentor-fullscreen-active #view-ai-mentor .ai-chat-input-row,
 .btn-modal-close-icon svg,
 .btn-milestone-close svg,
 .btn-drawer-close svg,
+.btn-reminder-dismiss svg,
+.btn-proctor-abort svg,
+#btn-close-trainee-contact-admin svg,
+#btn-close-faqs-modal svg,
+#btn-close-appeal-dialog svg,
 #quiz-close-btn svg,
 #elab-modal-close svg {
   display: block !important;
@@ -7495,6 +7508,11 @@ body.mentor-fullscreen-active #view-ai-mentor .ai-chat-input-row,
 .btn-modal-close-icon:hover,
 .btn-milestone-close:hover,
 .btn-drawer-close:hover,
+.btn-reminder-dismiss:hover,
+.btn-proctor-abort:hover,
+#btn-close-trainee-contact-admin:hover,
+#btn-close-faqs-modal:hover,
+#btn-close-appeal-dialog:hover,
 #quiz-close-btn:hover,
 #elab-modal-close:hover {
   background: #dc2626 !important;
@@ -10151,4 +10169,1226 @@ textarea ~ .btn-field-expand:hover {
   background: #2d2420 !important;
   border-color: #7c2d12 !important;
   color: #fdba74 !important;
+}
+
+
+/* ==========================================================================
+   OFFICER PROFILE AVATAR IMAGE & FLASHCARD RECYCLE BIN (10-DAY RECOVERY)
+   ========================================================================== */
+
+/* Profile Picture Reliability (Overrides solid gradient when avatar image exists) */
+.profile-avatar-overlap.has-custom-avatar {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+.profile-avatar-overlap img#public-profile-avatar-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 2 !important;
+  border-radius: 0px !important;
+}
+
+.profile-avatar-overlap.has-custom-avatar #public-profile-avatar-initials {
+  display: none !important;
+}
+
+.profile-avatar-overlap .avatar-edit-icon-btn {
+  z-index: 15 !important;
+}
+
+/* Sidebar Avatar Image */
+.trainee-avatar img#public-sidebar-avatar-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: 0px !important;
+}
+
+/* Flashcard Recycle Bin Button & Actions */
+.btn-recycle-flashcards:hover {
+  background: #fee2e2 !important;
+  border-color: #ef4444 !important;
+  color: #b91c1c !important;
+}
+
+.btn-restore-flashcard {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #166534;
+  background: #dcfce7;
+  border: 1px solid #86efac;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.15s ease;
+}
+
+.btn-restore-flashcard:hover {
+  background: #16a34a;
+  color: #ffffff;
+  border-color: #16a34a;
+}
+
+.btn-purge-flashcard {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #991b1b;
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.15s ease;
+}
+
+.btn-purge-flashcard:hover {
+  background: #dc2626;
+  color: #ffffff;
+  border-color: #dc2626;
+}
+
+.recycle-flashcard-countdown {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #ea580c;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  padding: 2px 7px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Dark Theme Overrides for Flashcard Recycle Bin */
+[data-theme="dark"] .btn-recycle-flashcards {
+  background: #2d1e24 !important;
+  border-color: #7f1d1d !important;
+  color: #fca5a5 !important;
+}
+
+[data-theme="dark"] .btn-recycle-flashcards:hover {
+  background: #3f1d24 !important;
+  border-color: #ef4444 !important;
+}
+
+[data-theme="dark"] #flashcard-recycle-bin-view .recycle-header-bar {
+  background: #1e1e2d !important;
+  border-color: #4b1d24 !important;
+}
+
+[data-theme="dark"] .recycle-flashcard-countdown {
+  background: #2d2420 !important;
+  border-color: #7c2d12 !important;
+  color: #fdba74 !important;
+}
+
+/* ==========================================================================
+   MULTI-PLATFORM COURSES & TRACKS (iGOT, NSSTA, MoSPI CADRE)
+   ========================================================================== */
+.courses-header-card {
+  background: #ffffff;
+  border: 1.5px solid #002b49;
+  box-shadow: 3px 3px 0px #002b49;
+  padding: 1.25rem 1.5rem;
+}
+
+.courses-stats-pills {
+  display: flex;
+  gap: 0.65rem;
+}
+
+.stat-pill-box {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  padding: 0.4rem 0.85rem;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+}
+
+.stat-pill-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.5px;
+}
+
+.stat-pill-val {
+  font-size: 0.95rem;
+  font-weight: 900;
+  color: #002b49;
+}
+
+.badge-active-count {
+  font-size: 0.72rem;
+  font-weight: 800;
+  background: #002b49;
+  color: #ffffff;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.course-card-gov {
+  position: relative;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.course-card-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.course-badges-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.course-platform-badge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.badge-platform-igot {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+}
+
+.badge-platform-nssta {
+  background: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+.badge-platform-cadre {
+  background: #fff7ed;
+  color: #c2410c;
+  border: 1px solid #fed7aa;
+}
+
+.course-hardness-badge {
+  font-size: 0.66rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.hardness-beginner {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.hardness-intermediate {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.hardness-advanced {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+/* Save For Later Bookmark Button & Tooltip */
+.btn-course-save-later {
+  position: relative;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #64748b;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.btn-course-save-later:hover {
+  background: #ea580c;
+  border-color: #ea580c;
+  color: #ffffff;
+}
+
+.btn-course-save-later.is-saved {
+  background: #fff7ed;
+  border-color: #ea580c;
+  color: #ea580c;
+}
+
+.btn-course-save-later.is-saved svg {
+  fill: #ea580c;
+}
+
+.btn-course-save-later .save-tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  right: 50%;
+  transform: translateX(50%);
+  background: #002b49;
+  color: #ffffff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  white-space: nowrap;
+  padding: 3px 7px;
+  border-radius: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.btn-course-save-later:hover .save-tooltip {
+  opacity: 1;
+}
+
+/* Course Metadata Row (Duration, Modules) */
+.course-meta-pills {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.72rem;
+  color: #64748b;
+  font-weight: 600;
+  margin: 0.5rem 0 0.75rem 0;
+}
+
+.course-meta-pills span {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* Action Buttons inside Card */
+.btn-give-course-exam {
+  background: #16a34a !important;
+  color: #ffffff !important;
+  border-color: #15803d !important;
+  box-shadow: 2px 2px 0px #14532d !important;
+  font-weight: 800 !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn-give-course-exam:hover {
+  background: #15803d !important;
+  box-shadow: 3px 3px 0px #0f172a !important;
+}
+
+.btn-course-info {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #002b49;
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 0.35rem 0.65rem;
+  border-radius: 2px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+}
+
+.btn-course-info:hover {
+  background: #f8fafc;
+  border-color: #002b49;
+  color: #002b49;
+}
+
+/* Udemy-Style Course Details Modal */
+.course-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 20, 40, 0.75);
+  backdrop-filter: blur(4px);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.course-modal-dialog {
+  background: #ffffff;
+  border: 2px solid #002b49;
+  box-shadow: 8px 8px 0px #002b49;
+  width: 100%;
+  max-width: 820px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: courseModalPop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes courseModalPop {
+  0% { opacity: 0; transform: scale(0.96) translateY(10px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.course-modal-header {
+  background: linear-gradient(135deg, #002b49 0%, #034b75 100%);
+  color: #ffffff;
+  padding: 1.25rem 1.5rem;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 3.5px solid #ea580c;
+}
+
+.course-modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.course-detail-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .course-detail-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.detail-metric-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 0.6rem 0.85rem;
+  border-radius: 4px;
+}
+
+.detail-metric-card .metric-lbl {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #64748b;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.detail-metric-card .metric-val {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #002b49;
+}
+
+.course-faculty-box {
+  background: #f1f5f9;
+  border-left: 3.5px solid #0284c7;
+  padding: 0.85rem 1rem;
+  border-radius: 0 4px 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.faculty-avatar-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #002b49;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.course-prereq-box {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  padding: 0.85rem 1rem;
+  border-radius: 4px;
+}
+
+.course-prereq-box ul {
+  margin: 0.4rem 0 0 1.25rem;
+  padding: 0;
+  font-size: 0.82rem;
+  color: #475569;
+}
+
+.course-prereq-box li {
+  margin-bottom: 0.25rem;
+}
+
+.syllabus-modules-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.syllabus-module-item {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 0.65rem 0.95rem;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.syllabus-module-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #002b49;
+}
+
+.syllabus-module-topics {
+  font-size: 0.74rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.course-modal-footer {
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* Dark Theme Overrides for Courses & Modal */
+[data-theme="dark"] .courses-header-card {
+  background: #111827 !important;
+  border-color: #334155 !important;
+  box-shadow: 3px 3px 0px #020617 !important;
+}
+
+[data-theme="dark"] .stat-pill-box {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+[data-theme="dark"] .stat-pill-val {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .course-modal-dialog {
+  background: #111827 !important;
+  border-color: #334155 !important;
+  box-shadow: 8px 8px 0px #020617 !important;
+}
+
+[data-theme="dark"] .course-modal-body {
+  background: #0f172a !important;
+}
+
+[data-theme="dark"] .detail-metric-card {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+[data-theme="dark"] .detail-metric-card .metric-val {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .course-faculty-box {
+  background: #1e293b !important;
+  border-left-color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .course-prereq-box {
+  background: #2d2420 !important;
+  border-color: #7c2d12 !important;
+}
+
+[data-theme="dark"] .syllabus-module-item {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+[data-theme="dark"] .syllabus-module-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .course-modal-footer {
+  background: #111827 !important;
+  border-color: #334155 !important;
+}
+
+[data-theme="dark"] .btn-course-save-later {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .btn-course-info {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+
+
+/* ==========================================================================
+   TRAINEE SIDEBAR HELP & SUPPORT FLYOUT MENU
+   ========================================================================== */
+.trainee-help-wrapper {
+  position: relative;
+  margin-bottom: 0.35rem;
+  width: 100%;
+}
+
+.trainee-help-trigger-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-left: 3px solid transparent;
+  border-radius: 0px !important;
+  color: #cbd5e1;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+}
+
+.trainee-help-trigger-btn:hover {
+  background-color: #001829;
+  color: #ffffff;
+  border-left-color: var(--trainee-saffron, #ff9933);
+}
+
+.trainee-help-trigger-btn.active {
+  background-color: #001424;
+  color: #ffffff;
+  border-left-color: var(--trainee-saffron, #ff9933);
+  font-weight: 700;
+}
+
+.trainee-help-trigger-btn .admin-nav-icon {
+  display: flex;
+  align-items: center;
+  color: #38bdf8;
+  margin-right: 0.75rem;
+}
+
+.help-arrow-icon {
+  margin-left: auto;
+  transition: transform 0.2s ease;
+  color: #94a3b8;
+}
+
+.trainee-help-trigger-btn.active .help-arrow-icon {
+  transform: rotate(180deg);
+}
+
+body.sidebar-collapsed .trainee-help-trigger-btn > span:not(.admin-nav-icon),
+body.sidebar-collapsed .trainee-help-trigger-btn .help-arrow-icon {
+  display: none !important;
+}
+
+body.sidebar-collapsed .trainee-help-trigger-btn {
+  justify-content: center;
+  padding: 0.7rem 0;
+}
+
+body.sidebar-collapsed .trainee-help-trigger-btn .admin-nav-icon {
+  margin-right: 0;
+}
+
+.trainee-help-flyout-menu {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 0;
+  width: 250px;
+  background: #ffffff;
+  border: 1.5px solid #002b49;
+  box-shadow: 0 12px 30px rgba(0, 43, 73, 0.35);
+  border-radius: 4px;
+  padding: 0.4rem 0;
+  z-index: 10000;
+  animation: tabFadeInUp 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+body.sidebar-collapsed .trainee-help-flyout-menu {
+  left: calc(100% + 8px);
+  bottom: 0;
+}
+
+.help-flyout-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #002b49;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease, color 0.15s ease;
+  box-sizing: border-box;
+}
+
+.help-flyout-item:hover {
+  background: #f0f7ff;
+  color: #ea580c;
+}
+
+.help-flyout-item svg {
+  color: #0284c7;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   BANNED USER BLOCKING OVERLAY MODAL
+   ========================================================================== */
+.banned-user-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(8px);
+  z-index: 9999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: tabFadeInUp 0.25s ease-out forwards;
+}
+
+.banned-modal-card {
+  width: 100%;
+  max-width: 580px;
+  background: #ffffff;
+  border: 3px solid #dc2626;
+  box-shadow: 0 25px 50px -12px rgba(220, 38, 38, 0.35);
+  border-radius: 0px !important;
+  overflow: hidden;
+}
+
+.banned-modal-header {
+  background: #dc2626;
+  color: #ffffff;
+  padding: 1.1rem 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.banned-reason-box {
+  background: #fef2f2;
+  border: 1.5px solid #f87171;
+  border-radius: 4px;
+  padding: 0.9rem 1.1rem;
+  margin: 0.75rem 0;
+}
+
+.banned-contact-hyperlink {
+  color: #0284c7;
+  font-weight: 800;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.banned-contact-hyperlink:hover {
+  color: #0369a1;
+}
+
+/* Banned Appeal Dialog */
+.banned-appeal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(5px);
+  z-index: 10000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.banned-appeal-card {
+  width: 100%;
+  max-width: 550px;
+  background: #ffffff;
+  border: 2px solid #002b49;
+  box-shadow: 6px 6px 0px rgba(0, 43, 73, 0.3);
+  border-radius: 0px !important;
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   FAQS ACCORDION STYLING
+   ========================================================================== */
+.faq-accordion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.faq-item {
+  border: 1.5px solid #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+  transition: border-color 0.15s ease;
+}
+
+.faq-item.active {
+  border-color: #002b49;
+}
+
+.faq-question {
+  padding: 0.8rem 1rem;
+  background: #f8fafc;
+  color: #002b49;
+  font-size: 0.84rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  user-select: none;
+}
+
+.faq-question:hover {
+  background: #f1f5f9;
+}
+
+.faq-toggle-icon {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #0284c7;
+  transition: transform 0.2s ease;
+}
+
+.faq-item.active .faq-toggle-icon {
+  transform: rotate(45deg);
+}
+
+.faq-answer {
+  display: none;
+  padding: 0.85rem 1rem;
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  font-size: 0.8rem;
+  color: #334155;
+  line-height: 1.55;
+}
+
+.faq-item.active .faq-answer {
+  display: block;
+}
+
+/* Dark theme overrides */
+[data-theme="dark"] .trainee-help-flyout-menu {
+  background: #0f172a;
+  border-color: #38bdf8;
+}
+
+[data-theme="dark"] .help-flyout-item {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .help-flyout-item:hover {
+  background: #1e293b;
+  color: #fb923c;
+}
+
+[data-theme="dark"] .banned-modal-card,
+[data-theme="dark"] .banned-appeal-card {
+  background: #0f172a;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .banned-reason-box {
+  background: #450a0a;
+  border-color: #991b1b;
+}
+
+[data-theme="dark"] #banned-modal-reason-text {
+  color: #fecaca !important;
+}
+
+[data-theme="dark"] .faq-item {
+  border-color: #334155;
+}
+
+[data-theme="dark"] .faq-question {
+  background: #1e293b;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .faq-answer {
+  background: #0f172a;
+  color: #cbd5e1;
+  border-color: #334155;
+}
+
+
+/* ==========================================================================
+   ENHANCED EXECUTIVE BANNED LOCKOUT SYSTEM & OVERLAY
+   ========================================================================== */
+body.user-is-banned {
+  overflow: hidden !important;
+}
+
+body.user-is-banned .trainee-shell,
+body.user-is-banned .trainee-sidebar,
+body.user-is-banned .trainee-main,
+body.user-is-banned .trainee-topbar {
+  filter: blur(8px) grayscale(85%) !important;
+  pointer-events: none !important;
+  user-select: none !important;
+  transition: filter 0.3s ease;
+}
+
+body.user-is-banned #banned-user-modal {
+  display: flex !important;
+  pointer-events: auto !important;
+  z-index: 999999999 !important;
+}
+
+/* Modal Shell */
+.banned-modal-card {
+  width: 100%;
+  max-width: 640px;
+  background: #ffffff;
+  border: 2px solid #b91c1c;
+  box-shadow: 0 25px 60px -10px rgba(185, 28, 28, 0.45), 0 0 0 1px rgba(185, 28, 28, 0.2);
+  border-radius: 0px !important;
+  position: relative;
+  overflow: hidden;
+  animation: tabFadeInUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.banned-modal-tricolor-accent {
+  height: 5px;
+  background: linear-gradient(90deg, #ea580c 0% 33.3%, #ffffff 33.3% 66.6%, #16a34a 66.6% 100%);
+  width: 100%;
+}
+
+.banned-modal-header {
+  background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 60%, #b91c1c 100%);
+  color: #ffffff;
+  padding: 1.15rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #ef4444;
+}
+
+.banned-header-emblem {
+  width: 38px;
+  height: 38px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #fef08a;
+}
+
+.banned-header-eyebrow {
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  font-weight: 800;
+  color: #fecaca;
+  text-transform: uppercase;
+}
+
+.banned-header-title {
+  font-size: 1.05rem;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  margin-top: 2px;
+}
+
+.banned-statutory-stamp {
+  font-size: 0.68rem;
+  font-weight: 900;
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1.5px dashed #b91c1c;
+  padding: 3px 8px;
+  border-radius: 2px;
+  letter-spacing: 0.08em;
+  transform: rotate(-3deg);
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.banned-modal-body {
+  padding: 1.4rem 1.6rem;
+  background: #ffffff;
+}
+
+.banned-officer-strip {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.75rem 1rem;
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.banned-officer-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #002b49;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 2px solid #ef4444;
+}
+
+.banned-officer-name {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #002b49;
+}
+
+.banned-officer-meta {
+  font-size: 0.75rem;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.banned-tag-pill {
+  font-size: 0.65rem;
+  font-weight: 900;
+  color: #991b1b;
+  background: #fee2e2;
+  border: 1px solid #f87171;
+  padding: 1px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.03em;
+}
+
+.banned-alert-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  color: #991b1b;
+  font-weight: 800;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  margin-bottom: 0.75rem;
+}
+
+.banned-alert-notice svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.banned-reason-box {
+  background: #fff5f5;
+  border: 2px solid #f87171;
+  box-shadow: inset 0 2px 4px rgba(185, 28, 28, 0.05);
+  border-radius: 4px;
+  padding: 1rem 1.15rem;
+  margin-bottom: 1rem;
+}
+
+.banned-reason-heading {
+  font-size: 0.68rem;
+  font-weight: 900;
+  color: #b91c1c;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.35rem;
+}
+
+.banned-modal-reason-text {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #7f1d1d;
+  line-height: 1.5;
+  margin: 0;
+  word-break: break-word;
+}
+
+.banned-reason-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #fecaca;
+  padding-top: 0.5rem;
+  margin-top: 0.6rem;
+  font-size: 0.7rem;
+  color: #991b1b;
+  font-weight: 600;
+}
+
+.banned-secure-hash {
+  font-family: monospace;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.banned-instructions-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 0.85rem 1rem;
+}
+
+.banned-modal-footer {
+  padding: 1rem 1.5rem;
+  background: #f1f5f9;
+  border-top: 1.5px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.btn-banned-appeal-primary {
+  padding: 0.55rem 1.4rem;
+  background: #002b49;
+  color: #ffffff;
+  border: 1.5px solid #001827;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  border-radius: 0px !important;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.btn-banned-appeal-primary:hover {
+  background: #034b75;
+  transform: translateY(-1px);
+}
+
+.btn-banned-signout {
+  padding: 0.5rem 1rem;
+  background: #ffffff;
+  color: #dc2626;
+  border: 1.5px solid #fca5a5;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 0px !important;
+  transition: all 0.15s ease;
+}
+
+.btn-banned-signout:hover {
+  background: #fef2f2;
+  border-color: #dc2626;
+}
+
+/* Dark Mode Adaptation */
+[data-theme="dark"] .banned-modal-card {
+  background: #0f172a;
+  border-color: #ef4444;
+}
+
+[data-theme="dark"] .banned-modal-body {
+  background: #0f172a;
+}
+
+[data-theme="dark"] .banned-officer-strip {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .banned-officer-name {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .banned-officer-meta {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .banned-reason-box {
+  background: #450a0a;
+  border-color: #b91c1c;
+}
+
+[data-theme="dark"] .banned-modal-reason-text {
+  color: #fee2e2;
+}
+
+[data-theme="dark"] .banned-instructions-card {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .banned-instructions-card div {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .banned-instructions-card p {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .banned-modal-footer {
+  background: #1e293b;
+  border-color: #334155;
 }
