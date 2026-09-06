@@ -813,6 +813,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.renderPublicOfficerDossier = renderPublicOfficerDossier;
 
+  // Phase 1 bridge: allows the FastAPI integration layer to replace the
+// internal profile state without rebuilding this existing UI module.
+window.setNirdeshaOfficerProfile = function (profile) {
+  currentOfficerProfile = {
+    ...DEFAULT_PUBLIC_PROFILE,
+    ...(profile || {})
+  };
+
+  try {
+    localStorage.setItem(
+      'nirdesha_officer_profile',
+      JSON.stringify(currentOfficerProfile)
+    );
+
+    localStorage.setItem(
+      'nirdesha_public_profile',
+      JSON.stringify(currentOfficerProfile)
+    );
+  } catch (e) {
+    console.warn(
+      'Could not cache backend profile:',
+      e
+    );
+  }
+
+  renderPublicOfficerDossier(
+    currentOfficerProfile
+  );
+};
+
   window.openSocialLinksEdit = function(fieldKey) {
     if (profileViewMode) profileViewMode.style.display = 'none';
     if (profileEditMode) profileEditMode.style.display = 'block';
@@ -955,6 +985,27 @@ document.addEventListener('DOMContentLoaded', () => {
       profileToast.textContent = '✓ Profile & Cadre Dossier Updated Successfully!';
       profileToast.style.display = 'block';
       setTimeout(() => { profileToast.style.display = 'none'; }, 3500);
+
+      // Phase 1: persist the same edited fields
+// in the FastAPI database.
+if (
+  window.NirdeshaPhase1 &&
+  typeof
+    window.NirdeshaPhase1.saveProfileFromForm
+    === 'function'
+) {
+
+  window.NirdeshaPhase1
+    .saveProfileFromForm()
+
+    .catch(error => {
+      console.error(
+        'Backend profile save failed:',
+        error
+      );
+    });
+}
+
     }
   }
 
@@ -1945,6 +1996,11 @@ document.addEventListener('DOMContentLoaded', () => {
       prereq: 'ISS Directorate Officer Track'
     }
   ];
+
+  // Phase 1 bridge: backend competency data
+  // can now update the existing 3D nodes.
+  window.NirdeshaConstellationNodes =
+  CONSTELLATION_NODES;
 
   // Dependency Edges between Competency Standards
   const CONSTELLATION_EDGES = [
@@ -7212,6 +7268,48 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
     history.unshift(historyItem);
     saveQuizHistory(history);
 
+
+  // convert the completed quiz into real SkillEvidence.
+  //
+  // Accuracy is used by the backend competency engine.
+  // Speed stays a separate gameplay/efficiency metric.
+  if (window.NirdeshaPhase1 && typeof window.NirdeshaPhase1.submitQuizEvidence === 'function') {
+
+  window.NirdeshaPhase1
+    .submitQuizEvidence({
+
+      title:
+        activeQuizSession.title,
+
+      topic:
+        activeQuizSession.topic,
+
+      accuracy:
+        accuracy,
+
+      correct:
+        correctCount,
+
+      total:
+        totalCount,
+
+      answers:
+        userAnswersRecord,
+
+      assessmentType:
+        'quiz'
+    })
+
+    .catch(error => {
+
+      console.error(
+        'Could not sync quiz result with competency backend:',
+        error
+      );
+
+    });
+}
+
     // Award Points to Trainee Profile Elo
     try {
       let profileScore = parseInt(localStorage.getItem('nirdesha_trainee_score') || '1420', 10);
@@ -8400,7 +8498,44 @@ Official digital marksheet archived in Nirdesha Competency Cloud.`;
     const accuracy = Math.round((correctQ / totalQ) * 100);
     isRetestActive = false;
     const passed = accuracy >= 66; // 2 out of 3 or higher
+    
+    // targeted retest is also competency evidence.
+    if (window.NirdeshaPhase1 && typeof window.NirdeshaPhase1.submitQuizEvidence === 'function') {
 
+      window.NirdeshaPhase1
+        .submitQuizEvidence({
+
+          title:
+            `Retest: ${currentRetestGap.topic}`,
+
+          topic:
+            currentRetestGap.topic,
+
+          accuracy:
+            accuracy,
+
+          correct:
+            correctQ,
+
+          total:
+            totalQ,
+
+          answers:
+           retestUserAnswers,
+
+          assessmentType:
+            'quiz'
+    })
+
+    .catch(error => {
+
+      console.error(
+        'Could not sync retest with competency backend:',
+        error
+      );
+
+    });
+}
     if (passed) {
       // Mark gap as Mastered!
       currentRetestGap.severity = 'resolved';

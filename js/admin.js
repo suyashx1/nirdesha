@@ -300,6 +300,42 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   ];
 
+// update the real backend-backed employee row
+// while keeping other users as demo data.
+//
+// Matching is done by employee ID OR name.
+window.NirdeshaAdminUpsertUser = function (user) {
+    if (!user || !user.id || !user.name) {
+      return;
+    }
+
+    const index =
+      USER_ROSTER.findIndex(
+        existing =>
+          existing.id === user.id ||
+          String(existing.name)
+            .toLowerCase()
+            ===
+          String(user.name)
+            .toLowerCase()
+      );
+
+    if (index >= 0) {
+      USER_ROSTER[index] = {
+        ...USER_ROSTER[index],
+        ...user
+      };
+    } else {
+      USER_ROSTER.unshift(user);
+    }
+
+    renderUserDirectory();
+  };
+
+  let currentSortKey = 'name';
+  let sortAscending = true;
+  let currentSearchQuery = '';
+
   function renderAdminBannerIntoStage(targetEl, mode, value) {
     if (!targetEl) return;
     let baseClass = 'profile-banner-stage';
