@@ -32,6 +32,7 @@ from .routers import (
     evidence,
     learning,
     materials,
+    mentor,
     profiles,
     recommendations,
     resume,
@@ -94,7 +95,7 @@ app = FastAPI(
     ),
 
     version=
-        "3.0.0-phase3",
+        "4.0.0-phase4",
 
     description=(
 
@@ -188,6 +189,14 @@ app.include_router(
     learning.router
 )
 
+# ================================================================
+# PHASE 4
+# Context-aware AI Mentor
+# ================================================================
+
+app.include_router(
+    mentor.router
+)
 
 @app.get("/")
 def root():
@@ -198,7 +207,7 @@ def root():
             "Nirdesha Competency Intelligence API",
 
         "phase":
-            3,
+            4,
 
         "status":
             "ready",
@@ -221,12 +230,15 @@ def health():
             "competency-core",
 
         "phase":
-            3,
+            4,
 
         "database":
             "connected",
 
         "learning_catalogue":
             "prototype_iGOT_NSSTA",
+
+        "mentor_context":
+            "database_injected",
 
     }
