@@ -32,7 +32,7 @@ from .routers import (
     evidence,
     learning,
     materials,
-    profile,
+    profiles,
     recommendations,
     resume,
 )
@@ -147,7 +147,7 @@ app.add_middleware(
 # ================================================================
 
 app.include_router(
-    profile.router
+    profiles.router
 )
 
 app.include_router(
