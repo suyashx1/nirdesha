@@ -890,7 +890,7 @@
                     Personalized quizzes built with your AI Study Mentor. Answer faster than question time to earn <strong>Bonus Speed Points</strong>!
                   </p>
                 </div>
-                <button type="button" class="btn-create-quiz-trigger" id="btn-trigger-mentor-quiz" title="Ask AI Mentor to build a new custom quiz">
+                <button type="button" class="btn-create-quiz-trigger" id="btn-trigger-mentor-quiz" onclick="if(typeof openCustomQuizArchitectModal==='function'){openCustomQuizArchitectModal();}else if(window.openCustomQuizArchitectModal){window.openCustomQuizArchitectModal();}" title="Ask AI Mentor to build a new custom quiz">
                   <span>+ Create Custom Quiz via Mentor</span>
                 </button>
               </div>
@@ -914,7 +914,7 @@
               <div>
                 <button type="button" class="btn-download-marksheet" id="btn-download-marksheet" disabled title="Select 1 or more quizzes to download academic marksheet">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
-                  <span>Download Academic Marksheet (PDF / PNG / JPG)</span>
+                  <span>Download Academic Marksheet (PDF / Word / JPG)</span>
                 </button>
               </div>
             </div>
@@ -2403,12 +2403,18 @@
           <p style="font-size: 0.95rem; font-weight: 700; color: #166534;" id="quiz-score-val">
             80% Accuracy (118s used, 80% Time Efficiency)
           </p>
-          <p style="font-size: 0.85rem; font-weight: 800; color: #ea580c; margin-bottom: 1.5rem;" id="quiz-elo-delta">
+          <p style="font-size: 0.85rem; font-weight: 800; color: #ea580c; margin-bottom: 1.25rem;" id="quiz-elo-delta">
             +28 Elo Rating Awarded
           </p>
-          <button type="button" class="btn-admin-action" onclick="document.getElementById('quiz-modal').classList.remove('open')">
-            Close & Update Dashboard
-          </button>
+          <div style="display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem;">
+            <button type="button" class="btn-download-quiz-result" id="btn-standard-download-marksheet">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>Download Result (PDF / Word / JPG)</span>
+            </button>
+            <button type="button" class="btn-admin-action" onclick="document.getElementById('quiz-modal').classList.remove('open')">
+              Close & Update Dashboard
+            </button>
+          </div>
         </div>
       </div>
 
@@ -3018,7 +3024,6 @@
               <span id="proctor-timer-val">00:45</span>
             </div>
 
-            <button type="button" class="btn-proctor-abort" id="btn-proctor-abort" title="Quit assessment">&times;</button>
             <button type="button" class="btn-modal-close btn-proctor-abort" id="btn-proctor-abort" title="Quit assessment" aria-label="Quit assessment"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
           </div>
         </div>
@@ -3085,11 +3090,49 @@
 
         <!-- Format Selector Toolbar -->
         <div class="marksheet-format-bar">
-          <span style="font-size: 0.78rem; font-weight: 800; text-transform: uppercase; color: #002b49;">Select Export Format:</span>
-          <div class="export-scope-toggle" id="marksheet-format-options">
-            <button type="button" class="export-scope-btn active" data-format="pdf">PDF Document (.pdf)</button>
-            <button type="button" class="export-scope-btn" data-format="png">High-Res PNG (.png)</button>
-            <button type="button" class="export-scope-btn" data-format="jpg">JPEG Image (.jpg)</button>
+          <div class="marksheet-format-header-info">
+            <span class="marksheet-format-title">Export Document Format</span>
+            <span class="marksheet-format-sub">Select format for official academic transcript</span>
+          </div>
+          <div class="export-scope-toggle" id="marksheet-format-options" role="radiogroup" aria-label="Export Format Selection">
+            <button type="button" class="export-scope-btn active" data-format="pdf" role="radio" aria-checked="true">
+              <span class="export-fmt-icon-box pdf-icon">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M9 15h6"></path><path d="M9 11h6"></path></svg>
+              </span>
+              <div class="export-fmt-details">
+                <span class="export-fmt-name">PDF Document</span>
+                <span class="export-fmt-ext">.PDF • Print / Official</span>
+              </div>
+              <span class="export-fmt-check">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </span>
+            </button>
+
+            <button type="button" class="export-scope-btn" data-format="word" role="radio" aria-checked="false">
+              <span class="export-fmt-icon-box word-icon">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              </span>
+              <div class="export-fmt-details">
+                <span class="export-fmt-name">Word Document</span>
+                <span class="export-fmt-ext">.DOCX • Editable Table</span>
+              </div>
+              <span class="export-fmt-check">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </span>
+            </button>
+
+            <button type="button" class="export-scope-btn" data-format="jpg" role="radio" aria-checked="false">
+              <span class="export-fmt-icon-box jpg-icon">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+              </span>
+              <div class="export-fmt-details">
+                <span class="export-fmt-name">JPEG Image</span>
+                <span class="export-fmt-ext">.JPG • Visual Slip</span>
+              </div>
+              <span class="export-fmt-check">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </span>
+            </button>
           </div>
         </div>
 
@@ -3168,8 +3211,8 @@
         <div class="marksheet-modal-footer">
           <button type="button" class="btn-cancel-modal" id="btn-cancel-marksheet">Close</button>
           <button type="button" class="btn-confirm-milestone" id="btn-execute-download-marksheet">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-            <span>Download Marksheet</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span id="btn-download-marksheet-text">Download Transcript (PDF)</span>
           </button>
         </div>
       </div>
@@ -4202,11 +4245,23 @@
         <!-- 5. Question Count & Timer -->
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem;">
           <div>
-            <label class="profile-field-label" style="font-weight: 800; color: #002b49; margin-bottom: 0.35rem; display: block;">6. Number of Questions</label>
-            <div class="wizard-pill-grid" id="modal-wiz-count-grid">
-              <button type="button" class="wizard-pill-opt selected" data-val="5">5 Questions</button>
-              <button type="button" class="wizard-pill-opt" data-val="10">10 Questions</button>
-              <button type="button" class="wizard-pill-opt" data-val="15">15 Questions</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <label class="profile-field-label" style="font-weight: 800; color: #002b49; margin: 0;">6. Number of Questions</label>
+              <span style="font-size: 0.72rem; color: #ea580c; font-weight: 700;">Up to 40 Questions</span>
+            </div>
+            <div class="wizard-pill-grid" id="modal-wiz-count-grid" style="grid-template-columns: repeat(4, 1fr); gap: 0.35rem; margin-bottom: 0.45rem;">
+              <button type="button" class="wizard-pill-opt selected" data-val="5">5 Qs</button>
+              <button type="button" class="wizard-pill-opt" data-val="10">10 Qs</button>
+              <button type="button" class="wizard-pill-opt" data-val="15">15 Qs</button>
+              <button type="button" class="wizard-pill-opt" data-val="20">20 Qs</button>
+              <button type="button" class="wizard-pill-opt" data-val="25">25 Qs</button>
+              <button type="button" class="wizard-pill-opt" data-val="30">30 Qs</button>
+              <button type="button" class="wizard-pill-opt" data-val="35">35 Qs</button>
+              <button type="button" class="wizard-pill-opt" data-val="40">40 Qs</button>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.4rem;">
+              <span style="font-size: 0.725rem; color: #64748b; white-space: nowrap; font-weight: 600;">Custom count:</span>
+              <input type="number" id="modal-wiz-custom-count-input" min="1" max="40" placeholder="1-40" class="profile-input-field" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; width: 85px;">
             </div>
           </div>
           <div>
@@ -4215,7 +4270,10 @@
               <option value="per_45" selected>45 seconds / question (Standard)</option>
               <option value="per_60">60 seconds / question (Relaxed)</option>
               <option value="per_90">90 seconds / question (Deep Math)</option>
-              <option value="total_10">Total 10 minutes (Entire Quiz)</option>
+              <option value="total_10">Total 10 minutes (Speed Exam)</option>
+              <option value="total_20">Total 20 minutes (Standard Exam)</option>
+              <option value="total_30">Total 30 minutes (Comprehensive)</option>
+              <option value="total_40">Total 40 minutes (Extended Full 40Q)</option>
             </select>
           </div>
         </div>

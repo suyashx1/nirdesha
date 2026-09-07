@@ -376,6 +376,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const topElo = document.getElementById('trainee-top-elo');
     if (topElo) topElo.textContent = '1,513 Elo (Level 3 - Proficient)';
+
+    // Log to Quiz History so results are downloadable as official marksheet
+    const stdId = 'std_quiz_' + Date.now();
+    try {
+      const historyItem = {
+        id: stdId,
+        title: 'Survey Sampling & Socio-Economic Survey Methodology (EVAL-2026-Q3)',
+        topic: 'Survey Sampling Theory',
+        totalQ: totalCount,
+        correctQ: correctCount,
+        accuracy: Math.round(accuracy),
+        speedBonus: 28,
+        status: 'Completed (Merit)',
+        date: Date.now()
+      };
+      if (typeof getQuizHistory === 'function' && typeof saveQuizHistory === 'function') {
+        const hist = getQuizHistory();
+        hist.unshift(historyItem);
+        saveQuizHistory(hist);
+      }
+    } catch (e) {}
+
+    const btnStdDownload = document.getElementById('btn-standard-download-marksheet');
+    if (btnStdDownload) {
+      btnStdDownload.onclick = () => {
+        if (typeof openMarksheetModal === 'function') {
+          openMarksheetModal(stdId);
+        } else if (window.openMarksheetModal) {
+          window.openMarksheetModal(stdId);
+        }
+      };
+    }
   }
 
   if (quizSubmitBtn) {
@@ -6672,27 +6704,28 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
   // CUSTOM QUIZ ARCHITECT VIA MENTOR TRIGGER
   // --------------------------------------------------------------------------
 
-  // Question generation utility
+  // Question generation utility supporting up to 40 unique questions
   function generateCustomQuizObject(id, topic, goal, format, focus, diff, count, timerMode) {
     const isPerQ = timerMode.startsWith('per_');
     const qTime = isPerQ ? parseInt(timerMode.replace('per_', ''), 10) : 45;
+    const targetCount = Math.min(Math.max(1, parseInt(count, 10) || 5), 40);
 
     const questionsPool = [
       {
-        prompt: `Under ${topic}, when the correlation coefficient \(\rho\) between auxiliary variable X and study variable Y is strictly greater than \(C_x / (2 C_y)\), which estimation methodology provides lower Mean Squared Error than the simple mean estimator?`,
+        prompt: `Under ${topic}, when the correlation coefficient \(\\rho\) between auxiliary variable X and study variable Y is strictly greater than \(C_x / (2 C_y)\), which estimation methodology provides lower Mean Squared Error than the simple mean estimator?`,
         options: [
-          'Ratio Estimator \(\hat{Y}_R = (\bar{y}/\bar{x}) X\)',
+          'Ratio Estimator \(\\hat{Y}_R = (\\bar{y}/\\bar{x}) X\)',
           'Difference Estimator with parameter \(k = 0\)',
           'Regression Estimator without intercept',
           'Linear Systematic Expansion'
         ],
         correct: 0,
-        explanation: 'The Ratio estimator has lower MSE than the SRSWOR mean estimator if and only if \(\rho > C_x / (2 C_y)\).'
+        explanation: 'The Ratio estimator has lower MSE than the SRSWOR mean estimator if and only if \(\\rho > C_x / (2 C_y)\).'
       },
       {
         prompt: `In evaluating ${topic}, what is the fundamental difference between the Hansen-Hurwitz estimator and the Horvitz-Thompson estimator?`,
         options: [
-          'Hansen-Hurwitz applies to sampling with replacement (PPSWR), whereas Horvitz-Thompson applies to sampling without replacement (\(\pi\)PS)',
+          'Hansen-Hurwitz applies to sampling with replacement (PPSWR), whereas Horvitz-Thompson applies to sampling without replacement (\\(\\pi\\)PS)',
           'Hansen-Hurwitz requires cluster sizes to be invariant',
           'Horvitz-Thompson cannot handle auxiliary size variables',
           'Hansen-Hurwitz is guaranteed zero variance under all finite populations'
@@ -6720,7 +6753,7 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
           'Retention of raw coordinates for district audits'
         ],
         correct: 0,
-        explanation: 'National statistical data release mandates k-anonymity (k>=5) and striping of direct identifying attributes to prevent indirect re-identification attacks.'
+        explanation: 'National statistical data release mandates k-anonymity (k>=5) and stripping of direct identifying attributes to prevent indirect re-identification attacks.'
       },
       {
         prompt: `For national accounting deflators under ${topic}, which property ensures that the price index multiplied by the quantity index equals the nominal value ratio?`,
@@ -6731,16 +6764,401 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
           'Proportionality Test'
         ],
         correct: 0,
-        explanation: 'The Factor Reversal Test requires \(P(0,1) \times Q(0,1) = V_1 / V_0\), fully decomposing nominal growth into real output and price effects.'
+        explanation: 'The Factor Reversal Test requires \(P(0,1) \\times Q(0,1) = V_1 / V_0\), fully decomposing nominal growth into real output and price effects.'
+      },
+      {
+        prompt: `Under SRSWOR in ${topic}, if sample size \(n\) is drawn from finite population \(N\), what is the exact Finite Population Correction (FPC) factor applied to variance?`,
+        options: [
+          '\((N - n) / N\)',
+          '\((N - 1) / (N - n)\)',
+          '\(N / (N - n)\)',
+          '\((N - n) / (n - 1)\)'
+        ],
+        correct: 0,
+        explanation: 'The Finite Population Correction factor is \((1 - f) = (N - n) / N\), which reduces sampling variance when sample fraction \(n/N\) is substantial.'
+      },
+      {
+        prompt: `In stratified sampling for ${topic}, which allocation rule minimizes sample variance for a fixed total cost \(C = c_0 + \\sum c_h n_h\)?`,
+        options: [
+          'Optimum Allocation with \(n_h \\propto \\frac{N_h S_h}{\\sqrt{c_h}}\)',
+          'Equal allocation \(n_h = n / L\)',
+          'Proportional allocation \(n_h \\propto N_h\)',
+          'Arbitrary variance allocation'
+        ],
+        correct: 0,
+        explanation: 'The Bowley-Chu-Neyman optimum cost allocation assigns \(n_h \\propto N_h S_h / \\sqrt{c_h}\), balancing stratum variance against survey collection costs.'
+      },
+      {
+        prompt: `In systematic sampling where population size \(N\) is not an exact integer multiple of interval \(k\) in ${topic}, which method eliminates periodicity bias?`,
+        options: [
+          'Circular Systematic Sampling',
+          'Purposive quota sampling',
+          'Truncation of the last stratum',
+          'Hansen-Hurwitz replacement'
+        ],
+        correct: 0,
+        explanation: 'Circular Systematic Sampling selects a random start from 1 to N and steps by k modulo N, guaranteeing equal first-order inclusion probabilities.'
+      },
+      {
+        prompt: `Under cluster sampling in ${topic}, when the intra-cluster correlation coefficient \(\\rho\) is strictly positive, how does cluster sampling efficiency compare to SRSWOR?`,
+        options: [
+          'Less efficient than SRSWOR (Higher variance)',
+          'More efficient than SRSWOR (Lower variance)',
+          'Identical variance under all conditions',
+          'Efficiency is completely independent of \(\\rho\)'
+        ],
+        correct: 0,
+        explanation: 'When intra-cluster correlation \(\\rho > 0\), cluster sampling has higher variance (design effect > 1) because units within the same cluster are homogeneous.'
+      },
+      {
+        prompt: `In two-stage sampling for MoSPI district surveys (${topic}), what do Primary Sampling Units (PSUs) and Secondary Sampling Units (SSUs) typically represent?`,
+        options: [
+          'PSUs are Census Villages / Urban Frame Survey Blocks; SSUs are Households',
+          'PSUs are Individual persons; SSUs are districts',
+          'PSUs are States; SSUs are National accounts',
+          'PSUs are ministries; SSUs are cadastral parcels'
+        ],
+        correct: 0,
+        explanation: 'In MoSPI socio-economic surveys, Stage 1 units (PSUs) are 2011 Census villages or UFS urban blocks, and Stage 2 units (SSUs) are selected households.'
+      },
+      {
+        prompt: `Which index number formula uses base-period expenditure weights and typically suffers from an upward substitution bias for ${topic}?`,
+        options: [
+          'Laspeyres Price Index \(I_L = \\frac{\\sum p_1 q_0}{\\sum p_0 q_0}\)',
+          'Paasche Price Index \(I_P = \\frac{\\sum p_1 q_1}{\\sum p_0 q_1}\)',
+          'Fisher Ideal Index',
+          'Tornqvist Exponential Index'
+        ],
+        correct: 0,
+        explanation: 'Laspeyres price index fixes base period consumption baskets (\(q_0\)), ignoring consumer substitution toward cheaper goods and hence overstating inflation.'
+      },
+      {
+        prompt: `The Fisher Ideal Index satisfies both Time Reversal and Factor Reversal tests because it is calculated as:`,
+        options: [
+          'The Geometric Mean of Laspeyres and Paasche indices: \(\\sqrt{I_L \\times I_P}\)',
+          'The Arithmetic Mean of Laspeyres and Paasche: \((I_L + I_P) / 2\)',
+          'The Harmonic Mean of current and base quantities',
+          'The median of regional relatives'
+        ],
+        correct: 0,
+        explanation: 'Irving Fisher proved that the geometric mean of Laspeyres and Paasche satisfies both the Time Reversal Test and Factor Reversal Test.'
+      },
+      {
+        prompt: `When linking two historical CPI series with differing base years under ${topic}, which technique connects the old index to the new series at the overlapping period?`,
+        options: [
+          'Splicing (using a Linking / Splicing Factor)',
+          'Linear Interpolation without reference',
+          'Simple moving median smoothing',
+          'Exponential decay discounting'
+        ],
+        correct: 0,
+        explanation: 'Splicing computes a linking factor (Ratio of Old Series / New Series at overlap) to chain historical series without discontinuous jumps.'
+      },
+      {
+        prompt: `Under MoSPI National Accounts compilation, what is the exact accounting relation between Gross Domestic Product (GDP) at market prices and Gross Value Added (GVA) at basic prices?`,
+        options: [
+          'GDP at Market Prices = GVA at Basic Prices + Product Taxes - Product Subsidies',
+          'GDP at Market Prices = GVA at Basic Prices - Product Taxes + Product Subsidies',
+          'GDP at Market Prices = GVA at Basic Prices + Production Taxes only',
+          'GDP at Market Prices = GVA at Basic Prices / Deflator'
+        ],
+        correct: 0,
+        explanation: 'According to SNA 2008 standards adopted by MoSPI, GDP at Market Prices = GVA at Basic Prices + (Product Taxes - Product Subsidies).'
+      },
+      {
+        prompt: `In the linear regression estimator \(\\bar{y}_{lr} = \\bar{y} + b(\\bar{X} - \\bar{x})\) for ${topic}, when is the regression estimator strictly unbiased?`,
+        options: [
+          'When the true population regression line passes through the origin and variance is constant',
+          'Always unbiased in small samples',
+          'Only when sample size exceeds 5000',
+          'Unbiased only when \(b = 0\)'
+        ],
+        correct: 0,
+        explanation: 'The linear regression estimator is approximately unbiased in large samples; exact unbiasedness occurs if the true relationship is linear through origin.'
+      },
+      {
+        prompt: `Under CAPI tablet automation for field investigators (${topic}), which telemetry metric prevents fraudulent off-site interview completions?`,
+        options: [
+          'Geo-fencing GPS coordinates bounded within the selected UFS block polygon',
+          'Battery discharge percentage rate',
+          'Device screen brightness logging',
+          'Local SIM operator carrier code'
+        ],
+        correct: 0,
+        explanation: 'CAPI enforces GPS geo-fencing timestamp telemetry to verify that survey forms are filled inside the demarcated Urban Frame Survey block.'
+      },
+      {
+        prompt: `Under the DPDP Act 2023, what is the statutory role of the National Statistical Office (NSO) when handling citizen survey microdata?`,
+        options: [
+          'Data Fiduciary bound by purpose limitation and mandatory data security measures',
+          'Data Principal with unrestricted monetization rights',
+          'Consent Broker without audit liability',
+          'Third-party cloud licensee'
+        ],
+        correct: 0,
+        explanation: 'Entities determining the purpose and means of processing personal data are legally designated as Data Fiduciaries under DPDP Act 2023.'
+      },
+      {
+        prompt: `In quality control auditing for ${topic}, committing a Type I error (\(\\alpha\)) corresponds to:`,
+        options: [
+          'Rejecting the null hypothesis when it is actually true (False Positive)',
+          'Failing to reject the null hypothesis when it is false (False Negative)',
+          'Incorrectly calculating standard deviation',
+          'Using double sampling instead of single sampling'
+        ],
+        correct: 0,
+        explanation: 'A Type I error is the rejection of a true null hypothesis, conventionally capped at \(\\alpha = 0.05\) or \(0.01\) in statistical audits.'
+      },
+      {
+        prompt: `When outlier values in microdata distort state-level aggregates in ${topic}, which technique replaces extreme values beyond the 99th percentile with the 99th percentile value?`,
+        options: [
+          'Winsorization (Top-coding)',
+          'Complete row deletion (Trimming)',
+          'Mean imputation',
+          'Hot-deck donor synthesis'
+        ],
+        correct: 0,
+        explanation: 'Winsorization recodes extreme values beyond specified percentiles (e.g. 1st and 99th) to the boundary values, retaining sample size while curbing variance.'
+      },
+      {
+        prompt: `In Periodic Labour Force Surveys (PLFS) for ${topic}, an individual is classified as employed under Current Weekly Status (CWS) if they worked for:`,
+        options: [
+          'At least 1 hour on any one day during the 7 days preceding the survey date',
+          'At least 30 days during the reference year',
+          'Minimum 40 hours during the past month',
+          'Continuous 8 hours on the survey interview date'
+        ],
+        correct: 0,
+        explanation: 'Under MoSPI PLFS standards, Current Weekly Status (CWS) classifies a person as employed if they worked for at least 1 hour on any day during the 7-day recall.'
+      },
+      {
+        prompt: `In Python data processing for ${topic}, which pandas expression efficiently computes the weighted mean price of commodity groups grouped by State?`,
+        options: [
+          'df.groupby("State").apply(lambda g: np.average(g["Price"], weights=g["Weight"]))',
+          'df.groupby("State")["Price"].mean() * df["Weight"]',
+          'df.filter("State").sum("Price")',
+          'df.pivot_table(index="State", aggfunc="max")'
+        ],
+        correct: 0,
+        explanation: '`df.groupby("State").apply(lambda g: np.average(g["Price"], weights=g["Weight"]))` correctly calculates the weighted average per stratum.'
+      },
+      {
+        prompt: `When evaluating multicollinearity in an econometric wage equation for ${topic}, a Variance Inflation Factor (VIF) exceeding what threshold signals severe multicollinearity?`,
+        options: [
+          'VIF > 5 to 10',
+          'VIF > 1.0',
+          'VIF < 0.2',
+          'VIF = 0'
+        ],
+        correct: 0,
+        explanation: 'A VIF value greater than 5 (or 10) indicates that more than 80-90% of the variance of a predictor is shared with other predictors.'
+      },
+      {
+        prompt: `Under two-phase (double) sampling for ${topic}, why is a large first-phase sample \(n'\) drawn before the smaller second-phase sample \(n\)?`,
+        options: [
+          'To cheaply estimate auxiliary variable parameters or strata proportions',
+          'To discard unwanted respondents permanently',
+          'To eliminate the need for non-response tracking',
+          'Because population size N is infinite'
+        ],
+        correct: 0,
+        explanation: 'Double sampling draws an inexpensive large initial sample \(n\'\) to obtain auxiliary information that guides efficient second-phase sampling.'
+      },
+      {
+        prompt: `In the Horvitz-Thompson estimator \(\\hat{Y}_{HT} = \\sum_{i=1}^n \\frac{y_i}{\\pi_i}\), what does \(\\pi_i\) represent?`,
+        options: [
+          'First-order inclusion probability of unit i in the sample',
+          'Second-order joint selection probability',
+          'Sample variance of unit i',
+          'Stratum weight multiplier'
+        ],
+        correct: 0,
+        explanation: '\(\\pi_i\) is the probability that unit i is included in the sample, weighting observations by the reciprocal of selection probability.'
+      },
+      {
+        prompt: `Under Household Consumer Expenditure Survey (HCES), what does MPCE stand for in measuring living standards?`,
+        options: [
+          'Monthly Per Capita Consumption Expenditure',
+          'Median Primary Cadre Evaluation',
+          'Macro Price Commodity Estimator',
+          'Multiple Phase Census Enumeration'
+        ],
+        correct: 0,
+        explanation: 'MPCE (Monthly Per Capita Consumption Expenditure) is the primary metric used by MoSPI and NITI Aayog for assessing consumption distribution.'
+      },
+      {
+        prompt: `In Annual Survey of Industries (ASI), industrial establishments employing 100 or more workers are surveyed under which scheme?`,
+        options: [
+          'Census Sector (100% complete enumeration)',
+          'Sample Sector (10% SRSWOR)',
+          'Voluntary disclosure register',
+          'Self-certification portal'
+        ],
+        correct: 0,
+        explanation: 'In ASI, larger factories (100+ workers or in specific states/industries) fall under the Census Sector and are completely enumerated every survey round.'
+      },
+      {
+        prompt: `Which statistical theorem proves that as sample size \(n\) increases, the sampling distribution of the sample mean approaches normality regardless of population shape?`,
+        options: [
+          'Central Limit Theorem (CLT)',
+          'Gauss-Markov Theorem',
+          'Law of Diminishing Marginal Returns',
+          'Bayes Theorem of Conditional Priors'
+        ],
+        correct: 0,
+        explanation: 'The Central Limit Theorem establishes that sample means become normally distributed as \(n \\to \\infty\) provided variance is finite.'
+      },
+      {
+        prompt: `For a 95% two-sided confidence interval for a normally distributed estimator, what is the critical Z-value used in ${topic}?`,
+        options: [
+          '1.96',
+          '2.576',
+          '1.645',
+          '3.00'
+        ],
+        correct: 0,
+        explanation: 'The standard critical value for a two-tailed 95% confidence interval under standard normal distribution is \(Z_{\\alpha/2} = 1.96\).'
+      },
+      {
+        prompt: `In time-series analysis for quarterly GDP growth under ${topic}, the Durbin-Watson statistic tests for:`,
+        options: [
+          'First-order serial correlation (autocorrelation) in regression residuals',
+          'Heteroscedasticity of error variance',
+          'Multicollinearity of regressors',
+          'Stationarity of unit roots'
+        ],
+        correct: 0,
+        explanation: 'The Durbin-Watson statistic \(d \\approx 2(1 - r)\) tests whether residuals from a linear regression model exhibit first-order autocorrelation.'
+      },
+      {
+        prompt: `What is the key advantage of Post-Stratification over Ordinary Stratified Sampling in field surveys?`,
+        options: [
+          'Can be applied when stratum membership of units is known only after the sample is selected',
+          'Requires zero sample data',
+          'Always guarantees smaller variance than proportional allocation',
+          'Eliminates non-sampling errors completely'
+        ],
+        correct: 0,
+        explanation: 'Post-stratification classifies units into strata after sampling when frame-level stratum markers were unavailable beforehand.'
+      },
+      {
+        prompt: `Under ${topic}, when calculating Consumer Price Index (CPI), what aggregation formula does MoSPI apply at the elementary item level?`,
+        options: [
+          'Geometric Laspeyres / Jevons index across price quotations',
+          'Arithmetic mean of prices without weights',
+          'Median price difference estimator',
+          'Simple ratio of regional extremes'
+        ],
+        correct: 0,
+        explanation: 'Elementary price aggregates across representative markets are compiled using the geometric mean (Jevons formula) to minimize elementary aggregation bias.'
+      },
+      {
+        prompt: `In official statistics dissemination, what does the 'Five Safes' framework govern?`,
+        options: [
+          'Safe projects, Safe people, Safe settings, Safe data, and Safe outputs for secure microdata access',
+          'Vehicle safety protocols for field supervisors',
+          'Data backup redundancy on five physical hard drives',
+          'Five-year census cycle scheduling'
+        ],
+        correct: 0,
+        explanation: 'The Five Safes framework is the international gold standard for safe research access to confidential administrative and statistical microdata.'
+      },
+      {
+        prompt: `In survey sampling for ${topic}, what does the Design Effect (Deff) quantify?`,
+        options: [
+          'Ratio of the variance under the complex design to the variance under SRSWOR with identical sample size',
+          'Ratio of response rate to non-response rate',
+          'Cost ratio between paper and tablet interviewing',
+          'Degree of interviewer deviation from manual'
+        ],
+        correct: 0,
+        explanation: 'Design Effect \(\\text{Deff} = \\text{Var}_{\\text{complex}} / \\text{Var}_{\\text{SRSWOR}}\) measures the efficiency penalty or gain of complex designs.'
+      },
+      {
+        prompt: `Under MoSPI SSS Cadre hierarchy, which role is directly responsible for initial field inspection, CAPI canvassing, and primary scrutiny?`,
+        options: [
+          'Junior Statistical Officer (JSO)',
+          'Director General (CSO)',
+          'Deputy Director General (FOD HQ)',
+          'Member Secretary (NSC)'
+        ],
+        correct: 0,
+        explanation: 'Junior Statistical Officers (JSOs) serve at the operational vanguard conducting field data collection and initial scrutiny of schedules.'
+      },
+      {
+        prompt: `When imputing missing values in NSS socio-economic surveys, 'Hot-Deck' imputation replaces missing values using:`,
+        options: [
+          'Values observed from a responding unit (donor) with similar demographic attributes in the same survey round',
+          'Historical averages from 10 years ago',
+          'Zeroes across all blank cells',
+          'Predicted values from an external commercial census'
+        ],
+        correct: 0,
+        explanation: 'Hot-deck imputation finds a matching donor respondent in the current dataset that shares critical demographic features with the non-respondent.'
+      },
+      {
+        prompt: `In calculating Gross Fixed Capital Formation (GFCF) for national accounts (${topic}), which asset type is explicitly included?`,
+        options: [
+          'Machinery, intellectual property products, and infrastructure construction',
+          'Consumer nondurables like food and clothing',
+          'Financial equity shares and speculative derivatives',
+          'Intermediate consumption raw materials'
+        ],
+        correct: 0,
+        explanation: 'GFCF measures net additions to fixed assets (construction, machinery, cultivated biological resources, and IP assets) used in production.'
+      },
+      {
+        prompt: `In hypothesis testing for survey differences, what does the p-value represent?`,
+        options: [
+          'The probability of observing a test statistic as extreme as, or more extreme than, the observed value, assuming null hypothesis is true',
+          'The probability that the null hypothesis is true',
+          'The probability that the research hypothesis is false',
+          'The statistical power of the test (\(1 - \\beta\))'
+        ],
+        correct: 0,
+        explanation: 'The p-value measures evidence against the null hypothesis; smaller p-values indicate greater discrepancy between observed data and null assumptions.'
+      },
+      {
+        prompt: `For stratified sampling with strata sample sizes \(n_1, n_2, \\dots, n_L\), what is the formula for the stratified sample mean \(\\bar{y}_{st}\)?`,
+        options: [
+          '\\(\\sum_{h=1}^L W_h \\bar{y}_h\\) where \(W_h = N_h / N\)',
+          '\\(\\frac{1}{L} \\sum_{h=1}^L \\bar{y}_h\\)',
+          '\\(\\sum_{h=1}^L \\frac{\\bar{y}_h}{n_h}\\)',
+          '\\(\\prod_{h=1}^L \\bar{y}_h^{W_h}\\)'
+        ],
+        correct: 0,
+        explanation: 'The stratified sample mean is the weighted average of individual stratum sample means \(\\bar{y}_{st} = \\sum W_h \\bar{y}_h\), which is strictly unbiased.'
+      },
+      {
+        prompt: `In Python analytics, what vector operation ensures reproducibility of randomized sampling drills in Nirdesha evaluations?`,
+        options: [
+          '`np.random.seed(seed_value)` or `random_state=42`',
+          '`time.sleep(1)`',
+          '`math.floor(np.pi)`',
+          '`df.reset_index(drop=True)`'
+        ],
+        correct: 0,
+        explanation: 'Setting random seeds via `np.random.seed()` or `random_state` ensures that pseudo-random number generation produces deterministic, auditable samples.'
+      },
+      {
+        prompt: `Under MoSPI data quality governance, which principle ensures that statistical publications are issued independently of political or administrative cycles?`,
+        options: [
+          'Professional Independence and Advance Dissemination Calendar commitment',
+          'Ad-hoc notification upon executive clearance',
+          'Selective release based on quarterly surplus',
+          'Closed ministerial review prior to public deposit'
+        ],
+        correct: 0,
+        explanation: 'MoSPI adheres to the UN Fundamental Principles of Official Statistics, releasing publications according to a pre-announced Advance Release Calendar.'
       }
     ];
 
     const finalQuestions = [];
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < targetCount; i++) {
       const template = questionsPool[i % questionsPool.length];
       finalQuestions.push({
         id: `q_${i + 1}`,
-        prompt: `[Question ${i + 1}] ${template.prompt}`,
+        prompt: `[Q${i + 1}/${targetCount}] ${template.prompt}`,
         type: 'mcq',
         options: template.options,
         correct: template.correct,
@@ -6749,9 +7167,18 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
       });
     }
 
+    // Determine total exam duration in minutes
+    let examMins = 5;
+    if (isPerQ) {
+      examMins = Math.max(3, Math.ceil((qTime * targetCount) / 60));
+    } else {
+      const parsedTotal = parseInt(timerMode.replace('total_', ''), 10);
+      examMins = isNaN(parsedTotal) ? Math.max(5, Math.ceil(targetCount * 1.2)) : parsedTotal;
+    }
+
     return {
       id: id,
-      title: `${topic} (${goal.split(' ')[0]} Drill)`,
+      title: `${topic} (${goal.split(' ')[0]} Drill — ${targetCount}Q)`,
       topic: topic,
       mode: goal,
       format: format,
@@ -6759,7 +7186,7 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
       difficulty: diff,
       timerMode: isPerQ ? 'per_question' : 'total_exam',
       questionTime: qTime,
-      totalExamMinutes: isPerQ ? Math.ceil((qTime * count) / 60) : 5,
+      totalExamMinutes: examMins,
       isNew: true,
       createdAt: Date.now(),
       questions: finalQuestions
@@ -6775,25 +7202,39 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
     const btnClose = document.getElementById('btn-close-quiz-architect-modal');
     const btnCancel = document.getElementById('btn-cancel-quiz-architect');
     const btnGenerate = document.getElementById('btn-modal-generate-quiz');
+    const customCountInput = document.getElementById('modal-wiz-custom-count-input');
 
     if (!modal) return;
 
     function openModal() {
-      // Dynamically highlight completed courses in course dropdown
-      const courseSelect = document.getElementById('modal-wiz-course-select');
-      if (courseSelect && typeof getUserCourses === 'function') {
-        const userCourses = getUserCourses();
-        const completedIds = Object.keys(userCourses).filter(id => userCourses[id].status === 'completed' || userCourses[id].progress === 100);
-        Array.from(courseSelect.options).forEach(opt => {
-          if (completedIds.some(cid => opt.value.includes(cid))) {
-            if (!opt.text.startsWith('✓')) {
-              opt.text = '✓ Certified: ' + opt.text.replace(/^[✓\sActive Completed:]+/, '').trim();
-            }
+      try {
+        // Dynamically highlight completed courses in course dropdown
+        const courseSelect = document.getElementById('modal-wiz-course-select');
+        if (courseSelect && typeof getUserCourses === 'function') {
+          const userCourses = getUserCourses();
+          if (userCourses && typeof userCourses === 'object') {
+            const completedIds = Object.keys(userCourses).filter(id => {
+              const c = userCourses[id];
+              return c && (c.status === 'completed' || c.progress === 100);
+            });
+            Array.from(courseSelect.options).forEach(opt => {
+              if (completedIds.some(cid => opt.value.includes(cid))) {
+                if (!opt.text.startsWith('✓')) {
+                  opt.text = '✓ Certified: ' + opt.text.replace(/^[✓\sActive Completed Certified:]+/, '').trim();
+                }
+              }
+            });
           }
-        });
+        }
+      } catch (e) {
+        console.warn('Course list highlight warning:', e);
       }
+      modal.style.zIndex = '10000000';
       modal.style.display = 'flex';
     }
+
+    // Expose globally so inline onclick or any caller can launch it without fail
+    window.openCustomQuizArchitectModal = openModal;
 
     function closeModal() {
       modal.style.display = 'none';
@@ -6828,9 +7269,29 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
         btn.addEventListener('click', () => {
           grid.querySelectorAll('.wizard-pill-opt').forEach(b => b.classList.remove('selected'));
           btn.classList.add('selected');
+          if (gridId === 'modal-wiz-count-grid' && customCountInput) {
+            customCountInput.value = btn.getAttribute('data-val');
+          }
         });
       });
     });
+
+    // Custom count input sync with count pills
+    if (customCountInput) {
+      customCountInput.addEventListener('input', () => {
+        const val = parseInt(customCountInput.value, 10);
+        const countGrid = document.getElementById('modal-wiz-count-grid');
+        if (countGrid) {
+          countGrid.querySelectorAll('.wizard-pill-opt').forEach(b => {
+            if (parseInt(b.getAttribute('data-val'), 10) === val) {
+              b.classList.add('selected');
+            } else {
+              b.classList.remove('selected');
+            }
+          });
+        }
+      });
+    }
 
     if (btnGenerate) {
       btnGenerate.addEventListener('click', (e) => {
@@ -6845,7 +7306,18 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
           const format = getVal('modal-wiz-format-grid') || 'Multiple Choice (MCQ)';
           const focus = getVal('modal-wiz-focus-grid') || 'Balanced';
           const diff = getVal('modal-wiz-diff-grid') || 'Intermediate';
-          const qCount = parseInt(getVal('modal-wiz-count-grid') || '5', 10);
+
+          // Determine question count (from custom input or selected pill, clamped 1-40)
+          let qCount = 5;
+          const customVal = customCountInput ? parseInt(customCountInput.value, 10) : null;
+          if (customVal && !isNaN(customVal) && customVal >= 1 && customVal <= 40) {
+            qCount = customVal;
+          } else {
+            qCount = parseInt(getVal('modal-wiz-count-grid') || '5', 10);
+            if (isNaN(qCount) || qCount < 1) qCount = 5;
+            if (qCount > 40) qCount = 40;
+          }
+
           const timerSelect = document.getElementById('modal-wiz-timer-select');
           const timerMode = timerSelect ? timerSelect.value : 'per_45';
 
@@ -6871,7 +7343,7 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
 
           const toast = document.getElementById('public-profile-toast');
           if (toast) {
-            toast.textContent = `✓ Custom Quiz "${newQuiz.title}" Generated & Added to AI Quiz!`;
+            toast.textContent = `✓ Custom Quiz "${newQuiz.title}" (${qCount} Questions) Generated & Added to AI Quiz!`;
             toast.style.display = 'block';
             setTimeout(() => { toast.style.display = 'none'; }, 4000);
           }
@@ -7323,7 +7795,6 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
     if (proctorQTextEl) {
       proctorQTextEl.innerHTML = `
         <div style="text-align:center; padding: 1.5rem 0;">
-          
           <h2 style="font-size: 1.45rem; font-weight: 900; color: #002b49; margin: 0 0 4px 0;">Assessment Completed!</h2>
           <p style="font-size: 0.85rem; color: #64748b; margin: 0 0 1.25rem 0;">
             Accuracy: <strong>${accuracy}% (${correctCount}/${totalCount})</strong> • Speed Bonus: <strong style="color:#0284c7;">+${totalSpeedPointsEarned} pts</strong>
@@ -7331,8 +7802,20 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
           <div style="display:inline-block; padding: 0.75rem 1.5rem; background:#f0fdf4; border: 1.5px solid #86efac; border-radius: 6px; margin-bottom: 1.25rem;">
             <span style="font-size: 0.85rem; font-weight: 800; color: #166534;">✓ Result logged in Academic Marksheet Record</span>
           </div>
+          <div style="margin-top: 0.5rem; display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap;">
+            <button type="button" class="btn-download-quiz-result" id="btn-proctor-download-result">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>Download Result (PDF / Word / JPG)</span>
+            </button>
+          </div>
         </div>
       `;
+      const btnProctorDl = document.getElementById('btn-proctor-download-result');
+      if (btnProctorDl) {
+        btnProctorDl.onclick = () => {
+          openMarksheetModal(historyItem.id);
+        };
+      }
     }
 
     if (proctorQOptionsEl) proctorQOptionsEl.innerHTML = '';
@@ -7383,14 +7866,27 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
                 ${escapeHtml(item.status || 'Completed')}
               </span>
             </div>
-            <h4 style="font-size: 0.95rem; font-weight: 800; color: #002b49; margin: 0 0 6px 0;">${escapeHtml(item.title)}</h4>
-            <div style="display: flex; gap: 0.75rem; font-size: 0.78rem;">
-              <span>Score: <strong>${item.correctQ || 0}/${item.totalQ || 5} (${item.accuracy || 0}%)</strong></span>
-              <span style="color: #0284c7;">Speed Bonus: <strong>+${item.speedBonus || 0} pts</strong></span>
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-top: 6px;">
+              <div style="display: flex; gap: 0.75rem; font-size: 0.78rem;">
+                <span>Score: <strong>${item.correctQ || 0}/${item.totalQ || 5} (${item.accuracy || 0}%)</strong></span>
+                <span style="color: #0284c7;">Speed Bonus: <strong>+${item.speedBonus || 0} pts</strong></span>
+              </div>
+              <button type="button" class="btn-card-export-result" data-id="${item.id}" title="Download result as PDF, Word, or JPG">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <span>Export Result</span>
+              </button>
             </div>
           </div>
         </div>
       `;
+
+      const exportBtn = card.querySelector('.btn-card-export-result');
+      if (exportBtn) {
+        exportBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          openMarksheetModal(item.id);
+        });
+      }
 
       card.querySelector('.quiz-history-check').addEventListener('change', updateSelectedHistoryCount);
       container.appendChild(card);
@@ -7430,7 +7926,19 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
   const btnCancelMarksheet = document.getElementById('btn-cancel-marksheet');
   const btnExecuteDownloadMarksheet = document.getElementById('btn-execute-download-marksheet');
 
-  let selectedExportFormat = 'pdf'; // 'pdf' | 'png' | 'jpg'
+  let selectedExportFormat = 'pdf'; // 'pdf' | 'word' | 'jpg'
+
+  function updateExportButtonText() {
+    const textSpan = document.getElementById('btn-download-marksheet-text');
+    if (!textSpan) return;
+    if (selectedExportFormat === 'pdf') {
+      textSpan.textContent = 'Download Transcript (PDF)';
+    } else if (selectedExportFormat === 'word') {
+      textSpan.textContent = 'Download Transcript (Word .doc)';
+    } else if (selectedExportFormat === 'jpg') {
+      textSpan.textContent = 'Download Transcript (JPEG Image)';
+    }
+  }
 
   if (btnDownloadMarksheet) {
     btnDownloadMarksheet.addEventListener('click', () => {
@@ -7441,30 +7949,49 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
   if (btnCloseMarksheet) btnCloseMarksheet.addEventListener('click', () => marksheetModal.style.display = 'none');
   if (btnCancelMarksheet) btnCancelMarksheet.addEventListener('click', () => marksheetModal.style.display = 'none');
 
-  // Format selection toggle
+  // Format selection toggle (PDF / Word / JPG)
   document.querySelectorAll('#marksheet-format-options .export-scope-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('#marksheet-format-options .export-scope-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#marksheet-format-options .export-scope-btn').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-checked', 'false');
+      });
       btn.classList.add('active');
+      btn.setAttribute('aria-checked', 'true');
       selectedExportFormat = btn.getAttribute('data-format') || 'pdf';
+      updateExportButtonText();
     });
   });
 
-  function openMarksheetModal() {
+  function openMarksheetModal(targetQuizId = null) {
     if (!marksheetModal) return;
-    const checkedBoxes = document.querySelectorAll('.quiz-history-check:checked');
     const history = getQuizHistory();
     const selectedQuizzes = [];
 
-    checkedBoxes.forEach(cb => {
-      const id = cb.getAttribute('data-id');
-      const item = history.find(h => h.id === id);
+    if (targetQuizId) {
+      const item = history.find(h => h.id === targetQuizId);
       if (item) selectedQuizzes.push(item);
-    });
+      // Synchronize checkboxes if rendered in history tab
+      document.querySelectorAll('.quiz-history-check').forEach(cb => {
+        cb.checked = (cb.getAttribute('data-id') === targetQuizId);
+      });
+      updateSelectedHistoryCount();
+    } else {
+      const checkedBoxes = document.querySelectorAll('.quiz-history-check:checked');
+      checkedBoxes.forEach(cb => {
+        const id = cb.getAttribute('data-id');
+        const item = history.find(h => h.id === id);
+        if (item) selectedQuizzes.push(item);
+      });
+    }
 
     if (selectedQuizzes.length === 0) {
-      alert('Please select at least 1 quiz to generate a marksheet.');
-      return;
+      if (history.length > 0) {
+        selectedQuizzes.push(history[0]);
+      } else {
+        alert('Please complete or select at least 1 quiz to generate a marksheet.');
+        return;
+      }
     }
 
     // Populate Table Rows
@@ -7516,21 +8043,29 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
     if (cumSpeedEl) cumSpeedEl.textContent = `+${grandSpeedPts} pts`;
     if (cumGradeEl) cumGradeEl.textContent = grandGrade;
 
+    updateExportButtonText();
+    marksheetModal.style.zIndex = '10000002';
     marksheetModal.style.display = 'flex';
   }
 
-  // Execute Marksheet Download (PDF / PNG / JPG)
+  // Expose globally
+  window.openMarksheetModal = openMarksheetModal;
+
+  // Execute Marksheet Download (PDF / Word / JPG)
   if (btnExecuteDownloadMarksheet) {
     btnExecuteDownloadMarksheet.addEventListener('click', () => {
       const candidateName = 'Officer_Raman';
       const fileName = `MoSPI_NSSTA_Marksheet_${candidateName}_${new Date().toISOString().split('T')[0]}`;
+      const canvasEl = document.getElementById('official-marksheet-canvas');
+      if (!canvasEl) return;
 
       if (selectedExportFormat === 'pdf') {
         // PDF / Print Layout
-        const canvasEl = document.getElementById('official-marksheet-canvas');
-        if (!canvasEl) return;
-
         const printWin = window.open('', '_blank');
+        if (!printWin) {
+          alert('Popup was blocked. Please allow popups to download or print your PDF.');
+          return;
+        }
         printWin.document.write(`
           <!DOCTYPE html>
           <html>
@@ -7542,11 +8077,15 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
               th, td { border: 1px solid #334155; padding: 6px 8px; }
               th { background: #002b49; color: #ffffff; }
               .ms-header { text-align: center; border-bottom: 2px solid #002b49; padding-bottom: 10px; margin-bottom: 15px; }
+              .ms-emblem { font-size: 13pt; font-weight: bold; color: #002b49; letter-spacing: 2px; }
               .ms-gov { font-size: 10pt; font-weight: bold; color: #ea580c; }
+              .ms-academy { font-size: 11pt; font-weight: bold; color: #002b49; }
               .ms-doc-title { display: inline-block; font-weight: bold; border: 1px solid #002b49; padding: 2px 8px; margin-top: 5px; }
               .ms-meta-row { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 10pt; }
               .ms-summary-strip { display: flex; justify-content: space-between; padding: 8px; background: #f1f5f9; border: 1.5px solid #002b49; margin: 15px 0; font-weight: bold; }
               .ms-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 30px; }
+              .ms-seal-stamp { border: 2px dashed #002b49; color: #002b49; font-weight: 800; font-size: 0.75rem; padding: 4px 8px; }
+              .ms-sig-line { font-weight: 800; color: #002b49; font-size: 0.85rem; border-top: 1px solid #002b49; padding-top: 2px; }
               @media print { body { margin: 1cm; } }
             </style>
           </head>
@@ -7560,16 +8099,67 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
         setTimeout(() => {
           printWin.print();
           printWin.close();
-        }, 300);
+        }, 350);
+
+      } else if (selectedExportFormat === 'word') {
+        // Microsoft Word Export (.doc)
+        const wordHtml = `
+          <html xmlns:o='urn:schemas-microsoft-com:office:office'
+                xmlns:w='urn:schemas-microsoft-com:office:word'
+                xmlns='http://www.w3.org/TR/REC-html40'>
+          <head>
+            <meta charset='utf-8'>
+            <title>${fileName}</title>
+            <!--[if gte mso 9]>
+            <xml>
+              <w:WordDocument>
+                <w:View>Print</w:View>
+                <w:Zoom>100</w:Zoom>
+                <w:DoNotOptimizeForBrowser/>
+              </w:WordDocument>
+            </xml>
+            <![endif]-->
+            <style>
+              body { font-family: 'Calibri', 'Times New Roman', Arial, sans-serif; font-size: 11pt; color: #0f172a; margin: 1in; }
+              table { width: 100%; border-collapse: collapse; margin-top: 14px; margin-bottom: 18px; }
+              th, td { border: 1px solid #475569; padding: 8px 10px; font-size: 10pt; }
+              th { background-color: #002b49; color: #ffffff; font-weight: bold; text-align: left; }
+              .ms-header { text-align: center; border-bottom: 2pt solid #002b49; padding-bottom: 12px; margin-bottom: 16px; }
+              .ms-emblem { font-size: 14pt; font-weight: bold; color: #002b49; letter-spacing: 2px; }
+              .ms-gov { font-size: 10pt; font-weight: bold; color: #ea580c; margin: 4px 0; }
+              .ms-academy { font-size: 11pt; font-weight: bold; color: #002b49; }
+              .ms-doc-title { display: inline-block; font-size: 11pt; font-weight: bold; border: 1pt solid #002b49; padding: 4px 12px; margin-top: 6px; }
+              .ms-candidate-box { background-color: #f8fafc; border: 1pt solid #cbd5e1; padding: 10px 14px; margin-bottom: 14px; }
+              .ms-meta-row { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 10pt; }
+              .ms-summary-strip { background-color: #f1f5f9; border: 1.5pt solid #002b49; padding: 10px; margin: 14px 0; font-weight: bold; }
+              .ms-footer { margin-top: 30px; display: flex; justify-content: space-between; }
+              .ms-seal-stamp { border: 2pt dashed #002b49; color: #002b49; font-weight: bold; padding: 6px 12px; display: inline-block; }
+              .ms-sig-line { font-weight: bold; color: #002b49; border-top: 1pt solid #002b49; padding-top: 4px; display: inline-block; width: 220px; }
+            </style>
+          </head>
+          <body>
+            ${canvasEl.innerHTML}
+          </body>
+          </html>
+        `;
+
+        const blob = new Blob(['\ufeff' + wordHtml], { type: 'application/msword;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${fileName}.doc`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
 
       } else {
-        // PNG or JPG Image Export via HTML Canvas Rendering
-        const canvasEl = document.getElementById('official-marksheet-canvas');
-        if (!canvasEl) return;
+        // JPEG Image Export
+        const canvasWidth = 800;
+        const canvasHeight = Math.max(900, canvasEl.scrollHeight + 40);
 
-        // Render clean SVG/HTML data to an offscreen Canvas
         const svgData = `
-          <svg xmlns="http://www.w3.org/2000/svg" width="800" height="900">
+          <svg xmlns="http://www.w3.org/2000/svg" width="${canvasWidth}" height="${canvasHeight}">
             <foreignObject width="100%" height="100%">
               <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: Arial, sans-serif; background: #ffffff; padding: 20px; color: #0f172a;">
                 ${canvasEl.outerHTML}
@@ -7584,21 +8174,18 @@ copyright: "NIRDESHA © 2026 MoSPI Government of India - Confidential Cadre Revi
 
         img.onload = function() {
           const offCanvas = document.createElement('canvas');
-          offCanvas.width = 800;
-          offCanvas.height = 900;
+          offCanvas.width = canvasWidth;
+          offCanvas.height = canvasHeight;
           const ctx = offCanvas.getContext('2d');
           ctx.fillStyle = '#ffffff';
-          ctx.fillRect(0, 0, 800, 900);
+          ctx.fillRect(0, 0, canvasWidth, canvasHeight);
           ctx.drawImage(img, 0, 0);
           URL.revokeObjectURL(url);
 
-          const mime = selectedExportFormat === 'png' ? 'image/png' : 'image/jpeg';
-          const ext = selectedExportFormat === 'png' ? 'png' : 'jpg';
-          const dataUrl = offCanvas.toDataURL(mime, 0.95);
-
+          const dataUrl = offCanvas.toDataURL('image/jpeg', 0.95);
           const a = document.createElement('a');
           a.href = dataUrl;
-          a.download = `${fileName}.${ext}`;
+          a.download = `${fileName}.jpg`;
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);

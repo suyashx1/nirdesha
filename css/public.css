@@ -6834,13 +6834,15 @@ body.mentor-fullscreen-active #view-ai-mentor .ai-chat-input-row,
 }
 
 /* ==========================================================================
-   ACADEMIC MARKSHEET MODAL STYLES (PDF / PNG / JPG)
+   ACADEMIC MARKSHEET MODAL STYLES (PDF / WORD / JPG)
    ========================================================================== */
 .marksheet-modal {
   position: fixed;
   inset: 0;
-  z-index: 99999;
-  background: rgba(0, 0, 0, 0.7);
+  z-index: 10000002 !important;
+  background: rgba(0, 15, 30, 0.75);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -6849,31 +6851,36 @@ body.mentor-fullscreen-active #view-ai-mentor .ai-chat-input-row,
 
 .marksheet-dialog {
   width: 100%;
-  max-width: 780px;
+  max-width: 820px;
   max-height: 92vh;
   background: #ffffff;
-  border-radius: 6px;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 20, 45, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .marksheet-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.85rem 1.25rem;
-  background: #002b49;
+  padding: 0.9rem 1.4rem;
+  background: linear-gradient(135deg, #002b49 0%, #001f35 100%);
   color: #ffffff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .marksheet-format-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.6rem 1.25rem;
-  background: #f1f5f9;
-  border-bottom: 1px solid #cbd5e1;
+  padding: 0.85rem 1.4rem;
+  background: linear-gradient(to right, #f8fafc, #f1f5f9);
+  border-bottom: 1.5px solid #e2e8f0;
+  flex-wrap: wrap;
+  gap: 0.85rem;
 }
 
 .marksheet-preview-scroll {
@@ -7008,10 +7015,308 @@ body.mentor-fullscreen-active #view-ai-mentor .ai-chat-input-row,
 .marksheet-modal-footer {
   display: flex;
   justify-content: flex-end;
-  gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1.4rem;
   background: #f8fafc;
-  border-top: 1px solid #cbd5e1;
+  border-top: 1.5px solid #e2e8f0;
+}
+
+/* Format Selector Toolbar & Cards (PDF / Word / JPG) */
+.marksheet-format-header-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.marksheet-format-title {
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #002b49;
+}
+
+.marksheet-format-sub {
+  font-size: 0.72rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.export-scope-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.export-scope-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.5rem 0.85rem;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  position: relative;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.export-scope-btn:hover:not(.active) {
+  border-color: #94a3b8;
+  background: #f8fafc;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+}
+
+.export-scope-btn.active {
+  background: #ffffff;
+  border-color: #002b49;
+  box-shadow: 0 0 0 3px rgba(0, 43, 73, 0.12), 0 3px 6px rgba(0, 43, 73, 0.08);
+  transform: translateY(-1px);
+}
+
+.export-fmt-icon-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.export-scope-btn:hover .export-fmt-icon-box {
+  transform: scale(1.08);
+}
+
+.pdf-icon {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.word-icon {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.jpg-icon {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.export-fmt-details {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.export-fmt-name {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.export-fmt-ext {
+  font-size: 0.67rem;
+  font-weight: 600;
+  color: #64748b;
+  line-height: 1.2;
+}
+
+.export-scope-btn.active .export-fmt-name {
+  color: #002b49;
+}
+
+.export-fmt-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  color: transparent;
+  margin-left: 0.25rem;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.export-scope-btn.active .export-fmt-check {
+  background: #002b49;
+  color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 43, 73, 0.3);
+}
+
+/* Download Result Buttons in AI Quiz Section */
+.btn-download-marksheet {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.15rem;
+  background: linear-gradient(135deg, #002b49 0%, #06406e 100%);
+  color: #ffffff;
+  border: 1.5px solid #002b49;
+  border-radius: 6px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 5px rgba(0, 43, 73, 0.18);
+  white-space: nowrap;
+}
+
+.btn-download-marksheet:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+  border-color: #ea580c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.28);
+}
+
+.btn-download-marksheet:disabled {
+  background: #f1f5f9 !important;
+  color: #94a3b8 !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: none !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  opacity: 0.7;
+}
+
+.btn-download-quiz-result {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.65rem 1.35rem;
+  background: linear-gradient(135deg, #002b49 0%, #06406e 100%);
+  color: #ffffff;
+  border: 1.5px solid #002b49;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 3px 10px rgba(0, 43, 73, 0.2);
+  text-decoration: none;
+}
+
+.btn-download-quiz-result:hover {
+  background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+  border-color: #ea580c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(234, 88, 12, 0.35);
+  color: #ffffff;
+}
+
+.btn-card-export-result {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  background: #ffffff;
+  color: #002b49;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 5px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.btn-card-export-result:hover {
+  background: #002b49;
+  color: #ffffff;
+  border-color: #002b49;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0, 43, 73, 0.2);
+}
+
+#btn-execute-download-marksheet {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.65rem 1.4rem;
+  background: linear-gradient(135deg, #002b49 0%, #06406e 100%);
+  color: #ffffff;
+  border: 1.5px solid #002b49;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 43, 73, 0.2);
+}
+
+#btn-execute-download-marksheet:hover {
+  background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+  border-color: #ea580c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.3);
+}
+
+/* Dark theme overrides */
+[data-theme="dark"] .marksheet-dialog {
+  background: #0f172a;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .marksheet-format-bar {
+  background: linear-gradient(to right, #1e293b, #0f172a);
+  border-color: #334155;
+}
+
+[data-theme="dark"] .marksheet-format-title {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .marksheet-format-sub {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .export-scope-btn {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .export-scope-btn.active {
+  background: #1e293b;
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+}
+
+[data-theme="dark"] .export-fmt-name {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .export-scope-btn.active .export-fmt-name {
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .export-fmt-ext {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .marksheet-modal-footer {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .btn-card-export-result {
+  background: #1e293b;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .btn-card-export-result:hover {
+  background: #38bdf8;
+  color: #0f172a;
+  border-color: #38bdf8;
 }
 
 /* ==========================================================================
@@ -11818,3 +12123,26 @@ body.user-is-banned #banned-user-modal {
   color: #94a3b8;
 }
 
+/* ==========================================================================
+   HIGH-PRIORITY POPUP MODAL STACKING & INTERACTIVITY (MAX Z-INDEX)
+   ========================================================================== */
+#custom-quiz-architect-modal,
+#elab-custom-project-modal,
+#resume-extraction-modal {
+  z-index: 10000000 !important;
+  position: fixed !important;
+  inset: 0 !important;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 21, 36, 0.82) !important;
+  backdrop-filter: blur(6px) !important;
+  pointer-events: auto !important;
+}
+
+#custom-quiz-architect-modal .admin-modal-dialog,
+#elab-custom-project-modal .admin-modal-dialog,
+#resume-extraction-modal .admin-modal-dialog {
+  z-index: 10000001 !important;
+  position: relative !important;
+  pointer-events: auto !important;
+}
