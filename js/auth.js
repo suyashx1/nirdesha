@@ -288,34 +288,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Quick Demo Credentials Buttons
-  const demoChipPublic = document.getElementById('demo-chip-public');
-  const demoChipAdmin = document.getElementById('demo-chip-admin');
-
-  if (demoChipPublic) {
-    demoChipPublic.addEventListener('click', () => {
-      const idInput = document.getElementById('login-identifier');
-      const passInput = document.getElementById('login-password');
-      const capInput = document.getElementById('login-captcha');
-      if (idInput) idInput.value = 'public';
-      if (passInput) passInput.value = 'public';
-      if (capInput && captchaText) capInput.value = captchaText.textContent.trim();
-      performLogin('public', 'public', null); // null = Demo Persona
-    });
-  }
-
-  if (demoChipAdmin) {
-    demoChipAdmin.addEventListener('click', () => {
-      const idInput = document.getElementById('login-identifier');
-      const passInput = document.getElementById('login-password');
-      const capInput = document.getElementById('login-captcha');
-      if (idInput) idInput.value = 'admin@gov';
-      if (passInput) passInput.value = 'admin';
-      if (capInput && captchaText) capInput.value = captchaText.textContent.trim();
-      performLogin('admin', 'admin@gov');
-    });
-  }
-
   // Parichay SSO Instant Authentication
   const ssoBtn = document.querySelector('.sso-btn-parichay');
   if (ssoBtn) {
@@ -338,7 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Empty identifier check
       if (!idVal) {
-        showAlert('Please enter your credentials (e.g. "public" or "admin@gov") or click a quick login button above.', 'error');
+        showAlert('Please enter your credentials (e.g. "public" or "admin@gov").', 'error');
         if (identifierInput) identifierInput.focus();
         return;
       }
@@ -378,7 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // 4. GENERAL OFFICER FALLBACK (e.g. ad-hoc @gov.in / @nic.in login)
       // Captcha check only if user typed a captcha
       if (captchaInput && captchaText && captchaInput.value.trim() && captchaInput.value.trim().toUpperCase() !== captchaText.textContent.trim()) {
-        showAlert('Security Captcha does not match. Please verify the code and re-enter, or use quick demo login.', 'error');
+        showAlert('Security Captcha does not match. Please verify the code and re-enter.', 'error');
         generateCaptcha();
         return;
       }

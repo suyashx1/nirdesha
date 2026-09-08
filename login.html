@@ -4,22 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <!-- Persistent Session Check & Clean URL Normalizer -->
+  <!-- Clean Semantic URL Normalizer -->
   <script>
     (function() {
       try {
-        if (!window.location.search.includes('signout') && !window.location.hash.includes('signout')) {
-          var s = localStorage.getItem('nirdesha_active_session');
-          if (s === 'admin') {
-            window.location.replace('admin.html');
-            return;
-          } else if (s === 'public') {
-            window.location.replace('public.html');
-            return;
+        if (window.location.protocol !== 'file:') {
+          var base = document.createElement('base');
+          base.href = '/';
+          document.head.appendChild(base);
+          if (window.location.pathname.endsWith('login.html')) {
+            window.history.replaceState(null, '', '/login' + window.location.hash);
           }
-        }
-        if (window.location.protocol !== 'file:' && window.location.pathname.endsWith('login.html')) {
-          window.history.replaceState(null, '', '/login' + window.location.hash);
         }
       } catch (e) {}
     })();
@@ -217,42 +212,18 @@
                 <button type="button" class="auth-mode-btn" id="mode-otp-btn">Instant Mobile/Email OTP</button>
               </div>
 
-              <!-- Quick Demo Credentials One-Click Bar -->
-              <div class="demo-quick-login-box" style="background: rgba(30, 58, 138, 0.05); border: 1px dashed #3b82f6; border-radius: 8px; padding: 0.75rem 0.9rem; margin-bottom: 1.25rem;">
-                <div style="font-size: 0.725rem; font-weight: 700; color: #1e3a8a; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.45rem; display: flex; align-items: center; justify-content: space-between;">
-                  <span style="display: flex; align-items: center; gap: 0.35rem;">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-                    Instant Demo Portals (Pre-loaded Showcases):
-                  </span>
-                  <span style="font-size: 0.68rem; color: #64748b; font-weight: 500;">No password/captcha required</span>
-                </div>
-                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.45rem;">
-                  <button type="button" class="btn-demo-chip" id="demo-chip-public" title="Showcase demo statistical officer with competencies, ratings, and diagnostic marksheets" style="background: #ffffff; border: 1px solid #16a34a; color: #15803d; padding: 0.4rem 0.75rem; border-radius: 6px; font-size: 0.8rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: all 0.2s ease;">
-                    <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #16a34a;"></span>
-                    <span>Demo Trainee (<strong>public</strong>)</span>
-                  </button>
-                  <button type="button" class="btn-demo-chip" id="demo-chip-admin" title="Showcase MoSPI central administration command center" style="background: #ffffff; border: 1px solid #2563eb; color: #1d4ed8; padding: 0.4rem 0.75rem; border-radius: 6px; font-size: 0.8rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: all 0.2s ease;">
-                    <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #2563eb;"></span>
-                    <span>Demo Admin (<strong>admin@gov</strong>)</span>
-                  </button>
-                </div>
-                <div style="font-size: 0.7rem; color: #64748b; line-height: 1.35;">
-                  New officer? Use the <strong>"New User Registration"</strong> tab to create a personalized statistical competency profile.
-                </div>
-              </div>
-
               <form id="form-officer-login" novalidate>
                 <!-- Identifier Input -->
                 <div class="form-group-gov">
                   <label for="login-identifier" class="form-label-gov">
                     <span>Official Email ID / Employee Code</span>
-                    <span style="font-weight: 500; font-size: 0.725rem; color: #64748b;">@gov.in or MoSPI Roll</span>
+                    <span style="font-weight: 500; font-size: 0.725rem; color: #64748b;">@gov.in, MoSPI Roll, or Cadre Code</span>
                   </label>
                   <div class="form-input-wrap">
                     <span class="form-input-icon">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
                     </span>
-                    <input type="text" id="login-identifier" class="form-input-gov" placeholder="Enter 'public' or 'admin@gov' or official email" required autocomplete="username">
+                    <input type="text" id="login-identifier" class="form-input-gov" placeholder="Enter official email or username" required autocomplete="username">
                   </div>
                 </div>
 
