@@ -260,13 +260,24 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Sign Out Action
+  function handleTraineeSignout(e) {
+    if (e) e.preventDefault();
+    try {
+      localStorage.removeItem('nirdesha_active_session');
+      localStorage.removeItem('nirdesha_user_role');
+      localStorage.removeItem('nirdesha_auth_user');
+      sessionStorage.removeItem('nirdesha_user_role');
+    } catch(err) {}
+    window.location.href = 'main.html';
+  }
+
   const signoutBtn = document.getElementById('trainee-signout-btn');
   if (signoutBtn) {
-    signoutBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      sessionStorage.removeItem('nirdesha_user_role');
-      window.location.href = 'login.html';
-    });
+    signoutBtn.addEventListener('click', handleTraineeSignout);
+  }
+  const bannedSignoutBtn = document.getElementById('btn-banned-signout');
+  if (bannedSignoutBtn) {
+    bannedSignoutBtn.addEventListener('click', handleTraineeSignout);
   }
 
   // 3. Render GitHub-Style Contribution Heatmap (Full Year • 52 Weeks • 364 Days)

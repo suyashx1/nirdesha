@@ -215,20 +215,36 @@ document.addEventListener('DOMContentLoaded', () => {
       // 1. Check for Public Officer / Trainee Credentials (case-insensitive "public", no captcha required)
       if (idVal === 'public' && passVal === 'public') {
         showAlert('Public Officer credentials verified. Launching Trainee Learning Dashboard...', 'success');
+        localStorage.setItem('nirdesha_active_session', 'public');
+        localStorage.setItem('nirdesha_user_role', 'public');
+        localStorage.setItem('nirdesha_auth_user', JSON.stringify({
+          role: 'public',
+          username: 'public',
+          displayName: 'Public Officer (Trainee)',
+          loginTime: Date.now()
+        }));
         sessionStorage.setItem('nirdesha_user_role', 'public');
         setTimeout(() => {
           window.location.href = 'public.html';
-        }, 600);
+        }, 500);
         return;
       }
 
       // 2. Check for Admin Credentials (admin@gov / admin in all small)
-      if ((idVal === 'admin@gov' || idVal === 'admin@gov.in' || idVal === 'admin') && passRaw === 'admin') {
+      if ((idVal === 'admin@gov' || idVal === 'admin@gov.in' || idVal === 'admin') && (passRaw === 'admin' || passVal === 'admin')) {
         showAlert('Admin credentials verified. Launching Nirdesha Administration Console...', 'success');
+        localStorage.setItem('nirdesha_active_session', 'admin');
+        localStorage.setItem('nirdesha_admin_session', 'true');
+        localStorage.setItem('nirdesha_auth_user', JSON.stringify({
+          role: 'admin',
+          username: 'admin@gov',
+          displayName: 'System Administrator (MoSPI)',
+          loginTime: Date.now()
+        }));
         sessionStorage.setItem('nirdesha_admin_session', 'true');
         setTimeout(() => {
           window.location.href = 'admin.html';
-        }, 800);
+        }, 600);
         return;
       }
 
@@ -240,9 +256,18 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       showAlert('Authentication verified. Authorizing credentials against MoSPI Cadre Registry...', 'success');
+      localStorage.setItem('nirdesha_active_session', 'public');
+      localStorage.setItem('nirdesha_user_role', 'officer');
+      localStorage.setItem('nirdesha_auth_user', JSON.stringify({
+        role: 'public',
+        username: idRaw,
+        displayName: idRaw,
+        loginTime: Date.now()
+      }));
+      sessionStorage.setItem('nirdesha_user_role', 'officer');
       setTimeout(() => {
-        window.location.href = 'main.html';
-      }, 1500);
+        window.location.href = 'public.html';
+      }, 800);
     });
   }
 

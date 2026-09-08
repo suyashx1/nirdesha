@@ -6,7 +6,19 @@
   <meta http-equiv="refresh" content="0; url=/main.html">
   <title>निर्देश (Nirdesha) — National Competency Intelligence & Training Guidance Platform | MoSPI, Govt. of India</title>
   <script>
-    window.location.replace('/main.html');
+    (function() {
+      try {
+        var s = localStorage.getItem('nirdesha_active_session');
+        if (s === 'admin') {
+          window.location.replace('/admin.html');
+          return;
+        } else if (s === 'public') {
+          window.location.replace('/public.html');
+          return;
+        }
+      } catch (e) {}
+      window.location.replace('/main.html');
+    })();
   </script>
 </head>
 <body style="margin: 0; padding: 2rem; font-family: system-ui, -apple-system, sans-serif; background: #002b49; color: #ffffff; display: flex; align-items: center; justify-content: center; height: 100vh;">

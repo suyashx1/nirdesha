@@ -3,6 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Persistent Session Check: Reopen directly into active dashboard (admin or public) until manual sign out -->
+  <script>
+    (function() {
+      try {
+        var s = localStorage.getItem('nirdesha_active_session');
+        if (s === 'admin') {
+          window.location.replace('admin.html');
+        } else if (s === 'public') {
+          window.location.replace('public.html');
+        }
+      } catch (e) {}
+    })();
+  </script>
+
   <title>निर्देश (Nirdesha) — National Competency Intelligence & Training Guidance Platform | MoSPI, Govt. of India</title>
   
   <meta name="description" content="Official portal for competency-intelligence, skill-gap analysis, and personalized learning guidance aligned with Ministry of Statistics and Programme Implementation (MoSPI) workflows.">
@@ -693,12 +708,9 @@
             </p>
 
             <div class="hero-button-group">
-              <a href="login.html#login" class="btn-gov-primary" title="Login to Portal">
-                <span>Login</span>
+              <a href="public.html" class="btn-gov-primary" title="Enter Trainee Learning & Competency Dashboard">
+                <span>Enter Trainee Portal</span>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-              </a>
-              <a href="login.html#register" class="btn-gov-secondary" title="New Officer Registration">
-                <span>Sign Up</span>
               </a>
             </div>
 

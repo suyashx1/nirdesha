@@ -187,8 +187,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (signoutBtn) {
     signoutBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      sessionStorage.removeItem('nirdesha_admin_session');
-      window.location.href = 'login.html';
+      try {
+        localStorage.removeItem('nirdesha_active_session');
+        localStorage.removeItem('nirdesha_admin_session');
+        localStorage.removeItem('nirdesha_auth_user');
+        sessionStorage.removeItem('nirdesha_admin_session');
+      } catch(err) {}
+      window.location.href = 'main.html';
     });
   }
 

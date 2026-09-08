@@ -3,6 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Persistent Session Check: If already logged in, resume active dashboard -->
+  <script>
+    (function() {
+      try {
+        if (!window.location.search.includes('signout') && !window.location.hash.includes('signout')) {
+          var s = localStorage.getItem('nirdesha_active_session');
+          if (s === 'admin') {
+            window.location.replace('admin.html');
+          } else if (s === 'public') {
+            window.location.replace('public.html');
+          }
+        }
+      } catch (e) {}
+    })();
+  </script>
+
   <title>Officer Authentication & Registration — Nirdesha Portal | MoSPI, Government of India</title>
   <meta name="description" content="Official authentication gateway for the Nirdesha Competency Intelligence Platform. Single Sign-On and cadre registration for central and state statistical officers.">
 
