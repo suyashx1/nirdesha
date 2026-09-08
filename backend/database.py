@@ -27,6 +27,9 @@ DATABASE_URL = os.getenv(
     f"sqlite:///{DEFAULT_DB_PATH.as_posix()}",
 )
 
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
 
 # ---------------------------------------------------------------------------
 # SQLALCHEMY BASE
