@@ -1,7 +1,9 @@
 (function () {
   'use strict';
 
-  const API_BASE = 'http://127.0.0.1:8001';
+  const API_BASE = (window.location.protocol === 'http:' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'))
+    ? 'http://127.0.0.1:8001'
+    : '';
   const EMPLOYEE_ID = 1;
   const REFRESH_MS = 8000;
 

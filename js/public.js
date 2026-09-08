@@ -1726,8 +1726,11 @@ if (
     let accumulatedText = '';
     let hasReceivedFirstToken = false;
 
+    // Resolve API Base (relative on Vercel/web server; 127.0.0.1:8000 on file://)
+    const apiBase = (window.location.protocol === 'file:') ? 'http://127.0.0.1:8000' : '';
+
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/chat/stream', {
+      const response = await fetch(`${apiBase}/api/chat/stream`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1799,8 +1802,42 @@ if (
       }
     } catch (err) {
       console.warn('AI Mentor server stream error:', err);
-    } finally {
-      isMentorStreaming = false;
+    }
+
+    // 2. Direct JSON fallback endpoint (/api/chat) if stream failed
+    if (!hasReceivedFirstToken) {
+      try {
+        const chatRes = await fetch(`${apiBase}/api/chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_id: 'public',
+            message: query,
+            role: 'mentor',
+            language: currentMentorLang,
+            personalization: typeof getAiPersonalizationSettings === 'function' ? getAiPersonalizationSettings() : {}
+          })
+        });
+        if (chatRes.ok) {
+          const chatData = await chatRes.json();
+          if (chatData && chatData.reply) {
+            accumulatedText = chatData.reply;
+            botBubble.innerHTML = window.NirdeshaFormatter ? window.NirdeshaFormatter.format(accumulatedText) : accumulatedText.replace(/\n/g, '<br>');
+            appendResponseActions(botBubble, query);
+            traineeChatLog.scrollTop = traineeChatLog.scrollHeight;
+            persistTraineeChatLog();
+            if (typeof window.recordMentorTurn === 'function') {
+              window.recordMentorTurn(query, botBubble.innerHTML, accumulatedText);
+            }
+            isMentorStreaming = false;
+            return;
+          }
+        }
+      } catch (chatErr) {
+        console.warn('AI Mentor direct chat error:', chatErr);
+      } finally {
+        isMentorStreaming = false;
+      }
     }
 
     if (!hasReceivedFirstToken) {

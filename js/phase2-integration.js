@@ -11,7 +11,7 @@
 
   const API_BASE =
     window.NirdeshaPhase1?.API_BASE ||
-    'http://127.0.0.1:8001';
+    ((window.location.protocol === 'http:' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) ? 'http://127.0.0.1:8001' : '');
 
   const EMPLOYEE_ID =
     window.NirdeshaPhase1?.EMPLOYEE_ID ||

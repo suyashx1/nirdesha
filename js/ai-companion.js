@@ -303,9 +303,12 @@
       let accumulatedText = '';
       let hasReceivedFirstToken = false;
 
+      // Resolve API Base (relative when running on Vercel/web server; 127.0.0.1:8000 when file://)
+      const apiBase = (window.location.protocol === 'file:') ? 'http://127.0.0.1:8000' : '';
+
       try {
         // 1. Try Ultra-Fast Streaming Endpoint (/api/chat/stream)
-        const response = await fetch('http://127.0.0.1:8000/api/chat/stream', {
+        const response = await fetch(`${apiBase}/api/chat/stream`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -365,10 +368,35 @@
           }
         }
       } catch (err) {
-        // Fallback
+        console.warn('AI Companion stream error:', err);
       }
 
-      // 2. Offline fallback
+      // 2. Direct JSON fallback endpoint (/api/chat) if stream failed
+      if (!hasReceivedFirstToken) {
+        try {
+          const chatRes = await fetch(`${apiBase}/api/chat`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              user_id: 'public', message: q, role: 'guidance', language: companionLanguage
+            })
+          });
+          if (chatRes.ok) {
+            const chatData = await chatRes.json();
+            if (chatData && chatData.reply) {
+              accumulatedText = chatData.reply.replace(/\*/g, "");
+              botMsg.innerHTML = window.NirdeshaFormatter ? window.NirdeshaFormatter.format(accumulatedText) : accumulatedText.replace(/\n/g, '<br>');
+              companionHistory.push({ sender: 'bot', text: accumulatedText });
+              chatBody.scrollTop = chatBody.scrollHeight;
+              return;
+            }
+          }
+        } catch (chatErr) {
+          console.warn('AI Companion direct chat error:', chatErr);
+        }
+      }
+
+      // 3. Offline fallback
       if (!hasReceivedFirstToken) {
         const queryLower = q.toLowerCase();
         let reply = COMPANION_KNOWLEDGE['default'];

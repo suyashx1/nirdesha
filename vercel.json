@@ -1,6 +1,7 @@
 {
   "cleanUrls": true,
   "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/index.py" },
     { "source": "/", "destination": "/main.html" },
     { "source": "/home", "destination": "/main.html" },
     { "source": "/main", "destination": "/main.html" },
