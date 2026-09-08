@@ -1,0 +1,13 @@
+Sampling Methods — Nirdesha Prototype Learning Material
+
+Stratified sampling divides a population into internally homogeneous strata before selecting samples from each stratum. It is useful when important population subgroups should be represented separately in the sample.
+
+Under Neyman allocation with equal unit costs, stratum sample sizes are assigned in proportion to stratum size multiplied by the stratum standard deviation. This allocates more observations to larger or more variable strata.
+
+Probability proportional to size sampling gives larger units higher probabilities of selection when an appropriate measure of size is available. Inclusion probabilities must be handled correctly during estimation.
+
+The Horvitz-Thompson estimator uses unit inclusion probabilities and can be used for unequal probability sampling designs. Correct weights are essential for unbiased estimation under the specified design.
+
+A sampling frame is the operational list or representation used to identify the units from which a sample is selected. Coverage errors in the frame can affect the quality of survey estimates.
+
+Survey documentation should describe the sampling design, weights, non-response adjustments, estimation procedures and quality checks so that results remain transparent and reproducible.

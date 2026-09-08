@@ -1,13 +1,18 @@
-"""Nirdesha FastAPI application.
+"""Nirdesha Phase-3 FastAPI application.
 
-Run from the Nirdesha project root:
+Run from project root:
 
 uvicorn backend.main:app --reload --host 127.0.0.1 --port 8001
+
+Port 8001 remains deliberate because server.py continues serving
+the frontend + existing AI Mentor on port 8000.
 """
 
 from __future__ import annotations
 
-from contextlib import asynccontextmanager
+from contextlib import (
+    asynccontextmanager,
+)
 
 from fastapi import FastAPI
 
@@ -23,9 +28,13 @@ from .database import (
 
 from .routers import (
     competency,
+    courses,
     evidence,
+    learning,
     materials,
-    profile,
+    mentor,
+    profiles,
+    recommendations,
     resume,
 )
 
@@ -33,9 +42,15 @@ from .seed import (
     seed_database,
 )
 
-# Importing this module registers
-# Phase-2 tables with SQLAlchemy metadata.
+from .phase3_seed import (
+    seed_phase3_database,
+)
+
+
+# Importing registers table metadata.
+
 from . import phase2_models  # noqa: F401
+from . import phase3_models  # noqa: F401
 
 
 @asynccontextmanager
@@ -43,20 +58,31 @@ async def lifespan(
     _app: FastAPI,
 ):
 
-    # Creates missing tables only.
+    # Creates only missing tables.
     #
-    # Existing Phase-1 tables/data are
-    # not dropped or reset.
+    # Existing Phase-1 and Phase-2 data
+    # remains intact.
 
     Base.metadata.create_all(
         bind=engine
     )
 
+
     with SessionLocal() as db:
+
+        # Existing employee/skill seed.
 
         seed_database(
             db
         )
+
+
+        # Phase-3 prototype learning catalogue.
+
+        seed_phase3_database(
+            db
+        )
+
 
     yield
 
@@ -68,24 +94,22 @@ app = FastAPI(
         "Intelligence API"
     ),
 
-    version=(
-        "2.0.0-phase2"
-    ),
+    version=
+        "4.0.0-phase4",
 
     description=(
-        "Nirdesha competency core plus "
-        "Phase-2 document intelligence "
-        "and source-grounded quiz generation."
+
+        "Nirdesha competency intelligence, "
+        "document/quiz intelligence, "
+        "explainable learning recommendations "
+        "and adaptive roadmap APIs."
+
     ),
 
     lifespan=lifespan,
 
 )
 
-
-# ---------------------------------------------------------------------------
-# CORS
-# ---------------------------------------------------------------------------
 
 app.add_middleware(
 
@@ -119,12 +143,12 @@ app.add_middleware(
 )
 
 
-# ---------------------------------------------------------------------------
-# PHASE 1 ROUTERS
-# ---------------------------------------------------------------------------
+# ================================================================
+# PHASE 1
+# ================================================================
 
 app.include_router(
-    profile.router
+    profiles.router
 )
 
 app.include_router(
@@ -136,9 +160,9 @@ app.include_router(
 )
 
 
-# ---------------------------------------------------------------------------
-# PHASE 2 ROUTERS
-# ---------------------------------------------------------------------------
+# ================================================================
+# PHASE 2
+# ================================================================
 
 app.include_router(
     resume.router
@@ -149,6 +173,31 @@ app.include_router(
 )
 
 
+# ================================================================
+# PHASE 3
+# ================================================================
+
+app.include_router(
+    courses.router
+)
+
+app.include_router(
+    recommendations.router
+)
+
+app.include_router(
+    learning.router
+)
+
+# ================================================================
+# PHASE 4
+# Context-aware AI Mentor
+# ================================================================
+
+app.include_router(
+    mentor.router
+)
+
 @app.get("/")
 def root():
 
@@ -158,7 +207,7 @@ def root():
             "Nirdesha Competency Intelligence API",
 
         "phase":
-            2,
+            4,
 
         "status":
             "ready",
@@ -181,9 +230,15 @@ def health():
             "competency-core",
 
         "phase":
-            2,
+            4,
 
         "database":
             "connected",
+
+        "learning_catalogue":
+            "prototype_iGOT_NSSTA",
+
+        "mentor_context":
+            "database_injected",
 
     }
