@@ -759,32 +759,6 @@ button, input, select {
 }
 
 /* Sharp Square, Highly Visible Government Buttons */
-.btn-nav-portal {
-  background: #0284c7;
-  color: #ffffff;
-  font-weight: 800;
-  font-size: 0.8125rem;
-  padding: 0.5rem 1rem;
-  border-radius: 0px !important; /* Strictly Square */
-  border: 1.5px solid #ffffff;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  box-shadow: 3px 3px 0px #00101d;
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.btn-nav-portal:hover {
-  background: #0369a1;
-  color: #ffffff;
-  box-shadow: 4px 4px 0px #00101d;
-  transform: translateY(-1px);
-  text-decoration: none;
-}
-
 .btn-nav-login {
   background: #ea580c;
   color: #ffffff;
