@@ -1,9 +1,13 @@
 {
   "rewrites": [
-    { "source": "/", "destination": "/public.html" },
+    { "source": "/", "destination": "/main.html" },
+    { "source": "/main", "destination": "/main.html" },
+    { "source": "/landing", "destination": "/main.html" },
+    { "source": "/dashboard", "destination": "/public.html" },
+    { "source": "/public", "destination": "/public.html" },
+    { "source": "/trainee", "destination": "/public.html" },
     { "source": "/admin", "destination": "/admin.html" },
-    { "source": "/login", "destination": "/login.html" },
-    { "source": "/main", "destination": "/main.html" }
+    { "source": "/login", "destination": "/login.html" }
   ]
 }
 
