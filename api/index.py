@@ -332,8 +332,8 @@ class handler(BaseHTTPRequestHandler):
             })
             return
 
-        # 2. Ultra-Fast SSE Stream Generator (/api/chat/stream)
-        if path.endswith("/stream"):
+        # 2. Ultra-Fast SSE Stream Generator (/api/chat/stream or /api?stream=1 or {"stream": true})
+        if path.endswith("/stream") or payload.get("stream") is True or "stream" in qs:
             history = get_user_history(session_key)
             history.append({"sender": "user", "text": user_message})
             system_instruction = build_system_context(user_id, role, language, personalization)

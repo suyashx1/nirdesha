@@ -1726,88 +1726,16 @@ if (
     let accumulatedText = '';
     let hasReceivedFirstToken = false;
 
-    // Resolve API Base (relative on Vercel/web server; 127.0.0.1:8000 on file://)
-    const apiBase = (window.location.protocol === 'file:') ? 'http://127.0.0.1:8000' : '';
+    // Multi-endpoint cascade for Vercel and local environments
+    const isFile = (window.location.protocol === 'file:');
+    const streamUrls = isFile ? ['http://127.0.0.1:8000/api/chat/stream'] : ['/api/chat/stream', '/api?stream=1'];
+    const jsonUrls = isFile ? ['http://127.0.0.1:8000/api/chat'] : ['/api/chat', '/api'];
 
-    try {
-      const response = await fetch(`${apiBase}/api/chat/stream`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user_id: 'public',
-          message: query,
-          role: 'mentor',
-          language: currentMentorLang,
-          personalization: typeof getAiPersonalizationSettings === 'function' ? getAiPersonalizationSettings() : {}
-        })
-      });
-
-      if (response.ok && response.body) {
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder('utf-8');
-        let buffer = '';
-
-        let isStreamDone = false;
-        let lastRenderTime = 0;
-
-        while (!isStreamDone) {
-          const { done, value } = await reader.read();
-          if (done) break;
-
-          buffer += decoder.decode(value, { stream: true });
-          const lines = buffer.split(/\r?\n/);
-          buffer = lines.pop();
-
-          for (const line of lines) {
-            const trimmed = line.trim();
-            if (trimmed === 'data: [DONE]') {
-              isStreamDone = true;
-              break;
-            }
-            if (trimmed.startsWith('data: ')) {
-              try {
-                const parsed = JSON.parse(trimmed.slice(6));
-                if (parsed.chunk) {
-                  if (!hasReceivedFirstToken) {
-                    botBubble.innerHTML = '';
-                    hasReceivedFirstToken = true;
-                  }
-                  accumulatedText += parsed.chunk;
-                  
-                  // Throttled fast rendering during stream to prevent DOM freeze
-                  const now = Date.now();
-                  if (now - lastRenderTime > 80) {
-                    lastRenderTime = now;
-                    botBubble.innerHTML = window.NirdeshaFormatter ? window.NirdeshaFormatter.format(accumulatedText) : accumulatedText.replace(/\n/g, '<br>');
-                    traineeChatLog.scrollTop = traineeChatLog.scrollHeight;
-                  }
-                }
-              } catch (e) {}
-            }
-          }
-        }
-
-        // Finalize formatting on complete response
-        if (accumulatedText.trim()) {
-          botBubble.innerHTML = window.NirdeshaFormatter ? window.NirdeshaFormatter.format(accumulatedText) : accumulatedText.replace(/\n/g, '<br>');
-          appendResponseActions(botBubble, query);
-          traineeChatLog.scrollTop = traineeChatLog.scrollHeight;
-          persistTraineeChatLog();
-          if (typeof window.recordMentorTurn === 'function') {
-            window.recordMentorTurn(query, botBubble.innerHTML, accumulatedText);
-          }
-          isMentorStreaming = false;
-          return;
-        }
-      }
-    } catch (err) {
-      console.warn('AI Mentor server stream error:', err);
-    }
-
-    // 2. Direct JSON fallback endpoint (/api/chat) if stream failed
-    if (!hasReceivedFirstToken) {
+    // 1. Try Streaming Endpoints
+    for (const sUrl of streamUrls) {
+      if (hasReceivedFirstToken) break;
       try {
-        const chatRes = await fetch(`${apiBase}/api/chat`, {
+        const response = await fetch(sUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -1815,13 +1743,54 @@ if (
             message: query,
             role: 'mentor',
             language: currentMentorLang,
-            personalization: typeof getAiPersonalizationSettings === 'function' ? getAiPersonalizationSettings() : {}
+            personalization: typeof getAiPersonalizationSettings === 'function' ? getAiPersonalizationSettings() : {},
+            stream: true
           })
         });
-        if (chatRes.ok) {
-          const chatData = await chatRes.json();
-          if (chatData && chatData.reply) {
-            accumulatedText = chatData.reply;
+
+        if (response.ok && response.body) {
+          const reader = response.body.getReader();
+          const decoder = new TextDecoder('utf-8');
+          let buffer = '';
+          let isStreamDone = false;
+          let lastRenderTime = 0;
+
+          while (!isStreamDone) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split(/\r?\n/);
+            buffer = lines.pop();
+
+            for (const line of lines) {
+              const trimmed = line.trim();
+              if (trimmed === 'data: [DONE]') {
+                isStreamDone = true;
+                break;
+              }
+              if (trimmed.startsWith('data: ')) {
+                try {
+                  const parsed = JSON.parse(trimmed.slice(6));
+                  if (parsed.chunk) {
+                    if (!hasReceivedFirstToken) {
+                      botBubble.innerHTML = '';
+                      hasReceivedFirstToken = true;
+                    }
+                    accumulatedText += parsed.chunk;
+                    const now = Date.now();
+                    if (now - lastRenderTime > 80) {
+                      lastRenderTime = now;
+                      botBubble.innerHTML = window.NirdeshaFormatter ? window.NirdeshaFormatter.format(accumulatedText) : accumulatedText.replace(/\n/g, '<br>');
+                      traineeChatLog.scrollTop = traineeChatLog.scrollHeight;
+                    }
+                  }
+                } catch (e) {}
+              }
+            }
+          }
+
+          if (accumulatedText.trim()) {
             botBubble.innerHTML = window.NirdeshaFormatter ? window.NirdeshaFormatter.format(accumulatedText) : accumulatedText.replace(/\n/g, '<br>');
             appendResponseActions(botBubble, query);
             traineeChatLog.scrollTop = traineeChatLog.scrollHeight;
@@ -1833,11 +1802,48 @@ if (
             return;
           }
         }
-      } catch (chatErr) {
-        console.warn('AI Mentor direct chat error:', chatErr);
-      } finally {
-        isMentorStreaming = false;
+      } catch (err) {
+        // Try next stream URL or fallback to JSON
       }
+    }
+
+    // 2. Direct JSON fallback endpoints
+    if (!hasReceivedFirstToken) {
+      for (const jUrl of jsonUrls) {
+        if (hasReceivedFirstToken) break;
+        try {
+          const chatRes = await fetch(jUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              user_id: 'public',
+              message: query,
+              role: 'mentor',
+              language: currentMentorLang,
+              personalization: typeof getAiPersonalizationSettings === 'function' ? getAiPersonalizationSettings() : {},
+              stream: false
+            })
+          });
+          if (chatRes.ok) {
+            const chatData = await chatRes.json();
+            if (chatData && chatData.reply) {
+              accumulatedText = chatData.reply;
+              botBubble.innerHTML = window.NirdeshaFormatter ? window.NirdeshaFormatter.format(accumulatedText) : accumulatedText.replace(/\n/g, '<br>');
+              appendResponseActions(botBubble, query);
+              traineeChatLog.scrollTop = traineeChatLog.scrollHeight;
+              persistTraineeChatLog();
+              if (typeof window.recordMentorTurn === 'function') {
+                window.recordMentorTurn(query, botBubble.innerHTML, accumulatedText);
+              }
+              isMentorStreaming = false;
+              return;
+            }
+          }
+        } catch (chatErr) {
+          // Try next JSON URL
+        }
+      }
+      isMentorStreaming = false;
     }
 
     if (!hasReceivedFirstToken) {

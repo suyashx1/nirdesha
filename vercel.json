@@ -1,7 +1,11 @@
 {
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/index.py" },
+    { "source": "/api/chat/stream", "destination": "/api" },
+    { "source": "/api/chat", "destination": "/api" },
+    { "source": "/api/history", "destination": "/api" },
+    { "source": "/api/health", "destination": "/api" },
+    { "source": "/api/(.*)", "destination": "/api" },
     { "source": "/", "destination": "/main.html" },
     { "source": "/home", "destination": "/main.html" },
     { "source": "/main", "destination": "/main.html" },
