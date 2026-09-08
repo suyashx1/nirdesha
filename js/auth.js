@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 6. Form Submission & Authentication Handling
+  // 6. User Directory & Authentication Engine (Demo Mode + Real User Registration)
   const loginForm = document.getElementById('form-officer-login');
   const registerForm = document.getElementById('form-officer-register');
   const authAlert = document.getElementById('auth-alert');
@@ -200,7 +200,33 @@ document.addEventListener('DOMContentLoaded', () => {
     authAlert.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
-  function performLogin(role, username) {
+  // Registry of users registered in the portal
+  function getRegisteredUsers() {
+    try {
+      const raw = localStorage.getItem('nirdesha_registered_users');
+      return raw ? JSON.parse(raw) : [];
+    } catch(e) {
+      return [];
+    }
+  }
+
+  function saveRegisteredUser(user) {
+    try {
+      const users = getRegisteredUsers();
+      // Update if existing or add new
+      const idx = users.findIndex(u => (u.email && u.email.toLowerCase() === user.email.toLowerCase()) || (u.empCode && u.empCode.toLowerCase() === user.empCode.toLowerCase()));
+      if (idx >= 0) {
+        users[idx] = { ...users[idx], ...user };
+      } else {
+        users.push(user);
+      }
+      localStorage.setItem('nirdesha_registered_users', JSON.stringify(users));
+    } catch(e) {
+      console.warn('Could not save registered user:', e);
+    }
+  }
+
+  function performLogin(role, identifier, customUser = null) {
     if (role === 'admin') {
       showAlert('✓ Administrator credentials verified! Opening Nirdesha Administration Console...', 'success');
       localStorage.setItem('nirdesha_active_session', 'admin');
@@ -208,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('nirdesha_user_role', 'admin');
       localStorage.setItem('nirdesha_auth_user', JSON.stringify({
         role: 'admin',
-        username: username || 'admin@gov',
+        username: identifier || 'admin@gov',
         displayName: 'System Administrator (MoSPI)',
         loginTime: Date.now()
       }));
@@ -217,13 +243,42 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'admin.html';
       }, 400);
     } else {
-      showAlert('✓ Public / Trainee credentials verified! Opening Trainee Learning Dashboard...', 'success');
+      // If logging in as a custom registered user, configure their personalized profile
+      if (customUser) {
+        const initials = customUser.fullName ? customUser.fullName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'SO';
+        const personalizedProfile = {
+          name: customUser.fullName || 'Statistical Officer',
+          role: `${customUser.cadre || 'MoSPI'} Statistical Officer`,
+          division: customUser.office || 'Field Operations Division (NSSO / FOD)',
+          cadreSeal: `Verified ${customUser.cadre || 'MoSPI'} Cadre`,
+          status: `Active officer (${customUser.empCode || 'REG-2026'}). Registered user on Nirdesha Platform. Baseline assessment profile active.`,
+          station: customUser.office || 'MoSPI Regional Office',
+          tenure: '2026 Batch (Enrolled Officer)',
+          email: customUser.email || identifier,
+          cadre: customUser.cadre || 'Subordinate Statistical Service (SSS)',
+          ministry: 'MoSPI, Government of India',
+          roll: customUser.empCode || 'REG-2026',
+          skills: 'Survey Operations, Data Quality Control, Statistical Foundations, Python Computing',
+          baseline: '1,320 Elo (Level 2 - Registered)',
+          avatarInitials: initials,
+          avatarImg: '',
+          isDemo: false
+        };
+        localStorage.setItem('nirdesha_officer_profile', JSON.stringify(personalizedProfile));
+        localStorage.setItem('nirdesha_public_profile', JSON.stringify(personalizedProfile));
+        showAlert(`✓ Welcome, ${customUser.fullName}! Launching your personalized Trainee Dashboard...`, 'success');
+      } else {
+        // DEMO PERSONA: Reset to canonical demo officer with fully populated baseline competencies
+        localStorage.removeItem('nirdesha_officer_profile');
+        showAlert('✓ Demo Officer credentials verified! Opening Trainee Competency Dashboard...', 'success');
+      }
+
       localStorage.setItem('nirdesha_active_session', 'public');
       localStorage.setItem('nirdesha_user_role', 'public');
       localStorage.setItem('nirdesha_auth_user', JSON.stringify({
         role: 'public',
-        username: username || 'public',
-        displayName: 'Public Officer (Trainee)',
+        username: identifier || 'public',
+        displayName: customUser ? customUser.fullName : 'Public Officer (Demo Trainee)',
         loginTime: Date.now()
       }));
       sessionStorage.setItem('nirdesha_user_role', 'public');
@@ -245,7 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (idInput) idInput.value = 'public';
       if (passInput) passInput.value = 'public';
       if (capInput && captchaText) capInput.value = captchaText.textContent.trim();
-      performLogin('public', 'public');
+      performLogin('public', 'public', null); // null = Demo Persona
     });
   }
 
@@ -265,7 +320,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const ssoBtn = document.querySelector('.sso-btn-parichay');
   if (ssoBtn) {
     ssoBtn.addEventListener('click', () => {
-      performLogin('public', 'parichay.officer@gov.in');
+      performLogin('public', 'parichay.officer@gov.in', null);
     });
   }
 
@@ -288,47 +343,116 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      // 1. Check for Public Officer / Trainee Credentials
-      // Matches "public", "trainee", "user", "public@gov", "public@gov.in", or containing "public" or "trainee"
-      if (idVal === 'public' || idVal === 'trainee' || idVal === 'user' || idVal.includes('public') || idVal.includes('trainee')) {
-        performLogin('public', idRaw);
+      // 1. DEMO PUBLIC / TRAINEE CREDENTIAL CHECK
+      // Matches "public", "trainee", "demo"
+      if (idVal === 'public' || idVal === 'trainee' || idVal === 'demo' || idVal === 'public@gov.in') {
+        performLogin('public', idRaw, null); // Loads Demo Officer Persona
         return;
       }
 
-      // 2. Check for Admin Credentials
-      // Matches "admin", "admin@gov", "admin@gov.in", "administrator", or containing "admin"
-      if (idVal === 'admin' || idVal === 'admin@gov' || idVal === 'admin@gov.in' || idVal.includes('admin')) {
+      // 2. DEMO ADMIN CREDENTIAL CHECK
+      // Matches "admin", "admin@gov", "admin@gov.in"
+      if (idVal === 'admin' || idVal === 'admin@gov' || idVal === 'admin@gov.in') {
         performLogin('admin', idRaw);
         return;
       }
 
-      // 3. General Officer Credentials Captcha Validation (only if captcha explicitly entered)
+      // 3. REAL REGISTERED USER CHECK
+      const registeredUsers = getRegisteredUsers();
+      const matchedUser = registeredUsers.find(u => 
+        (u.email && u.email.toLowerCase() === idVal) || 
+        (u.empCode && u.empCode.toLowerCase() === idVal)
+      );
+
+      if (matchedUser) {
+        // If password was set during registration, verify it (or allow demo bypass if left blank)
+        if (matchedUser.password && passRaw && matchedUser.password !== passRaw) {
+          showAlert('Incorrect password for this registered user account. Please check and retry.', 'error');
+          if (passwordInput) passwordInput.focus();
+          return;
+        }
+        performLogin('public', idRaw, matchedUser);
+        return;
+      }
+
+      // 4. GENERAL OFFICER FALLBACK (e.g. ad-hoc @gov.in / @nic.in login)
+      // Captcha check only if user typed a captcha
       if (captchaInput && captchaText && captchaInput.value.trim() && captchaInput.value.trim().toUpperCase() !== captchaText.textContent.trim()) {
         showAlert('Security Captcha does not match. Please verify the code and re-enter, or use quick demo login.', 'error');
         generateCaptcha();
         return;
       }
 
-      // General fallback authentication into Trainee Dashboard
-      performLogin('public', idRaw);
+      // Allow login as a new statistical officer with their entered identifier
+      const adhocUser = {
+        fullName: idRaw.split('@')[0].replace('.', ' ').toUpperCase(),
+        email: idRaw.includes('@') ? idRaw : `${idRaw}@mospi.gov.in`,
+        cadre: 'SSS',
+        empCode: idRaw.toUpperCase(),
+        office: 'MoSPI Central Division'
+      };
+      performLogin('public', idRaw, adhocUser);
     });
   }
 
   if (registerForm) {
     registerForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const pass1 = document.getElementById('reg-password').value;
-      const pass2 = document.getElementById('reg-password-confirm').value;
+      const nameInput = document.getElementById('reg-fullname');
+      const emailInput = document.getElementById('reg-email');
+      const cadreInput = document.getElementById('reg-cadre');
+      const empCodeInput = document.getElementById('reg-empcode');
+      const officeInput = document.getElementById('reg-office');
+      const mobileInput = document.getElementById('reg-mobile');
+      const pass1Input = document.getElementById('reg-password');
+      const pass2Input = document.getElementById('reg-password-confirm');
 
-      if (pass1 !== pass2) {
+      const nameVal = nameInput ? nameInput.value.trim() : '';
+      const emailVal = emailInput ? emailInput.value.trim() : '';
+      const cadreVal = cadreInput ? cadreInput.value : 'SSS';
+      const empVal = empCodeInput ? empCodeInput.value.trim() : '';
+      const officeVal = officeInput ? officeInput.value.trim() : '';
+      const mobileVal = mobileInput ? mobileInput.value.trim() : '';
+      const pass1 = pass1Input ? pass1Input.value : '';
+      const pass2 = pass2Input ? pass2Input.value : '';
+
+      if (!nameVal || !emailVal) {
+        showAlert('Please fill in your Full Name and Official Email ID to register.', 'error');
+        return;
+      }
+
+      if (pass1 && pass2 && pass1 !== pass2) {
         showAlert('Passwords do not match. Please confirm your security password.', 'error');
         return;
       }
 
-      showAlert('Registration submitted successfully. Application routed to MoSPI Nodal Officer for cadre verification.', 'success');
+      // Create new registered officer record
+      const newUser = {
+        id: 'usr_' + Date.now(),
+        fullName: nameVal,
+        email: emailVal,
+        cadre: cadreVal,
+        empCode: empVal || `EMP-${Math.floor(1000 + Math.random() * 9000)}`,
+        office: officeVal || 'NSSO Regional Directorate',
+        mobile: mobileVal,
+        password: pass1 || 'gov@123',
+        registeredAt: new Date().toISOString(),
+        isDemo: false
+      };
+
+      saveRegisteredUser(newUser);
+
+      showAlert(`✓ Registration successful for ${nameVal} (${cadreVal})! You can now sign in with your email or employee code.`, 'success');
+
+      // Pre-fill the login identifier so user can sign in immediately
+      const loginIdInput = document.getElementById('login-identifier');
+      const loginPassInput = document.getElementById('login-password');
+      if (loginIdInput) loginIdInput.value = emailVal;
+      if (loginPassInput && pass1) loginPassInput.value = pass1;
+
       setTimeout(() => {
         switchTab('login');
-      }, 2000);
+      }, 1200);
     });
   }
 
