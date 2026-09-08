@@ -10,14 +10,14 @@
       try {
         var s = localStorage.getItem('nirdesha_active_session');
         if (s === 'admin') {
-          window.location.replace(window.location.protocol === 'file:' ? 'admin.html' : '/admin/dashboard');
+          window.location.replace('admin.html');
           return;
         } else if (s === 'public') {
-          window.location.replace(window.location.protocol === 'file:' ? 'public.html' : '/dashboard');
+          window.location.replace('public.html');
           return;
         }
       } catch (e) {}
-      window.location.replace(window.location.protocol === 'file:' ? 'main.html' : '/');
+      window.location.replace('main.html');
     })();
   </script>
 </head>

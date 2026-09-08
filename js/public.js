@@ -268,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.removeItem('nirdesha_auth_user');
       sessionStorage.removeItem('nirdesha_user_role');
     } catch(err) {}
-    window.location.href = window.location.protocol === 'file:' ? 'main.html' : '/';
+    window.location.href = 'main.html';
   }
 
   const signoutBtn = document.getElementById('trainee-signout-btn');

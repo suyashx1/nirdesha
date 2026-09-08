@@ -1292,14 +1292,14 @@
         if (signupBtn) signupBtn.style.display = 'none';
         if (dashboardBtn) {
           dashboardBtn.style.display = 'inline-flex';
-          dashboardBtn.href = window.location.protocol === 'file:' ? 'admin.html' : '/admin/dashboard';
+          dashboardBtn.href = 'admin.html';
         }
         if (dashboardLabel) dashboardLabel.textContent = 'Admin Console';
         if (logoutBtn) logoutBtn.style.display = 'inline-flex';
 
         // Hero button takes user directly into Admin Console
         if (heroBtn) {
-          heroBtn.href = window.location.protocol === 'file:' ? 'admin.html' : '/admin/dashboard';
+          heroBtn.href = 'admin.html';
           heroBtn.title = 'Enter Administration Command Center';
           if (heroLabel) heroLabel.textContent = 'Enter Trainee Portal';
         }
@@ -1309,14 +1309,14 @@
         if (signupBtn) signupBtn.style.display = 'none';
         if (dashboardBtn) {
           dashboardBtn.style.display = 'inline-flex';
-          dashboardBtn.href = window.location.protocol === 'file:' ? 'public.html' : '/dashboard';
+          dashboardBtn.href = 'public.html';
         }
         if (dashboardLabel) dashboardLabel.textContent = 'Trainee Dashboard';
         if (logoutBtn) logoutBtn.style.display = 'inline-flex';
 
         // Hero button takes user directly into Trainee Dashboard
         if (heroBtn) {
-          heroBtn.href = window.location.protocol === 'file:' ? 'public.html' : '/dashboard';
+          heroBtn.href = 'public.html';
           heroBtn.title = 'Enter Trainee Learning & Competency Dashboard';
           if (heroLabel) heroLabel.textContent = 'Enter Trainee Portal';
         }
@@ -1329,7 +1329,7 @@
 
         // Hero button routes to Login page until user authenticates!
         if (heroBtn) {
-          heroBtn.href = window.location.protocol === 'file:' ? 'login.html#login' : '/login#login';
+          heroBtn.href = 'login.html#login';
           heroBtn.title = 'Login required to access Trainee Portal. Click to authenticate.';
           if (heroLabel) heroLabel.textContent = 'Enter Trainee Portal';
         }
@@ -1351,13 +1351,13 @@
           if (!activeSession) {
             // Not logged in yet: route to login page
             e.preventDefault();
-            window.location.href = window.location.protocol === 'file:' ? 'login.html#login' : '/login#login';
+            window.location.href = 'login.html#login';
           } else if (activeSession === 'admin') {
             e.preventDefault();
-            window.location.href = window.location.protocol === 'file:' ? 'admin.html' : '/admin/dashboard';
+            window.location.href = 'admin.html';
           } else if (activeSession === 'public') {
             e.preventDefault();
-            window.location.href = window.location.protocol === 'file:' ? 'public.html' : '/dashboard';
+            window.location.href = 'public.html';
           }
         });
       }

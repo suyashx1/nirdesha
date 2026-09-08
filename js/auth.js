@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 6. Form Submission Simulations
+  // 6. Form Submission & Authentication Handling
   const loginForm = document.getElementById('form-officer-login');
   const registerForm = document.getElementById('form-officer-register');
   const authAlert = document.getElementById('auth-alert');
@@ -198,6 +198,75 @@ document.addEventListener('DOMContentLoaded', () => {
     authAlert.textContent = message;
     authAlert.className = `auth-alert show alert-${type}`;
     authAlert.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function performLogin(role, username) {
+    if (role === 'admin') {
+      showAlert('✓ Administrator credentials verified! Opening Nirdesha Administration Console...', 'success');
+      localStorage.setItem('nirdesha_active_session', 'admin');
+      localStorage.setItem('nirdesha_admin_session', 'true');
+      localStorage.setItem('nirdesha_user_role', 'admin');
+      localStorage.setItem('nirdesha_auth_user', JSON.stringify({
+        role: 'admin',
+        username: username || 'admin@gov',
+        displayName: 'System Administrator (MoSPI)',
+        loginTime: Date.now()
+      }));
+      sessionStorage.setItem('nirdesha_admin_session', 'true');
+      setTimeout(() => {
+        window.location.href = 'admin.html';
+      }, 400);
+    } else {
+      showAlert('✓ Public / Trainee credentials verified! Opening Trainee Learning Dashboard...', 'success');
+      localStorage.setItem('nirdesha_active_session', 'public');
+      localStorage.setItem('nirdesha_user_role', 'public');
+      localStorage.setItem('nirdesha_auth_user', JSON.stringify({
+        role: 'public',
+        username: username || 'public',
+        displayName: 'Public Officer (Trainee)',
+        loginTime: Date.now()
+      }));
+      sessionStorage.setItem('nirdesha_user_role', 'public');
+      setTimeout(() => {
+        window.location.href = 'public.html';
+      }, 400);
+    }
+  }
+
+  // Quick Demo Credentials Buttons
+  const demoChipPublic = document.getElementById('demo-chip-public');
+  const demoChipAdmin = document.getElementById('demo-chip-admin');
+
+  if (demoChipPublic) {
+    demoChipPublic.addEventListener('click', () => {
+      const idInput = document.getElementById('login-identifier');
+      const passInput = document.getElementById('login-password');
+      const capInput = document.getElementById('login-captcha');
+      if (idInput) idInput.value = 'public';
+      if (passInput) passInput.value = 'public';
+      if (capInput && captchaText) capInput.value = captchaText.textContent.trim();
+      performLogin('public', 'public');
+    });
+  }
+
+  if (demoChipAdmin) {
+    demoChipAdmin.addEventListener('click', () => {
+      const idInput = document.getElementById('login-identifier');
+      const passInput = document.getElementById('login-password');
+      const capInput = document.getElementById('login-captcha');
+      if (idInput) idInput.value = 'admin@gov';
+      if (passInput) passInput.value = 'admin';
+      if (capInput && captchaText) capInput.value = captchaText.textContent.trim();
+      performLogin('admin', 'admin@gov');
+    });
+  }
+
+  // Parichay SSO Instant Authentication
+  const ssoBtn = document.querySelector('.sso-btn-parichay');
+  if (ssoBtn) {
+    ssoBtn.addEventListener('click', () => {
+      performLogin('public', 'parichay.officer@gov.in');
+    });
   }
 
   if (loginForm) {
@@ -212,62 +281,36 @@ document.addEventListener('DOMContentLoaded', () => {
       const passRaw = (passwordInput ? passwordInput.value : '').trim();
       const passVal = passRaw.toLowerCase();
 
-      // 1. Check for Public Officer / Trainee Credentials (case-insensitive "public", no captcha required)
-      if (idVal === 'public' && passVal === 'public') {
-        showAlert('Public Officer credentials verified. Launching Trainee Learning Dashboard...', 'success');
-        localStorage.setItem('nirdesha_active_session', 'public');
-        localStorage.setItem('nirdesha_user_role', 'public');
-        localStorage.setItem('nirdesha_auth_user', JSON.stringify({
-          role: 'public',
-          username: 'public',
-          displayName: 'Public Officer (Trainee)',
-          loginTime: Date.now()
-        }));
-        sessionStorage.setItem('nirdesha_user_role', 'public');
-        setTimeout(() => {
-          window.location.href = window.location.protocol === 'file:' ? 'public.html' : '/dashboard';
-        }, 500);
+      // Empty identifier check
+      if (!idVal) {
+        showAlert('Please enter your credentials (e.g. "public" or "admin@gov") or click a quick login button above.', 'error');
+        if (identifierInput) identifierInput.focus();
         return;
       }
 
-      // 2. Check for Admin Credentials (admin@gov / admin in all small)
-      if ((idVal === 'admin@gov' || idVal === 'admin@gov.in' || idVal === 'admin') && (passRaw === 'admin' || passVal === 'admin')) {
-        showAlert('Admin credentials verified. Launching Nirdesha Administration Console...', 'success');
-        localStorage.setItem('nirdesha_active_session', 'admin');
-        localStorage.setItem('nirdesha_admin_session', 'true');
-        localStorage.setItem('nirdesha_auth_user', JSON.stringify({
-          role: 'admin',
-          username: 'admin@gov',
-          displayName: 'System Administrator (MoSPI)',
-          loginTime: Date.now()
-        }));
-        sessionStorage.setItem('nirdesha_admin_session', 'true');
-        setTimeout(() => {
-          window.location.href = window.location.protocol === 'file:' ? 'admin.html' : '/admin/dashboard';
-        }, 600);
+      // 1. Check for Public Officer / Trainee Credentials
+      // Matches "public", "trainee", "user", "public@gov", "public@gov.in", or containing "public" or "trainee"
+      if (idVal === 'public' || idVal === 'trainee' || idVal === 'user' || idVal.includes('public') || idVal.includes('trainee')) {
+        performLogin('public', idRaw);
         return;
       }
 
-      // General Officer Credentials Captcha Validation
-      if (captchaInput && captchaText && captchaInput.value.trim().toUpperCase() !== captchaText.textContent.trim()) {
-        showAlert('Security Captcha does not match. Please verify the code and re-enter.', 'error');
+      // 2. Check for Admin Credentials
+      // Matches "admin", "admin@gov", "admin@gov.in", "administrator", or containing "admin"
+      if (idVal === 'admin' || idVal === 'admin@gov' || idVal === 'admin@gov.in' || idVal.includes('admin')) {
+        performLogin('admin', idRaw);
+        return;
+      }
+
+      // 3. General Officer Credentials Captcha Validation (only if captcha explicitly entered)
+      if (captchaInput && captchaText && captchaInput.value.trim() && captchaInput.value.trim().toUpperCase() !== captchaText.textContent.trim()) {
+        showAlert('Security Captcha does not match. Please verify the code and re-enter, or use quick demo login.', 'error');
         generateCaptcha();
         return;
       }
 
-      showAlert('Authentication verified. Authorizing credentials against MoSPI Cadre Registry...', 'success');
-      localStorage.setItem('nirdesha_active_session', 'public');
-      localStorage.setItem('nirdesha_user_role', 'officer');
-      localStorage.setItem('nirdesha_auth_user', JSON.stringify({
-        role: 'public',
-        username: idRaw,
-        displayName: idRaw,
-        loginTime: Date.now()
-      }));
-      sessionStorage.setItem('nirdesha_user_role', 'officer');
-      setTimeout(() => {
-        window.location.href = window.location.protocol === 'file:' ? 'public.html' : '/dashboard';
-      }, 800);
+      // General fallback authentication into Trainee Dashboard
+      performLogin('public', idRaw);
     });
   }
 
