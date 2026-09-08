@@ -1728,16 +1728,19 @@ if (
 
     // Multi-endpoint cascade for Vercel and local environments
     const isFile = (window.location.protocol === 'file:');
-    const streamUrls = isFile ? ['http://127.0.0.1:8000/api/chat/stream'] : ['/api/chat/stream', '/api?stream=1'];
-    const jsonUrls = isFile ? ['http://127.0.0.1:8000/api/chat'] : ['/api/chat', '/api'];
+    const streamUrls = isFile ? ['http://127.0.0.1:8000/api/chat/stream'] : ['/api?stream=1', '/api/chat/stream'];
+    const jsonUrls = isFile ? ['http://127.0.0.1:8000/api/chat'] : ['/api', '/api/chat'];
 
-    // 1. Try Streaming Endpoints
+    // 1. Try Streaming Endpoints (with fast 3.5s timeout on Vercel)
     for (const sUrl of streamUrls) {
       if (hasReceivedFirstToken) break;
       try {
+        const controller = new AbortController();
+        const streamTimer = setTimeout(() => controller.abort(), 3500);
         const response = await fetch(sUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          signal: controller.signal,
           body: JSON.stringify({
             user_id: 'public',
             message: query,
@@ -1747,6 +1750,7 @@ if (
             stream: true
           })
         });
+        clearTimeout(streamTimer);
 
         if (response.ok && response.body) {
           const reader = response.body.getReader();

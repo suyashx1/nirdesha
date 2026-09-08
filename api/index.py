@@ -215,10 +215,46 @@ def stream_gemini(messages, system_instruction, api_key, role="mentor"):
     yield "Apologies, temporary network latency detected. Please try asking again."
 
 def call_gemini_api(messages, system_instruction, api_key, role="mentor"):
-    full_text = []
-    for chunk in stream_gemini(messages, system_instruction, api_key, role):
-        full_text.append(chunk)
-    return "".join(full_text)
+    contents = []
+    for msg in messages[-6:]:
+        role_type = "user" if msg.get("sender") == "user" else "model"
+        contents.append({
+            "role": role_type,
+            "parts": [{"text": msg.get("text", "")}]
+        })
+
+    max_tokens = 2048 if role == "mentor" else 300
+
+    for current_model in CANDIDATE_MODELS:
+        gen_config = {
+            "temperature": 0.35,
+            "maxOutputTokens": max_tokens,
+            "topP": 0.95
+        }
+        if "3.7" in current_model or "3.5" in current_model:
+            gen_config["thinkingConfig"] = {"thinkingBudget": 0}
+
+        payload = {
+            "system_instruction": {"parts": [{"text": system_instruction}]},
+            "contents": contents,
+            "generationConfig": gen_config
+        }
+        req_data = json.dumps(payload).encode("utf-8")
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{current_model}:generateContent?key={api_key}"
+        req = urllib.request.Request(url, data=req_data, headers={"Content-Type": "application/json"})
+        try:
+            with urllib.request.urlopen(req, timeout=12) as resp:
+                data_json = json.loads(resp.read().decode("utf-8"))
+                candidates = data_json.get("candidates", [])
+                if candidates and "content" in candidates[0]:
+                    parts = candidates[0]["content"].get("parts", [])
+                    full_text = "".join([p.get("text", "") for p in parts if p.get("text")])
+                    if full_text.strip():
+                        return full_text
+        except Exception:
+            continue
+
+    return "Apologies, temporary network latency detected. Please try asking again."
 
 class handler(BaseHTTPRequestHandler):
     def _send_cors(self):
@@ -371,16 +407,22 @@ class handler(BaseHTTPRequestHandler):
             save_user_history(session_key, history)
             return
 
-        # 3. Standard JSON Response (/api/chat)
-        history = get_user_history(session_key)
-        history.append({"sender": "user", "text": user_message})
-        system_instruction = build_system_context(user_id, role, language, personalization)
+        try:
+            # 3. Standard JSON Response (/api/chat)
+            history = get_user_history(session_key)
+            history.append({"sender": "user", "text": user_message})
+            system_instruction = build_system_context(user_id, role, language, personalization)
 
-        bot_reply = call_gemini_api(history, system_instruction, api_key, role=role)
-        history.append({"sender": "bot", "text": bot_reply})
-        save_user_history(session_key, history)
+            bot_reply = call_gemini_api(history, system_instruction, api_key, role=role)
+            history.append({"sender": "bot", "text": bot_reply})
+            save_user_history(session_key, history)
 
-        self._send_json(200, {
-            "reply": bot_reply,
-            "status": "success"
-        })
+            self._send_json(200, {
+                "reply": bot_reply,
+                "status": "success"
+            })
+        except Exception as e:
+            self._send_json(200, {
+                "reply": f"Service temporarily busy. Please try asking again. ({str(e)[:60]})",
+                "status": "error"
+            })
