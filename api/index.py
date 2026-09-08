@@ -334,6 +334,7 @@ class handler(BaseHTTPRequestHandler):
     def do_POST(self):
         parsed = urlparse(self.path)
         path = parsed.path.rstrip("/")
+        qs = parse_qs(parsed.query)
 
         try:
             content_length = int(self.headers.get("Content-Length", 0))
