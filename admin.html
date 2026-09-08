@@ -3,6 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Clean Semantic URL Normalizer: Ensure address bar displays /admin/dashboard -->
+  <script>
+    (function() {
+      try {
+        if (window.location.protocol !== 'file:' && (window.location.pathname.endsWith('admin.html') || window.location.pathname.endsWith('/admin'))) {
+          window.history.replaceState(null, '', '/admin/dashboard' + window.location.hash);
+        }
+      } catch (e) {}
+    })();
+  </script>
+
   <title>Administration Command Center — Nirdesha Portal | MoSPI, Government of India</title>
   <meta name="description" content="Central administration and competency intelligence command center for the Ministry of Statistics and Programme Implementation (MoSPI).">
 

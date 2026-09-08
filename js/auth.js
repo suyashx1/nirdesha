@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }));
         sessionStorage.setItem('nirdesha_user_role', 'public');
         setTimeout(() => {
-          window.location.href = 'public.html';
+          window.location.href = window.location.protocol === 'file:' ? 'public.html' : '/dashboard';
         }, 500);
         return;
       }
@@ -243,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }));
         sessionStorage.setItem('nirdesha_admin_session', 'true');
         setTimeout(() => {
-          window.location.href = 'admin.html';
+          window.location.href = window.location.protocol === 'file:' ? 'admin.html' : '/admin/dashboard';
         }, 600);
         return;
       }
@@ -266,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }));
       sessionStorage.setItem('nirdesha_user_role', 'officer');
       setTimeout(() => {
-        window.location.href = 'public.html';
+        window.location.href = window.location.protocol === 'file:' ? 'public.html' : '/dashboard';
       }, 800);
     });
   }

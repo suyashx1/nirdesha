@@ -312,8 +312,22 @@ class NirdeshaAPIHandler(BaseHTTPRequestHandler):
             return
         # Static File Serving
         clean_path = path.lstrip("/\\")
-        if not clean_path:
-            clean_path = "main.html"
+        route_map = {
+            "": "main.html",
+            "home": "main.html",
+            "main": "main.html",
+            "dashboard": "public.html",
+            "user/dashboard": "public.html",
+            "public/dashboard": "public.html",
+            "public": "public.html",
+            "trainee": "public.html",
+            "admin": "admin.html",
+            "admin/dashboard": "admin.html",
+            "login": "login.html",
+            "signup": "login.html"
+        }
+        if clean_path in route_map:
+            clean_path = route_map[clean_path]
 
         file_path = os.path.normpath(os.path.join(BASE_DIR, clean_path))
         # Security check: must remain inside BASE_DIR

@@ -4,17 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <!-- Persistent Session Check: If already logged in, resume active dashboard -->
+  <!-- Persistent Session Check & Clean URL Normalizer -->
   <script>
     (function() {
       try {
         if (!window.location.search.includes('signout') && !window.location.hash.includes('signout')) {
           var s = localStorage.getItem('nirdesha_active_session');
           if (s === 'admin') {
-            window.location.replace('admin.html');
+            window.location.replace(window.location.protocol === 'file:' ? 'admin.html' : '/admin/dashboard');
+            return;
           } else if (s === 'public') {
-            window.location.replace('public.html');
+            window.location.replace(window.location.protocol === 'file:' ? 'public.html' : '/dashboard');
+            return;
           }
+        }
+        if (window.location.protocol !== 'file:' && window.location.pathname.endsWith('login.html')) {
+          window.history.replaceState(null, '', '/login' + window.location.hash);
         }
       } catch (e) {}
     })();

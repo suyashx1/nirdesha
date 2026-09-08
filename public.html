@@ -3,6 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Clean Semantic URL Normalizer: Ensure address bar displays /dashboard -->
+  <script>
+    (function() {
+      try {
+        if (window.location.protocol !== 'file:' && (window.location.pathname.endsWith('public.html') || window.location.pathname.endsWith('/public'))) {
+          window.history.replaceState(null, '', '/dashboard' + window.location.hash);
+        }
+      } catch (e) {}
+    })();
+  </script>
+
   <title>User Learning & Competency Dashboard — Nirdesha | MoSPI, Government of India</title>
   <meta name="description" content="Personalized learning guidance, competitive skill ratings, and competency diagnostics dashboard for public users and statistical personnel.">
 

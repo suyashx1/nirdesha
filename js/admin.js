@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem('nirdesha_auth_user');
         sessionStorage.removeItem('nirdesha_admin_session');
       } catch(err) {}
-      window.location.href = 'main.html';
+      window.location.href = window.location.protocol === 'file:' ? 'main.html' : '/';
     });
   }
 

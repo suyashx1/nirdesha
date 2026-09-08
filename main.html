@@ -4,15 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <!-- Persistent Session Check: Reopen directly into active dashboard (admin or public) until manual sign out -->
+  <!-- Persistent Session Check & Clean URL Normalizer -->
   <script>
     (function() {
       try {
         var s = localStorage.getItem('nirdesha_active_session');
         if (s === 'admin') {
-          window.location.replace('admin.html');
+          window.location.replace(window.location.protocol === 'file:' ? 'admin.html' : '/admin/dashboard');
+          return;
         } else if (s === 'public') {
-          window.location.replace('public.html');
+          window.location.replace(window.location.protocol === 'file:' ? 'public.html' : '/dashboard');
+          return;
+        }
+        if (window.location.protocol !== 'file:' && window.location.pathname.endsWith('main.html')) {
+          window.history.replaceState(null, '', '/' + window.location.hash);
         }
       } catch (e) {}
     })();
@@ -642,7 +647,7 @@
       </ul>
 
       <div class="nav-actions">
-        <a href="login.html#login" class="btn-nav-login" title="Login">
+        <a href="login.html#login" onclick="if(window.location.protocol!=='file:'){window.location.href='/login#login';return false;}" class="btn-nav-login" title="Login">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
             <polyline points="10 17 15 12 10 7"></polyline>
@@ -650,7 +655,7 @@
           </svg>
           <span>Login</span>
         </a>
-        <a href="login.html#register" class="btn-nav-signup" title="New Officer Registration">
+        <a href="login.html#register" onclick="if(window.location.protocol!=='file:'){window.location.href='/login#register';return false;}" class="btn-nav-signup" title="New Officer Registration">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" y1="8" x2="19" y2="14"></line><line x1="22" y1="11" x2="16" y2="11"></line>
           </svg>
@@ -708,7 +713,7 @@
             </p>
 
             <div class="hero-button-group">
-              <a href="public.html" class="btn-gov-primary" title="Enter Trainee Learning & Competency Dashboard">
+              <a href="public.html" onclick="if(window.location.protocol!=='file:'){window.location.href='/dashboard';return false;}" class="btn-gov-primary" title="Enter Trainee Learning & Competency Dashboard">
                 <span>Enter Trainee Portal</span>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
               </a>
