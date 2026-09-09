@@ -13,7 +13,7 @@
           base.href = '/';
           document.head.appendChild(base);
           if (window.location.pathname.endsWith('main.html')) {
-            window.history.replaceState(null, '', '/' + window.location.hash);
+            window.history.replaceState(null, '', '/home' + window.location.hash);
           }
         }
       } catch (e) {}

@@ -3,21 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="refresh" content="0; url=/main.html">
+  <meta http-equiv="refresh" content="0; url=/main">
   <title>निर्देश (Nirdesha) — National Competency Intelligence & Training Guidance Platform | MoSPI, Govt. of India</title>
   <script>
     (function() {
+      var isFile = (window.location.protocol === 'file:');
       try {
         var s = localStorage.getItem('nirdesha_active_session');
         if (s === 'admin') {
-          window.location.replace('admin.html');
+          window.location.replace(isFile ? 'admin.html' : '/admin');
           return;
         } else if (s === 'public') {
-          window.location.replace('public.html');
+          window.location.replace(isFile ? 'public.html' : '/dashboard');
           return;
         }
       } catch (e) {}
-      window.location.replace('main.html');
+      window.location.replace(isFile ? 'main.html' : '/main');
     })();
   </script>
 </head>

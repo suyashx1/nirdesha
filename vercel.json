@@ -11,19 +11,19 @@
     { "source": "/api/history", "destination": "/api" },
     { "source": "/api/health", "destination": "/api" },
     { "source": "/api/(.*)", "destination": "/api" },
-    { "source": "/", "destination": "/main.html" },
-    { "source": "/home", "destination": "/main.html" },
-    { "source": "/main", "destination": "/main.html" },
-    { "source": "/landing", "destination": "/main.html" },
-    { "source": "/dashboard", "destination": "/public.html" },
-    { "source": "/user/dashboard", "destination": "/public.html" },
-    { "source": "/public/dashboard", "destination": "/public.html" },
-    { "source": "/public", "destination": "/public.html" },
-    { "source": "/trainee", "destination": "/public.html" },
-    { "source": "/admin/dashboard", "destination": "/admin.html" },
-    { "source": "/admin", "destination": "/admin.html" },
-    { "source": "/login", "destination": "/login.html" },
-    { "source": "/signup", "destination": "/login.html" }
+    { "source": "/home", "destination": "/main" },
+    { "source": "/landing", "destination": "/main" },
+    { "source": "/dashboard", "destination": "/public" },
+    { "source": "/dashboard/(.*)", "destination": "/public" },
+    { "source": "/user/dashboard", "destination": "/public" },
+    { "source": "/public/dashboard", "destination": "/public" },
+    { "source": "/public", "destination": "/public" },
+    { "source": "/trainee", "destination": "/public" },
+    { "source": "/admin/dashboard", "destination": "/admin" },
+    { "source": "/admin/dashboard/(.*)", "destination": "/admin" },
+    { "source": "/admin", "destination": "/admin" },
+    { "source": "/login", "destination": "/login" },
+    { "source": "/signup", "destination": "/login" }
   ]
 }
 
