@@ -1625,18 +1625,44 @@ if (
 
     let accumulatedText = '';
     let hasReceivedFirstToken = false;
+    let streamError = '';
 
     try {
       const response = await fetch('http://127.0.0.1:8000/api/chat/stream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          user_id: 'public',
-          message: query,
-          role: 'mentor',
-          language: currentMentorLang,
-          personalization: typeof getAiPersonalizationSettings === 'function' ? getAiPersonalizationSettings() : {}
-        })
+
+    user_id:
+        'public',
+
+    employee_id:
+        window.NirdeshaPhase4
+            ?.EMPLOYEE_ID
+        || 1,
+
+    context_version:
+        4,
+
+    message:
+        query,
+
+    role:
+        'mentor',
+
+    language:
+        currentMentorLang,
+
+    personalization:
+
+        typeof getAiPersonalizationSettings
+        === 'function'
+
+            ? getAiPersonalizationSettings()
+
+            : {}
+
+})
       });
 
       if (response.ok && response.body) {
@@ -1664,6 +1690,15 @@ if (
             if (trimmed.startsWith('data: ')) {
               try {
                 const parsed = JSON.parse(trimmed.slice(6));
+                if (parsed.error) {
+
+    streamError =
+        String(
+            parsed.error
+        );
+
+    continue;
+}
                 if (parsed.chunk) {
                   if (!hasReceivedFirstToken) {
                     botBubble.innerHTML = '';
@@ -1704,13 +1739,258 @@ if (
     }
 
     if (!hasReceivedFirstToken) {
-      botBubble.innerHTML = "I am ready to assist your statistical studies. What specific concept or formula would you like to review?";
-      appendResponseActions(botBubble, query);
-      traineeChatLog.scrollTop = traineeChatLog.scrollHeight;
-      if (typeof window.recordMentorTurn === 'function') {
-        window.recordMentorTurn(query, botBubble.innerHTML, botBubble.textContent);
-      }
+
+    /*
+     * Streaming failed or returned no chunks.
+     *
+     * Try the standard REST endpoint once.
+     * This protects the demo from SSE-specific
+     * browser/network issues.
+     */
+
+    try {
+
+        const fallbackResponse =
+            await fetch(
+                'http://127.0.0.1:8000/api/chat',
+                {
+
+                    method:
+                        'POST',
+
+                    headers: {
+
+                        'Content-Type':
+                            'application/json'
+
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            user_id:
+                                'public',
+
+                            employee_id:
+
+                                window
+                                    .NirdeshaPhase4
+                                    ?.EMPLOYEE_ID
+
+                                || 1,
+
+                            context_version:
+                                4,
+
+                            message:
+                                query,
+
+                            role:
+                                'mentor',
+
+                            language:
+                                currentMentorLang,
+
+                            personalization:
+
+                                typeof
+                                    getAiPersonalizationSettings
+                                === 'function'
+
+                                    ? getAiPersonalizationSettings()
+
+                                    : {}
+
+                        })
+
+                }
+            );
+
+
+        const fallbackData =
+            await fallbackResponse
+                .json()
+                .catch(
+                    () => null
+                );
+
+
+        if (
+
+            fallbackResponse.ok
+
+            &&
+
+            fallbackData?.reply
+
+        ) {
+
+            accumulatedText =
+                String(
+                    fallbackData.reply
+                );
+
+
+            botBubble.innerHTML =
+
+                window.NirdeshaFormatter
+
+                    ? window
+                        .NirdeshaFormatter
+                        .format(
+                            accumulatedText
+                        )
+
+                    : accumulatedText
+                        .replace(
+                            /\n/g,
+                            '<br>'
+                        );
+
+
+            appendResponseActions(
+                botBubble,
+                query
+            );
+
+
+            traineeChatLog.scrollTop =
+                traineeChatLog
+                    .scrollHeight;
+
+
+            persistTraineeChatLog();
+
+
+            if (
+                typeof
+                    window.recordMentorTurn
+                === 'function'
+            ) {
+
+                window.recordMentorTurn(
+
+                    query,
+
+                    botBubble.innerHTML,
+
+                    accumulatedText
+
+                );
+            }
+
+
+            return;
+        }
+
+
+        if (
+            fallbackData?.error
+        ) {
+
+            streamError =
+                String(
+                    fallbackData.error
+                );
+        }
+
+
+        if (
+            fallbackData?.reply
+            &&
+            !fallbackResponse.ok
+        ) {
+
+            streamError =
+                String(
+                    fallbackData.reply
+                );
+        }
+
+    } catch (fallbackError) {
+
+        console.error(
+
+            'AI Mentor REST fallback failed:',
+
+            fallbackError
+
+        );
+
+
+        if (!streamError) {
+
+            streamError =
+
+                'Could not reach the Nirdesha AI server on port 8000.';
+
+        }
+
     }
+
+
+    /*
+     * Never pretend the AI answered.
+     *
+     * Show a real actionable error.
+     */
+
+    const finalError =
+
+        streamError
+
+        ||
+
+        (
+            'The AI Mentor received no model response. '
+            +
+            'Check http://127.0.0.1:8000/api/health '
+            +
+            'and the server.py terminal.'
+        );
+
+
+    botBubble.innerHTML = `
+
+        <div
+          style="
+            padding:10px;
+            border-radius:8px;
+            background:#fff7ed;
+            color:#9a3412;
+            line-height:1.5;
+          "
+        >
+
+          <strong>
+            AI Mentor unavailable
+          </strong>
+
+          <br>
+
+          ${
+            String(
+                finalError
+            )
+            .replace(
+                /</g,
+                '&lt;'
+            )
+            .replace(
+                />/g,
+                '&gt;'
+            )
+          }
+
+        </div>
+
+    `;
+
+
+    traineeChatLog.scrollTop =
+        traineeChatLog
+            .scrollHeight;
+}
     persistTraineeChatLog();
   }
 

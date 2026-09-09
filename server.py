@@ -249,67 +249,424 @@ WEBSITE NAVIGATION BOUNDARY:
 {persona_directive}"""
 
 # Ultra-Fast Stream Generator with Smart Cascading & No Mid-Stream Cutoff
-def stream_gemini(messages, system_instruction, api_key, model="gemini-3.1-flash-lite", role="mentor"):
-    candidate_models = ["gemini-3.1-flash-lite", "gemini-flash-latest", "gemini-3.7-flash", "gemini-3.5-flash"]
-    if model in candidate_models:
-        candidate_models.remove(model)
-        candidate_models.insert(0, model)
+def stream_gemini(
+    messages,
+    system_instruction,
+    api_key,
+    model="gemini-3.5-flash-lite",
+    role="mentor",
+):
+    """
+    Stream text from Gemini with a small stable fallback cascade.
+
+    Every failed model is logged in the terminal so problems
+    are visible instead of silently becoming a frontend fallback.
+    """
+
+    preferred_models = [
+
+        model,
+
+        "gemini-3.5-flash-lite",
+
+        "gemini-3.5-flash",
+
+        "gemini-3.7-flash",
+
+        "gemini-2.5-flash",
+
+    ]
+
+
+    # Remove duplicates while preserving order.
+
+    candidate_models = list(
+
+        dict.fromkeys(
+
+            item.strip()
+
+            for item in preferred_models
+
+            if item
+            and item.strip()
+
+        )
+
+    )
+
 
     contents = []
-    for msg in messages[-6:]:
-        role_type = "user" if msg["sender"] == "user" else "model"
-        contents.append({
-            "role": role_type,
-            "parts": [{"text": msg["text"]}]
-        })
 
-    # Length Control:
-    # Mentor is completely unrestricted (4096 tokens) to prevent ever cutting off in mid-stream
-    # Guidance is short point-to-point (220 tokens)
-    max_tokens = 4096 if role == "mentor" else 220
 
-    for current_model in candidate_models:
-        gen_config = {
-            "temperature": 0.35,
-            "maxOutputTokens": max_tokens,
-            "topP": 0.95
-        }
-        # Add thinkingConfig only to models that support it to prevent HTTP 400
-        if "3.7" in current_model or "3.5" in current_model:
-            gen_config["thinkingConfig"] = {"thinkingBudget": 0}
+    for msg in messages[-8:]:
 
-        payload = {
-            "system_instruction": {"parts": [{"text": system_instruction}]},
-            "contents": contents,
-            "generationConfig": gen_config
-        }
-        req_data = json.dumps(payload).encode("utf-8")
+        role_type = (
 
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/{current_model}:streamGenerateContent?alt=sse&key={api_key}"
-        req = urllib.request.Request(url, data=req_data, headers={"Content-Type": "application/json"})
-        try:
-            has_yielded = False
-            with urllib.request.urlopen(req, timeout=45) as resp:
-                for line in resp:
-                    line_str = line.decode("utf-8").strip()
-                    if line_str.startswith("data: "):
-                        data_json = json.loads(line_str[6:])
-                        candidates = data_json.get("candidates", [])
-                        if candidates and "content" in candidates[0]:
-                            parts = candidates[0]["content"].get("parts", [])
-                            for p in parts:
-                                chunk = p.get("text", "")
-                                if chunk:
-                                    has_yielded = True
-                                    yield chunk
-            if has_yielded:
-                return
-        except Exception as e:
-            print(f"[{current_model} stream error]: {e}, falling over to next model...")
+            "user"
+
+            if msg.get(
+                "sender"
+            )
+            == "user"
+
+            else "model"
+
+        )
+
+
+        text = str(
+
+            msg.get(
+                "text",
+                "",
+            )
+
+        )
+
+
+        if not text.strip():
+
             continue
 
-    yield "Apologies, temporary network latency detected. Please try asking again."
 
+        contents.append({
+
+            "role":
+                role_type,
+
+            "parts": [
+
+                {
+                    "text":
+                        text
+                }
+
+            ],
+
+        })
+
+
+    max_tokens = (
+
+        4096
+
+        if role == "mentor"
+
+        else 300
+
+    )
+
+
+    last_error = None
+
+
+    for current_model in candidate_models:
+
+        generation_config = {
+
+            "temperature":
+                0.35,
+
+            "maxOutputTokens":
+                max_tokens,
+
+            "topP":
+                0.95,
+
+        }
+
+
+        request_payload = {
+
+            "system_instruction": {
+
+                "parts": [
+
+                    {
+                        "text":
+                            system_instruction
+                    }
+
+                ]
+
+            },
+
+            "contents":
+                contents,
+
+            "generationConfig":
+                generation_config,
+
+        }
+
+
+        request_data = json.dumps(
+
+            request_payload,
+
+            ensure_ascii=False,
+
+        ).encode(
+            "utf-8"
+        )
+
+
+        url = (
+
+            "https://generativelanguage.googleapis.com/"
+            "v1beta/models/"
+
+            f"{current_model}"
+
+            ":streamGenerateContent"
+
+            "?alt=sse"
+
+            f"&key={api_key}"
+
+        )
+
+
+        request = urllib.request.Request(
+
+            url,
+
+            data=request_data,
+
+            headers={
+
+                "Content-Type":
+                    "application/json"
+
+            },
+
+            method="POST",
+
+        )
+
+
+        try:
+
+            
+
+            has_yielded = False
+
+
+            with urllib.request.urlopen(
+
+                request,
+
+                timeout=45,
+
+            ) as response:
+
+
+                for raw_line in response:
+
+                    line = (
+
+                        raw_line
+
+                        .decode(
+                            "utf-8",
+                            errors="replace",
+                        )
+
+                        .strip()
+
+                    )
+
+
+                    if not line.startswith(
+                        "data:"
+                    ):
+
+                        continue
+
+
+                    json_text = (
+                        line[5:]
+                        .strip()
+                    )
+
+
+                    if not json_text:
+
+                        continue
+
+
+                    try:
+
+                        event = json.loads(
+                            json_text
+                        )
+
+                    except json.JSONDecodeError:
+
+                        continue
+
+
+                    candidates = (
+
+                        event.get(
+                            "candidates"
+                        )
+
+                        or []
+
+                    )
+
+
+                    for candidate in candidates:
+
+                        content = (
+
+                            candidate.get(
+                                "content"
+                            )
+
+                            or {}
+
+                        )
+
+
+                        parts = (
+
+                            content.get(
+                                "parts"
+                            )
+
+                            or []
+
+                        )
+
+
+                        for part in parts:
+
+                            text = (
+                                part.get(
+                                    "text"
+                                )
+                            )
+
+
+                            if text:
+
+                                has_yielded = (
+                                    True
+                                )
+
+
+                                yield str(
+                                    text
+                                )
+
+
+            if has_yielded:
+
+                print(
+
+                    f"[Gemini] Stream succeeded: "
+                    f"{current_model}"
+
+                )
+
+                return
+
+
+            last_error = (
+
+                f"{current_model} returned "
+                "no text candidates."
+
+            )
+
+
+            print(
+
+                "[Gemini Empty Response]",
+
+                last_error,
+
+            )
+
+
+        except urllib.error.HTTPError as exc:
+
+            try:
+
+                error_body = (
+
+                    exc.read()
+
+                    .decode(
+                        "utf-8",
+                        errors="replace",
+                    )
+
+                )
+
+            except Exception:
+
+                error_body = (
+                    str(exc)
+                )
+
+
+            last_error = (
+
+                f"{current_model}: "
+                f"HTTP {exc.code}: "
+                f"{error_body[:700]}"
+
+            )
+
+
+            print(
+
+                "[Gemini HTTP Error]",
+
+                last_error,
+
+            )
+
+
+        except Exception as exc:
+
+            last_error = (
+
+                f"{current_model}: "
+                f"{repr(exc)}"
+
+            )
+
+
+            print(
+
+                "[Gemini Stream Error]",
+
+                last_error,
+
+            )
+
+
+    # Nothing succeeded.
+
+    raise RuntimeError(
+
+        "All Gemini model attempts failed. "
+
+        + (
+
+            last_error
+
+            or
+            "No additional error information."
+
+        )
+
+    )
 # Non-streaming fallback
 def call_gemini_api(messages, system_instruction, api_key, model="gemini-3.5-flash", role="mentor"):
     full_text = []
@@ -418,31 +775,38 @@ class NirdeshaAPIHandler(BaseHTTPRequestHandler):
             self.send_json(200, {"status": "cleared", "user_id": user_id})
             return
 
-        # 1. High-Speed SSE Streaming Chat (/api/chat/stream)
+        # ============================================================
+        # 1. PHASE-4 CONTEXT-AWARE SSE STREAMING CHAT
+        # ============================================================
+
         if path == "/api/chat/stream":
-            user_id = payload.get("user_id", "public")
-            user_message = payload.get("message", "").strip()
-            role = payload.get("role", "mentor") # "mentor" or "guidance"
-            language = payload.get("language", "English")
-            session_key = f"{user_id}_{role}"
 
-            if not user_message:
-                self.send_json(400, {"error": "Empty message"})
-                return
+            user_id = payload.get(
+                "user_id",
+                "public",
+            )
 
-            config = load_env()
-            api_key = config.get("GEMINI_API_KEY", "").strip()
-            model = config.get("GEMINI_MODEL", "gemini-3.1-flash-lite")
+            user_message = str(
+                payload.get(
+                    "message",
+                    "",
+                )
+            ).strip()
 
-            if not api_key:
-                self.send_json(200, {"reply": "Please paste your GEMINI_API_KEY in the .env file."})
-                return
+            role = payload.get(
+                "role",
+                "mentor",
+            )
+
+            language = payload.get(
+                "language",
+                "English",
+            )
 
             personalization = payload.get(
                 "personalization",
                 {},
             )
-
 
             employee_id = safe_employee_id(
 
@@ -453,93 +817,370 @@ class NirdeshaAPIHandler(BaseHTTPRequestHandler):
 
             )
 
-
-            history = get_user_history(
-                session_key
+            session_key = (
+                f"{user_id}_{role}"
             )
 
 
-            history.append({
+            # --------------------------------------------------------
+            # VALIDATE MESSAGE
+            # --------------------------------------------------------
 
-                "sender":
-                    "user",
+            if not user_message:
 
-                "text":
-                    user_message,
+                self.send_json(
 
-            })
+                    400,
+
+                    {
+                        "error":
+                            "Empty message."
+                    },
+
+                )
+
+                return
 
 
-            system_instruction = (
-                build_system_context(
+            # --------------------------------------------------------
+            # LOAD GEMINI CONFIGURATION
+            # --------------------------------------------------------
 
-                    user_id,
+            config = load_env()
+
+            api_key = str(
+
+                config.get(
+                    "GEMINI_API_KEY",
+                    "",
+                )
+
+            ).strip()
+
+            model = str(
+
+                config.get(
+                    "GEMINI_MODEL",
+                    "gemini-3.5-flash-lite",
+                )
+
+            ).strip()
+
+
+            if not model:
+
+                model = (
+                    "gemini-3.5-flash-lite"
+                )
+
+
+            # --------------------------------------------------------
+            # ALWAYS START A REAL SSE RESPONSE
+            #
+            # Previously, missing API keys returned ordinary JSON.
+            # public.js expected SSE, received zero chunks and therefore
+            # displayed the misleading hardcoded fallback message.
+            # --------------------------------------------------------
+
+            self.send_response(
+                200
+            )
+
+            self.send_header(
+                "Content-Type",
+                "text/event-stream; charset=utf-8",
+            )
+
+            self.send_header(
+                "Cache-Control",
+                "no-cache",
+            )
+
+            self.send_header(
+                "Connection",
+                "keep-alive",
+            )
+
+            self.send_header(
+                "Access-Control-Allow-Origin",
+                "*",
+            )
+
+            self.send_header(
+                "Access-Control-Allow-Headers",
+                "Content-Type",
+            )
+
+            self.end_headers()
+
+
+            def send_sse(
+                data: dict,
+            ) -> None:
+                """
+                Send one JSON SSE message.
+                """
+
+                line = (
+
+                    "data: "
+
+                    + json.dumps(
+                        data,
+                        ensure_ascii=False,
+                    )
+
+                    + "\n\n"
+
+                )
+
+                self.wfile.write(
+
+                    line.encode(
+                        "utf-8"
+                    )
+
+                )
+
+                self.wfile.flush()
+
+
+            def send_done() -> None:
+
+                self.wfile.write(
+                    b"data: [DONE]\n\n"
+                )
+
+                self.wfile.flush()
+
+
+            # --------------------------------------------------------
+            # API KEY ERROR
+            # --------------------------------------------------------
+
+            if not api_key:
+
+                send_sse({
+
+                    "error": (
+
+                        "Gemini API key is not configured. "
+                        "Add GEMINI_API_KEY to the .env file "
+                        "beside server.py and restart the AI server."
+
+                    )
+
+                })
+
+                send_done()
+
+                return
+
+
+            try:
+
+                # ----------------------------------------------------
+                # CONVERSATION HISTORY
+                # ----------------------------------------------------
+
+                history = get_user_history(
+                    session_key
+                )
+
+                history.append({
+
+                    "sender":
+                        "user",
+
+                    "text":
+                        user_message,
+
+                })
+
+
+                # ----------------------------------------------------
+                # BASE MENTOR / GUIDANCE INSTRUCTION
+                # ----------------------------------------------------
+
+                system_instruction = (
+                    build_system_context(
+
+                        user_id,
+
+                        role,
+
+                        language,
+
+                        personalization,
+
+                    )
+                )
+
+
+                # ----------------------------------------------------
+                # PHASE 4 LIVE CONTEXT
+                #
+                # IMPORTANT:
+                # Context is fetched server-side.
+                # We do not trust browser-generated competency values.
+                # ----------------------------------------------------
+
+                if role == "mentor":
+
+                    live_context = (
+                        fetch_live_mentor_context(
+
+                            employee_id
+
+                        )
+                    )
+
+
+                    system_instruction += (
+                        build_live_context_instruction(
+
+                            live_context
+
+                        )
+                    )
+
+
+                # ----------------------------------------------------
+                # GEMINI STREAM
+                # ----------------------------------------------------
+
+                full_reply: list[str] = []
+
+
+                for chunk in stream_gemini(
+
+                    history,
+
+                    system_instruction,
+
+                    api_key,
+
+                    model,
 
                     role,
 
-                    language,
+                ):
 
-                    personalization,
+                    if not chunk:
 
-                )
-            )
+                        continue
 
 
-            # =====================================================
-            # PHASE 4:
-            # Inject fresh authoritative employee context
-            # into AI Study Mentor requests only.
-            #
-            # Website Guidance remains separate.
-            # =====================================================
+                    chunk = str(
+                        chunk
+                    )
 
-            if role == "mentor":
 
-                live_context = (
-                    fetch_live_mentor_context(
+                    full_reply.append(
+                        chunk
+                    )
 
-                        employee_id
+
+                    send_sse({
+
+                        "chunk":
+                            chunk
+
+                    })
+
+
+                # ----------------------------------------------------
+                # PROTECT AGAINST SILENT EMPTY RESPONSES
+                # ----------------------------------------------------
+
+                final_text = "".join(
+                    full_reply
+                ).strip()
+
+
+                if not final_text:
+
+                    send_sse({
+
+                        "error": (
+
+                            "The AI service returned no text. "
+                            "Check the terminal running server.py "
+                            "for the Gemini API error."
+
+                        )
+
+                    })
+
+
+                # ----------------------------------------------------
+                # SAVE HISTORY ONLY WHEN AN ACTUAL RESPONSE EXISTS
+                # ----------------------------------------------------
+
+                else:
+
+                    history.append({
+
+                        "sender":
+                            "bot",
+
+                        "text":
+                            final_text,
+
+                    })
+
+
+                    save_user_history(
+
+                        session_key,
+
+                        history,
 
                     )
+
+
+                send_done()
+
+
+            except BrokenPipeError:
+
+                # Browser closed the stream.
+                return
+
+
+            except Exception as exc:
+
+                print(
+
+                    "[Phase-4 Mentor Streaming Error]:",
+
+                    repr(exc),
+
                 )
 
 
-                system_instruction += (
-                    build_live_context_instruction(
+                try:
 
-                        live_context
+                    send_sse({
 
-                    )
-                )
+                        "error": (
 
-            # Start SSE Stream
-            self.send_response(200)
-            self.send_header("Content-Type", "text/event-stream; charset=utf-8")
-            self.send_header("Cache-Control", "no-cache")
-            self.send_header("Connection", "keep-alive")
-            self.send_header("Access-Control-Allow-Origin", "*")
-            self.send_header("Access-Control-Allow-Headers", "Content-Type")
-            self.end_headers()
+                            "The AI Mentor request failed on the server. "
+                            "Check the server.py terminal for details."
 
-            full_reply = []
-            try:
-                for chunk in stream_gemini(history, system_instruction, api_key, model, role):
-                    full_reply.append(chunk)
-                    sse_line = f"data: {json.dumps({'chunk': chunk})}\n\n"
-                    self.wfile.write(sse_line.encode("utf-8"))
-                    self.wfile.flush()
-                
-                # Signal completion
-                self.wfile.write(b"data: [DONE]\n\n")
-                self.wfile.flush()
-            except Exception as e:
-                print(f"[Streaming Error]: {e}")
+                        )
 
-            # Save completed reply into persistent history
-            final_text = "".join(full_reply)
-            if final_text:
-                history.append({"sender": "bot", "text": final_text})
-                save_user_history(session_key, history)
+                    })
+
+
+                    send_done()
+
+
+                except Exception:
+
+                    pass
+
+
             return
 
         # 2. Standard Fast REST Chat (/api/chat)
