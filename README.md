@@ -1,4 +1,4 @@
-# Nirdesha Backend — Competency Intelligence System (SIH)
+# Nirdesha - Competency Intelligence System (SIH)
 
 Backend service for the **Competency Intelligence System** integrated with **iGOT Karmayogi** for Smart India Hackathon (SIH).
 
