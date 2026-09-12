@@ -23,17 +23,61 @@
 <picture><source media="(prefers-color-scheme: dark)" srcset="https://www.shieldcn.dev/github/release/suyashx1/nirdesha.svg?size=sm&amp;mode=dark&amp;theme=orange&amp;font=fira-code"><img alt="Release" src="https://www.shieldcn.dev/github/release/suyashx1/nirdesha.svg?size=sm&amp;mode=light&amp;theme=orange&amp;font=fira-code"></picture>
 <picture><source media="(prefers-color-scheme: dark)" srcset="https://www.shieldcn.dev/github/ci/suyashx1/nirdesha.svg?variant=secondary&amp;size=sm&amp;mode=dark&amp;theme=orange&amp;font=fira-code"><img alt="CI" src="https://www.shieldcn.dev/github/ci/suyashx1/nirdesha.svg?variant=secondary&amp;size=sm&amp;mode=light&amp;theme=orange&amp;font=fira-code"></picture>
 <picture><source media="(prefers-color-scheme: dark)" srcset="https://www.shieldcn.dev/github/license/suyashx1/nirdesha.svg?variant=ghost&amp;size=sm&amp;mode=dark&amp;theme=orange&amp;font=fira-code"><img alt="License" src="https://www.shieldcn.dev/github/license/suyashx1/nirdesha.svg?variant=ghost&amp;size=sm&amp;mode=light&amp;theme=orange&amp;font=fira-code"></picture>
-<picture><source media="(prefers-color-scheme: dark)" srcset="https://www.shieldcn.dev/badge/Hosting-Vercel-000000.svg?logo=vercel&amp;variant=secondary&amp;size=sm&amp;mode=dark&amp;theme=orange&amp;font=fira-code"><img alt="Hosting · Vercel" src="https://www.shieldcn.dev/badge/Hosting-Vercel-000000.svg?logo=vercel&amp;variant=secondary&amp;size=sm&amp;mode=light&amp;theme=orange&amp;font=fira-code"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="https://www.shieldcn.dev/badge/Hosting-Vercel-000000.svg?logo=vercel&amp;variant=secondary&amp;size=sm&amp;mode=dark&amp;theme=orange&amp;font=fira-code"><img alt="Hosting · Vercel" src="https://www.shieldcn.dev/badge/Hosting-Vercel-000000.svg?logo=vercel&amp;variant=secondary&amp;size=sm&amp;mode=dark&amp;theme=orange&amp;font=fira-code"></picture>
 <picture><source media="(prefers-color-scheme: dark)" srcset="https://www.shieldcn.dev/badge/Backend-Python%20%7C%20FastAPI%20%7C%20Serverless-3776ab.svg?logo=python&amp;variant=secondary&amp;size=sm&amp;mode=dark&amp;theme=orange&amp;font=fira-code"><img alt="Backend · Python | FastAPI | Serverless" src="https://www.shieldcn.dev/badge/Backend-Python%20%7C%20FastAPI%20%7C%20Serverless-3776ab.svg?logo=python&amp;variant=secondary&amp;size=sm&amp;mode=light&amp;theme=orange&amp;font=fira-code"></picture>
 <picture><source media="(prefers-color-scheme: dark)" srcset="https://www.shieldcn.dev/badge/AI%20Engine-Google%20Gemini-8e75b2.svg?logo=googlegemini&amp;variant=secondary&amp;size=sm&amp;mode=dark&amp;theme=orange&amp;font=fira-code"><img alt="AI Engine · Google Gemini" src="https://www.shieldcn.dev/badge/AI%20Engine-Google%20Gemini-8e75b2.svg?logo=googlegemini&amp;variant=secondary&amp;size=sm&amp;mode=light&amp;theme=orange&amp;font=fira-code"></picture>
 
 <br><br>
 
-[![Live Deployment](https://img.shields.io/badge/Live_Portal-nirdesha.vercel.app-002B49?style=for-the-badge&logo=vercel&logoColor=white)](https://nirdesha.vercel.app)
+[![Live Deployed Portal](https://img.shields.io/badge/🌐_Deployed_Website-nirdesha.vercel.app%2Fmain-002B49?style=for-the-badge&logo=vercel&logoColor=white)](https://nirdesha.vercel.app/main)
+[![Watch Demo Video](https://img.shields.io/badge/🎥_Watch_Demo_Video-Google_Drive-EA4335?style=for-the-badge&logo=google-drive&logoColor=white)](https://drive.google.com/file/d/1-4bPo-PjgS6l1OudaZWnouYr8K1LEFFI/view)
 [![Gov of India](https://img.shields.io/badge/Government_of_India-MoSPI-FF9933?style=for-the-badge&logo=india&logoColor=white)](https://www.mospi.gov.in)
 [![Mission Karmayogi](https://img.shields.io/badge/Aligned_with-iGOT_Karmayogi-138808?style=for-the-badge)](https://igotkarmayogi.gov.in)
 
 </div>
+
+---
+
+## 🚀 Quick Access & Evaluator Credentials
+
+Anyone can immediately test and evaluate both the **Public Trainee Dashboard** and the **Administrative Command Center** using the pre-configured evaluator credentials below:
+
+| Portal & Role | Direct Link | Username / ID | Password | Profile Persona & Access Scope |
+| :--- | :--- | :---: | :---: | :--- |
+| **🌐 Public Trainee Dashboard** | [**Open Trainee Portal**](https://nirdesha.vercel.app/dashboard) | `public` | `public` | **S. K. Raman**, Junior Statistical Officer (JSO), MoSPI. Full access to 52-week heatmap, Elo ratings, 3D topology, AI Study Mentor, notes & custom quizzes. |
+| **🛡️ Admin Command Center** | [**Open Admin Portal**](https://nirdesha.vercel.app/admin) | `admin@gov`<br>*(or `admin`)* | `admin` | **Cadre Administrator** (Executive Headquarters). Full access to officer directory, live profile inspection, Rule 14-B suspensions & messages console. |
+| **🏛️ National Landing Page** | [**Open Landing Portal**](https://nirdesha.vercel.app/main) | — | — | Public MoSPI portal with Nirdesha Saarthi (निर्देश सारथी) AI guidance companion, session resume, and portal navigation. |
+| **🔐 Authentication Gateway** | [**Open Login Portal**](https://nirdesha.vercel.app/login) | *Use above* | *Use above* | Official Single Sign-On (Parichay SSO) and manual cadre authentication gateway. |
+
+> 🎥 **Official Video Walkthrough:** [**Watch Full Demonstration on Google Drive &rarr;**](https://drive.google.com/file/d/1-4bPo-PjgS6l1OudaZWnouYr8K1LEFFI/view)  
+> 🌐 **Production Deployment URL:** [**https://nirdesha.vercel.app/main &rarr;**](https://nirdesha.vercel.app/main)
+
+---
+
+## 🎬 Live Demonstration & Video Walkthrough
+
+A complete end-to-end recorded walkthrough of the Nirdesha platform is available on Google Drive:
+
+[![Watch Video Walkthrough](https://img.shields.io/badge/▶️_Click_Here_to_Watch-Full_Platform_Demo_Video_(Google_Drive)-FF0000?style=for-the-badge&logo=google-drive&logoColor=white)](https://drive.google.com/file/d/1-4bPo-PjgS6l1OudaZWnouYr8K1LEFFI/view)
+
+### What is covered in the demonstration video:
+1. **Public Landing Portal & Intelligent Session Memory:**
+   - Modern GIGW 3.0 government aesthetic with national tricolor accents.
+   - Smart session persistence automatically resuming returning officers to their active dashboard while retaining landing page accessibility.
+   - Global **Nirdesha Saarthi (निर्देश सारथी)** floating assistant with instant on-screen text selection and voice/text interaction.
+2. **Officer Trainee Learning Dashboard (`/dashboard`):**
+   - **52-Week Learning Consistency Heatmap:** Real-time 364-day activity tracking with intensity levels.
+   - **14-Day Circular Streak & 365-Day Cylindrical Date Milestone Wheel:** Long-term goal setting.
+   - **Competitive Skill Ratings (Per-Domain Elo):** Real-time skill rankings with accuracy floors and decay safeguards.
+   - **2D Skill Radar & 3D Celestial Topology Map:** Three.js visualization with graphite PBR sensor nodes and photon telemetry filaments.
+   - **Personal AI Study Mentor (Google Gemini):** Multi-lingual tutoring across 11 Indian languages, LaTeX math proofs with KaTeX ($Horvitz\text{-}Thompson$, sampling error derivations), and ChatGPT-style past conversation drawer.
+   - **Proctored Ethical Assessment Engine:** Watchdog anti-cheating tab-switch detection, speed bonus points, and official MoSPI Academic Transcript Marksheets (PDF/PNG/JPG).
+   - **Skill Gap Radar & Mistake Ingestion:** Historical 'Why?' audit comparing officer mistakes against official standards, plus AI study roadmaps.
+   - **Official MoSPI Cadre Dossier:** Editable Central Cadre Record, verified competencies, animated banner presets, and social verification links.
+3. **Administrative Command Center (`/admin`):**
+   - Officer directory with **Dynamic Profile Inspection Parity** mirroring live trainee customizations.
+   - **Rule 14-B Executive Suspension Order System:** Ashok Stambh insignia, red statutory suspension stamp, real-time 400ms heartbeat lockout, and bilateral appeals pipeline.
+   - **Cadre Communications & Messages Console:** Split-pane messenger with single-tick delivery status and appeal review badges.
 
 ---
 
@@ -52,7 +96,7 @@ Nirdesha bridges national training frameworks—specifically **Mission Karmayogi
 ```
                   ┌─────────────────────────────────────────────────────────┐
                   │                 NIRDESHA PORTAL UNIFIED UI               │
-                  │   Landing (/home)  •  Trainee (/dashboard)  •  Admin   │
+                  │   Landing (/main)  •  Trainee (/dashboard)  •  Admin    │
                   └────────────────────────────┬────────────────────────────┘
                                                │
                        ┌───────────────────────┴───────────────────────┐
@@ -85,7 +129,7 @@ Nirdesha bridges national training frameworks—specifically **Mission Karmayogi
 
 ---
 
-## 🚀 Key Features
+## 🚀 Detailed Feature Walkthrough
 
 ### 👨‍💼 Trainee & Officer Learning Portal (`/dashboard`)
 * **52-Week Learning Heatmap (364 Days):** Full-width, GitHub-style consistency grid tracking daily training activity, timed evaluations, and CAPI field simulation tasks.
@@ -136,7 +180,7 @@ Nirdesha bridges national training frameworks—specifically **Mission Karmayogi
 
 ---
 
-### 🌐 National Public Landing Portal (`/home` or `/`)
+### 🌐 National Public Landing Portal (`/main` or `/home`)
 * **GIGW 3.0 & Digital India Compliant:** Authentic government color palette (MoSPI Deep Navy `#002b49`, Ashok Saffron `#ea580c`, Pure White `#ffffff`).
 * **Smart Session Memory:** 
   * Reopening the portal automatically restores active officer sessions directly into `/dashboard` or `/admin`.
@@ -294,14 +338,23 @@ uvicorn main:app --reload --port 8000
 
 ---
 
-## 🔑 Demo Access Credentials
+## 🔑 Demo Access Credentials (Quick Copy-Paste)
 
-The live deployment at **[nirdesha.vercel.app](https://nirdesha.vercel.app)** is pre-configured with evaluative demo accounts:
+The live deployment at **[nirdesha.vercel.app/main](https://nirdesha.vercel.app/main)** is pre-configured with evaluator accounts for instant access:
 
-| Portal | Route | Username / ID | Password | Profile Persona |
-| :--- | :--- | :--- | :--- | :--- |
-| **Trainee Portal** | `/dashboard` or `/login` | `public` | `public` | **S. K. Raman** (Junior Statistical Officer, MoSPI) |
-| **Admin Console** | `/admin` or `/login` | `admin@gov` *(or `admin`)* | `admin` | **Cadre Administrator** (Executive Headquarters) |
+### 1. Public Trainee Portal (Officer Persona)
+* **Direct URL:** [https://nirdesha.vercel.app/dashboard](https://nirdesha.vercel.app/dashboard)
+* **Username / ID:** `public`
+* **Password:** `public`
+* **Officer Identity:** **S. K. Raman**, Junior Statistical Officer (JSO), National Accounts Division (NAD), MoSPI (`SSS-2024-8891`)
+* **Key Features to Test:** 52-week heatmap, 14-day streak, 3D competency graph, AI Study Mentor (ask any formula proof in English or Hindi), Claude-style custom quiz architect, notebook note saving, and official cadre dossier editing.
+
+### 2. Administrative Command Center (Executive Cadre)
+* **Direct URL:** [https://nirdesha.vercel.app/admin](https://nirdesha.vercel.app/admin)
+* **Username / ID:** `admin@gov` *(or `admin`)*
+* **Password:** `admin`
+* **Executive Authority:** Cadre Management Division & Training Directorate, MoSPI Headquarters
+* **Key Features to Test:** Officer directory search and inspection (reflecting Raman's live customizations), Rule 14-B Executive Suspension Order (test real-time lockout and blur), and split-pane Messages Console with bilateral appeal handling.
 
 ---
 
@@ -344,7 +397,7 @@ nirdesha/
 ├── vendor/                          # Bundled Libraries
 │   └── katex/                       # Standalone mathematical typography engine
 ├── index.html                       # Smart root session dispatcher
-├── main.html                        # National landing portal (/home)
+├── main.html                        # National landing portal (/main, /home)
 ├── public.html                      # Trainee learning & competency dashboard (/dashboard)
 ├── admin.html                       # Administrative command center (/admin)
 ├── login.html                       # Officer authentication portal (/login)
@@ -372,5 +425,6 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 
 <div align="center">
   <sub>Built with pride for the Government of India • Ministry of Statistics and Programme Implementation (MoSPI)</sub><br>
-  <sub>निर्देश (Nirdesha) • Empowering India's Statistical Cadre through Competency Intelligence</sub>
+  <sub>निर्देश (Nirdesha) • Empowering India's Statistical Cadre through Competency Intelligence</sub><br><br>
+  <sub>🌐 <a href="https://nirdesha.vercel.app/main">Live Deployment: nirdesha.vercel.app/main</a> • 🎥 <a href="https://drive.google.com/file/d/1-4bPo-PjgS6l1OudaZWnouYr8K1LEFFI/view">Watch Demo Video on Google Drive</a></sub>
 </div>
