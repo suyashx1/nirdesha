@@ -30,7 +30,7 @@
 <br><br>
 
 [![Live Deployed Portal](https://img.shields.io/badge/🌐_Deployed_Website-nirdesha.vercel.app%2Fmain-002B49?style=for-the-badge&logo=vercel&logoColor=white)](https://nirdesha.vercel.app/main)
-[![Watch Demo Video](https://img.shields.io/badge/🎥_Watch_Demo_Video-Google_Drive-EA4335?style=for-the-badge&logo=google-drive&logoColor=white)](https://drive.google.com/file/d/1-4bPo-PjgS6l1OudaZWnouYr8K1LEFFI/view)
+[![Watch Demo Video](https://img.shields.io/badge/🎥_Watch_Demo_Video-Google_Drive-EA4335?style=for-the-badge&logo=google-drive&logoColor=white)](https://drive.google.com/file/d/1_JFRdR0NXoOETZpfbt830P5ZYf0-UZsg/view?usp=sharing)
 [![Gov of India](https://img.shields.io/badge/Government_of_India-MoSPI-FF9933?style=for-the-badge&logo=india&logoColor=white)](https://www.mospi.gov.in)
 [![Mission Karmayogi](https://img.shields.io/badge/Aligned_with-iGOT_Karmayogi-138808?style=for-the-badge)](https://igotkarmayogi.gov.in)
 
@@ -49,7 +49,7 @@ Anyone can immediately test and evaluate both the **Public Trainee Dashboard** a
 | **🏛️ National Landing Page** | [**Open Landing Portal**](https://nirdesha.vercel.app/main) | — | — | Public MoSPI portal with Nirdesha Saarthi (निर्देश सारथी) AI guidance companion, session resume, and portal navigation. |
 | **🔐 Authentication Gateway** | [**Open Login Portal**](https://nirdesha.vercel.app/login) | *Use above* | *Use above* | Official Single Sign-On (Parichay SSO) and manual cadre authentication gateway. |
 
-> 🎥 **Official Video Walkthrough:** [**Watch Full Demonstration on Google Drive &rarr;**](https://drive.google.com/file/d/1-4bPo-PjgS6l1OudaZWnouYr8K1LEFFI/view)  
+> 🎥 **Official Video Walkthrough:** [**Watch Full Demonstration on Google Drive &rarr;**](https://drive.google.com/file/d/1_JFRdR0NXoOETZpfbt830P5ZYf0-UZsg/view?usp=sharing)  
 > 🌐 **Production Deployment URL:** [**https://nirdesha.vercel.app/main &rarr;**](https://nirdesha.vercel.app/main)
 
 ---
@@ -58,7 +58,7 @@ Anyone can immediately test and evaluate both the **Public Trainee Dashboard** a
 
 A complete end-to-end recorded walkthrough of the Nirdesha platform is available on Google Drive:
 
-[![Watch Video Walkthrough](https://img.shields.io/badge/▶️_Click_Here_to_Watch-Full_Platform_Demo_Video_(Google_Drive)-FF0000?style=for-the-badge&logo=google-drive&logoColor=white)](https://drive.google.com/file/d/1-4bPo-PjgS6l1OudaZWnouYr8K1LEFFI/view)
+[![Watch Video Walkthrough](https://img.shields.io/badge/▶️_Click_Here_to_Watch-Full_Platform_Demo_Video_(Google_Drive)-FF0000?style=for-the-badge&logo=google-drive&logoColor=white)](https://drive.google.com/file/d/1_JFRdR0NXoOETZpfbt830P5ZYf0-UZsg/view?usp=sharing)
 
 ### What is covered in the demonstration video:
 1. **Public Landing Portal & Intelligent Session Memory:**
@@ -426,5 +426,5 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 <div align="center">
   <sub>Built with pride for the Government of India • Ministry of Statistics and Programme Implementation (MoSPI)</sub><br>
   <sub>निर्देश (Nirdesha) • Empowering India's Statistical Cadre through Competency Intelligence</sub><br><br>
-  <sub>🌐 <a href="https://nirdesha.vercel.app/main">Live Deployment: nirdesha.vercel.app/main</a> • 🎥 <a href="https://drive.google.com/file/d/1-4bPo-PjgS6l1OudaZWnouYr8K1LEFFI/view">Watch Demo Video on Google Drive</a></sub>
+  <sub>🌐 <a href="https://nirdesha.vercel.app/main">Live Deployment: nirdesha.vercel.app/main</a> • 🎥 <a href="https://drive.google.com/file/d/1_JFRdR0NXoOETZpfbt830P5ZYf0-UZsg/view?usp=sharing">Watch Demo Video on Google Drive</a></sub>
 </div>
